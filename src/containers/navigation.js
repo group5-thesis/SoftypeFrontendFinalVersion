@@ -56,7 +56,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Company Repository',
-        to: '/leave/request',
+        to: '/repository',
         icon: 'cil-folder',
     },
     // {

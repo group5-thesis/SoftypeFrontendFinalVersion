@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import 'scss/style.scss';
 import { PublicRoute, ProtectedRoute } from "router/routeContainer";
 const loading = (
@@ -20,7 +20,7 @@ const Page500 = React.lazy(() => import('views/pages/page500/Page500'));
 class App extends Component {
   render() {
     return (
-      <HashRouter>
+      <BrowserRouter>
         <React.Suspense fallback={loading}>
           <Switch>
             <PublicRoute exact path="/login" name="Login Page" component={Login} {...this.props} />
@@ -31,7 +31,7 @@ class App extends Component {
             <Redirect from='*' to='/404' />
           </Switch>
         </React.Suspense>
-      </HashRouter>
+      </BrowserRouter>
     );
   }
 }
