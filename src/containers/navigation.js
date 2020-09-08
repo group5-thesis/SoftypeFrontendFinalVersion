@@ -5,7 +5,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Dashboard',
-        to: '/dashboard',
+        to: '/employees',
         icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />
     },
     // Employee module
@@ -16,7 +16,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Employee Profile',
-        to: '/employee/profile',
+        to: '/employees',
         icon: 'cil-user',
     },
     {
@@ -56,15 +56,8 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Company Repository',
-        to: '/repository',
+        to: '/dashboard',
         icon: 'cil-folder',
     },
-    // {
-    //     _tag: 'CSidebarNavItem',
-    //     name: 'Leave Calendar',
-    //     to: '/leave/calendar',
-    //     icon: 'cil-calendar',
-    // },
-
 ]
 

@@ -11,7 +11,7 @@ import {
   CPagination
 } from '@coreui/react'
 
-import usersData from './UsersData'
+import usersData from './EmployeesData'
 
 const getBadge = status => {
   switch (status) {
@@ -23,13 +23,6 @@ const getBadge = status => {
   }
 }
 
-const addRow = ()=>{
-  var items = this.state.items; //functional component this nga keyword is not applicable
-  items.push('new row');
-  this.setState({items : items}) //wala kay state :) 
-}
-
-
 const Users = () => {
   const history = useHistory()
   const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
@@ -37,13 +30,13 @@ const Users = () => {
   const [page, setPage] = useState(currentPage)
 
   const pageChange = newPage => {
-    currentPage !== newPage && history.push(`/users?page=${newPage}`)
+    currentPage !== newPage && history.push(`/employees?page=${newPage}`)
   }
 
   useEffect(() => {
     currentPage !== page && setPage(currentPage)
   }, [currentPage, page])
-  
+
   return (
     <CRow>
       <CCol xl={6}>
@@ -51,7 +44,6 @@ const Users = () => {
           <CCardHeader>
             Users
             <small className="text-muted"> example</small>
-            <button id="addBtn" onClick={addRow} variant="outline" type="button" class="btn btn-warning">Add</button>
           </CCardHeader>
           <CCardBody>
           <CDataTable
@@ -65,7 +57,7 @@ const Users = () => {
             itemsPerPage={5}
             activePage={page}
             clickableRows
-            onRowClick={(item) => history.push(`/users/${item.id}`)}
+            onRowClick={(item) => history.push(`/employees/profile/${item.id}`)}
             scopedSlots = {{
               'status':
                 (item)=>(
@@ -75,11 +67,8 @@ const Users = () => {
                     </CBadge>
                   </td>
                 )
-            }
-          }
-            
+            }}
           />
-          
           <CPagination
             activePage={page}
             onActivePageChange={pageChange}
@@ -93,8 +82,5 @@ const Users = () => {
     </CRow>
   )
 }
-
-
-
 
 export default Users
