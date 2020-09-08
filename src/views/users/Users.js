@@ -100,8 +100,8 @@ const Users = () => {
           Lorem ipsum dolor...
         </CModalBody> */}
         <CModalFooter>
-          <CButton color="warning">Update</CButton>{' '}
-          <CButton color="danger">Delete</CButton>
+          {/* <CButton color="warning">Update</CButton>{' '} */}
+          {/* <CButton color="danger">Delete</CButton> */}
           <CButton
             color="secondary"
             onClick={toggle}
