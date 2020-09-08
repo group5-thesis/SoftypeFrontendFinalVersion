@@ -1,5 +1,5 @@
 import React from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
 import usersData from './UsersData'
@@ -29,6 +29,9 @@ const User = ({match}) => {
                       )
                     })
                   }
+                  <br></br>
+                  <CButton color="warning">Update</CButton>{' '} 
+                   <CButton color="danger">Delete</CButton> 
                 </tbody>
               </table>
           </CCardBody>

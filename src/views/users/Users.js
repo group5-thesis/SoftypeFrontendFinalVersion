@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import {CButton, CModal, CModalBody, CModalHeader, CModalFooter, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText,} from '@coreui/react'
+import { CButton, CModal, CModalBody, CModalHeader, CModalFooter, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
 import {
   CBadge,
   CCard,
@@ -35,7 +35,7 @@ const getBadge = status => {
 const Users = () => {
   const [modal, setModal] = useState(false);
 
-  const toggle = ()=>{
+  const toggle = () => {
     setModal(!modal);
   }
 
@@ -52,7 +52,7 @@ const Users = () => {
   useEffect(() => {
     currentPage !== page && setPage(currentPage)
   }, [currentPage, page])
-  
+
   return (
     <>
       <CButton
@@ -61,41 +61,42 @@ const Users = () => {
         className="mr-1"
       >Add Employee</CButton>
       <CModal
+        className="fade"
         show={modal}
         onClose={toggle}
       >
         <CModalHeader closeButton>Modal title</CModalHeader>
         <CContainer fluid>
-      <CRow>
-        <CCol sm="12">
-          <CForm action="" method="post">
-            <CFormGroup>
-              <CLabel htmlFor="nf-email">Email</CLabel>
-              <CInput
-                type="email"
-                id="nf-email"
-                name="nf-email"
-                placeholder="Enter Email.."
-                autoComplete="email"
-              />
-              <CFormText className="help-block">Please enter your email</CFormText>
-            </CFormGroup>
-            <CFormGroup>
-              <CLabel htmlFor="nf-password">Password</CLabel>
-              <CInput
-                type="password"
-                id="nf-password"
-                name="nf-password"
-                placeholder="Enter Password.."
-                autoComplete="current-password"
-              />
-              <CFormText className="help-block">Please enter your password</CFormText>
-            </CFormGroup>
-          </CForm>
-        </CCol>
-      </CRow>
-    </CContainer>
-  )
+          <CRow>
+            <CCol sm="12">
+              <CForm action="" method="post">
+                <CFormGroup>
+                  <CLabel htmlFor="nf-email">Email</CLabel>
+                  <CInput
+                    type="email"
+                    id="nf-email"
+                    name="nf-email"
+                    placeholder="Enter Email.."
+                    autoComplete="email"
+                  />
+                  <CFormText className="help-block">Please enter your email</CFormText>
+                </CFormGroup>
+                <CFormGroup>
+                  <CLabel htmlFor="nf-password">Password</CLabel>
+                  <CInput
+                    type="password"
+                    id="nf-password"
+                    name="nf-password"
+                    placeholder="Enter Password.."
+                    autoComplete="current-password"
+                  />
+                  <CFormText className="help-block">Please enter your password</CFormText>
+                </CFormGroup>
+              </CForm>
+            </CCol>
+          </CRow>
+        </CContainer>
+        
         {/* <CModalBody>
           Lorem ipsum dolor...
         </CModalBody> */}
@@ -109,53 +110,53 @@ const Users = () => {
         </CModalFooter>
       </CModal>
       <br></br>
-    {/* </> */}
-    <CRow>
-      <CCol xl={6}>
-        <CCard>
-          <CCardHeader>
-            Users
+      {/* </> */}
+      <CRow>
+        <CCol xl={6}>
+          <CCard>
+            <CCardHeader>
+              Users
             <small className="text-muted"> example</small>
-            {/* <button id="addBtn" onClick={addRow} type="button" class="btn btn-warning">Add</button> */}
-          </CCardHeader>
-          <CCardBody>
-          <CDataTable
-            items={usersData}
-            fields={[
-              { key: 'name', _classes: 'font-weight-bold' },
-              'registered', 'role', 'status'
-            ]}
-            hover
-            striped
-            itemsPerPage={5}
-            activePage={page}
-            clickableRows
-            onRowClick={(item) => history.push(`/users/${item.id}`)}
-            scopedSlots = {{
-              'status':
-                (item)=>(
-                  <td>
-                    <CBadge color={getBadge(item.status)}>
-                      {item.status}
-                    </CBadge>
-                  </td>
-                )
-            }
-          }
-            
-          />
-          
-          <CPagination
-            activePage={page}
-            onActivePageChange={pageChange}
-            pages={5}
-            doubleArrows={false} 
-            align="center"
-          />
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+              {/* <button id="addBtn" onClick={addRow} type="button" class="btn btn-warning">Add</button> */}
+            </CCardHeader>
+            <CCardBody>
+              <CDataTable
+                items={usersData}
+                fields={[
+                  { key: 'name', _classes: 'font-weight-bold' },
+                  'registered', 'role', 'status'
+                ]}
+                hover
+                striped
+                itemsPerPage={5}
+                activePage={page}
+                clickableRows
+                onRowClick={(item) => history.push(`/users/${item.id}`)}
+                scopedSlots={{
+                  'status':
+                    (item) => (
+                      <td>
+                        <CBadge color={getBadge(item.status)}>
+                          {item.status}
+                        </CBadge>
+                      </td>
+                    )
+                }
+                }
+
+              />
+
+              <CPagination
+                activePage={page}
+                onActivePageChange={pageChange}
+                pages={5}
+                doubleArrows={false}
+                align="center"
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
     </>
   )
 }
