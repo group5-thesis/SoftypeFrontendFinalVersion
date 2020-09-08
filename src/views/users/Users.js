@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { CButton, CModal, CModalBody, CModalHeader, CModalFooter, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
+import { CButton } from '@coreui/react'
 import {
   CBadge,
   CCard,
@@ -11,8 +11,10 @@ import {
   CRow,
   CPagination
 } from '@coreui/react'
+import usermodal from './UserModal.js'
 
 import usersData from './UsersData'
+import Usermodal from './UserModal.js';
 
 const getBadge = status => {
   switch (status) {
@@ -30,13 +32,19 @@ const getBadge = status => {
 //   items.push('new row');
 //   this.setState({items : items}) //wala kay state :) 
 // }
-
+// let modalE = (condition) => {
+//   if(condition){
+//     return <Usermodal></Usermodal>
+//   }
+// }
 
 const Users = () => {
+  let modalE = false;
   const [modal, setModal] = useState(false);
 
   const toggle = () => {
     setModal(!modal);
+    // modalE(!modal)
   }
 
   const history = useHistory();
@@ -60,57 +68,8 @@ const Users = () => {
         onClick={toggle}
         className="mr-1"
       >Add Employee</CButton>
-      <CModal
-        className="fade"
-        show={modal}
-        onClose={toggle}
-      >
-        <CModalHeader closeButton>Modal title</CModalHeader>
-        <CContainer fluid>
-          <CRow>
-            <CCol sm="12">
-              <CForm action="" method="post">
-                <CFormGroup>
-                  <CLabel htmlFor="nf-email">Email</CLabel>
-                  <CInput
-                    type="email"
-                    id="nf-email"
-                    name="nf-email"
-                    placeholder="Enter Email.."
-                    autoComplete="email"
-                  />
-                  <CFormText className="help-block">Please enter your email</CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-password">Password</CLabel>
-                  <CInput
-                    type="password"
-                    id="nf-password"
-                    name="nf-password"
-                    placeholder="Enter Password.."
-                    autoComplete="current-password"
-                  />
-                  <CFormText className="help-block">Please enter your password</CFormText>
-                </CFormGroup>
-              </CForm>
-            </CCol>
-          </CRow>
-        </CContainer>
-        
-        {/* <CModalBody>
-          Lorem ipsum dolor...
-        </CModalBody> */}
-        <CModalFooter>
-          {/* <CButton color="warning">Update</CButton>{' '} */}
-          {/* <CButton color="danger">Delete</CButton> */}
-          <CButton
-            color="secondary"
-            onClick={toggle}
-          >Cancel</CButton>
-        </CModalFooter>
-      </CModal>
       <br></br>
-      {/* </> */}
+      <Usermodal></Usermodal>
       <CRow>
         <CCol xl={6}>
           <CCard>
