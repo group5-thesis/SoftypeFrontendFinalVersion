@@ -32,14 +32,9 @@ const getBadge = status => {
 //   items.push('new row');
 //   this.setState({items : items}) //wala kay state :) 
 // }
-// let modalE = (condition) => {
-//   if(condition){
-//     return <Usermodal></Usermodal> 
-//   }
-// }
+
 
 const Users = () => {
-  // let modalE = false;
   const [modal, setModal] = useState(false);
 
   const toggle = () => {
@@ -47,7 +42,6 @@ const Users = () => {
     if(setModal(!modal)===true){
       return <Usermodal></Usermodal>
     }
-    // modalE(!modal)
   }
 
   const history = useHistory();
@@ -73,8 +67,6 @@ const Users = () => {
           <CCard>
             <CCardHeader>
               Users
-            <small className="text-muted"> example</small>
-              {/* <button id="addBtn" onClick={addRow} type="button" class="btn btn-warning">Add</button> */}
             </CCardHeader>
             <CCardBody>
               <CDataTable

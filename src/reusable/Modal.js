@@ -34,6 +34,14 @@ const Modal = forwardRef((props, ref) => {
                         if  (modalOnClose){
                             modalOnClose();
                         }
+                    }} className="mr-1" color="warning">
+                        Add
+                    </CButton>
+                    <CButton onClick={() => {
+                        toggle();
+                        if  (modalOnClose){
+                            modalOnClose();
+                        }
                     }} className="mr-1" color="danger">
                         Cancel
                     </CButton>

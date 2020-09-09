@@ -13,27 +13,38 @@ const Usermodal = () => {
                 <CRow>
                     <CCol sm="12">
                         <CForm action="" method="post">
-                            <CFormGroup>
-                                <CLabel htmlFor="nf-email">Email</CLabel>
+                        <CFormGroup>
+                                <CLabel htmlFor="nf-email">Name</CLabel>
                                 <CInput
-                                    type="email"
-                                    id="nf-email"
-                                    name="nf-email"
-                                    placeholder="Enter Email.."
-                                    autoComplete="email"
+                                    type="name"
+                                    id="nf-name"
+                                    name="nf-name"
+                                    placeholder="Enter Name"
+                                    autoComplete="name"
                                 />
-                                <CFormText className="help-block">Please enter your email</CFormText>
+                                <CFormText className="help-block">Please enter your name</CFormText>
                             </CFormGroup>
                             <CFormGroup>
-                                <CLabel htmlFor="nf-password">Password</CLabel>
+                                <CLabel htmlFor="nf-email">Role</CLabel>
                                 <CInput
-                                    type="password"
-                                    id="nf-password"
-                                    name="nf-password"
-                                    placeholder="Enter Password.."
-                                    autoComplete="current-password"
+                                    type="role"
+                                    id="nf-role"
+                                    name="nf-role"
+                                    placeholder="Enter Role.."
+                                    autoComplete="role"
                                 />
-                                <CFormText className="help-block">Please enter your password</CFormText>
+                                <CFormText className="help-block">Please enter role</CFormText>
+                            </CFormGroup>
+                            <CFormGroup>
+                                <CLabel htmlFor="nf-password">Status</CLabel>
+                                <CInput
+                                    type="status"
+                                    id="nf-status"
+                                    name="nf-status"
+                                    placeholder="Enter Status.."
+                                    autoComplete="status"
+                                />
+                                <CFormText className="help-block">Please enter status</CFormText>
                             </CFormGroup>
                         </CForm>
                     </CCol>
