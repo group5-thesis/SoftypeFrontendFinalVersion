@@ -132,7 +132,9 @@ import {
   cilSmilePlus,
   cilAccountLogout,
   cilCarAlt,
-  cilFolder
+  cilFolder,
+  cilInfo,
+  cilPlus
 } from '@coreui/icons'
 
 export const icons = Object.assign({}, {
@@ -235,7 +237,9 @@ export const icons = Object.assign({}, {
     cilSmilePlus,
     cilAccountLogout,
     cilCarAlt,
-    cilFolder
+    cilFolder,
+    cilInfo,
+    cilPlus
   }, {
     cifUs,
     cifBr,
@@ -243,7 +247,7 @@ export const icons = Object.assign({}, {
     cifFr,
     cifEs,
     cifPl
-  }, 
+  },
   {
     cibSkype,
     cibFacebook,

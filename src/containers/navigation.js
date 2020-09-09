@@ -16,7 +16,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Employee Profile',
-        to: '/employee/profile',
+        to: '/employees',
         icon: 'cil-user',
     },
     {
@@ -39,7 +39,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Leave Requests',
-        to: '/leave/request',
+        to: '/leave/requests',
         icon: 'cil-car-alt',
     },
     {

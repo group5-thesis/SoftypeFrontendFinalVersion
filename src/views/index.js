@@ -12,9 +12,10 @@ const mapDispatchToProps = (dispatch, _) => ({
     if (authStateResult != null) {
       dispatch(actionCreator(ActionTypes.LOGIN));
     }
-    setTimeout(() => {
-      dispatch(actionCreator(ActionTypes.AUTH_CHECKED));
-    },2000);
+    dispatch(actionCreator(ActionTypes.AUTH_CHECKED));
+    // setTimeout(() => {
+    //   dispatch(actionCreator(ActionTypes.AUTH_CHECKED));
+    // },2000);
   }
 });
 export default connect(

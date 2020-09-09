@@ -1,1 +1,32 @@
 // Here you can add other styles
+.c-sidebar {
+    .c-sidebar-nav-link.c-active , .c-sidebar-nav-link.c-active:hover{
+        color: $white;
+        background: $orange;
+        
+    }
+    .c-sidebar-nav-link:hover{
+        color: $orange;
+        font-weight: bold;
+        background:none;
+    }
+}
+
+.wrap-content-text {
+    word-wrap: break-word;
+    max-width: 20rem;
+    min-width: 20rem;
+}
+
+.table{
+    td{
+        p{
+            margin:0;
+        }
+    }
+}
+
+.float{
+    flex:right ;
+    flex-direction: row-reverse;
+}
