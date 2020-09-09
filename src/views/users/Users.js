@@ -14,7 +14,7 @@ import {
 import usermodal from './UserModal.js'
 
 import usersData from './UsersData'
-import Usermodal from './UserModal.js';
+import Usermodal from './UserModal';
 
 const getBadge = status => {
   switch (status) {
@@ -34,16 +34,19 @@ const getBadge = status => {
 // }
 // let modalE = (condition) => {
 //   if(condition){
-//     return <Usermodal></Usermodal>
+//     return <Usermodal></Usermodal> 
 //   }
 // }
 
 const Users = () => {
-  let modalE = false;
+  // let modalE = false;
   const [modal, setModal] = useState(false);
 
   const toggle = () => {
     setModal(!modal);
+    if(setModal(!modal)===true){
+      return <Usermodal></Usermodal>
+    }
     // modalE(!modal)
   }
 
@@ -63,12 +66,7 @@ const Users = () => {
 
   return (
     <>
-      <CButton
-        color="warning"
-        onClick={toggle}
-        className="mr-1"
-      >Add Employee</CButton>
-      <br></br>
+      
       <Usermodal></Usermodal>
       <CRow>
         <CCol xl={6}>

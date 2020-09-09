@@ -1,19 +1,14 @@
 import React, { useState } from 'react'
 import { CButton, CModal, CRow, CCol, CModalBody, CModalHeader, CModalFooter, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
-
+import {Modal} from 'reusable'
 const Usermodal = () => {
-    const [modal, setModal] = useState(true);
-
-    const toggle = () => {
-        setModal(!modal);
-    }
+  
     return (
-        <CModal
-            className="fade"
-            show={modal}
-            onClose={toggle}
-        >
-            <CModalHeader closeButton>Modal title</CModalHeader>
+        <Modal {...{
+            title: "Add Employee",
+            color: "warning"
+        }}>
+
             <CContainer fluid>
                 <CRow>
                     <CCol sm="12">
@@ -44,18 +39,7 @@ const Usermodal = () => {
                     </CCol>
                 </CRow>
             </CContainer>
-
-            {/* <CModalBody>
-          Lorem ipsum dolor...
-        </CModalBody> */}
-            <CModalFooter>
-
-                <CButton
-                    color="secondary"
-                    onClick={toggle}
-                >Cancel</CButton>
-            </CModalFooter>
-        </CModal>
+        </Modal>
     )
 }
 
