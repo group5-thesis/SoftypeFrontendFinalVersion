@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { ActionTypes, actionCreator } from '../actions';
 export const RULES = {
     required: value => !!value || "Required.",
     usernameRules: v => (v && v.length <= 10) || "Name must be less than 10 characters",
@@ -107,4 +108,14 @@ export const checkDateRange = (start, end) => {
     let gap = moment.duration(end.diff(start)).asDays();
     return gap;
 }
-export * from './leaveRequestHelpers';
+
+export const getAdminResponse = (code) => {
+    return code ? "approved" : "rejected";
+}
+
+export const toggleDialog = (dispatch) => {
+    dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG));
+}
+export const respondToRequest = (dispatch, payload) => {
+    dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, payload));
+}

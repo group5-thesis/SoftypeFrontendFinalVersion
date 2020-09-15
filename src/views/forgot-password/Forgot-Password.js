@@ -42,7 +42,6 @@ const Register = (props) => {
                       }} className="px-0">Back to Login</CButton>
                     </CCol>
                   </CRow>
-
                 </CForm>
               </CCardBody>
             </CCard>

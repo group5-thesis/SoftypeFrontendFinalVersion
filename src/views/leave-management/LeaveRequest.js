@@ -20,6 +20,7 @@ const LeaveRequest = ({ match }) => {
   if (!Object.keys(request).length) {
     return <NoData />
   }
+  
 
   request = insertProperty(request, 'no_of_days', checkDateRange(request['date from'], request['date to']), 4);
   event = {
@@ -63,7 +64,7 @@ const LeaveRequest = ({ match }) => {
                 }
               </tbody>
             </table>
-            {request.status == 'pending' &&
+            {request.status === 'pending' &&
               <CButtonGroup style={{ float: "right" }}>
                 <CButton color="primary" onClick={() => {
                   handleClick(1)

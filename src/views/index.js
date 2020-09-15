@@ -10,7 +10,7 @@ const mapDispatchToProps = (dispatch, _) => ({
   checkLogin: () => {
     let authStateResult = localStorage.getItem("token");
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
-    if (authStateResult != null) {
+    if (authStateResult !== null) {
       // let user = JSON.parse(window.user);
       dispatch(actionCreator(ActionTypes.LOGIN));
       // dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user))

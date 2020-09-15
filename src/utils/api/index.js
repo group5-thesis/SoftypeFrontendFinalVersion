@@ -19,7 +19,8 @@ const callAPI = async (method, url, data = null ) => {
     let config = {
         method,
         url,
-        headers
+        timeout: 1000 * 5, // Wait for 5 seconds
+        headers,
     }
 
     if (data) {

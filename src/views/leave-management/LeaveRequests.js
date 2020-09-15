@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { actionCreator, ActionTypes } from 'utils/actions'
@@ -11,17 +11,14 @@ import {
     CRow,
     CFormGroup,
     CSelect,
-    CAlert,
     CLink,
     CPopover,
-    CButton,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { checkDateRange, toCapitalize, insertProperty, renameKey, getAdminResponse } from 'utils/helpers';
+import { checkDateRange, toCapitalize, insertProperty, renameKey, getAdminResponse, toggleDialog, respondToRequest } from 'utils/helpers';
 import LeaveFormRequest from './LeaveRequestForm';
 import NoData from 'reusable/NoData';
-import { Modal, ConfirmDialog } from 'reusable';
-import { _ } from 'core-js';
+import { ConfirmDialog } from 'reusable';
 const Users = () => {
     const dispatch = useDispatch();
     const history = useHistory()
@@ -110,24 +107,19 @@ const Users = () => {
         history.push(`/leave/requests/${id}`)
     }
 
-    const respondToRequest = () => {
-        dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, payload));
-    }
-
-    const toggleDialog = () => {
-        dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG, { confirmDialog: true }));
-    }
-
+  
 
     return (
         <CRow>
             <CCol xl={12}>
-                <ConfirmDialog id="cutom_dialog"  {...{ onConfirm: respondToRequest, title: `${payload.statusCode ? 'Approve' : 'Reject'}` }}></ConfirmDialog>
+                <ConfirmDialog id="cutom_dialog"  {...{ onConfirm: ()=>{
+                    respondToRequest(dispatch , payload)
+                }, title: `${payload.statusCode ? 'Approve' : 'Reject'}` }}></ConfirmDialog>
                 <CCard>
                     <CCardBody>
                         <CRow>
                             <CCol sm="5">
-                                <h4  className="card-title mb-0">{status} Request</h4>
+                                <h4 className="card-title mb-0">{status} Request</h4>
                             </CCol>
                             <CCol sm="7" className="d-none d-md-block">
                                 <div className="float-right" >
@@ -210,7 +202,7 @@ const Users = () => {
                                                             <CPopover header={el.header} key={id} >
                                                                 <CLink onClick={() => {
                                                                     setPayload({ id: item.id, status: getAdminResponse(el.code), statusCode: el.code })
-                                                                    toggleDialog()
+                                                                    toggleDialog(dispatch)
                                                                 }} className="card-header-action">
                                                                     <CIcon name={`cil-${el.icon}`} className={`text-${el.color}`} />
                                                                 </CLink>
