@@ -5,16 +5,17 @@ import {
   AppFooter,
   AppHeader
 } from 'containers'
+import { ConfirmDialog } from 'reusable';
 
 const AppLayout = () => {
 
   return (
     <div className="c-app c-default-layout">
-      <AppSidebar/>
+      <AppSidebar />
       <div className="c-wrapper">
-        <AppHeader/>
+        <AppHeader />
         <div className="c-body">
-          <AppContent/>
+          <AppContent />
         </div>
         {/* <AppFooter/> */}
       </div>

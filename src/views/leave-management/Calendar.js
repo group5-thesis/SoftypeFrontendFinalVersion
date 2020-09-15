@@ -3,17 +3,22 @@ import { CCard, CCardHeader, CCardBody } from '@coreui/react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-const Calendar = ({ _events }) => {
+const Calendar = ({ _events, header = true }) => {
     return (
         <CCard style={{ height: '95%' }}>
-            <CCardHeader>
-                Calendar View
-        </CCardHeader>
+            {
+                header  && 
+                <CCardHeader>
+                    Calendar View
+                </CCardHeader>
+            }
+
             <CCardBody >
                 <FullCalendar
                     initialView="dayGridMonth"
                     themeSystem="bootstrap"
-                    height='100%'
+                    slotMinWidth='100%'
+                    eventOverlap
                     plugins={[dayGridPlugin]}
                     footerToolbar={null}
                     headerToolbar={{
@@ -21,7 +26,7 @@ const Calendar = ({ _events }) => {
                         center: 'title',
                         left: ''
                     }}
-                    events={_events}
+                    events={_events ? _events : []}
                 />
             </CCardBody>
         </CCard>

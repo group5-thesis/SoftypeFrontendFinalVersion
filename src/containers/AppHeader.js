@@ -3,25 +3,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   CHeader,
   CToggler,
-  CHeaderBrand,
   CHeaderNav,
-  CHeaderNavItem,
-  CHeaderNavLink,
   CSubheader,
-  CBreadcrumbRouter,
-  CLink
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+  CBreadcrumbRouter} from '@coreui/react'
 import { ActionTypes, actionCreator } from "utils/actions";
 // routes config
 import routes from 'router'
 
-import {
-  AppHeaderDropdown,
-  AppHeaderDropdownMssg,
-  AppHeaderDropdownNotif,
-  AppHeaderDropdownTasks
-} from '.'
+import {AppHeaderDropdown} from '.'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -29,13 +18,12 @@ const AppHeader = () => {
 
   const toggleSidebar = () => {
     const val = [true, 'responsive'].includes(sidebarShow) ? false : 'responsive'
-    // dispatch({ type: 'set', sidebarShow: val })
-    dispatch(actionCreator(ActionTypes.SET, { sidebarShow: val }));
+    dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }));
   }
 
   const toggleSidebarMobile = () => {
     const val = [false, 'responsive'].includes(sidebarShow) ? true : 'responsive'
-    dispatch(actionCreator(ActionTypes.SET, { sidebarShow: val }));
+    dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }));
   }
 
   return (
@@ -55,9 +43,6 @@ const AppHeader = () => {
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
-        <AppHeaderDropdownNotif />
-        <AppHeaderDropdownTasks />
-        <AppHeaderDropdownMssg />
         <AppHeaderDropdown />
       </CHeaderNav>
 

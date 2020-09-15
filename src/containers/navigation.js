@@ -59,12 +59,11 @@ export default [
         to: '/repository',
         icon: 'cil-folder',
     },
-    // {
-    //     _tag: 'CSidebarNavItem',
-    //     name: 'Leave Calendar',
-    //     to: '/leave/calendar',
-    //     icon: 'cil-calendar',
-    // },
-
+    {
+        _tag: 'CSidebarNavItem',
+        name: 'Tasks',
+        to: '/tasks',
+        icon: 'cil-task',
+    },
 ]
 

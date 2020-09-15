@@ -1,6 +1,5 @@
 import moment from 'moment';
-
-export const rules = {
+export const RULES = {
     required: value => !!value || "Required.",
     usernameRules: v => (v && v.length <= 10) || "Name must be less than 10 characters",
     min: v => (v && v.length >= 8) || "Min 8 characters",
@@ -11,7 +10,7 @@ export const rules = {
     ageRules: v => v >= 18 || "Must be in legal age"
 }
 
-export const months = [
+export const MONTHS = [
     "January",
     "February",
     "March",
@@ -38,7 +37,6 @@ export const renameKey = (obj) => {
             [splitSnakeCase(splitCamelCase(key)), value]
         )
     )
-
     return altObj;
 }
 export const plotArray = (arr) => {
@@ -109,3 +107,4 @@ export const checkDateRange = (start, end) => {
     let gap = moment.duration(end.diff(start)).asDays();
     return gap;
 }
+export * from './leaveRequestHelpers';

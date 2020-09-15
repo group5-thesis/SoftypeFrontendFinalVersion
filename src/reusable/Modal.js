@@ -3,7 +3,7 @@ import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui
 
 const Modal = forwardRef((props, ref) => {
     const [modal, setModal] = useState(false);
-    let { title, footer, modalOnClose, children } = props;
+    let { title, footer, size, centered, modalOnClose, children } = props;
     const toggle = () => {
         setModal(!modal);
     }
@@ -17,11 +17,13 @@ const Modal = forwardRef((props, ref) => {
     )
     return (
         <>
-            <CButton onClick={toggle} className="mr-1" color="primary">
+            <CButton onClick={toggle} color="primary" >
                 {title}
             </CButton>
-            <CModal show={modal} closeOnBackdrop={false} onClose={() => {
-                modalOnClose()
+            <CModal show={modal} centered={centered ? true : false} size={size} closeOnBackdrop={false} onClose={() => {
+                if (modalOnClose) {
+                    modalOnClose()
+                }
             }} className="fade" >
                 <CModalHeader closeButton><strong>{title}</strong></CModalHeader>
                 <CModalBody>
@@ -30,8 +32,7 @@ const Modal = forwardRef((props, ref) => {
                 <CModalFooter>
                     {footer}
                     <CButton onClick={() => {
-                        toggle();
-                        modalOnClose();
+                        toggle()
                     }} className="mr-1" color="danger">
                         Cancel
                     </CButton>

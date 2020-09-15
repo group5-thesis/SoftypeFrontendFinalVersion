@@ -30,7 +30,7 @@ const Users = () => {
   const [page, setPage] = useState(currentPage)
 
   const pageChange = newPage => {
-    currentPage !== newPage && history.push(`/users?page=${newPage}`)
+    currentPage !== newPage && history.push(`/employees?page=${newPage}`)
   }
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Users = () => {
             itemsPerPage={5}
             activePage={page}
             clickableRows
-            onRowClick={(item) => history.push(`/users/${item.id}`)}
+            onRowClick={(item) => history.push(`/employees/profile/${item.id}`)}
             scopedSlots = {{
               'status':
                 (item)=>(

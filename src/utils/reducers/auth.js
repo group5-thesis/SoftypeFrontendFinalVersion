@@ -3,7 +3,6 @@ import { ActionTypes } from "utils/actions";
 const initial_state = {
   auth_checked: false,
   already_logged: false,
-  fetch_user: false,
   user: null
 };
 

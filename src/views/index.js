@@ -9,13 +9,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, _) => ({
   checkLogin: () => {
     let authStateResult = localStorage.getItem("token");
+    dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
     if (authStateResult != null) {
+      // let user = JSON.parse(window.user);
       dispatch(actionCreator(ActionTypes.LOGIN));
+      // dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user))
+      dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED));
-    // setTimeout(() => {
-    //   dispatch(actionCreator(ActionTypes.AUTH_CHECKED));
-    // },2000);
+
   }
 });
 export default connect(

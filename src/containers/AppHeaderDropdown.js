@@ -27,7 +27,7 @@ const AppHeaderDropdown = () => {
         </div>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownItem
+        {/* <CDropdownItem
           header
           tag="div"
           color="light"
@@ -60,9 +60,8 @@ const AppHeaderDropdown = () => {
           tag="div"
           color="light"
           className="text-center"
-        >
-          <strong>Settings</strong>
-        </CDropdownItem>
+        >  <strong>Settings</strong>
+        </CDropdownItem> */}
         <CDropdownItem>
           <CIcon name="cil-user" className="mfe-2" />Profile
         </CDropdownItem>
@@ -70,20 +69,10 @@ const AppHeaderDropdown = () => {
           <CIcon name="cil-settings" className="mfe-2" /> 
           Settings
         </CDropdownItem>
-        <CDropdownItem>
-          <CIcon name="cil-credit-card" className="mfe-2" /> 
-          Payments
-          <CBadge color="secondary" className="mfs-auto">42</CBadge>
-        </CDropdownItem>
-        <CDropdownItem>
-          <CIcon name="cil-file" className="mfe-2" /> 
-          Projects
-          <CBadge color="primary" className="mfs-auto">42</CBadge>
-        </CDropdownItem>
         <CDropdownItem divider />
         <CDropdownItem>
-          <CIcon name="cil-lock-locked" className="mfe-2" /> 
-          Lock Account
+          <CIcon name="cil-account-logout" className="mfe-2" /> 
+          Logout
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { actionCreator, ActionTypes } from 'utils/actions'
 import {
     CBadge,
     CCard,
     CCardBody,
-    CCardHeader,
     CCol,
     CDataTable,
     CRow,
-    CPagination,
     CFormGroup,
     CSelect,
-    CLabel,
     CAlert,
-    CForm,
-    CInput
+    CLink,
+    CPopover,
+    CButton,
 } from '@coreui/react'
-
-import mockData from './LeaveRequestData'
-
-import { checkDateRange, toCapitalize, insertProperty, plotArray, renameKey } from 'utils/helpers';
+import CIcon from '@coreui/icons-react'
+import { checkDateRange, toCapitalize, insertProperty, renameKey, getAdminResponse } from 'utils/helpers';
 import LeaveFormRequest from './LeaveRequestForm';
 import NoData from 'reusable/NoData';
+import { Modal, ConfirmDialog } from 'reusable';
+import { _ } from 'core-js';
 const Users = () => {
+    const dispatch = useDispatch();
     const history = useHistory()
     const location = useLocation()
     const query = new URLSearchParams(location.search)
@@ -31,10 +32,48 @@ const Users = () => {
     const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
     const [page, setPage] = useState(currentPage)
     const [status, setStatus] = useState(queryStatus ? queryStatus : 'All')
-    const [requestsData, setRequestsData] = useState(mockData)
+    const requestsData = useSelector(state => {
+        return state.appState.leave.leave_requests.filter(el => {
+            return el.status === status.toLowerCase() || status.toLowerCase() === 'all'
+        })
+    })
+    const [payload, setPayload] = useState({
+        id: null,
+        status: '',
+        statusCode: null,
+
+    })
+
     const header = [
-        { key: 'name', _classes: 'font-weight-bold' },
-        'date from', 'date to', 'no of days', 'category', 'reason', 'status', 'approver'
+        {
+            key: 'name'
+            , _classes: 'font-weight-bold'
+        },
+        'date from', 'date to', {
+            key: 'no of days',
+            label: 'Days',
+            _style: { width: '1%' },
+            sorter: false,
+            filter: false
+        },
+        {
+            key: 'category',
+            sorter: false,
+            filter: false
+        },
+        {
+            key: 'reason',
+            _style: { width: '20%' },
+            sorter: false,
+            filter: false
+        }, 'status', 'approver',
+        {
+            key: 'actions',
+            label: 'Options',
+            sorter: false,
+            filter: false
+        }
+
     ]
 
     const STATUS = {
@@ -49,6 +88,7 @@ const Users = () => {
     }
 
     const pageChange = newPage => {
+        setPage(newPage)
         currentPage !== newPage && goToRoute(newPage, status)
     }
 
@@ -57,76 +97,70 @@ const Users = () => {
         goToRoute(currentPage, e.target.value)
     }
 
-    const computedData = React.useMemo(
-        () =>
-            requestsData.filter((data) => {
-                return data.status.toLocaleLowerCase() == status.toLocaleLowerCase() || status.toLowerCase() === 'all'
-            }),
-        [status]
-    );
-
     const goToRoute = (page, status) => {
         history.push(`/leave/requests?page=${page}&status=${status}`)
     }
 
     const addRequest = (request) => {
         request = insertProperty(request, 'id', requestsData.length + 1, 0)
-        let arrCopy = requestsData;
-        arrCopy.push(renameKey(request))
-        arrCopy = plotArray(arrCopy)
-        setRequestsData(arrCopy)
+        dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(request)))
     }
 
-    useEffect(() => {
-        currentPage !== page && setPage(currentPage)
-    }, [currentPage, page])
+    const viewRequestInfo = (id) => {
+        history.push(`/leave/requests/${id}`)
+    }
+
+    const respondToRequest = () => {
+        dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, payload));
+    }
+
+    const toggleDialog = () => {
+        dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG, { confirmDialog: true }));
+    }
+
 
     return (
         <CRow>
             <CCol xl={12}>
-                <CRow>
-                    <CCol xl={12}>
-                        <CAlert color="info" closeButton>
-                            Click the row to show the full information.
-                </CAlert>
-                    </CCol>
-                </CRow>
+                <ConfirmDialog id="cutom_dialog"  {...{ onConfirm: respondToRequest, title: `${payload.statusCode ? 'Approve' : 'Reject'}` }}></ConfirmDialog>
                 <CCard>
-
-                    <CCardHeader>
-
-                        {status} Requests
-                        <div className="card-header-actions">
-                            <CForm inline >
-                                <CFormGroup >
-                                    <CSelect custom name="status" id="status" onChange={handleChange}>
-                                        <option value='' hidden>{status}</option>
-                                        <option value="All">All</option>
-                                        <option value={Object.keys(STATUS)[0]}>Pending</option>
-                                        <option value={Object.keys(STATUS)[1]}>Approved</option>
-                                        <option value={Object.keys(STATUS)[2]}>Rejected</option>
-                                        <option value={Object.keys(STATUS)[3]}>Cancelled</option>
-                                    </CSelect>
-                                </CFormGroup>
-                            </CForm>
-                        </div>
-                        <LeaveFormRequest {...{ onSubmit: addRequest }} />
-                    </CCardHeader>
                     <CCardBody>
+                        <CRow>
+                            <CCol sm="5">
+                                <h4  className="card-title mb-0">{status} Request</h4>
+                            </CCol>
+                            <CCol sm="7" className="d-none d-md-block">
+                                <div className="float-right" >
+                                    <LeaveFormRequest {...{ onSubmit: addRequest }} />
+                                </div>
+                                <div className="float-right mr-3">
+                                    <CFormGroup >
+                                        <CSelect custom name="status" id="status" onChange={handleChange}>
+                                            <option value='' hidden>{status}</option>
+                                            <option value="All">All</option>
+                                            {
+                                                Object.keys(STATUS).map((key) => {
+                                                    return <option key={key} value={key}>{key}</option>
+                                                })
+                                            }
+                                        </CSelect>
+                                    </CFormGroup>
+                                </div>
+                            </CCol>
+                        </CRow>
                         <CDataTable
+                            className="table-responsive"
                             items={requestsData}
+                            itemsPerPage={5}
                             fields={header}
-                            itemsPerPageSelect
-                            hover
                             pagination
-                            onPagesChange={(e)=>{
-                                console.log(e)
+                            sorter
+                            onPageChange={(e) => {
+                                pageChange(e)
                             }}
-                            striped
                             activePage={page}
                             noItemsViewSlot={<NoData />}
                             clickableRows
-                            onRowClick={(item) => history.push(`/leave/requests/${item.id}`)}
                             scopedSlots={{
                                 'no of days': (item) => (
                                     <td >
@@ -136,7 +170,7 @@ const Users = () => {
                                 'reason':
                                     (item) => (
                                         <td >
-                                            <p className="wrap-content-text"> {item.description}</p>
+                                            <p className="wrap-content-text"> {item.reason}</p>
                                         </td>
                                     ),
                                 'status':
@@ -146,16 +180,50 @@ const Users = () => {
                                                 {item.status}
                                             </CBadge>
                                         </td>
-                                    )
+                                    ),
+                                'actions':
+                                    (item) => {
+                                        let isPending = item.status.toLowerCase() === "pending";
+                                        return (
+                                            <td >
+                                                <CPopover header="View Details" >
+                                                    <CLink onClick={() => viewRequestInfo(item.id)} className="card-header-action">
+                                                        <CIcon name="cib-indeed" className="text-dark " />
+                                                        {!isPending ? ' View Details' : ''}
+                                                    </CLink>
+                                                </CPopover>
+                                                {
+                                                    isPending && [
+                                                        {
+                                                            header: "Approve",
+                                                            code: 1,
+                                                            color: "success",
+                                                            icon: "check"
+                                                        }, {
+                                                            header: "Reject",
+                                                            code: 0,
+                                                            color: "danger",
+                                                            icon: "x-circle"
+                                                        }
+                                                    ].map((el, id) => {
+                                                        return (
+                                                            <CPopover header={el.header} key={id} >
+                                                                <CLink onClick={() => {
+                                                                    setPayload({ id: item.id, status: getAdminResponse(el.code), statusCode: el.code })
+                                                                    toggleDialog()
+                                                                }} className="card-header-action">
+                                                                    <CIcon name={`cil-${el.icon}`} className={`text-${el.color}`} />
+                                                                </CLink>
+                                                            </CPopover>
+                                                        )
+                                                    })
+                                                }
+
+                                            </td>
+                                        )
+                                    },
                             }}
                         />
-                        {/* <CPagination
-                            activePage={page}
-                            onActivePageChange={pageChange}
-                            pages={Math.ceil(requestsData.length / 5)}
-                            doubleArrows={false}
-                            align="center"
-                        /> */}
                     </CCardBody>
                 </CCard>
             </CCol>

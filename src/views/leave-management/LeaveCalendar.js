@@ -1,85 +1,48 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
-import {
-  CBadge,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CDataTable,
-  CRow,
-  CPagination
-} from '@coreui/react'
-
-import usersData from './UsersData'
-
-const getBadge = status => {
-  switch (status.toLowerCase()) {
-    case 'approved': return 'success'
-    case 'pending': return 'warning'
-    case 'rejected': return 'danger'
-    default: return 'primary'
-  }
+import React from 'react';
+import Calendar from './Calendar';
+const LeaveCalendar = () => {
+  return <Calendar {...{
+    header: false,
+    _events: [
+      {
+        title: 'All Day Event',
+        start: '2014-06-01'
+      },
+      {
+        title: 'Long Event',
+        start: '2014-06-07',
+        end: '2014-06-10'
+      },
+      {
+        id: 999,
+        title: 'Repeating Event',
+        start: '2014-06-09T16:00:00'
+      },
+      {
+        id: 999,
+        title: 'Repeating Event',
+        start: '2014-06-16T16:00:00'
+      },
+      {
+        title: 'Meeting',
+        start: '2014-06-12T10:30:00',
+        end: '2014-06-12T12:30:00'
+      },
+      {
+        title: 'Lunch',
+        start: '2014-06-12T12:00:00'
+      },
+      {
+        title: 'Birthday Party',
+        start: '2014-06-13T07:00:00'
+      },
+      {
+        title: 'Click for Google',
+        url: 'http://google.com/',
+        start: '2014-06-28'
+      }
+    ]
+  }} />
 }
 
-const Users = () => {
-  const history = useHistory()
-  const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
-  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
-  const [page, setPage] = useState(currentPage)
-
-  const pageChange = newPage => {
-    currentPage !== newPage && history.push(`/leave/requests?page=${newPage}`)
-  }
-
-  useEffect(() => {
-    currentPage !== page && setPage(currentPage)
-  }, [currentPage, page])
-
-  return (
-    <CRow>
-      <CCol xl={6}>
-        <CCard>
-          <CCardHeader>
-            Users
-            <small className="text-muted"> example</small>
-          </CCardHeader>
-          <CCardBody>
-          <CDataTable
-            items={usersData}
-            fields={[
-              { key: 'name', _classes: 'font-weight-bold' },
-              'registered', 'role', 'status'
-            ]}
-            hover
-            striped
-            itemsPerPage={5}
-            activePage={page}
-            clickableRows
-            onRowClick={(item) => history.push(`/leave/requests/${item.id}`)}
-            scopedSlots = {{
-              'status':
-                (item)=>(
-                  <td>
-                    <CBadge color={getBadge(item.status)}>
-                      {item.status}
-                    </CBadge>
-                  </td>
-                )
-            }}
-          />
-          <CPagination
-            activePage={page}
-            onActivePageChange={pageChange}
-            pages={5}
-            doubleArrows={false} 
-            align="center"
-          />
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
-  )
-}
-
-export default Users
+export default LeaveCalendar;

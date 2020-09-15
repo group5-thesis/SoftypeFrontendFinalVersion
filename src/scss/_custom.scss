@@ -2,20 +2,14 @@
 .c-sidebar {
     .c-sidebar-nav-link.c-active , .c-sidebar-nav-link.c-active:hover{
         color: $white;
-        background: $orange;
+        background: rgba($color: $orange, $alpha: 0.6);
         
-    }
-    .c-sidebar-nav-link:hover{
-        color: $orange;
-        font-weight: bold;
-        background:none;
     }
 }
 
 .wrap-content-text {
     word-wrap: break-word;
-    max-width: 20rem;
-    min-width: 20rem;
+ 
 }
 
 .table{
@@ -29,4 +23,20 @@
 .float{
     flex:right ;
     flex-direction: row-reverse;
+}
+
+.custom-dialog {
+    .modal-dialog{
+        width: 50%;
+    }
+}
+
+.login-page {
+    background: linear-gradient(
+        rgba(129, 80, 80, 0.4),
+        rgba(255, 255, 255, 0.4)
+      ),url("../assets/img/softype-inc.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }

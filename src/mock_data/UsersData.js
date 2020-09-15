@@ -27,7 +27,6 @@ const usersData = [
 ]
 
 export default usersData
-
 export const users = {
   username: "admin",
   password: "admin",

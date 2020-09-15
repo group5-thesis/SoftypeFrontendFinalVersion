@@ -46,7 +46,8 @@ const AppSidebar = () => {
   return (
     <CSidebar
       show={show}
-      onShowChange={(val) => dispatch(actionCreator(ActionTypes.SET, { sidebarShow: val }))}
+      className="bg-dark"
+      onShowChange={(val) => dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }))}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
         <CIcon

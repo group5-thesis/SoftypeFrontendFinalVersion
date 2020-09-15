@@ -26,6 +26,16 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
         copy[key] = value;
         setData(copy)
     }
+    const CATEGORY = [
+        "Sick Leave (SL)",
+        "Vacation Leave (VL)",
+        "Service Incentive Leave (SIL)",
+        "Maternity Leave (ML)",
+        "Paternity Leave",
+        "Parental Leave",
+        "Rehabilitation Leave",
+        "Study Leave"
+    ]
 
     const invalidDate = useMemo(() => {
         return (noOfDays <= 0);
@@ -36,7 +46,7 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
     }
 
     const checkErrors = () => {
-        for (const [key, value] of Object.entries(data)) {
+        for (const [_, value] of Object.entries(data)) {
             if (value === '') {
                 setHasErrors(true);
                 return;
@@ -54,11 +64,9 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
     const actions = () => (
         <>
             <CButton color="primary" disabled={hasErrors || invalidDate} onClick={() => {
-                let dataCopy = Object.assign({}, data);
-                dataCopy.noOfDays = noOfDays;
-                setData(dataCopy)
                 onSubmit(data)
                 modalRef.current.toggle()
+                modalOnClose()
             }}>Submit</CButton>
         </>
     )
@@ -66,7 +74,8 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
         <Modal ref={modalRef} {...{
             title: "Request Leave",
             footer: actions(),
-            modalOnClose
+            modalOnClose,
+            size: "lg"
 
         }}>
             <CFormGroup >
@@ -121,14 +130,15 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
                 <CSelect
                     custom name="category"
                     invalid={!data.category}
-                    valid={data.category.length < 0}
+                    valid={data.category !== ''}
                     value={data.category}
                     onChange={handleOnChange}
                     id="category">
                     <option value="" hidden>Please select</option>
-                    <option value="1">Option #1</option>
-                    <option value="2">Option #2</option>
-                    <option value="3">Option #3</option>
+                    {CATEGORY.map((category, idx) => {
+                        return <option key={idx} value={category}>{category}</option>
+
+                    })}
                 </CSelect>
             </CFormGroup>
             <CFormGroup>
@@ -138,7 +148,7 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
                     name="reason"
                     value={data.reason}
                     invalid={!data.reason}
-                    valid={data.reason.length < 0}
+                    valid={data.reason !== ''}
                     rows="5"
                 />
                 <CInvalidFeedback className="help-block">
