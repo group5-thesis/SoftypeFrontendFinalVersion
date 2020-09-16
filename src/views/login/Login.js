@@ -20,13 +20,12 @@ import { useDispatch } from "react-redux";
 import { shallowCopy, respondToRequest, toggleDialog } from "utils/helpers";
 import { APP_MESSAGES } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from "utils/actions";
-import UsersData, { users } from "mock_data/UsersData";
 import { ConfirmDialog } from "reusable";
 import api from "utils/api";
 const Login = (props) => {
   let { history } = props;
   const [credentials, setCredentials] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const [changed, setChanged] = useState(false);
@@ -40,42 +39,27 @@ const Login = (props) => {
     setCredentials(copy);
   };
 
-  // const validateCredentials = async _ => {
-  //   let user = post("/login" , credentials)
-  //   let result = null;
-  //   if (users.username === credentials.username && users.password === credentials.password) {
-  //     result = UsersData.filter(user => {
-  //       return user.id === users.id
-  //     })[0]
-  //   }
-  //   return await result;
-  // }
+  const validateCredentials = async _ => {
+    let user = await api.post("/login", credentials);
+    return await user;
+  }
 
-  const loginAttempt = async (_) => {
-    if (credentials.password === "" || credentials.username === "") {
-      // alert(APP_MESSAGES.INPUT_REQUIRED)
+  const loginAttempt = async () => {
+    if (credentials.password === "" || credentials.email === "") {
       setError(APP_MESSAGES.INPUT_REQUIRED);
       toggleDialog(dispatch);
       return;
     }
     setIsLoading(true);
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING));
-    let user = await api.post("/login", credentials);
+    let user = await validateCredentials()
+    if(!user.error){
+      setError(user.message)
+    }
+    localStorage.setItem("token",user.access_token)
+    dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user.data))
+    dispatch(actionCreator(ActionTypes.LOGIN))
     setIsLoading(false);
-    // let result = await validateCredentials();
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   if (result) {
-    //     dispatch(actionCreator(ActionTypes.LOGIN))
-    //     localStorage.setItem("token", true)
-    //     window.user = JSON.stringify(result)
-    //     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, result))
-    //   } else {
-    //     setError(APP_MESSAGES.INVALID_CREDENTIALS)
-    //     toggleDialog(dispatch)
-    //   }
-    // }, 3000)
-    console.log(user);
   };
 
   useEffect(() => {
@@ -115,10 +99,10 @@ const Login = (props) => {
                       </CInputGroupPrepend>
                       <CInput
                         type="text"
-                        value={credentials.username || ""}
-                        placeholder="Username/Email"
-                        name="username"
-                        invalid={credentials.username === "" && changed}
+                        value={credentials.email || ""}
+                        placeholder="email/Email"
+                        name="email"
+                        invalid={credentials.email === "" && changed}
                         onChange={handleChange}
                       />
                       <CInvalidFeedback className="help-block">
@@ -150,7 +134,7 @@ const Login = (props) => {
                           disabled={
                             isLoading ||
                             credentials.password === "" ||
-                            credentials.username === ""
+                            credentials.email === ""
                           }
                           color="primary"
                           className="px-4"

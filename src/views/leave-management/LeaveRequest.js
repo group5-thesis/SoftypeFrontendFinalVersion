@@ -15,15 +15,11 @@ const LeaveRequest = ({ match }) => {
   })
 
   let request = shallowCopy(_request);
-  let event = {};
-
   if (!Object.keys(request).length) {
     return <NoData />
   }
-  
-
   request = insertProperty(request, 'no_of_days', checkDateRange(request['date from'], request['date to']), 4);
-  event = {
+  let event = {
     start: request['date from'],
     end: request['date to'],
     title: request.category
