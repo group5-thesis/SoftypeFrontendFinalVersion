@@ -17,6 +17,7 @@ import res from 'assets/img'
 import navigation from './navigation'
 // import { navigations } from './navigation'
 import { actionCreator, ActionTypes } from 'utils/actions';
+import { shallowCopy } from 'utils/helpers';
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
@@ -24,29 +25,28 @@ const AppSidebar = () => {
   const logout = () => {
     dispatch(actionCreator(ActionTypes.LOGOUT))
   }
-  navigation.push(
-    {
-      _tag: 'CSidebarNavDivider',
-      className: 'm-2'
-    },
-    {
-      _tag: 'CSidebarNavItem',
-      name: 'Logout',
-      to: '',
-      icon: 'cil-account-logout',
-      label: true,
-      onClick: logout
-    },
-    {
-      _tag: 'CSidebarNavDivider',
-      className: 'm-2'
-    }
-  )
-
+  let sideMenu = navigation.concat([{
+    _tag: 'CSidebarNavDivider',
+    className: 'm-2'
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Logout',
+    to: '',
+    icon: 'cil-account-logout',
+    label: true,
+    onClick: logout
+  },
+  {
+    _tag: 'CSidebarNavDivider',
+    className: 'm-2'
+  }])
+  console.log(sideMenu)
   return (
     <CSidebar
       show={show}
-      onShowChange={(val) => dispatch(actionCreator(ActionTypes.SET, { sidebarShow: val }))}
+      className="bg-dark"
+      onShowChange={(val) => dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }))}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
         <CIcon
@@ -64,7 +64,7 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <CCreateElement
-          items={navigation}
+          items={sideMenu}
           components={{
             CSidebarNavDivider,
             CSidebarNavDropdown,

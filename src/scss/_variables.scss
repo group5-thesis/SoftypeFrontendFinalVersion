@@ -1,10 +1,10 @@
-// Variable overrides
+// // Variable overrides
 $input-shadow: none;
 $black:        #0a0a0a !default;
 $black-bis:    #121212 !default;
 $black-ter:    #242424 !default;
 
-$grey-darker:  #363636 !default;
+$grey-darker:  #212121 !default;
 $grey-dark:    #4a4a4a !default;
 $grey:         #7a7a7a !default;
 $grey-light:   #b5b5b5 !default;
@@ -14,10 +14,23 @@ $white-ter:    #f5f5f5 !default;
 $white-bis:    #fafafa !default;
 $white:        #ffffff !default;
 
+
 $orange:       #E3730F !default;
 $yellow:       #ffdd57 !default;
 $green:        #23d160 !default;
 $turquoise:    #00d1b2 !default;
 $blue:         #3273dc !default;
 $purple:       #b86bff !default;
-$red:          #ff3860 !default;
+$red:          #e72e2e !default;
+
+
+$theme-colors: (
+  "primary": $orange,
+  "danger": $red,
+  "info": $blue,
+  "dark": $grey-darker,
+  "softype": $orange
+);
+.form-control:focus  , select:focus {
+  box-shadow: none !important;
+}

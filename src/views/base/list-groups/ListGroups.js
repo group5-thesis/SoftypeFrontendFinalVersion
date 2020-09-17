@@ -12,6 +12,7 @@ import {
   CTabPane
 } from '@coreui/react'
 import { DocsLink } from 'reusable'
+import CIcon from '@coreui/icons-react';
 
 
 const ListGroups = () => {
@@ -20,26 +21,25 @@ const ListGroups = () => {
   return (
     <>
       <CRow>
-        <CCol sm="12" xl="6">
-
+        <CCol sm="12" xl="12">
           <CCard>
             <CCardHeader>
-              List group
-              <DocsLink name="CListGroup"/>
+              Company Files
+              <DocsLink name="CListGroup" />
             </CCardHeader>
             <CCardBody>
               <CListGroup>
-                <CListGroupItem>Cras justo odio</CListGroupItem>
-                <CListGroupItem>Dapibus ac facilisis in</CListGroupItem>
-                <CListGroupItem>Morbi leo risus</CListGroupItem>
-                <CListGroupItem>Porta ac consectetur ac</CListGroupItem>
-                <CListGroupItem>Vestibulum at eros</CListGroupItem>
+                <CListGroupItem><CIcon name="cil-folder"></CIcon>   Company File.docx</CListGroupItem>
+                <CListGroupItem><CIcon name="cil-folder"></CIcon>   Company File2.docx</CListGroupItem>
+                <CListGroupItem><CIcon name="cil-folder"></CIcon>   Company File3.docx</CListGroupItem>
+                <CListGroupItem><CIcon name="cil-folder"></CIcon>   Company File4.txt</CListGroupItem>
+                <CListGroupItem><CIcon name="cil-folder"></CIcon>   Company Filte5.mp4</CListGroupItem>
               </CListGroup>
             </CCardBody>
           </CCard>
 
         </CCol>
-        <CCol sm="12" xl="6">
+        {/* <CCol sm="12" xl="6">
           <CCard>
             <CCardHeader>
               List group links
@@ -265,6 +265,7 @@ const ListGroups = () => {
             </CCardBody>
           </CCard>
         </CCol>
+     */}
       </CRow>
     </>
   )

@@ -39,7 +39,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Leave Requests',
-        to: '/leave/request',
+        to: '/leave/requests',
         icon: 'cil-car-alt',
     },
     {
@@ -58,6 +58,12 @@ export default [
         name: 'Company Repository',
         to: '/dashboard',
         icon: 'cil-folder',
+    },
+    {
+        _tag: 'CSidebarNavItem',
+        name: 'Tasks',
+        to: '/tasks',
+        icon: 'cil-task',
     },
 ]
 

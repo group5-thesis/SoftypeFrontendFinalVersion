@@ -63,7 +63,7 @@ const Users = () => {
       
       <Usermodal></Usermodal>
       <CRow>
-        <CCol xl={6}>
+        <CCol xl={12}>
           <CCard>
             <CCardHeader>
               Users
@@ -72,9 +72,9 @@ const Users = () => {
               <CDataTable
                 items={usersData}
                 fields={[
-                  { key: 'name', _classes: 'font-weight-bold' },
-                  'registered', 'role', 'status'
-                ]}
+                  { key: 'firstname', _classes: 'font-weight-bold' },
+                  'lastname', 'middlename', 'gender', 'mobilenumber', 'birthdate', 'email', 'street', 'city', 'country'
+                 ]}
                 hover
                 striped
                 itemsPerPage={5}

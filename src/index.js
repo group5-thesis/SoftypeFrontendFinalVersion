@@ -5,18 +5,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import { icons } from 'assets/icons'
-// import { Provider } from 'react-redux'
 import configureStore from 'utils/store/configureStore';
 import Root from 'app/Root';
 let store = configureStore();
 React.icons = icons
 
-// ReactDOM.render(
-//   <Provider store={store}>
-//     <App/>
-//   </Provider>, 
-//   document.getElementById('root')
-// );
 ReactDOM.render(
   <Root store={store} />
   , document.getElementById('root')
