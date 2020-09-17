@@ -2,7 +2,8 @@ import { ActionTypes } from "utils/actions";
 
 const initial_state = {
   sidebarShow: 'responsive',
-  confirmDialog: false
+  confirmDialog: false,
+  sideMenu:[]
 }
 
 export default function changeState(state = initial_state, action) {

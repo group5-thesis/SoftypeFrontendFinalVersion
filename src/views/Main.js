@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Loader } from "reusable";
-// import router from 'router'
 import AppRoutes from './Routes';
-import { BrowserRouter as Router } from 'react-router-dom';
+import NetworkDetectorHOC from "containers/NetworkDetectorHOC";
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     props.checkLogin();
@@ -22,3 +21,4 @@ const _renderRootNavigation = () => {
 };
 
 const _renderLoader = () => <Loader />;
+export default NetworkDetectorHOC(App);

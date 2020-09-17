@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   CButton,
   CCard,
@@ -17,11 +17,12 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useDispatch } from "react-redux";
-import { shallowCopy, respondToRequest, toggleDialog } from "utils/helpers";
+import { shallowCopy, toggleDialog } from "utils/helpers";
 import { APP_MESSAGES } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from "utils/actions";
 import { ConfirmDialog } from "reusable";
 import api from "utils/api";
+
 const Login = (props) => {
   let { history } = props;
   const [credentials, setCredentials] = useState({
@@ -39,11 +40,6 @@ const Login = (props) => {
     setCredentials(copy);
   };
 
-  const validateCredentials = async _ => {
-    let user = await api.post("/login", credentials);
-    return await user;
-  }
-
   const loginAttempt = async () => {
     if (credentials.password === "" || credentials.email === "") {
       setError(APP_MESSAGES.INPUT_REQUIRED);
@@ -52,28 +48,19 @@ const Login = (props) => {
     }
     setIsLoading(true);
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING));
-    let user = await validateCredentials()
-    if(!user.error){
-      setError(user.message)
+    let res = await api.post("/login", credentials);
+    if (!res.error) {
+      setError(res.message)
+      let { access_token, account_information } = res.data
+      localStorage.setItem("token", access_token)
+      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, account_information))
+      dispatch(actionCreator(ActionTypes.LOGIN))
+    } else {
+      setError(res.message)
+      toggleDialog(dispatch);
     }
-    localStorage.setItem("token",user.access_token)
-    dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user.data))
-    dispatch(actionCreator(ActionTypes.LOGIN))
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    const listener = (event) => {
-      if (event.code === "Enter" || event.code === "NumpadEnter") {
-        loginAttempt();
-      }
-    };
-    document.addEventListener("keydown", listener);
-    return () => {
-      document.removeEventListener("keydown", listener);
-    };
-  }, []);
-
   return (
     <div className="c-app c-default-layout flex-row align-items-center login-page">
       <ConfirmDialog
@@ -102,6 +89,7 @@ const Login = (props) => {
                         value={credentials.email || ""}
                         placeholder="email/Email"
                         name="email"
+                        autoComplete="email"
                         invalid={credentials.email === "" && changed}
                         onChange={handleChange}
                       />
@@ -120,6 +108,7 @@ const Login = (props) => {
                         value={credentials.password || ""}
                         placeholder="Password"
                         name="password"
+                        autoComplete="current-password"
                         onChange={handleChange}
                         invalid={credentials.password === "" && changed}
                       />
@@ -128,8 +117,20 @@ const Login = (props) => {
                       </CInvalidFeedback>
                     </CInputGroup>
                     <CRow>
+                      <CCol xs="6" className="text-left">
+                        <CButton
+                          color="link"
+                          onClick={() => {
+                            history.push("/account-recovery");
+                          }}
+                          className="px-0"
+                        >
+                          Forgot password?
+                        </CButton>
+                      </CCol>
                       <CCol xs="6">
                         <CButton
+                          block
                           onClick={loginAttempt}
                           disabled={
                             isLoading ||
@@ -142,19 +143,8 @@ const Login = (props) => {
                           {isLoading ? (
                             <CSpinner color="secondary" size="sm" />
                           ) : (
-                            "Login"
-                          )}
-                        </CButton>
-                      </CCol>
-                      <CCol xs="6" className="text-right">
-                        <CButton
-                          color="link"
-                          onClick={() => {
-                            history.push("/account-recovery");
-                          }}
-                          className="px-0"
-                        >
-                          Forgot password?
+                              "Login"
+                            )}
                         </CButton>
                       </CCol>
                     </CRow>

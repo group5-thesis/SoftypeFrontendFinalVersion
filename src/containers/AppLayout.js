@@ -2,13 +2,10 @@ import React from 'react'
 import {
   AppContent,
   AppSidebar,
-  AppFooter,
   AppHeader
-} from 'containers'
-import { ConfirmDialog } from 'reusable';
+} from '.'
 
 const AppLayout = () => {
-
   return (
     <div className="c-app c-default-layout">
       <AppSidebar />
@@ -17,7 +14,6 @@ const AppLayout = () => {
         <div className="c-body">
           <AppContent />
         </div>
-        {/* <AppFooter/> */}
       </div>
     </div>
   )

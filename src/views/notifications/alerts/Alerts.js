@@ -21,7 +21,7 @@ const Alerts = () => {
         <CCol xs="12" md="6">
           <CCard>
             <CCardHeader>
-              Alerts
+              Alerts  
               <DocsLink name="CAlert"/>
             </CCardHeader>
             <CCardBody>

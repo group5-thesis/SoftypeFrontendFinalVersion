@@ -34,10 +34,10 @@ const Register = (props) => {
                   <CRow>
                     <CCol xs="6">
                     </CCol>
-                    <CCol xs="6" className="text-right">
+                    <CCol xs="6" className="text-right px-0">
                       <CButton className="float-right" color="link" onClick={() => {
                         history.push("/login")
-                      }} className="px-0">Back to Login</CButton>
+                      }}>Back to Login</CButton>
                     </CCol>
                   </CRow>
                 </CForm>
