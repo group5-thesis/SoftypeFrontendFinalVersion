@@ -1,7 +1,7 @@
 import Main from "./Main";
 import { ActionTypes, actionCreator } from "utils/actions";
 import { connect } from "react-redux";
-
+import mockData from 'views/employee/EmployeesData'
 const mapStateToProps = state => ({
   appState: state.appState
 });
@@ -14,6 +14,7 @@ const mapDispatchToProps = (dispatch, _) => ({
       // let user = JSON.parse(window.user);
       dispatch(actionCreator(ActionTypes.LOGIN));
       // dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user))
+      dispatch(actionCreator(ActionTypes.FETCH_EMPLOYEES,mockData))
       dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED));

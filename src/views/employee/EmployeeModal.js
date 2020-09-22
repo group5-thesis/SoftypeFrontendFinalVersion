@@ -1,32 +1,32 @@
 import React, { useState } from 'react'
-import {useDispatch} from "react-redux"
-import { CButton, CModal, CRow, CCol, CModalBody, CModalHeader, CModalFooter, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
-import {Modal} from 'reusable'
-import {actionCreator , ActionTypes} from 'utils/actions'
-const Usermodal = () => {
+import { useDispatch } from "react-redux"
+import { CButton, CModal,CSelect, CRow, CCol, CDropdown, CDropdownItem, CDropdownToggle, CDropdownMenu, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
+import { Modal } from 'reusable'
+import { actionCreator, ActionTypes } from 'utils/actions'
+const EmployeeModal = () => {
     let dispatch = useDispatch();
     const [employee, createEmployee] = useState({
         // name: "",
         // status: "",
-        // role: ""
+        role: "",
         firstname: "",
         lastname: "",
         middlename: "",
         gender: "",
-        mobilenumber:"",
-        birthdate:"",
-        email:"",
+        mobilenumber: "",
+        birthdate: "",
+        email: "",
         street: "",
         city: "",
         country: ""
 
-    })
+    },
+    
+    
+    )
 
     const addEmployee = () => {
-        console.log(employee);
-        
         dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
-
     }
     const handleOnChange = (event) => {
         let Employee = Object.assign({}, employee)
@@ -34,7 +34,8 @@ const Usermodal = () => {
         createEmployee(Employee)
 
     }
-    
+
+
     return (
         <Modal {...{
             title: "Add Employee",
@@ -49,7 +50,7 @@ const Usermodal = () => {
             <CContainer fluid>
                 <CRow>
                     <CCol sm="12">
-                        <CForm action="" method="post">
+                        <CForm action="" method="post" >
                             <CFormGroup>
                                 <CLabel>Firstname</CLabel>
                                 <CInput
@@ -84,17 +85,23 @@ const Usermodal = () => {
                                 />
                                 <CFormText className="help-block">Please enter your Middlename</CFormText>
                             </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Gender</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="gender"
-                                    value={employee.gender || ""}
-                                    placeholder="Enter Gender.."
 
-                                />
-                                <CFormText className="help-block">Please enter your Gender</CFormText>
-                            </CFormGroup>
+                            <CFormGroup>
+                    <CLabel>Role</CLabel>
+                    <CSelect onChange={handleOnChange} name="role">
+                    {/* <option value="N/A"></option>/ */}
+                      <option value="1">Mdsadsadase</option>
+                      <option value="2">Femadsadsadasdsle</option>
+                    </CSelect>
+                  </CFormGroup>
+                            <CFormGroup>
+                    <CLabel>Gender</CLabel>
+                    <CSelect onChange={handleOnChange} name="gender">
+                    {/* <option value="N/A"></option> */}
+                      <option value='male'>Male</option>
+                      <option  value='female'>Female</option>
+                    </CSelect>
+                  </CFormGroup>
                             <CFormGroup>
                                 <CLabel>Mobile Number</CLabel>
                                 <CInput
@@ -109,11 +116,12 @@ const Usermodal = () => {
                             <CFormGroup>
                                 <CLabel>Birthdate</CLabel>
                                 <CInput
+                                    type='date'
                                     onChange={handleOnChange}
                                     name="birthdate"
                                     value={employee.birthdate || ""}
                                     placeholder="Enter Birthdate.."
-                                    
+
 
                                 />
                                 <CFormText className="help-block">Please enter your Birthdate</CFormText>
@@ -170,4 +178,4 @@ const Usermodal = () => {
     )
 }
 
-export default Usermodal;
+export default EmployeeModal;

@@ -29,14 +29,14 @@ const Modal = forwardRef((props, ref) => {
                 </CModalBody>
                 <CModalFooter>
                     {footer}
-                    <CButton onClick={() => {
+                    {/* <CButton onClick={() => {
                         toggle();
                         if  (modalOnClose){
                             modalOnClose();
                         }
                     }} className="mr-1" color="warning">
                         Add
-                    </CButton>
+                    </CButton> */}
                     <CButton onClick={() => {
                         toggle();
                         if  (modalOnClose){

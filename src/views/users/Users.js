@@ -11,8 +11,6 @@ import {
   CRow,
   CPagination
 } from '@coreui/react'
-import usermodal from './UserModal.js'
-
 import usersData from './UsersData'
 import Usermodal from './UserModal';
 
@@ -26,23 +24,10 @@ const getBadge = status => {
   }
 }
 
-// const addRow = ()=>{
-//   var items = items //functional component this nga keyword is not applicable
-//   // console.log(items)
-//   items.push('new row');
-//   this.setState({items : items}) //wala kay state :) 
-// }
 
 
 const Users = () => {
   const [modal, setModal] = useState(false);
-
-  const toggle = () => {
-    setModal(!modal);
-    if(setModal(!modal)===true){
-      return <Usermodal></Usermodal>
-    }
-  }
 
   const history = useHistory();
   const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
@@ -61,12 +46,12 @@ const Users = () => {
   return (
     <>
       
-      <Usermodal></Usermodal>
       <CRow>
         <CCol xl={12}>
           <CCard>
             <CCardHeader>
               Users
+              <Usermodal/>
             </CCardHeader>
             <CCardBody>
               <CDataTable
