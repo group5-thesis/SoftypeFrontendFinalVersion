@@ -25,15 +25,14 @@ const callAPI = async (method, url, data = null) => {
   if (data) {
     config.data = data;
   }
-
   try {
     let response = await axios(config);
     return response.data;
   } catch (error) {
     let errors = {
       error: true,
-      data:null,
-      message:null
+      data: null,
+      message: null
     }
     if (error.response) {
       /*
@@ -46,6 +45,7 @@ const callAPI = async (method, url, data = null) => {
       /*
        * The request was made but no response was received
        */
+      // alert('TEst ')
       errors.message = "Something went wrong"
     } else {
       errors.message = error.message
@@ -55,7 +55,7 @@ const callAPI = async (method, url, data = null) => {
 };
 
 export default {
-  post: async (url, data = null) => callAPI("post", url, data),
+  post: async (url, data = null) => callAPI("POST", url, data),
 
   put: async (url, data = null) => callAPI("put", url, data),
 

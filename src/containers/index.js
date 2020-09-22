@@ -7,6 +7,7 @@ import AppHeaderDropdownNotif from './AppHeaderDropdownNotif'
 import AppHeaderDropdownTasks from './AppHeaderDropdownTasks'
 import AppLayout from './AppLayout'
 import AppSidebar from './AppSidebar'
+import CenteredLayout from './CenteredLayout'
 
 export {
   AppContent,
@@ -17,5 +18,6 @@ export {
   AppHeaderDropdownNotif,
   AppHeaderDropdownTasks,
   AppLayout,
-  AppSidebar
+  AppSidebar,
+  CenteredLayout
 }

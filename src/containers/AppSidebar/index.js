@@ -15,7 +15,7 @@ import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
 import navigation from './SideMenu'
 // import { navigations } from './navigation'
-import { actionCreator, ActionTypes } from 'utils/actions';
+import { actionCreator, ActionTypes } from 'utils/actions'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()

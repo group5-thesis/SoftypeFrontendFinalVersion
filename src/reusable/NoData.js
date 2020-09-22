@@ -1,6 +1,6 @@
 import React from 'react'
-import { CWidgetSimple } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
+import { CWidgetSimple } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
 
 const NoData = () => {
     return (
@@ -13,4 +13,4 @@ const NoData = () => {
     )
 }
 
-export default NoData;
+export default NoData

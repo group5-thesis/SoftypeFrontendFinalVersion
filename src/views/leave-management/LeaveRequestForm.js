@@ -76,7 +76,6 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
             footer: actions(),
             modalOnClose,
             size: "lg"
-
         }}>
             <CFormGroup >
                 <CLabel>Name : </CLabel>

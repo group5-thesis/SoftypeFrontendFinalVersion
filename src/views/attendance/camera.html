@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+
+<body>
+    <h1>Web camera</h1>
+    <video autoplay></video>
+
+    <script>
+        function errorMessage(message, e) {
+            console.error(message, typeof e == 'undefined' ? '' : e);
+        }
+
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({ audio: true, video: true }, function (stream) {
+                document.querySelector('video').src = window.URL.createObjectURL(stream);
+                var mediaStreamTrack = stream.getVideoTracks()[0];
+                if (typeof mediaStreamTrack != "undefined") {
+                    mediaStreamTrack.onended = function () {//for Chrome.
+                        errorMessage('Your webcam is busy!')
+                    }
+                } else errorMessage('Permission denied!');
+            }, function (e) {
+                var message;
+                switch (e.name) {
+                    case 'NotFoundError':
+                    case 'DevicesNotFoundError':
+                        message = 'Please setup your webcam first.';
+                        break;
+                    case 'SourceUnavailableError':
+                        message = 'Your webcam is busy';
+                        break;
+                    case 'PermissionDeniedError':
+                    case 'SecurityError':
+                        message = 'Permission denied!';
+                        break;
+                    default: errorMessage('Reeeejected!', e);
+                        return;
+                }
+                errorMessage(message);
+            });
+        } else errorMessage('Uncompatible browser!');
+    </script>
+</body>
+
+</html>

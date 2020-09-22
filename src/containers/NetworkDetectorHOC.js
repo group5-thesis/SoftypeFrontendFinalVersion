@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { CAlert } from '@coreui/react';
+import React, { Component } from 'react'
+import { CAlert } from '@coreui/react'
 
 export default function (ComposedComponent) {
     class NetworkDetector extends Component {
@@ -8,19 +8,19 @@ export default function (ComposedComponent) {
         }
 
         componentDidMount() {
-            this.handleConnectionChange();
-            window.addEventListener('online', this.handleConnectionChange);
-            window.addEventListener('offline', this.handleConnectionChange);
+            this.handleConnectionChange()
+            window.addEventListener('online', this.handleConnectionChange)
+            window.addEventListener('offline', this.handleConnectionChange)
         }
 
         componentWillUnmount() {
-            window.removeEventListener('online', this.handleConnectionChange);
-            window.removeEventListener('offline', this.handleConnectionChange);
+            window.removeEventListener('online', this.handleConnectionChange)
+            window.removeEventListener('offline', this.handleConnectionChange)
         }
 
 
         handleConnectionChange = () => {
-            const condition = navigator.onLine ? 'online' : 'offline';
+            const condition = navigator.onLine ? 'online' : 'offline'
             if (condition === 'online') {
                 const webPing = setInterval(
                     () => {
@@ -30,20 +30,20 @@ export default function (ComposedComponent) {
                             .then(() => {
                                 this.setState({ isDisconnected: false }, () => {
                                     return clearInterval(webPing)
-                                });
+                                })
                             }).catch(() => this.setState({ isDisconnected: true }))
-                    }, 2000);
-                return;
+                    }, 2000)
+                return
             }
 
-            this.setState({ isDisconnected: true });
+            this.setState({ isDisconnected: true })
             setTimeout(() => {
                 this.handleConnectionChange()
-            }, 200);
+            }, 200)
         }
 
         render() {
-            const { isDisconnected } = this.state;
+            const { isDisconnected } = this.state
             return (
                 <div>
                     {isDisconnected && (
@@ -52,9 +52,9 @@ export default function (ComposedComponent) {
                     }
                     <ComposedComponent {...this.props} />
                 </div>
-            );
+            )
         }
     }
 
-    return NetworkDetector;
+    return NetworkDetector
 }

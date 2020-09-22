@@ -27,6 +27,7 @@ import {
   cibPaypal,
   cibGooglePay,
   cibCcAmex,
+  cibGmail
 } from '@coreui/icons'
 import {
   cifUs,
@@ -50,6 +51,7 @@ import {
   cilBold,
   cilBookmark,
   cilCalculator,
+  cilCamera,
   cilCalendar,
   cilCloudDownload,
   cilChartPie,
@@ -157,6 +159,7 @@ export const icons = Object.assign({}, {
     cilBookmark,
     cilCalculator,
     cilCalendar,
+    cilCamera,
     cilCloudDownload,
     cilChartPie,
     cilCheck,
@@ -274,5 +277,6 @@ export const icons = Object.assign({}, {
     cibPaypal,
     cibGooglePay,
     cibCcAmex,
-    cibIndeed
+    cibIndeed,
+    cibGmail
   })

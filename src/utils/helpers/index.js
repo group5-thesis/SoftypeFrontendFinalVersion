@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { ActionTypes, actionCreator } from '../actions';
+import { Promise } from 'q';
 export const RULES = {
     required: value => !!value || "Required.",
     usernameRules: v => (v && v.length <= 10) || "Name must be less than 10 characters",
@@ -118,4 +119,58 @@ export const toggleDialog = (dispatch) => {
 }
 export const respondToRequest = (dispatch, payload) => {
     dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, payload));
+}
+
+export const checkCamera = () => {
+    return new Promise((resolve, reject) => {
+        const defaultError = "Please Allow the app to use the camera";
+        let result = {
+            camera: false,
+            cameraError: defaultError
+        }
+        let hasCamera = false;
+
+        navigator.mediaDevices.enumerateDevices()
+            .then((devices) => {
+                devices.forEach((device) => {
+                    if (device.kind === "videoinput") {
+                        hasCamera = true;
+                    }
+                });
+                if (hasCamera) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then((stream) => {
+                            result.camera = true;
+                            resolve(result)
+                        })
+                        .catch((err) => {
+                            result.cameraError = err.name + ": " + err.message;
+                            console.log(err)
+                            if (err.name == "NotAllowedError") {
+                                result.cameraError = defaultError;
+                            }
+                            reject(result)
+
+                        });
+                } else {
+                    result.cameraError = "Camera not supported";
+                    reject(result)
+                }
+            })
+            .catch(function (err) {
+                result.camera = false;
+                result.cameraError = err.name + ": " + err.message;
+                reject(result)
+            });
+    })
+}
+export const getAge = (dateString) => {
+    let today = new Date();
+    let birthDate = new Date(dateString);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
 }

@@ -6,7 +6,7 @@ import {
   CHeaderNav,
   CSubheader,
   CBreadcrumbRouter} from '@coreui/react'
-import { ActionTypes, actionCreator } from "utils/actions";
+import { ActionTypes, actionCreator } from "utils/actions"
 // routes config
 import routes from 'router'
 
@@ -18,12 +18,12 @@ const AppHeader = () => {
 
   const toggleSidebar = () => {
     const val = [true, 'responsive'].includes(sidebarShow) ? false : 'responsive'
-    dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }));
+    dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }))
   }
 
   const toggleSidebarMobile = () => {
     const val = [false, 'responsive'].includes(sidebarShow) ? true : 'responsive'
-    dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }));
+    dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }))
   }
 
   return (
