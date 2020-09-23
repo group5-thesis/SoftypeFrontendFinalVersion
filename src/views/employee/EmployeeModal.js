@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import { useDispatch } from "react-redux"
-import { CButton, CModal,CSelect, CRow, CCol, CDropdown, CDropdownItem, CDropdownToggle, CDropdownMenu, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
+import { CButton, CModal, CSelect, CRow, CCol, CDropdown, CDropdownItem, CDropdownToggle, CDropdownMenu, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
+import api from "utils/api"
 const EmployeeModal = () => {
     let dispatch = useDispatch();
     const [employee, createEmployee] = useState({
-        // name: "",
-        // status: "",
-        role: "",
+        roleId: "",
+        department: "",
         firstname: "",
         lastname: "",
         middlename: "",
         gender: "",
-        mobilenumber: "",
+        mobileno: "",
         birthdate: "",
         email: "",
         street: "",
@@ -21,12 +21,17 @@ const EmployeeModal = () => {
         country: ""
 
     },
-    
-    
     )
 
-    const addEmployee = () => {
-        dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
+    const addEmployee = async () => {
+        let res = await api.post("/create_employee", employee)
+        console.log(res)
+        if (!res.error) {
+            dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
+        } else {
+            alert(res.message);
+        }
+
     }
     const handleOnChange = (event) => {
         let Employee = Object.assign({}, employee)
@@ -35,13 +40,42 @@ const EmployeeModal = () => {
 
     }
 
+    // POST  /create_employee {
+    //     'firstname' => 'required',
+    //     'middlename' => 'required',
+    //     'lastname' => 'required',
+    //     'mobileno' => 'required',
+    //     'birthdate' => 'required',
+    //     'email' => 'required',
+    //     'gender' => 'required',
+    //     'street' => 'required',
+    //     'city' => 'required',
+    //     'country' => 'required',
+    //     'roleId' => 'required',
+    //     }
+    //     $table->string('firstname');
+    //     $table->string('middlename');
+    //     $table->string('lastname');
+    //     $table->string('mobileno');
+    //     $table->date('birthdate');
+    //     $table->string('email')->unique();
+    //     $table->string('gender');
+    //     $table->string('profileImage');
+    //     $table->string('street');
+    //     $table->string('city');
+    //     $table->string('country');
+    //     $table->integer('roleId');
+    //     @renzy
 
     return (
         <Modal {...{
             title: "Add Employee",
             color: "warning",
             footer:
-                <CButton onClick={addEmployee} className="mr-1" color="warning">
+                <CButton
+                    onClick={addEmployee}
+                    className="mr-1"
+                    color="warning">
                     Add
                 </CButton>
 
@@ -87,27 +121,36 @@ const EmployeeModal = () => {
                             </CFormGroup>
 
                             <CFormGroup>
-                    <CLabel>Role</CLabel>
-                    <CSelect onChange={handleOnChange} name="role">
-                    {/* <option value="N/A"></option>/ */}
-                      <option value="1">Mdsadsadase</option>
-                      <option value="2">Femadsadsadasdsle</option>
-                    </CSelect>
-                  </CFormGroup>
+                                <CLabel>Role</CLabel>
+                                <CSelect onChange={handleOnChange} name="roleId">
+                                    {/* <option value="N/A"></option>/ */}
+                                    <option value="1">Mdsadsadase</option>
+                                    <option value="2">Femadsadsadasdsle</option>
+                                </CSelect>
+                            </CFormGroup>
                             <CFormGroup>
-                    <CLabel>Gender</CLabel>
-                    <CSelect onChange={handleOnChange} name="gender">
-                    {/* <option value="N/A"></option> */}
-                      <option value='male'>Male</option>
-                      <option  value='female'>Female</option>
-                    </CSelect>
-                  </CFormGroup>
+                                <CLabel>Gender</CLabel>
+                                <CSelect onChange={handleOnChange} name="gender">
+                                    {/* <option value="N/A"></option> */}
+                                    <option value='male'>Male</option>
+                                    <option value='female'>Female</option>
+                                </CSelect>
+                            </CFormGroup>
+                            <CFormGroup>
+                                <CLabel>Department</CLabel>
+                                <CSelect onChange={handleOnChange} name="department">
+                                    {/* <option value="N/A"></option> */}
+                                    <option value='lodge'>Lodge</option>
+                                    <option value='cr'>CR</option>
+                                </CSelect>
+                            </CFormGroup>
                             <CFormGroup>
                                 <CLabel>Mobile Number</CLabel>
                                 <CInput
                                     onChange={handleOnChange}
-                                    name="mobilenumber"
-                                    value={employee.mobilenumber || ""}
+                                    name="mobileno"
+                                    required
+                                    value={employee.mobileno || ""}
                                     placeholder="Enter Mobile Number.."
 
                                 />

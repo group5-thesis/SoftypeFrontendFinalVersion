@@ -10,7 +10,8 @@ export default function AppReducer(state = initial_state, action) {
   switch (action.type) {
     case ActionTypes.LOGOUT:
       localStorage.removeItem('token');
-      return { ...state, already_logged: false };
+      localStorage.removeItem('uId');
+      return { ...state, ...{ already_logged: false, user: null } };
     case ActionTypes.LOGIN:
       return { ...state, already_logged: true };
     case ActionTypes.AUTH_CHECKED:

@@ -1,19 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { CenteredLayout } from 'containers'
-import { useSelector } from 'react-redux'
 import api from 'utils/api'
 import { CCol, CRow, CSpinner } from '@coreui/react';
 import { toCapitalize, getAge } from 'utils/helpers'
 import res from 'assets/img'
-const ProfilePage = () => {
-    const imgRef = useRef(null)
+const ProfilePage = ({ auth }) => {
     const [loading, setLoading] = useState(true)
     const [src, setSrc] = useState('')
-    const user = useSelector(state => {
-        return state.appState.auth.user
-    })
+    const { already_logged, user } = auth
+    console.log()
     const userDetails = {
-        // Name: `${toCapitalize(user.firstname)} ${user.middlename && toCapitalize(user.middlename) + " "}${toCapitalize(user.lastname)}`,
         Address: `${toCapitalize(user.street)} ${toCapitalize(user.city)} ${toCapitalize(user.country)}`,
         Age: getAge(user.birthdate),
         Email: user.email,
@@ -31,9 +26,12 @@ const ProfilePage = () => {
             setSrc(image64)
         }
     }
-    useEffect(() => {
+    if (already_logged) {
         getQrCode()
-    }, [])
+    }
+    // useEffect(() => {
+    //     getQrCode()
+    // }, [])
     return (
         <>
             <CRow className="justify-content-center">

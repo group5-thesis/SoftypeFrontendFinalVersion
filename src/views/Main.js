@@ -9,6 +9,7 @@ class App extends Component {
     props.checkLogin();
   }
   render() {
+  
     const { auth_checked } = this.props.appState.auth;
     if (!auth_checked) {
       return _renderLoader();

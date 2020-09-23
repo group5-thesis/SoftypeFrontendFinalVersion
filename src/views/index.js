@@ -7,7 +7,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch, _) => ({
-  checkLogin:async () => {
+  checkLogin: async () => {
     let authStateResult = localStorage.getItem("token")
     let userId = localStorage.getItem("uId")
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
@@ -22,6 +22,11 @@ const mapDispatchToProps = (dispatch, _) => ({
         dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, data))
         dispatch(actionCreator(ActionTypes.LOGIN))
         dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST))
+
+      } else {
+        dispatch(actionCreator(ActionTypes.LOGOUT))
+        localStorage.removeItem("token")
+        localStorage.removeItem("uId")
       }
     }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED))

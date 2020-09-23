@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
+import { useSelector } from 'react-redux'
 import {
-  CBadge,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
@@ -9,13 +9,14 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
-import { useHistory } from 'react-router-dom'
 import { Modal } from 'reusable'
 import ProfilePage from 'views/profile/Profile'
 const AppHeaderDropdown = () => {
+  const auth = useSelector(state => {
+    return state.appState.auth
+  })
   const modalRef = useRef(null)
-  let history = useHistory()
-  const goToRoute = (route) => {
+  const showProfile = () => {
     modalRef.current.toggle()
   }
   return (
@@ -24,13 +25,16 @@ const AppHeaderDropdown = () => {
       className="c-header-nav-items mx-2"
       direction="down"
     >
-      <Modal ref={modalRef} {...{
-        title: "Profile",
-        size: "lg",
-        hidden: true
-      }}>
-        <ProfilePage />
-      </Modal>
+      {
+        (auth.user && auth.already_logged) &&
+        <Modal ref={modalRef} {...{
+          title: "Profile",
+          size: "lg",
+          hidden: true
+        }}>
+          <ProfilePage auth={auth} />
+        </Modal>
+      }
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <div className="c-avatar">
           <CImg
@@ -42,7 +46,7 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownItem onClick={() => {
-          goToRoute("/profile")
+          showProfile()
         }}>
           <CIcon name="cil-user" className="mfe-2" />Profile
         </CDropdownItem>
