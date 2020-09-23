@@ -34,7 +34,7 @@ const callAPI = async (method, url, data = null) => {
     let errors = {
       error: true,
       data: null,
-      message: null
+      message: error.message || ''
     }
     if (error.response) {
       /*
@@ -42,7 +42,7 @@ const callAPI = async (method, url, data = null) => {
        */
       let { data, status, headers } = error.response
       errors.data = [data, status, headers]
-      errors.message = "Server Error"
+      // errors.message = error.message// "Server Error"
     } else if (error.request) {
       /*
        * The request was made but no response was received

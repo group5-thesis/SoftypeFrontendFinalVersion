@@ -103,7 +103,7 @@ export const checkDateRange = (start, end) => {
     start = moment(start, 'YYYY-MM-DD');
     end = moment(end, 'YYYY-MM-DD')
 
-    if (start.isSameOrBefore(moment()) || start.isSameOrBefore(moment())) {
+    if (start.isSameOrBefore(moment()) || end.isSameOrBefore(moment())) {
         return 0;
     }
     let gap = moment.duration(end.diff(start)).asDays();

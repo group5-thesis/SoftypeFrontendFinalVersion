@@ -19,6 +19,7 @@ import { checkDateRange, toCapitalize, insertProperty, renameKey, getAdminRespon
 import LeaveFormRequest from './LeaveRequestForm';
 import NoData from 'reusable/NoData';
 import { ConfirmDialog } from 'reusable';
+import api from 'utils/api'
 const Users = () => {
     const dispatch = useDispatch();
     const history = useHistory()
@@ -98,11 +99,6 @@ const Users = () => {
         history.push(`/leave/requests?page=${page}&status=${status}`)
     }
 
-    const addRequest = (request) => {
-        request = insertProperty(request, 'id', requestsData.length + 1, 0)
-        dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(request)))
-    }
-
     const viewRequestInfo = (id) => {
         history.push(`/leave/requests/${id}`)
     }
@@ -123,7 +119,7 @@ const Users = () => {
                             </CCol>
                             <CCol sm="7" className="d-none d-md-block">
                                 <div className="float-right" >
-                                    <LeaveFormRequest {...{ onSubmit: addRequest }} />
+                                    <LeaveFormRequest />
                                 </div>
                                 <div className="float-right mr-3">
                                     <CFormGroup >

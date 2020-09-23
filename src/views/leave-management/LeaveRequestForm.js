@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import {
     CButton,
     CCol,
@@ -8,38 +8,52 @@ import {
     CLabel,
     CSelect,
     CInvalidFeedback,
-} from '@coreui/react';
-import { Modal } from 'reusable';
-import LeaveRequestModel from 'models/LeaveRequestModel';
-import { shallowCopy, checkDateRange } from 'utils/helpers';
+    CSpinner,
+} from '@coreui/react'
+import { Modal } from 'reusable'
+import LeaveRequestModel from 'models/LeaveRequestModel'
+import { shallowCopy, checkDateRange, toCapitalize, insertProperty, renameKey } from 'utils/helpers'
+import { useSelector, useDispatch } from 'react-redux'
+import { LEAVE_TYPES } from 'utils/constants/constant'
+import { actionCreator, ActionTypes } from 'utils/actions';
+import api from 'utils/api'
 
-const LeaveFormRequest = ({ request, onSubmit }) => {
-    LeaveRequestModel.name = 'Yol';
+const LeaveFormRequest = ({ request }) => {
+    const dispatch = useDispatch();
+    const user = useSelector(state => {
+        let authed = state.appState.auth.user;
+        return {
+            firstname: authed.firstname,
+            lastname: authed.lastname,
+            employeeId: authed.employeeId,
+            userId: authed.userId
+        }
+    })
+    LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
+    LeaveRequestModel.employeeID = user.employeeId
     const modalRef = useRef()
     const [data, setData] = useState(request ? request : LeaveRequestModel)
-    const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to));
-    const [hasErrors, setHasErrors] = useState(true);
-    const handleOnChange = (e) => {
-        let key = e.target.name;
-        let value = e.target.value;
-        let copy = shallowCopy(data);
-        copy[key] = value;
-        setData(copy)
+    const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to))
+    const [hasErrors, setHasErrors] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const validateDate = () => {
+        let gap = checkDateRange(data.date_from, data.date_to)
+        setNoOfDays(gap > 0 ? gap : 0)
+        checkErrors()
     }
-    const CATEGORY = [
-        "Sick Leave (SL)",
-        "Vacation Leave (VL)",
-        "Service Incentive Leave (SIL)",
-        "Maternity Leave (ML)",
-        "Paternity Leave",
-        "Parental Leave",
-        "Rehabilitation Leave",
-        "Study Leave"
-    ]
+
+    const handleOnChange = (e) => {
+        let key = e.target.name
+        let value = e.target.value
+        let copy = shallowCopy(data)
+        copy[key] = value
+        setData(copy)
+        validateDate()
+    }
 
     const invalidDate = useMemo(() => {
-        return (noOfDays <= 0);
-    }, [noOfDays]);
+        return (noOfDays <= 0)
+    }, [noOfDays])
 
     const modalOnClose = () => {
         setData(LeaveRequestModel)
@@ -48,26 +62,43 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
     const checkErrors = () => {
         for (const [_, value] of Object.entries(data)) {
             if (value === '') {
-                setHasErrors(true);
-                return;
+                setHasErrors(true)
+                return
             }
         }
-        setHasErrors(false);
+        setHasErrors(false)
+    }
+
+    const handleSubmit = async () => {
+        setIsLoading(true)
+        let res = await api.post("/create_request_leave", data)
+        if (!res.error) {
+            dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
+            modalRef.current.toggle()
+            modalOnClose()
+        } else {
+            alert("error")
+        }
+        setIsLoading(false)
     }
 
     useEffect(() => {
-        let gap = checkDateRange(data.date_from, data.date_to);
-        setNoOfDays(gap > 0 ? gap : 0);
+        validateDate()
         checkErrors()
-    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+    }, [data])
 
     const actions = () => (
         <>
-            <CButton color="primary" disabled={hasErrors || invalidDate} onClick={() => {
+            {/* <CButton color="primary" disabled={hasErrors || invalidDate} onClick={() => {
                 onSubmit(data)
                 modalRef.current.toggle()
                 modalOnClose()
-            }}>Submit</CButton>
+            }}>Submit</CButton> */}
+            <CButton color="primary" disabled={hasErrors || invalidDate || isLoading} onClick={handleSubmit}>
+                {
+                    isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
+                }
+            </CButton>
         </>
     )
     return (
@@ -79,7 +110,7 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
         }}>
             <CFormGroup >
                 <CLabel>Name : </CLabel>
-                <CInput id="company" value="Yol Torres" disabled />
+                <CInput id="company" value={data.name} disabled />
             </CFormGroup>
             <CFormGroup row className="my-0">
                 <CCol xs="6">
@@ -130,13 +161,12 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
                     custom name="category"
                     invalid={!data.category}
                     valid={data.category !== ''}
-                    value={data.category}
+                    value={data.category || ""}
                     onChange={handleOnChange}
                     id="category">
                     <option value="" hidden>Please select</option>
-                    {CATEGORY.map((category, idx) => {
-                        return <option key={idx} value={category}>{category}</option>
-
+                    {LEAVE_TYPES.map((category, idx) => {
+                        return <option key={idx} value={Number(idx + 1)}>{category}</option>
                     })}
                 </CSelect>
             </CFormGroup>
@@ -158,4 +188,4 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
     )
 
 }
-export default LeaveFormRequest;
+export default LeaveFormRequest
