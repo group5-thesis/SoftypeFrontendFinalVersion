@@ -59,7 +59,7 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
         let gap = checkDateRange(data.date_from, data.date_to);
         setNoOfDays(gap > 0 ? gap : 0);
         checkErrors()
-    }, [data])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     const actions = () => (
         <>
@@ -76,7 +76,6 @@ const LeaveFormRequest = ({ request, onSubmit }) => {
             footer: actions(),
             modalOnClose,
             size: "lg"
-
         }}>
             <CFormGroup >
                 <CLabel>Name : </CLabel>

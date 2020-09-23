@@ -1,11 +1,11 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
-import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react'
+import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react'
 
 const Modal = forwardRef((props, ref) => {
-    const [modal, setModal] = useState(false);
-    let { title, footer,color="primary", modalOnClose, children } = props;
+    const [modal, setModal] = useState(false)
+    let { title, footer, size, centered, modalOnClose, children, btnTitle, block, hidden = false } = props
     const toggle = () => {
-        setModal(!modal);
+        setModal(!modal)
     }
     useImperativeHandle(
         ref,
@@ -17,13 +17,17 @@ const Modal = forwardRef((props, ref) => {
     )
     return (
         <>
-            <CButton onClick={toggle} className="mr-1" color={color}>
-                {title}
-            </CButton>
-            <CModal show={modal} closeOnBackdrop={false} onClose={() => {
-                if(modalOnClose) modalOnClose()
-            }} className="fade" >
-                <CModalHeader closeButton><strong>{title}</strong></CModalHeader>
+            {!hidden && <CButton block={block ? true : false} onClick={toggle} color="primary" >
+                {btnTitle ? btnTitle : title}
+            </CButton>}
+
+            <CModal show={modal} centered={centered ? true : false} size={size} closeOnBackdrop={false} onClose={() => {
+                if (modalOnClose) {
+                    modalOnClose()
+                }
+            }
+            } className="fade" >
+                <CModalHeader ><strong>{title}</strong></CModalHeader>
                 <CModalBody>
                     {children}
                 </CModalBody>
@@ -51,4 +55,4 @@ const Modal = forwardRef((props, ref) => {
     )
 })
 
-export default Modal;       
+export default Modal

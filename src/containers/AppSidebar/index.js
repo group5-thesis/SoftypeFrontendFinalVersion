@@ -7,25 +7,27 @@ import {
   CSidebarNav,
   CSidebarNavDivider,
   CSidebarNavTitle,
-  CSidebarMinimizer,
   CSidebarNavDropdown,
   CSidebarNavItem,
 } from '@coreui/react'
 
 import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
-import navigation from './navigation'
+import navigation from './SideMenu'
 // import { navigations } from './navigation'
-import { actionCreator, ActionTypes } from 'utils/actions';
-import { shallowCopy } from 'utils/helpers';
+import { actionCreator, ActionTypes } from 'utils/actions'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const show = useSelector(state => state.appState.app.sidebarShow)
+  const user = useSelector(state => state.appState.auth.user)
   const logout = () => {
     dispatch(actionCreator(ActionTypes.LOGOUT))
   }
-  let sideMenu = navigation.concat([{
+  let sideMenu = navigation.filter(menu => {
+    return menu.user === user ? Number(user.userType) : 4
+  })
+  sideMenu = sideMenu.concat([{
     _tag: 'CSidebarNavDivider',
     className: 'm-2'
   },
@@ -41,7 +43,6 @@ const AppSidebar = () => {
     _tag: 'CSidebarNavDivider',
     className: 'm-2'
   }])
-  console.log(sideMenu)
   return (
     <CSidebar
       show={show}
@@ -55,12 +56,6 @@ const AppSidebar = () => {
           src={res.logo}
           height={25}
         />
-        <CIcon
-          className="c-sidebar-brand-minimized"
-          src={res.logoReact}
-          name="sygnet"
-          height={35}
-        />
       </CSidebarBrand>
       <CSidebarNav>
         <CCreateElement
@@ -73,7 +68,7 @@ const AppSidebar = () => {
           }}
         />
       </CSidebarNav>
-      <CSidebarMinimizer className="c-d-md-down-none" />
+
     </CSidebar>
   )
 }

@@ -8,7 +8,6 @@ import { CContainer, CFade } from '@coreui/react'
 
 // routes config
 import routes from 'router'
-
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -28,11 +27,13 @@ const AppContent = () => {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  render={props => (
+                  render={() => (
                     <CFade>
-                      <route.component {...props} />
+                      <route.component />
                     </CFade>
-                  )} />
+                  )
+                }
+                />
               )
             })}
             <Redirect from="/" to="/dashboard" />

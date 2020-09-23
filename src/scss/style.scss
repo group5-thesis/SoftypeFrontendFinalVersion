@@ -7,18 +7,3 @@
 // If you want to add something do it here
 @import "custom";
 
-::-webkit-scrollbar{
-    width: 2px;
-    margin: none;
-    height: 2px;
-}
-::-webkit-scrollbar-track {
-    background: $white-bis;
-} 
-::-webkit-scrollbar-thumb{
-    background: $orange
-}
-
-::-webkit-scrollbar-thumb:hover{
-     background: $primary
-}

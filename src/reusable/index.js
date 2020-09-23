@@ -7,5 +7,5 @@ export {
   DocsLink,
   Loader,
   Modal,
-  ConfirmDialog
+  ConfirmDialog,
 }

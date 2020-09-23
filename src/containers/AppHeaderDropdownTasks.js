@@ -30,7 +30,7 @@ const AppHeaderDropdownTasks = () => {
           <strong>You have {itemsCount} pending tasks</strong>
         </CDropdownItem>
         <CDropdownItem className="d-block">
-          <div className="small mb-1">Upgrade NPM &amp; Bower <span
+          <div className="small mb-1">Upgrade NPM &amp Bower <span
             className="float-right"><strong>0%</strong></span></div>
           <CProgress size="xs" color="info" value={0} />
         </CDropdownItem>

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-import AppView from 'views';
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
+import AppView from 'views'
 
 export default class Root extends Component {
   render() {
@@ -8,6 +8,6 @@ export default class Root extends Component {
       <Provider store={store}>
         <AppView />
       </Provider>
-    );
+    )
   }
 }
