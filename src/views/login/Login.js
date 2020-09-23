@@ -10,7 +10,7 @@ import {
   CInvalidFeedback,
 } from "@coreui/react"
 import CIcon from "@coreui/icons-react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { shallowCopy, toggleDialog, checkCamera } from "utils/helpers"
 import { APP_MESSAGES } from "utils/constants/constant"
 import { actionCreator, ActionTypes } from "utils/actions"
@@ -18,9 +18,11 @@ import { ConfirmDialog, Modal } from "reusable"
 import api from "utils/api"
 import { CenteredLayout } from "containers"
 import QrCodeScanner from './QrCodeScanner'
+import { Redirect } from 'react-router-dom'
 
 const Login = (props) => {
   // stateless variables
+  const isLoggedIn = useSelector(state => state.appState.auth.already_logged)
   let { history } = props
   const [credentials, setCredentials] = useState({
     username_email: "ytorres",
@@ -31,6 +33,18 @@ const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const dispatch = useDispatch()
+
+  if (isLoggedIn) {
+    return <Redirect to="/" />
+  }
+  else {
+    checkCamera().then(() => {
+      setCamera(true)
+    }).catch(err => {
+      setCamera(false)
+      setError(err.cameraError)
+    })
+  }
 
   // methods
   const handleChange = (e) => {
@@ -49,18 +63,20 @@ const Login = (props) => {
     setIsLoading(true)
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
     let res = await api.post("/login", credentials)
+    setIsLoading(false)
     if (!res.error) {
       setError(res.message)
       let { access_token, account_information } = res.data
       localStorage.setItem("token", access_token)
-      localStorage.setItem("uId" ,  account_information.employee_id)
-      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, account_information))
+      localStorage.setItem("uId", account_information[0].userId)
+      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, account_information[0]))
       dispatch(actionCreator(ActionTypes.LOGIN))
+      history.push("/")
     } else {
       setError(res.message)
       toggleDialog(dispatch)
     }
-    setIsLoading(false)
+
   }
 
   // const loginWithQrCode = () => {
@@ -72,15 +88,14 @@ const Login = (props) => {
   //     toggleDialog(dispatch)
   //   })
   // }
-  useEffect( () => {
-
-    checkCamera().then(() => {
-      setCamera(true)
-    }).catch(err => {
-      setCamera(false)
-      setError(err.cameraError)
-    })
-  }, [])
+  // useEffect(() => {
+  //   checkCamera().then(() => {
+  //     setCamera(true)
+  //   }).catch(err => {
+  //     setCamera(false)
+  //     setError(err.cameraError)
+  //   })
+  // }, [])
   return (
     <CenteredLayout>
       <ConfirmDialog
@@ -134,7 +149,9 @@ const Login = (props) => {
         </CInputGroup>
         <CButton
           block
-          onClick={loginAttempt}
+          onClick={() => {
+            loginAttempt()
+          }}
           disabled={
             isLoading ||
             credentials.password === "" ||

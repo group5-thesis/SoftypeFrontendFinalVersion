@@ -8,6 +8,7 @@ const LeaveCalendar = React.lazy(() => import('views/leave-management/LeaveCalen
 const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards')) 
+const Calendar = React.lazy(() => import('views/calendar/Calendar')) 
 
 const routes = [
     { path: '/', exact: true, name: 'Home' },
@@ -20,7 +21,7 @@ const routes = [
     { path: '/forms', name: 'Forms', component: BasicForms },
     { path: '/cards', name: 'Cards', component: Cards },
     { path: '/repository', name: 'Repository', component: ListGroup },
-    // { path: '/profile', name: 'Profile', component: Profile },
+    { path: '/calendar', name: 'Calendar', component: Calendar },
 
 ]
 

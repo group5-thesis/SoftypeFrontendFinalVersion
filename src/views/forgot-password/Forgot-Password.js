@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -12,10 +12,17 @@ import {
   CInputGroupText,
   CRow
 } from '@coreui/react'
+import { useSelector } from 'react-redux'
 import { CenteredLayout } from 'containers';
 
 const ForgotPassword = (props) => {
   let { history } = props;
+  let already_logged = useSelector(state => {
+    return state.appState.auth.already_logged
+  })
+  useEffect(() => {
+    already_logged && history.push("/")
+  }, [])
   return (
 
     <CenteredLayout>

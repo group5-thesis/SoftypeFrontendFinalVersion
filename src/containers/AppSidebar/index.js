@@ -10,19 +10,20 @@ import {
   CSidebarNavDropdown,
   CSidebarNavItem,
 } from '@coreui/react'
-
+import { useHistory } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
 import navigation from './SideMenu'
-// import { navigations } from './navigation'
 import { actionCreator, ActionTypes } from 'utils/actions'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const show = useSelector(state => state.appState.app.sidebarShow)
   const user = useSelector(state => state.appState.auth.user)
   const logout = () => {
     dispatch(actionCreator(ActionTypes.LOGOUT))
+    history.push("/login")
   }
   let sideMenu = navigation.filter(menu => {
     return menu.user === user ? Number(user.userType) : 4

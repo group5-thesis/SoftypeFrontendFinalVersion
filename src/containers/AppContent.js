@@ -15,6 +15,7 @@ const loading = (
 )
 
 const AppContent = () => {
+
   return (
     <main className="c-main">
       <CContainer fluid>
@@ -28,11 +29,9 @@ const AppContent = () => {
                   exact={route.exact}
                   name={route.name}
                   render={() => (
-                    <CFade>
-                      <route.component />
-                    </CFade>
+                    <route.component />
                   )
-                }
+                  }
                 />
               )
             })}

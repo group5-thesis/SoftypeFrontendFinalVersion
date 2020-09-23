@@ -11,12 +11,14 @@ const callAPI = async (method, url, data = null) => {
     headers.Authorization = `Bearer ${token}`;
   }
 
+
   if (process.env.NODE_ENV === "production") {
     url = `${cnf.API_URL_LIVE}${url}`;
   } else {
     url = `${cnf.API_URL_DEV}${url}`;
   }
   let config = {
+    timeout: 1000 * 30,
     method,
     url,
     headers,
