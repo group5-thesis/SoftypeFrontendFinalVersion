@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
+import { CButton } from '@coreui/react'
 import {
   CBadge,
   CCard,
@@ -10,8 +11,8 @@ import {
   CRow,
   CPagination
 } from '@coreui/react'
-
 import usersData from './UsersData'
+import Usermodal from './UserModal';
 
 const getBadge = status => {
   switch (status) {
@@ -23,14 +24,19 @@ const getBadge = status => {
   }
 }
 
+
+
 const Users = () => {
-  const history = useHistory()
+  const [modal, setModal] = useState(false);
+
+  const history = useHistory();
   const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
   const [page, setPage] = useState(currentPage)
+  const [items, setitems] = useState(usersData)
 
   const pageChange = newPage => {
-    currentPage !== newPage && history.push(`/employees?page=${newPage}`)
+    currentPage !== newPage && history.push(`/users?page=${newPage}`)
   }
 
   useEffect(() => {
@@ -38,49 +44,58 @@ const Users = () => {
   }, [currentPage, page])
 
   return (
-    <CRow>
-      <CCol xl={6}>
-        <CCard>
-          <CCardHeader>
-            Users
-            <small className="text-muted"> example</small>
-          </CCardHeader>
-          <CCardBody>
-          <CDataTable
-            items={usersData}
-            fields={[
-              { key: 'name', _classes: 'font-weight-bold' },
-              'registered', 'role', 'status'
-            ]}
-            hover
-            striped
-            itemsPerPage={5}
-            activePage={page}
-            clickableRows
-            onRowClick={(item) => history.push(`/employees/profile/${item.id}`)}
-            scopedSlots = {{
-              'status':
-                (item)=>(
-                  <td>
-                    <CBadge color={getBadge(item.status)}>
-                      {item.status}
-                    </CBadge>
-                  </td>
-                )
-            }}
-          />
-          <CPagination
-            activePage={page}
-            onActivePageChange={pageChange}
-            pages={5}
-            doubleArrows={false} 
-            align="center"
-          />
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+    <>
+      
+      <CRow>
+        <CCol xl={12}>
+          <CCard>
+            <CCardHeader>
+              Users
+              <Usermodal/>
+            </CCardHeader>
+            <CCardBody>
+              <CDataTable
+                items={usersData}
+                fields={[
+                  { key: 'firstname', _classes: 'font-weight-bold' },
+                  'lastname', 'middlename', 'gender', 'mobilenumber', 'birthdate', 'email', 'street', 'city', 'country'
+                 ]}
+                hover
+                striped
+                itemsPerPage={5}
+                activePage={page}
+                clickableRows
+                onRowClick={(item) => history.push(`/users/${item.id}`)}
+                scopedSlots={{
+                  'status':
+                    (item) => (
+                      <td>
+                        <CBadge color={getBadge(item.status)}>
+                          {item.status}
+                        </CBadge>
+                      </td>
+                    )
+                }
+                }
+
+              />
+
+              <CPagination
+                activePage={page}
+                onActivePageChange={pageChange}
+                pages={5}
+                doubleArrows={false}
+                align="center"
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+    </>
   )
 }
+
+
+
 
 export default Users
