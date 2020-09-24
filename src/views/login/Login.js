@@ -28,6 +28,7 @@ const Login = (props) => {
     username_email: "ytorres",
     password: "Softype@100",
   })
+
   const [camera, setCamera] = useState(false)
   const [changed, setChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)

@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from "react-redux"
 import { CButton, CModal, CSelect, CRow, CCol, CDropdown, CDropdownItem, CDropdownToggle, CDropdownMenu, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api"
+
 const EmployeeModal = () => {
     let dispatch = useDispatch();
     const [employee, createEmployee] = useState({
@@ -22,6 +23,38 @@ const EmployeeModal = () => {
 
     },
     )
+    
+    const [roleId,setroleId] = useState('')
+    const [department,setdepartment] = useState('')
+    const [firstname,setfirstname] = useState('')
+    const [lastname,setlasname] = useState('')
+    const [middlename,setmiddlename] = useState('')
+    const [gender,setgender] = useState('')
+    const [mobileno,setmobileno] = useState('')
+    const [birthdate,setbirthdate] = useState('')
+    const [email,setemail] = useState('')
+    const [street,setstreet] = useState('')
+    const [city,setcity] = useState('')
+    const [country,setcountry] = useState('')
+
+    const firstrender = useRef(true)
+
+    const [disabled, setDisabled] = useState(true)
+
+    // const [firstnameError, setfirstnameError] = useState(null)
+
+    useEffect(() => {
+        if(firstrender.current){
+            firstrender.current = false;
+            return
+        }
+        setDisabled( formValidation() )
+      }, [roleId, department, firstname, lastname, middlename, gender,mobileno, birthdate, email, street, city , country])
+    
+      const formValidation = () => {
+        
+        
+      }
 
     const addEmployee = async () => {
         let res = await api.post("/create_employee", employee)
@@ -37,7 +70,6 @@ const EmployeeModal = () => {
         let Employee = Object.assign({}, employee)
         Employee[event.target.name] = event.target.value
         createEmployee(Employee)
-
     }
 
     // POST  /create_employee {
@@ -73,6 +105,7 @@ const EmployeeModal = () => {
             color: "warning",
             footer:
                 <CButton
+                disabled = {disabled}
                     onClick={addEmployee}
                     className="mr-1"
                     color="warning">
