@@ -36,6 +36,7 @@ const LeaveFormRequest = ({ request }) => {
     const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to))
     const [hasErrors, setHasErrors] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
+   
     const validateDate = () => {
         let gap = checkDateRange(data.date_from, data.date_to)
         setNoOfDays(gap > 0 ? gap : 0)
@@ -85,15 +86,10 @@ const LeaveFormRequest = ({ request }) => {
     useEffect(() => {
         validateDate()
         checkErrors()
-    }, [data])
+    }, [data ,validateDate])
 
     const actions = () => (
         <>
-            {/* <CButton color="primary" disabled={hasErrors || invalidDate} onClick={() => {
-                onSubmit(data)
-                modalRef.current.toggle()
-                modalOnClose()
-            }}>Submit</CButton> */}
             <CButton color="primary" disabled={hasErrors || invalidDate || isLoading} onClick={handleSubmit}>
                 {
                     isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
@@ -101,11 +97,13 @@ const LeaveFormRequest = ({ request }) => {
             </CButton>
         </>
     )
+    
     return (
         <Modal ref={modalRef} {...{
             title: "Request Leave",
             footer: actions(),
             modalOnClose,
+            cancelBtnTitle:"Close",
             size: "lg"
         }}>
             <CFormGroup >

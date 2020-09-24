@@ -15,6 +15,7 @@ import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
 import navigation from './SideMenu'
 import { actionCreator, ActionTypes } from 'utils/actions'
+import { filterModule } from 'utils/helpers';
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
@@ -25,9 +26,11 @@ const AppSidebar = () => {
     dispatch(actionCreator(ActionTypes.LOGOUT))
     history.push("/login")
   }
-  let sideMenu = navigation.filter(menu => {
-    return menu.user === user ? Number(user.userType) : 4
-  })
+  let sideMenu = filterModule(navigation , user.roleId) 
+  // navigation.filter(menu => {
+  //   let result =  menu.user.includes(Number(user.roleId) )|| menu.user.includes(4)
+  //   return result
+  // })
   sideMenu = sideMenu.concat([{
     _tag: 'CSidebarNavDivider',
     className: 'm-2'

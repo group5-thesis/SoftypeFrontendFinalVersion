@@ -17,11 +17,13 @@ const mapDispatchToProps = (dispatch, _) => ({
         userId = +userId
       }
       let res = await api.get(`/getProfile?userId=${userId}`)
+      // console.log(res)
+      // debugger
       if (res.length) {
         let data = res[0]
         dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, data))
-        dispatch(actionCreator(ActionTypes.LOGIN))
         dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST))
+        dispatch(actionCreator(ActionTypes.LOGIN))
 
       } else {
         dispatch(actionCreator(ActionTypes.LOGOUT))

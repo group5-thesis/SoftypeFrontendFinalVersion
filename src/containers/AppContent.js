@@ -4,38 +4,42 @@ import {
   Route,
   Switch
 } from 'react-router-dom'
-import { CContainer, CFade } from '@coreui/react'
-
+import { CContainer } from '@coreui/react'
+import { Loader } from 'reusable'
+import { useSelector } from 'react-redux'
 // routes config
 import routes from 'router'
+import { filterModule } from 'utils/helpers'
+import Page404 from 'views/placeholder/page404/Page404';
 const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
+  <Loader bg="transparent" />
 )
 
 const AppContent = () => {
-
+  const user = useSelector(state => state.appState.auth.user)
+  let accessedRoutes = filterModule(routes, user.roleId)
   return (
     <main className="c-main">
       <CContainer fluid>
         <Suspense fallback={loading}>
           <Switch>
-            {routes.map((route, idx) => {
+            {accessedRoutes.map((route, idx) => {
               return route.component && (
                 <Route
                   key={idx}
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  render={() => (
-                    <route.component />
+                  render={(props) => (
+                    <route.component {...props} />
                   )
                   }
                 />
               )
             })}
+            <Route exact path="/404" name="Page 404" render={props => <Page404 {...props} />} />
             <Redirect from="/" to="/dashboard" />
+            <Redirect from="*" to="/404" />
           </Switch>
         </Suspense>
       </CContainer>

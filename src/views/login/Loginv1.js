@@ -60,6 +60,7 @@ class Login extends Component {
                 localStorage.setItem("token", access_token)
                 localStorage.setItem("uId", account_information[0].userId)
                 dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, account_information[0]))
+                dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST))
                 dispatch(actionCreator(ActionTypes.LOGIN))
                 history.replace("/")
             } else {
@@ -156,7 +157,7 @@ class Login extends Component {
                     </CButton>
                     <hr className="hr-text" data-content="OR" />
                     {
-                        !this.state.camera ? <CButton block onClick={() => {
+                        !this.state.camera || this.state.isLoading ? <CButton disabled={ this.state.isLoading } block onClick={() => {
                             toggleDialog(this.props.dispatch)
                         }} color="primary" className="px-4" > Login with QRCode  </CButton> : <QrCodeScanner />
                     }

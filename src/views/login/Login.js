@@ -65,7 +65,6 @@ const Login = (props) => {
     let res = await api.post("/login", credentials)
     setIsLoading(false)
     if (!res.error) {
-      setError(res.message)
       let { access_token, account_information } = res.data
       localStorage.setItem("token", access_token)
       localStorage.setItem("uId", account_information[0].userId)
