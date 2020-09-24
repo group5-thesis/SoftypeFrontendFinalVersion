@@ -3,11 +3,12 @@ export default {
     name: '',
     date_from: '',
     date_to: '',
-    category: '',
+    category: null,
     reason: '',
     status: 'pending',
     approver: 'admin',
     employeeID: null,
+    approverId:1,
 }
 
 

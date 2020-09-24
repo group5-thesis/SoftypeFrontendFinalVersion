@@ -26,12 +26,11 @@ const ProfilePage = ({ auth }) => {
             setSrc(image64)
         }
     }
-    if (already_logged) {
-        getQrCode()
-    }
-    // useEffect(() => {
-    //     getQrCode()
-    // }, [])
+    useEffect(() => {   
+        if (already_logged) {
+            getQrCode()
+        }
+    }, [])
     return (
         <>
             <CRow className="justify-content-center">

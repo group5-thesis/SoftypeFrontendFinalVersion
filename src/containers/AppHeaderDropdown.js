@@ -30,6 +30,7 @@ const AppHeaderDropdown = () => {
         <Modal ref={modalRef} {...{
           title: "Profile",
           size: "lg",
+          cancelBtnTitle :"close",
           hidden: true
         }}>
           <ProfilePage auth={auth} />

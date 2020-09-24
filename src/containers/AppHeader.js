@@ -40,6 +40,7 @@ const AppHeader = () => {
       />
      
       <CHeaderNav className="d-md-down-none mr-auto">
+          SMP Beta
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
