@@ -31,7 +31,6 @@ const callAPI = async (method, url, data = null) => {
     let response = await axios(config);
     return response.data;
   } catch (error) {
-    console.log((JSON.stringify(error)))
     let errors = {
       error: true,
       data: null,
@@ -50,8 +49,6 @@ const callAPI = async (method, url, data = null) => {
        */
       // alert('TEst ')
       errors.message = "Something went wrong"
-    } else {
-      errors.message = error.message
     }
     return errors
   }

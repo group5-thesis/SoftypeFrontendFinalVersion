@@ -1,0 +1,3 @@
+AppContainer.js - Wrapper of the app , here we will check if the user is authenticated or not 
+App.js - Contains the main routes (this will render the actual pages of the application)
+index.js - Wrapper of the App.js , this will render the App.js when the checking of the AppContainer is finished

@@ -4,17 +4,8 @@
   "description": "Powered by COREUI",
   "proxy": "http://localhost:8000/",
   "author": {
-    "name": "CoreUI",
-    "url": "https://coreui.io",
-    "github": "https://github.com/coreui",
-    "twitter": "https://twitter.com/core_ui"
+    "name": "Anonymous"
   },
-  "contributors": [
-    {
-      "name": "CoreUI Team",
-      "url": "https://github.com/orgs/coreui/people"
-    }
-  ],
   "homepage": ".",
   "copyright": "Copyright 2017-2020 creativeLabs Łukasz Holeczek",
   "license": "MIT",
@@ -51,7 +42,8 @@
     "react-redux": "7.2.1",
     "react-router-dom": "^5.2.0",
     "redux": "4.0.5",
-    "redux-saga": "^1.1.3"
+    "redux-saga": "^1.1.3",
+    "svg-png-converter": "0.0.9"
   },
   "devDependencies": {
     "auto-changelog": "2.2.0",

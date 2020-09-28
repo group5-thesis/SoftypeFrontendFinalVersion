@@ -19,7 +19,8 @@ const Calendar = ({ _events, header = true, showHeader = false }) => {
                     themeSystem="bootstrap"
                     slotMinWidth='100%'
                     dayMinWidth='100%'
-                    monthMode
+                    // monthMode
+                    weekends
                     eventOverlap
                     plugins={[dayGridPlugin]}
                     footerToolbar={null}

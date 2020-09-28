@@ -10,8 +10,11 @@ import {
 import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
 import { Modal } from 'reusable'
-import ProfilePage from 'views/profile/Profile'
-const AppHeaderDropdown = () => {
+import Avatar from 'react-avatar';
+const ProfilePage = React.lazy(() => import('views/profile/Profilev1'))
+
+const AppHeaderDropdown = (props) => {
+  const { history } = props
   const auth = useSelector(state => {
     return state.appState.auth
   })
@@ -19,6 +22,12 @@ const AppHeaderDropdown = () => {
   const showProfile = () => {
     modalRef.current.toggle()
   }
+  const logout = () => {
+    props.logout()
+    history.push("/login")
+  }
+  const {user} = auth
+
   return (
     <CDropdown
       inNav
@@ -30,19 +39,27 @@ const AppHeaderDropdown = () => {
         <Modal ref={modalRef} {...{
           title: "Profile",
           size: "lg",
-          cancelBtnTitle :"close",
+          cancelBtnTitle: "close",
           hidden: true
         }}>
-          <ProfilePage auth={auth} />
+          <ProfilePage {...{ auth }} />
         </Modal>
       }
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <div className="c-avatar">
-          <CImg
+          <Avatar  {...{
+            name: `${user.firstname} ${user.lastname}`,
+            className: "c-avatar-img",
+            color:'orange',
+            round: true,
+            size: 35
+          }} />
+
+          {/* <CImg
             src={res.avatar}
             className="c-avatar-img"
             alt="userlogo"
-          />
+          /> */}
         </div>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
@@ -56,7 +73,7 @@ const AppHeaderDropdown = () => {
           Settings
         </CDropdownItem>
         <CDropdownItem divider />
-        <CDropdownItem>
+        <CDropdownItem onClick={logout}>
           <CIcon name="cil-account-logout" className="mfe-2" />
           Logout
         </CDropdownItem>
