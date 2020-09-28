@@ -62,7 +62,7 @@ const Users = () => {
                             items={usersData}
                             fields={[
                               { key: 'firstname', _classes: 'font-weight-bold' },
-                              'lastname', 'middlename','role', 'gender', 'mobilenumber', 'birthdate', 'email', 'street', 'city', 'country'
+                              'lastname', 'middlename','role','department', 'gender', 'mobilenumber', 'birthdate', 'email', 'street', 'city', 'country'
                              ]}
                             hover
                             striped

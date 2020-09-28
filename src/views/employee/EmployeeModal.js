@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from "react-redux"
-import { CButton, CModal, CSelect, CRow, CCol, CDropdown, CDropdownItem, CDropdownToggle, CDropdownMenu, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
+import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api"
+import { APP_MESSAGES } from 'utils/constants/constant';
+import { ADD_EMPLOYEE } from 'utils/constants/action-types';
+import {hasMissingFieds} from 'utils/helpers'
 
 const EmployeeModal = () => {
     let dispatch = useDispatch();
@@ -23,38 +26,23 @@ const EmployeeModal = () => {
 
     },
     )
+    const handleOnChange = (event) => {
+        const value = event.target.value;
+        let Employee = Object.assign({}, employee)
+        Employee[event.target.name] = event.target.value
+        createEmployee(Employee)
+    }
     
-    const [roleId,setroleId] = useState('')
-    const [department,setdepartment] = useState('')
-    const [firstname,setfirstname] = useState('')
-    const [lastname,setlasname] = useState('')
-    const [middlename,setmiddlename] = useState('')
-    const [gender,setgender] = useState('')
-    const [mobileno,setmobileno] = useState('')
-    const [birthdate,setbirthdate] = useState('')
-    const [email,setemail] = useState('')
-    const [street,setstreet] = useState('')
-    const [city,setcity] = useState('')
-    const [country,setcountry] = useState('')
-
-    const firstrender = useRef(true)
-
+    
+    const [Error, setError] = useState(APP_MESSAGES.INPUT_REQUIRED)
     const [disabled, setDisabled] = useState(true)
 
-    // const [firstnameError, setfirstnameError] = useState(null)
 
     useEffect(() => {
-        if(firstrender.current){
-            firstrender.current = false;
-            return
-        }
-        setDisabled( formValidation() )
-      }, [roleId, department, firstname, lastname, middlename, gender,mobileno, birthdate, email, street, city , country])
+        setDisabled(hasMissingFieds(employee))
+      }, [employee])
+
     
-      const formValidation = () => {
-        
-        
-      }
 
     const addEmployee = async () => {
         let res = await api.post("/create_employee", employee)
@@ -62,42 +50,12 @@ const EmployeeModal = () => {
         if (!res.error) {
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
         } else {
-            alert(res.message);
+           setError(res.message)
+           alert(Error)
         }
 
     }
-    const handleOnChange = (event) => {
-        let Employee = Object.assign({}, employee)
-        Employee[event.target.name] = event.target.value
-        createEmployee(Employee)
-    }
-
-    // POST  /create_employee {
-    //     'firstname' => 'required',
-    //     'middlename' => 'required',
-    //     'lastname' => 'required',
-    //     'mobileno' => 'required',
-    //     'birthdate' => 'required',
-    //     'email' => 'required',
-    //     'gender' => 'required',
-    //     'street' => 'required',
-    //     'city' => 'required',
-    //     'country' => 'required',
-    //     'roleId' => 'required',
-    //     }
-    //     $table->string('firstname');
-    //     $table->string('middlename');
-    //     $table->string('lastname');
-    //     $table->string('mobileno');
-    //     $table->date('birthdate');
-    //     $table->string('email')->unique();
-    //     $table->string('gender');
-    //     $table->string('profileImage');
-    //     $table->string('street');
-    //     $table->string('city');
-    //     $table->string('country');
-    //     $table->integer('roleId');
-    //     @renzy
+   
 
     return (
         <Modal {...{
@@ -105,7 +63,7 @@ const EmployeeModal = () => {
             color: "warning",
             footer:
                 <CButton
-                disabled = {disabled}
+                    disabled = {disabled}
                     onClick={addEmployee}
                     className="mr-1"
                     color="warning">
@@ -156,7 +114,7 @@ const EmployeeModal = () => {
                             <CFormGroup>
                                 <CLabel>Role</CLabel>
                                 <CSelect onChange={handleOnChange} name="roleId">
-                                    {/* <option value="N/A"></option>/ */}
+                                    <option value=""></option>
                                     <option value="1">Mdsadsadase</option>
                                     <option value="2">Femadsadsadasdsle</option>
                                 </CSelect>
@@ -164,7 +122,7 @@ const EmployeeModal = () => {
                             <CFormGroup>
                                 <CLabel>Gender</CLabel>
                                 <CSelect onChange={handleOnChange} name="gender">
-                                    {/* <option value="N/A"></option> */}
+                                    <option value=""></option>
                                     <option value='male'>Male</option>
                                     <option value='female'>Female</option>
                                 </CSelect>
@@ -172,7 +130,7 @@ const EmployeeModal = () => {
                             <CFormGroup>
                                 <CLabel>Department</CLabel>
                                 <CSelect onChange={handleOnChange} name="department">
-                                    {/* <option value="N/A"></option> */}
+                                    <option value=""></option>
                                     <option value='lodge'>Lodge</option>
                                     <option value='cr'>CR</option>
                                 </CSelect>
