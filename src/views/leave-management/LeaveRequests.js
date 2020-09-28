@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { actionCreator, ActionTypes } from 'utils/actions'
 import {
     CBadge,
     CCard,
@@ -15,12 +14,11 @@ import {
     CPopover,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { checkDateRange, toCapitalize, insertProperty, renameKey, getAdminResponse, toggleDialog, respondToRequest } from 'utils/helpers';
+import { checkDateRange, toCapitalize, getAdminResponse, toggleDialog, respondToRequest } from 'utils/helpers';
 import LeaveFormRequest from './LeaveRequestForm';
 import NoData from 'reusable/NoData';
 import { ConfirmDialog } from 'reusable';
-import api from 'utils/api'
-const Users = () => {
+const LeaveRequests = () => {
     const dispatch = useDispatch();
     const history = useHistory()
     const location = useLocation()
@@ -102,8 +100,6 @@ const Users = () => {
     const viewRequestInfo = (id) => {
         history.push(`/leave/requests/${id}`)
     }
-
-  
 
     return (
         <CRow>
@@ -219,4 +215,4 @@ const Users = () => {
     )
 }
 
-export default Users
+export default LeaveRequests

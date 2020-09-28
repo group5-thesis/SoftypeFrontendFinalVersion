@@ -70,12 +70,19 @@ export default [
         _children: ['Others'],
         user: [4],
     },
+    // {
+    //     _tag: 'CSidebarNavItem',
+    //     name: 'Monitoring',
+    //     to: '/monitoring',
+    //     user: [1],
+    //     icon: 'cil-graph',
+    // },
     {
         _tag: 'CSidebarNavItem',
-        name: 'Monitoring',
-        to: '/monitoring',
-        user: [1],
-        icon: 'cil-graph',
+        name: 'Tickets',
+        to: '/tickets',
+        user: [2,3],
+        icon: 'cil-graph',  
     },
     {
         _tag: 'CSidebarNavItem',

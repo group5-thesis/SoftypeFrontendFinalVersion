@@ -12,7 +12,7 @@ import routes from 'router'
 
 import {AppHeaderDropdown} from '.'
 
-const AppHeader = () => {
+const AppHeader = (props) => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector(state => { return state.appState.app.sidebarShow })
 
@@ -44,7 +44,7 @@ const AppHeader = () => {
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
-        <AppHeaderDropdown />
+        <AppHeaderDropdown {...props} />
       </CHeaderNav>
 
       <CSubheader className="px-3 justify-content-between">

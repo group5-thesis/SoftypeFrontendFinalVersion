@@ -23,6 +23,5 @@ export const LEAVE_TYPES = [
 export const APP_MESSAGES = {
     LOGIN_SUCCESS: (username) => `Welcome back ${username}`,
     INPUT_REQUIRED: "Please provide a valid information",
-    INVALID_CREDENTIALS: "Invalid credentials"
-    
+     INVALID_CREDENTIALS: "Invalid credentials"
 }
