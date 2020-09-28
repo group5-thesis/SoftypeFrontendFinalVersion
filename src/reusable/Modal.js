@@ -1,9 +1,9 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react'
 import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react'
 
-const Modal = forwardRef((props, ref) => {
+const Modal = forwardRef(({title, footer, size, centered, modalOnClose, children, btnTitle, cancelBtnTitle = "cancel", block, hidden = false} , ref) => {
     const [modal, setModal] = useState(false)
-    let { title, footer, size, centered, modalOnClose, children, btnTitle, block, hidden = false } = props
+    // let { title, footer, size, centered, modalOnClose, children, btnTitle,  = "cancel", block, hidden = false } = props
     const toggle = () => {
         setModal(!modal)
     }
@@ -33,10 +33,21 @@ const Modal = forwardRef((props, ref) => {
                 </CModalBody>
                 <CModalFooter>
                     {footer}
+                    {/* <CButton onClick={() => {
+                        toggle();
+                        if  (modalOnClose){
+                            modalOnClose();
+                        }
+                    }} className="mr-1" color="warning">
+                        Add
+                    </CButton> */}
                     <CButton onClick={() => {
-                        toggle()
+                        toggle();
+                        if (modalOnClose) {
+                            modalOnClose();
+                        }
                     }} className="mr-1" color="danger">
-                        Cancel
+                        {cancelBtnTitle}
                     </CButton>
                 </CModalFooter>
             </CModal>

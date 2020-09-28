@@ -14,10 +14,14 @@ class App extends Component {
       <BrowserRouter>
         <React.Suspense fallback={loading}>
           <Switch>
-            <Route exact path="/login" name="Login Page" component={Login} {...this.props} />
+            <Route exact path="/login" {...this.props} name="Login Page" render={(props) => {
+              return <Login {...props} />
+            }} />
             <Route exact path="/account-recovery" name="Forgot Password" component={ForgotPassword} {...this.props} />
             <Route exact path="/404" name="Page 404" render={props => <Page404 {...props} />} />
-            <Route path="/" name="Home" component={AppLayout} {...this.props} />
+            <Route path="/" {...this.props} name="Home" component={(props) => {
+              return <AppLayout {...props}/>
+            }} />
             <Redirect from='*' to='/404' />
           </Switch>
         </React.Suspense>

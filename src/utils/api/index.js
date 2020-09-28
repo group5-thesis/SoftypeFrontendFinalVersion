@@ -18,7 +18,7 @@ const callAPI = async (method, url, data = null) => {
     url = `${cnf.API_URL_DEV}${url}`;
   }
   let config = {
-    timeout: 1000 * 30,
+    timeout: 1000 * 120,
     method,
     url,
     headers,
@@ -31,10 +31,11 @@ const callAPI = async (method, url, data = null) => {
     let response = await axios(config);
     return response.data;
   } catch (error) {
+    console.log((JSON.stringify(error)))
     let errors = {
       error: true,
       data: null,
-      message: null
+      message: error.message || ''
     }
     if (error.response) {
       /*
@@ -42,7 +43,7 @@ const callAPI = async (method, url, data = null) => {
        */
       let { data, status, headers } = error.response
       errors.data = [data, status, headers]
-      errors.message = "Server Error"
+      errors.message = error.message?error.message: "Server Error"
     } else if (error.request) {
       /*
        * The request was made but no response was received

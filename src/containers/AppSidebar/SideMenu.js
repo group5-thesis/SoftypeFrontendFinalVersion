@@ -13,80 +13,84 @@ export default [
         _tag: 'CSidebarNavItem',
         name: 'Dashboard',
         to: '/dashboard',
-        user: 4,
+        user: [4],
         icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />
     },
     // Employee module
     {
         _tag: 'CSidebarNavTitle',
         _children: ['Employee Directory'],
+        user: [4],
     },
     {
         _tag: 'CSidebarNavItem',
         name: 'Employee Profile',
         to: '/employees',
-        user: 4,
+        user: [1, 2],
         icon: 'cil-user',
     },
     {
         _tag: 'CSidebarNavItem',
         name: 'Organization Chart',
         to: '/employee/organization',
-        user: 4,
+        user: [4],
         icon: 'cil-group',
     },
     {
         _tag: 'CSidebarNavItem',
         name: 'Performance Reviews',
         to: '/employee/performance-review',
-        user: 4,
+        user: [2],
         icon: 'cil-smile-plus',
     },
     // Leave management module
     {
         _tag: 'CSidebarNavTitle',
         _children: ['Leave Management'],
+        user: [4],
+        
     },
     {
         _tag: 'CSidebarNavItem',
         name: 'Leave Requests',
         to: '/leave/requests',
-        user: 4,
+        user: [4],
         icon: 'cil-car-alt',
     },
     {
         _tag: 'CSidebarNavItem',
         name: 'Leave Calendar',
         to: '/leave/calendar',
-        user: 4,
+        user: [4],
         icon: 'cil-calendar',
     },
     // 
     {
         _tag: 'CSidebarNavTitle',
         _children: ['Others'],
+        user: [4],
     },
     {
         _tag: 'CSidebarNavItem',
         name: 'Monitoring',
         to: '/monitoring',
-        user: 4,
+        user: [1],
         icon: 'cil-graph',
     },
     {
         _tag: 'CSidebarNavItem',
         name: 'Company Repository',
         to: '/repository',
-        user: 4,
+        user: [4],
         icon: 'cil-folder',
     },
-    {
-        _tag: 'CSidebarNavItem',
-        name: 'Tasks',
-        to: '/tasks',
-        user: 4,
-        icon: 'cil-task',
-    },
+    // {
+    //     _tag: 'CSidebarNavItem',
+    //     name: 'Tasks',
+    //     to: '/tasks',
+    //     user: 4,
+    //     icon: 'cil-task',
+    // },
 
 ]
 

@@ -5,10 +5,10 @@ import {
     CContainer,
     CRow,
 } from "@coreui/react"
-const CenteredLayout = ({ md = 5, bg = true, children }) => {
+const CenteredLayout = ({ md = 5, bg = "rgba(0,0,0,0.8)" }) => {
     return (
         <div className={`c-app c-default-layout flex-row align-items-center`} style={
-            { backgroundColor: "rgba(0,0,0,0.8)" }
+            { backgroundColor: bg }
         }>
             <CContainer>
                 <CRow className="justify-content-center">
