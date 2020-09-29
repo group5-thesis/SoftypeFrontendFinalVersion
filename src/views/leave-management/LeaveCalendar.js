@@ -8,4 +8,4 @@ class LeaveCalendar extends Component {
     }} />
   }
 }
-export default React.memo(LeaveCalendar)
+export default LeaveCalendar
