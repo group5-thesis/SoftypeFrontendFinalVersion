@@ -12,7 +12,7 @@ import {
 } from '@coreui/react'
 import { Modal } from 'reusable'
 import LeaveRequestModel from 'models/LeaveRequestModel'
-import { shallowCopy, checkDateRange, toCapitalize, insertProperty, renameKey } from 'utils/helpers'
+import { shallowCopy, checkDateRange, toCapitalize, renameKey } from 'utils/helpers'
 import { useSelector, useDispatch } from 'react-redux'
 import { LEAVE_TYPES } from 'utils/constants/constant'
 import { actionCreator, ActionTypes } from 'utils/actions';

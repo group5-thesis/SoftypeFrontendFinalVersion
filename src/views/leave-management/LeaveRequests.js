@@ -15,9 +15,10 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { checkDateRange, toCapitalize, getAdminResponse, toggleDialog, respondToRequest } from 'utils/helpers';
-import LeaveFormRequest from './LeaveRequestForm';
+import {LeaveRequestForm,LeaveRequestFilter} from '.';
 import NoData from 'reusable/NoData';
 import { ConfirmDialog } from 'reusable';
+// import LeaveRequestFilter from './LeaveRequestFilter';
 const LeaveRequests = () => {
     const dispatch = useDispatch();
     const history = useHistory()
@@ -114,8 +115,11 @@ const LeaveRequests = () => {
                                 <h4 className="card-title mb-0">{status} Request</h4>
                             </CCol>
                             <CCol sm="7" className="d-none d-md-block">
-                                <div className="float-right" >
-                                    <LeaveFormRequest />
+                                <div className="float-right  mr-3" >
+                                    <LeaveRequestForm />
+                                </div>
+                                <div className="float-right mr-3" >
+                                    <LeaveRequestFilter />
                                 </div>
                                 <div className="float-right mr-3">
                                     <CFormGroup >

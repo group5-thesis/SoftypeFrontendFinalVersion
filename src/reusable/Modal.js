@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react'
 import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react'
 
-const Modal = forwardRef(({title, footer, size, centered, modalOnClose, children, btnTitle, cancelBtnTitle = "cancel", block, hidden = false} , ref) => {
+const Modal = forwardRef(({title, footer, size, centered, modalOnClose, children, btnTitle, cancelBtnTitle = "cancel", block, hidden = false , theme = "primary"} , ref) => {
     const [modal, setModal] = useState(false)
     // let { title, footer, size, centered, modalOnClose, children, btnTitle,  = "cancel", block, hidden = false } = props
     const toggle = () => {
@@ -17,7 +17,7 @@ const Modal = forwardRef(({title, footer, size, centered, modalOnClose, children
     )
     return (
         <>
-            {!hidden && <CButton block={block ? true : false} onClick={toggle} color="primary" >
+            {!hidden && <CButton block={block ? true : false} onClick={toggle} color={theme} >
                 {btnTitle ? btnTitle : title}
             </CButton>}
 

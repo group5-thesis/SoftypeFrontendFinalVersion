@@ -12,21 +12,6 @@ export const RULES = {
     ageRules: v => v >= 18 || "Must be in legal age"
 }
 
-export const MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-]
-
 export const splitCamelCase = (text) => {
     return text.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()
 }
