@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch, _) => ({
         dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, data))
         dispatch(actionCreator(ActionTypes.LOGIN))
       } else {
-        logout();
+        logout(dispatch);
       }
     }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED))

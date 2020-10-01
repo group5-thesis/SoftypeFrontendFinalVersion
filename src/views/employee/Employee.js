@@ -1,11 +1,15 @@
 import React from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader,CButton, CCol, CRow, CButtonToolbar } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import {useSelector} from 'react-redux'
 
-import usersData from './EmployeesData'
 
 const User = ({match}) => {
-  const user = usersData.find( user => user.id.toString() === match.params.id)
+  const usersData = useSelector(state => {
+    return state.appState.employee.employees
+})
+const user = usersData.find( user => user.id.toString() === match.params.id)
+
   const userDetails = user ? Object.entries(user) : 
     [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
 
@@ -32,6 +36,11 @@ const User = ({match}) => {
                 </tbody>
               </table>
           </CCardBody>
+          <CButtonToolbar justify="end">
+          <CButton color="warning">Update</CButton>
+          <CButton color="danger">Delete</CButton>
+          </CButtonToolbar>
+          
         </CCard>
       </CCol>
     </CRow>
