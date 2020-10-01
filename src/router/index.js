@@ -10,6 +10,7 @@ const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 const Calendar = React.lazy(() => import('views/calendar/Calendar'))
 
+//path = url, 
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
     { path: '/dashboard', name: 'Dashboard', component: Dashboard, user: [4] },

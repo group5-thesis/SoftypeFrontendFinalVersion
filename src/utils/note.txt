@@ -1,1 +1,6 @@
 please study about react-redux for our state management
+
+
+//react hooks
+//react-redux 
+//spread operator

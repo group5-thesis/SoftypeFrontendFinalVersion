@@ -67,7 +67,7 @@
     span {
         position: absolute;
         top: -11px;
-        background: #fff;
+        background: $white;
         padding: 0 20px;
         font-weight: bold;
         font-size: 16px;
@@ -121,8 +121,6 @@
         transition: .5s ease;
         background-color: rgba(0, 0, 0, 0.5);
       }
-      
-      
       .text {
         position: absolute;
         top: 45%;
@@ -130,4 +128,6 @@
       }
   }
   
+
+//   
  
