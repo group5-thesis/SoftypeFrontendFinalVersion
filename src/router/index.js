@@ -13,9 +13,9 @@ const Calendar = React.lazy(() => import('views/calendar/Calendar'))
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
     { path: '/dashboard', name: 'Dashboard', component: Dashboard, user: [4] },
-    { path: '/employees', exact: true, name: 'Employees', component: Employees, user: [ 2 ,1] },
-    { path: '/employees/profile/:id', exact: true, name: 'Employee', component: Employee, user: [2 ,1] },
-    { path: '/leave/requests', exact: true, name: 'Leave Requests', component: LeaveRequests, user: [4 ] },
+    { path: '/employees', exact: true, name: 'Employees', component: Employees, user: [2, 1] },
+    { path: '/employees/profile/:id', exact: true, name: 'Employee', component: Employee, user: [2, 1] },
+    { path: '/leave/requests', exact: true, name: 'Leave Requests', component: LeaveRequests, user: [4] },
     { path: '/leave/requests/:id', exact: true, name: 'Request Details', component: LeaveRequest, user: [4] },
     { path: '/leave/calendar', exact: true, name: 'Leave Calendar', component: LeaveCalendar, user: [4] },
     { path: '/forms', name: 'Forms', component: BasicForms, user: [4] },

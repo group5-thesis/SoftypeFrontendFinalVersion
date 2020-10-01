@@ -15,11 +15,9 @@ const Calendar = ({ _events, header = true, showHeader = false }) => {
 
             <CCardBody >
                 <FullCalendar
-                    initialView="dayGridMonth"
                     themeSystem="bootstrap"
                     slotMinWidth='100%'
                     dayMinWidth='100%'
-                    // monthMode
                     weekends
                     eventOverlap
                     plugins={[dayGridPlugin]}

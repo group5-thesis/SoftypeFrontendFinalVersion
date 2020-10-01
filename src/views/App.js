@@ -6,6 +6,7 @@ const AppLayout = React.lazy(() => import('containers/AppLayout'));
 const Login = React.lazy(() => import('views/login/Loginv1'));
 const ForgotPassword = React.lazy(() => import('views/forgot-password/Forgot-Password'));
 const Page404 = React.lazy(() => import('views/placeholder/page404/Page404'));
+const Calendar = React.lazy(() => import('views/calendar/Calendar'));
 const loading = (<Loader />)
 class App extends Component {
   render() {
