@@ -29,7 +29,7 @@ const PerformanceReview = () => { // Performance details lacking
   };
 
   useEffect(() => {
-
+    console.log("test")
   }, []);
 
   return (
