@@ -10,10 +10,6 @@ import {
     CRow,
     CPagination
 } from '@coreui/react'
-
-
-    
-
 import EmployeeModal from './EmployeeModal';
 
 const getBadge = status => {
@@ -62,7 +58,7 @@ const Users = () => {
                             items={usersData}
                             fields={[
                               { key: 'firstname', _classes: 'font-weight-bold' },
-                              'lastname', 'middlename','role','department', 'gender', 'mobilenumber', 'birthdate', 'email', 'street', 'city', 'country'
+                              'lastname', 'middlename','role','department', 'gender', 'mobile number', 'birthdate', 'email', 'street', 'city', 'country'
                              ]}
                             hover
                             striped

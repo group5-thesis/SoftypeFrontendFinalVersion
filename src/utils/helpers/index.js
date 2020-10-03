@@ -4,14 +4,18 @@ import { Promise } from 'q'
 export const RULES = {
     required: value => !!value || "Required.",
     usernameRules: v => (v && v.length <= 10) || "Name must be less than 10 characters",
-    min: v => (v && v.length >= 8) || "Min 8 characters",
-    max: v => (v && v.length <= 20) || "Name must be less than 20 characters",
+    min: v => (v && v.length >= 2) || "Min 2 characters",
+    max: v => (v && v.length <= 25) || "Name must be less than 20 characters",
     nameRules: v => (/^[A-Z a-z]+$/.test(v)) || "This field must be letters only",
     emailRules: v => /.+@.+\..+/.test(v) || "E-mail must be valid",
     passwordRules: v => (v && v.length >= 8) || "Password must be more than 8 characters",
     ageRules: v => v >= 18 || "Must be in legal age"
 }
-
+export const NameValidation = {
+    min: v => (v && v.length >= 2) || "Min 2 characters",
+    max: v => (v && v.length <= 25) || "Name must be less than 20 characters",
+    nameRules: v => (/^[A-Z a-z]+$/.test(v)) || "This field must be letters only",
+}
 export const splitCamelCase = (text) => {
     return text.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()
 }
@@ -26,11 +30,21 @@ export const renameKey = (obj) => {
     )
     return altObj
 }
+
 export const plotArray = (arr) => {
     return arr.map(data => {
         return renameKey(data)
     })
 }
+
+
+// try {
+
+//     }
+// } catch (error) {
+    
+// }
+
 
 export const computeDays = (day1, day2) => {
     const date1 = new Date(day1)

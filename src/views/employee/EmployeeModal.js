@@ -3,7 +3,8 @@ import { useDispatch } from "react-redux"
 import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
-import api from "utils/api"
+import api from "utils/api";
+import {NameVAlidation} from 'utils/helpers';
 import { APP_MESSAGES } from 'utils/constants/constant';
 import { ADD_EMPLOYEE } from 'utils/constants/action-types';
 import {hasMissingFieds} from 'utils/helpers'
@@ -27,7 +28,6 @@ const EmployeeModal = () => {
     },
     )
     const handleOnChange = (event) => {
-        const value = event.target.value;
         let Employee = Object.assign({}, employee)
         Employee[event.target.name] = event.target.value
         createEmployee(Employee)
@@ -45,6 +45,7 @@ const EmployeeModal = () => {
     
 
     const addEmployee = async () => {
+        console.log(employee.roleId === undefined)
         let res = await api.post("/create_employee", employee)
         console.log(res)
         if (!res.error) {
@@ -115,8 +116,8 @@ const EmployeeModal = () => {
                                 <CLabel>Role</CLabel>
                                 <CSelect onChange={handleOnChange} name="roleId">
                                     <option value=""></option>
-                                    <option value="1">Mdsadsadase</option>
-                                    <option value="2">Femadsadsadasdsle</option>
+                                    <option value={1} >Mdsadsadase</option>
+                                    <option value={2}>Femadsadsadasdsle</option>
                                 </CSelect>
                             </CFormGroup>
                             <CFormGroup>
