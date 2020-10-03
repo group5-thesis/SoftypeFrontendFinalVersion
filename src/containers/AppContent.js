@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux'
 // routes config
 import routes from 'router'
 import { filterModule } from 'utils/helpers'
-import Page404 from 'views/placeholder/page404/Page404';
+import Page404 from 'modules/placeholder/page404/Page404';
 import api from 'utils/api';
 const loading = (
   <Loader bg="transparent" />

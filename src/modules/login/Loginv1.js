@@ -94,11 +94,10 @@ class Login extends Component {
                     {...{
                         title: this.state.error,
                         cancelButtonText: "Ok",
-                        confirmButton: false
                     }}
                 ></ConfirmDialog>
                 <CForm>
-                    <h1>Login</h1>
+                    <h2>Welcome Back</h2>
                     <p className="text-muted">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                         <CInputGroupPrepend>

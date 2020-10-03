@@ -12,13 +12,14 @@ import {
     CSelect,
     CLink,
     CPopover,
+    CCollapse,
+    CButton,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { checkDateRange, toCapitalize, getAdminResponse, toggleDialog, respondToRequest } from 'utils/helpers';
-import {LeaveRequestForm,LeaveRequestFilter} from '.';
+import { LeaveRequestForm } from '.';
 import NoData from 'reusable/NoData';
 import { ConfirmDialog } from 'reusable';
-// import LeaveRequestFilter from './LeaveRequestFilter';
 const LeaveRequests = () => {
     const dispatch = useDispatch();
     const history = useHistory()
@@ -29,6 +30,7 @@ const LeaveRequests = () => {
     const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
     const [page, setPage] = useState(currentPage)
     const [status, setStatus] = useState(queryStatus ? queryStatus : 'All')
+    const [collapse, setCollapse] = useState(false);
     const requestsData = useSelector(state => {
         return state.appState.leave.leave_requests.filter(el => {
             return el.status === status.toLowerCase() || status.toLowerCase() === 'all'
@@ -102,12 +104,19 @@ const LeaveRequests = () => {
         history.push(`/leave/requests/${id}`)
     }
 
+    const toggle = (e) => {
+        setCollapse(!collapse);
+        e.preventDefault();
+    }
+
     return (
         <CRow>
             <CCol xl={12}>
-                <ConfirmDialog id="cutom_dialog"  {...{ onConfirm: ()=>{
-                    respondToRequest(dispatch , payload)
-                }, title: `${payload.statusCode ? 'Approve' : 'Reject'}` }}></ConfirmDialog>
+                <ConfirmDialog id="cutom_dialog"  {...{
+                    onConfirm: () => {
+                        respondToRequest(dispatch, payload)
+                    }, title: `${payload.statusCode ? 'Approve' : 'Reject'}`
+                }}></ConfirmDialog>
                 <CCard>
                     <CCardBody>
                         <CRow>
@@ -119,7 +128,13 @@ const LeaveRequests = () => {
                                     <LeaveRequestForm />
                                 </div>
                                 <div className="float-right mr-3" >
-                                    <LeaveRequestFilter />
+                                    <CButton
+                                        color={`${collapse ? "secondary" : "primary"}`}
+                                        onClick={toggle}
+                                        className={'mb-1'}
+                                    >
+                                        Advance Filter <CIcon size={'sm'}  name={`${!collapse ? "cil-chevron-bottom" : "cil-chevron-top"}`} />
+                                    </CButton>
                                 </div>
                                 <div className="float-right mr-3">
                                     <CFormGroup >
@@ -134,6 +149,11 @@ const LeaveRequests = () => {
                                         </CSelect>
                                     </CFormGroup>
                                 </div>
+                            </CCol>
+                        </CRow>
+                        <CRow>
+                            <CCol>
+                                {/* <LeaveRequestFilter {...{ collapse }} /> */}
                             </CCol>
                         </CRow>
                         <CDataTable

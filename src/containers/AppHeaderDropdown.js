@@ -11,7 +11,7 @@ import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
 import { Modal } from 'reusable'
 import Avatar from 'react-avatar';
-const ProfilePage = React.lazy(() => import('views/profile/Profilev1'))
+const ProfilePage = React.lazy(() => import('modules/profile/Profilev1'))
 
 const AppHeaderDropdown = (props) => {
   const { history } = props

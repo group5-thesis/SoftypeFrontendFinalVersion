@@ -1,14 +1,14 @@
 import React from 'react'
-const Dashboard = React.lazy(() => import('views/dashboard/Dashboard'))
-const Employees = React.lazy(() => import('views/employee/Employees'));
-const Employee = React.lazy(() => import('views/employee/Employee'));
-const LeaveRequests = React.lazy(() => import('views/leave-management/LeaveRequests'))
-const LeaveRequest = React.lazy(() => import('views/leave-management/LeaveRequest'))
-const LeaveCalendar = React.lazy(() => import('views/leave-management/LeaveCalendar'))
+const Dashboard = React.lazy(() => import('modules/dashboard/Dashboard'))
+const Employees = React.lazy(() => import('modules/employee/Employees'));
+const Employee = React.lazy(() => import('modules/employee/Employee'));
+const LeaveRequests = React.lazy(() => import('modules/leave-management/LeaveRequests'))
+const LeaveRequest = React.lazy(() => import('modules/leave-management/LeaveRequest'))
+const LeaveCalendar = React.lazy(() => import('modules/leave-management/LeaveCalendar'))
 const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
-const Calendar = React.lazy(() => import('views/calendar/Calendar'))
+const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
 
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
