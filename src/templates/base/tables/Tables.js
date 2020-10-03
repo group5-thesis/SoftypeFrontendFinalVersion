@@ -10,7 +10,7 @@ import {
 } from '@coreui/react'
 import { DocsLink } from 'reusable'
 
-import usersData from 'views/users/UsersData'
+import usersData from 'modules/users/UsersData'
 
 const getBadge = status => {
   switch (status) {

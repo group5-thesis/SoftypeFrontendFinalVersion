@@ -3,10 +3,10 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import 'scss/style.scss';
 import { Loader } from 'reusable'
 const AppLayout = React.lazy(() => import('containers/AppLayout'));
-const Login = React.lazy(() => import('views/login/Loginv1'));
-const ForgotPassword = React.lazy(() => import('views/forgot-password/Forgot-Password'));
-const Page404 = React.lazy(() => import('views/placeholder/page404/Page404'));
-const Calendar = React.lazy(() => import('views/calendar/Calendar'));
+const Login = React.lazy(() => import('modules/login/Loginv1'));
+const ForgotPassword = React.lazy(() => import('modules/forgot-password/Forgot-Password'));
+const Page404 = React.lazy(() => import('modules/placeholder/page404/Page404'));
+const Calendar = React.lazy(() => import('modules/calendar/Calendar'));
 const loading = (<Loader />)
 class App extends Component {
   render() {
