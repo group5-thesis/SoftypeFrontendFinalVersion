@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from "react"
+import React, { Component } from "react"
 import {
     CButton,
     CForm,
@@ -68,7 +68,7 @@ class Login extends Component {
                 toggleDialog(dispatch)
                 this.setState({ isLoading: false })
             }
-          
+
         }
     }
 
@@ -81,7 +81,6 @@ class Login extends Component {
                 this.setState({ error: err.cameraError })
             })
         }
-
     }
     render() {
         if (this.props.already_logged) {

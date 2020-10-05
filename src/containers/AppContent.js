@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense ,useEffect } from 'react'
 import {
   Redirect,
   Route,
@@ -11,13 +11,27 @@ import { useSelector } from 'react-redux'
 import routes from 'router'
 import { filterModule } from 'utils/helpers'
 import Page404 from 'views/placeholder/page404/Page404';
+import api from 'utils/api';
 const loading = (
   <Loader bg="transparent" />
 )
 
-const AppContent = () => {
+const AppContent = (_props) => {
   const user = useSelector(state => state.appState.auth.user)
-  let accessedRoutes = filterModule(routes, user.roleId)
+  const { employeeId, roleId } = user
+  const payload = { employeeId, roleId };
+  const accessedRoutes = filterModule(routes, roleId)
+  const retrieveLeaveRequests = async () => {
+    let res = await api.post("/getLeaveRequest", payload)
+    // if (!res.error) {
+      
+    // }
+    console.log(res)
+  }
+
+  useEffect(() => {
+    retrieveLeaveRequests()
+  }, [])
   return (
     <main className="c-main">
       <CContainer fluid>
@@ -31,7 +45,7 @@ const AppContent = () => {
                   exact={route.exact}
                   name={route.name}
                   render={(props) => (
-                    <route.component {...props} />
+                    <route.component {...{ ..._props, ...props }} />
                   )
                   }
                 />

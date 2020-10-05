@@ -23,7 +23,7 @@ export default class Calendar extends React.Component {
               center: 'title',
               right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }}
-            initialView='dayGridMonth'
+            // initialView='dayGridMonth'
             editable={true}
             selectable={true}
             selectMirror={true}

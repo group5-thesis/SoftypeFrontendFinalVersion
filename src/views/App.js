@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import 'scss/style.scss';
-import { PublicRoute, ProtectedRoute } from "router/routeContainer";
 import { Loader } from 'reusable'
 const AppLayout = React.lazy(() => import('containers/AppLayout'));
 const Login = React.lazy(() => import('views/login/Loginv1'));
@@ -19,8 +18,8 @@ class App extends Component {
             }} />
             <Route exact path="/account-recovery" name="Forgot Password" component={ForgotPassword} {...this.props} />
             <Route exact path="/404" name="Page 404" render={props => <Page404 {...props} />} />
-            <Route path="/" {...this.props} name="Home" component={(props) => {
-              return <AppLayout {...props}/>
+            <Route path="/" {...this.props} name="Home" render={(props) => {
+              return <AppLayout {...{ ...this.props, ...props }} />
             }} />
             <Redirect from='*' to='/404' />
           </Switch>
@@ -30,4 +29,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default React.memo(App);

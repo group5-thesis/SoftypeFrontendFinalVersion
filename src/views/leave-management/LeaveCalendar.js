@@ -1,10 +1,11 @@
-import React from 'react';
-import Calendar from './Calendar';
-const LeaveCalendar = () => {
-  return <Calendar {...{
-    header: false,
-    showHeader: true
-  }} />
+import React, { Component } from 'react'
+import Calendar from './Calendar'
+class LeaveCalendar extends Component {
+  render() {
+    return <Calendar {...{
+      header: false,
+      showHeader: true
+    }} />
+  }
 }
-
-export default LeaveCalendar;
+export default React.memo(LeaveCalendar)
