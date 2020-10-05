@@ -28,8 +28,6 @@ const callAPI = async (method, url, data = null, isFormData) => {
     headers,
   };
 
-  console.log(config);
-
   if (data) {
     config.data = data;
   }
