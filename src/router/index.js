@@ -9,7 +9,7 @@ const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-
+const Test =  React.lazy(() => import('views/test/fileupload'));
 //path = url, 
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
@@ -23,6 +23,7 @@ const routes = [
     { path: '/cards', name: 'Cards', component: Cards, user: [4] },
     { path: '/repository', name: 'Repository', component: ListGroup, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
+    { path: '/upload', name: 'FIle Upload', component: Test, user: [4] },
 
 ]
 
