@@ -1,4 +1,4 @@
-// import LeaveRequestFilter from './filter/LeaveRequestFilter'
+import LeaveRequestFilter from './component/LeaveRequestFilter'
 import LeaveRequestForm from './component/LeaveRequestForm'
 import LeaveRequests from './LeaveRequests'
 import LeaveCalendar from './LeaveCalendar'

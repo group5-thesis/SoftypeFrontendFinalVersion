@@ -7,6 +7,7 @@ const LeaveRequest = React.lazy(() => import('modules/leave-management/LeaveRequ
 const LeaveCalendar = React.lazy(() => import('modules/leave-management/LeaveCalendar'))
 const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups'))
+const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
 
@@ -22,6 +23,7 @@ const routes = [
     { path: '/cards', name: 'Cards', component: Cards, user: [4] },
     { path: '/repository', name: 'Repository', component: ListGroup, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
+    { path: '/upload', name: 'Upload', component: Upload, user: [4] },
 
 ]
 
