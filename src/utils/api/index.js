@@ -8,7 +8,7 @@ const callAPI = async (method, url, data = null, isFormData) => {
   };
 
   if (isFormData) {
-    headers["Content-Type"] = "multipart/form-data";
+    headers["Content-Type"] = "multipart/form-data"
   }
 
   let token = localStorage.getItem("token");
@@ -45,13 +45,12 @@ const callAPI = async (method, url, data = null, isFormData) => {
        * The request was made and the server responded with a status code that falls out of the range of 2xx
        */
       let { data, status, headers } = error.response;
-      errors.data = [data, status, headers];
-      errors.message = error.message ? error.message : "Server Error";
+      errors.data = [data.data, status, headers];
+      errors.message = data.message ? data.message : error.message;
     } else if (error.request) {
       /*
        * The request was made but no response was received
        */
-      // alert('TEst ')
       errors.message = "Something went wrong";
     }
     return errors;
