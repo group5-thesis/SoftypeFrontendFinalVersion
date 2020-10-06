@@ -38,14 +38,6 @@ export const plotArray = (arr) => {
 }
 
 
-// try {
-
-//     }
-// } catch (error) {
-    
-// }
-
-
 export const computeDays = (day1, day2) => {
     const date1 = new Date(day1)
     const date2 = new Date(day2)

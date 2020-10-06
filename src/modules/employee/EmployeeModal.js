@@ -45,11 +45,12 @@ const EmployeeModal = () => {
     
 
     const addEmployee = async () => {
-        console.log(employee.roleId === undefined)
+        // console.log(employee.roleId === undefined)
         let res = await api.post("/create_employee", employee)
-        console.log(res)
+        // console.log(res)
         if (!res.error) {
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
+            console.log(employee)
         } else {
            setError(res.message)
            alert(Error)

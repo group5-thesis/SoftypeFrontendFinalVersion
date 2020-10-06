@@ -9,7 +9,12 @@ export default function changeState(state = initial_state, action) {
     case ActionTypes.FETCH_EMPLOYEES:
       return { ...state, employees:action.payload}; 
     case ActionTypes.UPDATE_EMPLOYEE:
-      return { ...state, ...action.payload};
+      // return { ...state, ...action.payload};
+      return {...state,
+        employees: state.employees.map((content, i) => content.id === action.payload.id ? {
+          ...content, employees: action.payload.employees
+        }:content)
+        }
     case ActionTypes.DELETE_EMPLOYEE:
       return { ...state, ...action.payload};
     case ActionTypes.ADD_EMPLOYEE:

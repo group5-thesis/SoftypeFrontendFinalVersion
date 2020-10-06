@@ -1,7 +1,10 @@
-import React from 'react'
+    import React from 'react'
 import { CCard, CCardBody, CCardHeader, CButton, CCol, CRow, CButtonToolbar } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useSelector } from 'react-redux'
+import { actionCreator, ActionTypes } from 'utils/actions';
+import { shallowCopy } from 'utils/helpers';
+import NoData from 'reusable/NoData';
 
 
 const User = ({ match }) => {
@@ -9,8 +12,36 @@ const User = ({ match }) => {
     
     return state.appState.employee.employees
   })
-  const user = usersData.find(user => user.id.toString() === match.params.id)
-  
+  const user = usersData.filter(user => String(user.id)=== match.params.id)
+  if (!Object.keys(user).length) {
+    return <NoData />
+  }
+  // const UpdateEmployee = async () =>{
+  //   let res = await api.post("/update_employee", employee)
+  //   if(!res.error){
+  //     console.log(res)
+  //     dispatch(actionCreator(ActionTypes.UPDATE_EMPLOYEE, employee))
+    
+  //   }
+  // }
+  const updateData = async () => {
+    let newUser = shallowCopy(user[0])
+    //unsaon pag reuse sa form ?????????? wa kuy alamag ani.......
+
+    // firstname : newUser.firstname
+    // lastname : newUser.lastname
+    // middlename : newUser.middlename
+    // roleId : newUser.roleId
+    // department : newUser.department
+    // gender : newUser.gender
+    // mobileno : newUser.mobileno
+    // bithdate : newUser.birthdate
+    // email : newUser.email
+    // street : newUser.street
+    // city : newUser.city
+    // country : newUser.country
+    
+  }
 
 
   const userDetails = user ? Object.entries(user) :
