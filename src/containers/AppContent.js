@@ -24,7 +24,7 @@ const AppContent = (_props) => {
   const retrieveLeaveRequests = async () => {
     let res = await api.post("/getLeaveRequest", payload)
     // if (!res.error) {
-
+        
     // }
     console.log(res)
   }

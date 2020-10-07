@@ -9,10 +9,10 @@ import NoData from 'reusable/NoData';
 
 const User = ({ match }) => {
   const usersData = useSelector(state => {
-    
+    // show:false
     return state.appState.employee.employees
   })
-  const user = usersData.filter(user => String(user.id)=== match.params.id)
+  const user = usersData.find(user => String(user.id)=== match.params.id)
   if (!Object.keys(user).length) {
     return <NoData />
   }
@@ -24,8 +24,9 @@ const User = ({ match }) => {
     
   //   }
   // }
-  const updateData = async () => {
-    let newUser = shallowCopy(user[0])
+  // const updateData = async () => {
+  //   let newUser = shallowCopy(user[0])
+
     //unsaon pag reuse sa form ?????????? wa kuy alamag ani.......
 
     // firstname : newUser.firstname
@@ -41,12 +42,21 @@ const User = ({ match }) => {
     // city : newUser.city
     // country : newUser.country
     
-  }
+  // }
 
 
   const userDetails = user ? Object.entries(user) :
     [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
 
+    
+
+ const showModal = () => {
+    this.setState({ show: true });
+  };
+
+ const  hideModal = () => {
+    this.setState({ show: false });
+  };
   return (
     <CRow>
       <CCol lg={6}>
@@ -71,7 +81,7 @@ const User = ({ match }) => {
             </table>
           </CCardBody>
           <CButtonToolbar justify="end">
-            <CButton color="warning">Update</CButton>
+            <CButton type="button" color="warning" onClick={showModal}>Update</CButton>
             <CButton color="danger">Delete</CButton>
           </CButtonToolbar>
 
