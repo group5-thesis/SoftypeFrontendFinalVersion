@@ -8,6 +8,7 @@ import {NameVAlidation} from 'utils/helpers';
 import { APP_MESSAGES } from 'utils/constants/constant';
 import { ADD_EMPLOYEE } from 'utils/constants/action-types';
 import {hasMissingFieds} from 'utils/helpers'
+import {employee} from './EmployeeModal'
 
 const EmployeeModal = () => {
     let dispatch = useDispatch();
@@ -27,36 +28,37 @@ const EmployeeModal = () => {
 
     },
     )
-    // const handleOnChange = (event) => {
-    //     let Employee = Object.assign({}, employee)
-    //     Employee[event.target.name] = event.target.value
-    //     createEmployee(Employee)
-    // }
+    const handleOnChange = (event) => {
+        let Employee = Object.assign({}, employee)
+        Employee[event.target.name] = event.target.value
+        createEmployee(Employee)
+    }
     
     
-    // const [Error, setError] = useState(APP_MESSAGES.INPUT_REQUIRED)
-    // const [disabled, setDisabled] = useState(true)
+    const [Error, setError] = useState(APP_MESSAGES.INPUT_REQUIRED)
+    const [disabled, setDisabled] = useState(true)
 
 
-    // useEffect(() => {
-    //     setDisabled(hasMissingFieds(employee))
-    //   }, [employee])
+    useEffect(() => {
+        setDisabled(hasMissingFieds(employee))
+      }, [employee])
 
     
 
-    // const addEmployee = async () => {
-    //     // console.log(employee.roleId === undefined)
-    //     let res = await api.post("/create_employee", employee)
-    //     // console.log(res)
-    //     if (!res.error) {
-    //         dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
-    //         console.log(employee)
-    //     } else {
-    //        setError(res.message)
-    //        alert(Error)
-    //     }
+    const updateEmployee = async () => {
+        // console.log(employee.roleId === undefined)
+        let res = await api.post("/create_employee", employee)
+        // console.log(res)
+        if (!res.error) {
+            dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
+            console.log(employee)
+        } else {
+           setError(res.message)
+           alert(Error)
+        }
+        
 
-    // }
+    }
    
 
     return (
@@ -85,7 +87,7 @@ const EmployeeModal = () => {
 
                                     name="firstname"
                                     value={employee.firstname || ""}
-                                    placeholder="Enter Firstname"
+                                    placeholder={employee.firstname}
                                 />
                                 <CFormText className="help-block">Please enter your Firstname</CFormText>
                             </CFormGroup>
@@ -96,7 +98,7 @@ const EmployeeModal = () => {
 
                                     name="lastname"
                                     value={employee.lastname || ""}
-                                    placeholder="Enter Lastname.."
+                                    placeholder={employee.lastname}
 
                                 />
                                 <CFormText className="help-block">Please enter your Lastname</CFormText>
@@ -107,7 +109,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="middlename"
                                     value={employee.middlename || ""}
-                                    placeholder="Enter Middlename.."
+                                    placeholder={employee.middlename}
 
                                 />
                                 <CFormText className="help-block">Please enter your Middlename</CFormText>
@@ -144,7 +146,7 @@ const EmployeeModal = () => {
                                     name="mobileno"
                                     required
                                     value={employee.mobileno || ""}
-                                    placeholder="Enter Mobile Number.."
+                                    placeholder={employee.mobileno}
 
                                 />
                                 <CFormText className="help-block">Please enter your Mobile Number</CFormText>
@@ -156,7 +158,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="birthdate"
                                     value={employee.birthdate || ""}
-                                    placeholder="Enter Birthdate.."
+                                    placeholder={employee.birthdate}
 
 
                                 />
@@ -168,7 +170,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="email"
                                     value={employee.email || ""}
-                                    placeholder="Enter Email.."
+                                    placeholder={employee.email}
 
                                 />
                                 <CFormText className="help-block">Please enter your Email</CFormText>
@@ -179,7 +181,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="street"
                                     value={employee.street || ""}
-                                    placeholder="Enter Street.."
+                                    placeholder={employee.street}
 
                                 />
                                 <CFormText className="help-block">Please enter your Street</CFormText>
@@ -190,7 +192,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="city"
                                     value={employee.city || ""}
-                                    placeholder="Enter City.."
+                                    placeholder={employee.city}
 
                                 />
                                 <CFormText className="help-block">Please enter your City</CFormText>
@@ -201,7 +203,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="country"
                                     value={employee.country || ""}
-                                    placeholder="Enter Country.."
+                                    placeholder={employee.country}
 
                                 />
                                 <CFormText className="help-block">Please enter your Country</CFormText>

@@ -37,11 +37,11 @@ const ActionTypes = {
 const actionCreator = (type, payload = null) => ({ type, payload });
 export { ActionTypes, actionCreator };
 
-export function updateEmployee(data) {  
-  return dispatch => {  
-      return dispatch({  
-          type: 'UPDATE_EMPLOYEE',  
-          payload: data  
-      });  
-  }  
-};  
+// export function updateEmployee(data) {  
+//   return dispatch => {  
+//       return dispatch({  
+//           type: 'UPDATE_EMPLOYEE',  
+//           payload: data  
+//       });  
+//   }  
+// };  
