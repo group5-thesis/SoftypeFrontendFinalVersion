@@ -1,16 +1,20 @@
 import axios from "axios";
 import { config as cnf } from "utils/config";
-let headers = {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-};
 
-const callAPI = async (method, url, data = null) => {
+const callAPI = async (method, url, data = null, isFormData) => {
+  let headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+
+  if (isFormData) {
+    headers["Content-Type"] = "multipart/form-data"
+  }
+
   let token = localStorage.getItem("token");
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
-
 
   if (process.env.NODE_ENV === "production") {
     url = `${cnf.API_URL_LIVE}${url}`;
@@ -34,28 +38,28 @@ const callAPI = async (method, url, data = null) => {
     let errors = {
       error: true,
       data: null,
-      message: error.message || ''
-    }
+      message: error.message || "",
+    };
     if (error.response) {
       /*
        * The request was made and the server responded with a status code that falls out of the range of 2xx
        */
-      let { data, status, headers } = error.response
-      errors.data = [data, status, headers]
-      errors.message = error.message?error.message: "Server Error"
+      let { data, status, headers } = error.response;
+      errors.data = [data.data, status, headers];
+      errors.message = data.message ? data.message : error.message;
     } else if (error.request) {
       /*
        * The request was made but no response was received
        */
-      // alert('TEst ')
-      errors.message = "Something went wrong"
+      errors.message = "Something went wrong";
     }
-    return errors
+    return errors;
   }
 };
 
 export default {
-  post: async (url, data = null) => callAPI("POST", url, data),
+  post: async (url, data = null, isFormData = false) =>
+    callAPI("POST", url, data, isFormData),
 
   put: async (url, data = null) => callAPI("put", url, data),
 

@@ -28,6 +28,7 @@ const Login = (props) => {
     username_email: "ytorres",
     password: "Softype@100",
   })
+
   const [camera, setCamera] = useState(false)
   const [changed, setChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -106,7 +107,7 @@ const Login = (props) => {
       >
       </ConfirmDialog>
       <CForm>
-        <h1>Login</h1>
+        <h1>Welcome Back!!</h1>
         <p className="text-muted">Sign In to your account</p>
         <CInputGroup className="mb-3">
           <CInputGroupPrepend>

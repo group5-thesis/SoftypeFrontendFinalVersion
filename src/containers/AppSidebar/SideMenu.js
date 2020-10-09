@@ -43,6 +43,13 @@ export default [
         user: [2],
         icon: 'cil-smile-plus',
     },
+    {
+        _tag: 'CSidebarNavItem',
+        name: 'Departments',
+        to: '/employee/department',
+        user: [4],
+        icon: 'cil-group',
+    },
     // Leave management module
     {
         _tag: 'CSidebarNavTitle',

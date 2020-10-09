@@ -1,183 +1,176 @@
-import moment from 'moment'
-import { ActionTypes, actionCreator } from '../actions'
-import { Promise } from 'q'
+import moment from "moment";
+import { ActionTypes, actionCreator } from "../actions";
+import { Promise } from "q";
 export const RULES = {
-    required: value => !!value || "Required.",
-    usernameRules: v => (v && v.length <= 10) || "Name must be less than 10 characters",
-    min: v => (v && v.length >= 8) || "Min 8 characters",
-    max: v => (v && v.length <= 20) || "Name must be less than 20 characters",
-    nameRules: v => (/^[A-Z a-z]+$/.test(v)) || "This field must be letters only",
-    emailRules: v => /.+@.+\..+/.test(v) || "E-mail must be valid",
-    passwordRules: v => (v && v.length >= 8) || "Password must be more than 8 characters",
-    ageRules: v => v >= 18 || "Must be in legal age"
-}
-
-export const MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-]
+  required: (value) => !!value || "Required.",
+  usernameRules: (v) =>
+    (v && v.length <= 10) || "Name must be less than 10 characters",
+  min: (v) => (v && v.length >= 8) || "Min 8 characters",
+  max: (v) => (v && v.length <= 20) || "Name must be less than 20 characters",
+  nameRules: (v) => /^[A-Z a-z]+$/.test(v) || "This field must be letters only",
+  emailRules: (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+  passwordRules: (v) =>
+    (v && v.length >= 8) || "Password must be more than 8 characters",
+  ageRules: (v) => v >= 18 || "Must be in legal age",
+};
 
 export const splitCamelCase = (text) => {
-    return text.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()
-}
+  return text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+};
 export const splitSnakeCase = (text) => {
-    return text.replaceAll("_", " ").toLowerCase()
-}
+  return text.replaceAll("_", " ").toLowerCase();
+};
 export const renameKey = (obj) => {
-    const altObj = Object.fromEntries(
-        Object.entries(obj).map(([key, value]) =>
-            [splitSnakeCase(splitCamelCase(key)), value]
-        )
-    )
-    return altObj
-}
+  const altObj = Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      splitSnakeCase(splitCamelCase(key)),
+      value,
+    ])
+  );
+  return altObj;
+};
 export const plotArray = (arr) => {
-    return arr.map(data => {
-        return renameKey(data)
-    })
-}
+  return arr.map((data) => {
+    return renameKey(data);
+  });
+};
 
 export const computeDays = (day1, day2) => {
-    const date1 = new Date(day1)
-    const date2 = new Date(day2)
-    const diffTime = Math.abs(date2 - date1)
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return diffDays
-}
+  const date1 = new Date(day1);
+  const date2 = new Date(day2);
+  const diffTime = Math.abs(date2 - date1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+};
 
 export const insertProperty = (obj, key, value, index) => {
-    var temp = {}
-    var i = 0
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-            if (i === index && key && value) {
-                temp[key] = value
-            }
-            temp[prop] = obj[prop]
-            i++
-
-        }
+  var temp = {};
+  var i = 0;
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      if (i === index && key && value) {
+        temp[key] = value;
+      }
+      temp[prop] = obj[prop];
+      i++;
     }
-    if (!index && key && value) {
-        temp[key] = value
-    }
-    return temp
-}
+  }
+  if (!index && key && value) {
+    temp[key] = value;
+  }
+  return temp;
+};
 
 export const toCapitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1)
-}
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 export const formatDate = (date) => {
-    return moment(new Date(date)).format('YYYY-MM-DD')
-}
+  return moment(new Date(date)).format("YYYY-MM-DD");
+};
 
 export const shallowCopy = (obj) => {
-    let copy = Object.assign({}, obj)
-    return copy
-}
+  let copy = Object.assign({}, obj);
+  return copy;
+};
 
 export const hasMissingFieds = (obj, rules) => {
-    for (const [key, value] of Object.entries(obj)) {
-        if (value === '' || value === null) {
-            return true
-        }
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === "" || value === null) {
+      return true;
     }
-    return false
-}
+  }
+  return false;
+};
 
-export const checkDateRange = (start, end) => {
-    if (start === '' || end === '') {
-        return 0
-    }
-    start = moment(start, 'YYYY-MM-DD')
-    end = moment(end, 'YYYY-MM-DD')
+export const checkDateRange = (start, end, isFilter = false) => {
+  if (start === "" || end === "") {
+    return -1;
+  }
+  if (start === end) {
+    return -1;
+  }
+  start = moment(start, "YYYY-MM-DD");
+  end = moment(end, "YYYY-MM-DD");
 
+  if (!isFilter) {
     if (start.isSameOrBefore(moment()) || end.isSameOrBefore(moment())) {
-        return 0
+      return -1;
     }
-    let gap = moment.duration(end.diff(start)).asDays()
-    return gap
-}
+  }
+  let gap = moment.duration(end.diff(start)).asDays();
+  return gap;
+};
 
 export const getAdminResponse = (code) => {
-    return code ? "approved" : "rejected"
-}
+  return code ? "approved" : "rejected";
+};
 
 export const toggleDialog = (dispatch) => {
-    dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG))
-}
+  dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG));
+};
 export const respondToRequest = (dispatch, payload) => {
-    dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, payload))
-}
+  dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, payload));
+};
 
 export const checkCamera = () => {
-    return new Promise((resolve, reject) => {
-        const defaultError = "Please Allow the app to use the camera"
-        let result = {
-            camera: false,
-            cameraError: defaultError
+  return new Promise((resolve, reject) => {
+    const defaultError = "Please Allow the app to use the camera";
+    let result = {
+      camera: false,
+      cameraError: defaultError,
+    };
+    let hasCamera = false;
+
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then((devices) => {
+        devices.forEach((device) => {
+          if (device.kind === "videoinput") {
+            hasCamera = true;
+          }
+        });
+        if (hasCamera) {
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then((stream) => {
+              result.camera = true;
+              resolve(result);
+            })
+            .catch((err) => {
+              result.cameraError = err.name + ": " + err.message;
+              console.log(err);
+              if (err.name == "NotAllowedError") {
+                result.cameraError = defaultError;
+              }
+              reject(result);
+            });
+        } else {
+          result.cameraError = "Camera not supported";
+          reject(result);
         }
-        let hasCamera = false
-
-        navigator.mediaDevices.enumerateDevices()
-            .then((devices) => {
-                devices.forEach((device) => {
-                    if (device.kind === "videoinput") {
-                        hasCamera = true
-                    }
-                })
-                if (hasCamera) {
-                    navigator.mediaDevices.getUserMedia({ video: true })
-                        .then((stream) => {
-                            result.camera = true
-                            resolve(result)
-                        })
-                        .catch((err) => {
-                            result.cameraError = err.name + ": " + err.message
-                            console.log(err)
-                            if (err.name == "NotAllowedError") {
-                                result.cameraError = defaultError
-                            }
-                            reject(result)
-
-                        })
-                } else {
-                    result.cameraError = "Camera not supported"
-                    reject(result)
-                }
-            })
-            .catch(function (err) {
-                result.camera = false
-                result.cameraError = err.name + ": " + err.message
-                reject(result)
-            })
-    })
-}
+      })
+      .catch(function (err) {
+        result.camera = false;
+        result.cameraError = err.name + ": " + err.message;
+        reject(result);
+      });
+  });
+};
 export const getAge = (dateString) => {
-    let today = new Date()
-    let birthDate = new Date(dateString)
-    let age = today.getFullYear() - birthDate.getFullYear()
-    let m = today.getMonth() - birthDate.getMonth()
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--
-    }
-    return age
-}
+  let today = new Date();
+  let birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
 
-export const filterModule = (modules , roleId)=>{
-    let availableModule = modules.filter(({user}) =>{
-        return user.includes(Number(roleId) )|| user.includes(4)
-    })
-    return availableModule
-}
+export const filterModule = (modules, roleId) => {
+  let availableModule = modules.filter(({ user }) => {
+    return user.includes(Number(roleId)) || user.includes(4);
+  });
+  return availableModule;
+};

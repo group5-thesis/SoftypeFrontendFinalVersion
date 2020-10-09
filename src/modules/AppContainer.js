@@ -35,7 +35,7 @@ const mapDispatchToProps = (dispatch, _) => ({
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED))
   },
   logout: () => {
-   logout(dispatch)
+    logout(dispatch)
   },
 })
 export default connect(

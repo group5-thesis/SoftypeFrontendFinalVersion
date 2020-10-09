@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Calendar from './Calendar'
+import Calendar from './component/Calendar'
 class LeaveCalendar extends Component {
   render() {
     return <Calendar {...{
@@ -8,4 +8,4 @@ class LeaveCalendar extends Component {
     }} />
   }
 }
-export default React.memo(LeaveCalendar)
+export default LeaveCalendar
