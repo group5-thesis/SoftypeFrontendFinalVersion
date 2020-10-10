@@ -35,6 +35,14 @@ export const MONTHS = [
     "December"
 ]
 
+
+export const STATUS = {
+    Pending: "primary",
+    Approved: "success",
+    Rejected: "danger",
+    Cancelled: "warning",
+  };
+
 export const APP_MESSAGES = {
     LOGIN_SUCCESS: (username) => `Welcome back ${username}`,
     INPUT_REQUIRED: "Please provide a valid information",

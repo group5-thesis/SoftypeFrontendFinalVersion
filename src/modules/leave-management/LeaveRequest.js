@@ -2,7 +2,7 @@ import React from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButtonGroup, CButton } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import { splitCamelCase, splitSnakeCase, checkDateRange, insertProperty, shallowCopy, getAdminResponse } from 'utils/helpers'
-import Calendar from './Calendar';
+import Calendar from './component/Calendar';
 import NoData from 'reusable/NoData';
 import { ActionTypes, actionCreator } from 'utils/actions';
 

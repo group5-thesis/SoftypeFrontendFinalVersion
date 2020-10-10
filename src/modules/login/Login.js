@@ -91,7 +91,7 @@ const Login = (props) => {
         }}
       ></ConfirmDialog>
       <CForm>
-        <h1>Login</h1>
+        <h1>Welcome Back!!</h1>
         <p className="text-muted">Sign In to your account</p>
         <CInputGroup className="mb-3">
           <CInputGroupPrepend>

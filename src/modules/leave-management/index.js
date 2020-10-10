@@ -1,9 +1,9 @@
-import LeaveRequestFilter from './LeaveRequestFilter'
-import LeaveRequestForm from './LeaveRequestForm'
+import LeaveRequestFilter from './component/LeaveRequestFilter'
+import LeaveRequestForm from './component/LeaveRequestForm'
 import LeaveRequests from './LeaveRequests'
 import LeaveCalendar from './LeaveCalendar'
 import LeaveRequest from './LeaveRequest'
-import Calendar from './Calendar'
+import Calendar from './component/Calendar'
 
 export  {
     LeaveRequestFilter,

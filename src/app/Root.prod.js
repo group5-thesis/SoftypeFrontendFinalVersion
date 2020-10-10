@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import AppView from 'views/AppContainer'
+import AppView from 'modules/AppContainer'
 
 export default class Root extends Component {
   render() {

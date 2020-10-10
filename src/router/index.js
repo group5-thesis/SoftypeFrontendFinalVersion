@@ -1,16 +1,19 @@
 import React from 'react'
-const Dashboard = React.lazy(() => import('views/dashboard/Dashboard'))
-const Employees = React.lazy(() => import('views/employee/Employees'));
-const Employee = React.lazy(() => import('views/employee/Employee'));
-const LeaveRequests = React.lazy(() => import('views/leave-management/LeaveRequests'))
-const LeaveRequest = React.lazy(() => import('views/leave-management/LeaveRequest'))
-const LeaveCalendar = React.lazy(() => import('views/leave-management/LeaveCalendar'))
+const Dashboard = React.lazy(() => import('modules/dashboard/Dashboard'))
+const Employees = React.lazy(() => import('modules/employee/Employees'));
+const Employee = React.lazy(() => import('modules/employee/Employee'));
+const LeaveRequests = React.lazy(() => import('modules/leave-management/LeaveRequests'))
+const LeaveRequest = React.lazy(() => import('modules/leave-management/LeaveRequest'))
+const LeaveCalendar = React.lazy(() => import('modules/leave-management/LeaveCalendar'))
 const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups'))
+const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
-const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-const Test =  React.lazy(() => import('views/test/fileupload'));
+// const Calendar = React.lazy(() => import('views/calendar/Calendar'))
+const Test =  React.lazy(() => import('modules/test/fileupload'));
 //path = url, 
+
+
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
     { path: '/dashboard', name: 'Dashboard', component: Dashboard, user: [4] },
@@ -22,8 +25,9 @@ const routes = [
     { path: '/forms', name: 'Forms', component: BasicForms, user: [4] },
     { path: '/cards', name: 'Cards', component: Cards, user: [4] },
     { path: '/repository', name: 'Repository', component: ListGroup, user: [4] },
-    { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
+    // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'FIle Upload', component: Test, user: [4] },
+    
 
 ]
 

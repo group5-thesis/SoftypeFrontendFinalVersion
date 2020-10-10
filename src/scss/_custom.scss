@@ -1,133 +1,133 @@
-::-webkit-scrollbar{
-    width: 2px;
-    margin: none;
-    height: 2px;
+::-webkit-scrollbar {
+  width: 2px;
+  margin: none;
+  height: 2px;
 }
 ::-webkit-scrollbar-track {
-    background: $white-bis;
-} 
-::-webkit-scrollbar-thumb{
-    background: $orange
+  background: $white-bis;
+}
+::-webkit-scrollbar-thumb {
+  background: $orange;
 }
 
-::-webkit-scrollbar-thumb:hover{
-     background: $primary
+::-webkit-scrollbar-thumb:hover {
+  background: $primary;
 }
 
 // Here you can add other styles
 .c-sidebar {
-    .c-sidebar-nav-link.c-active , .c-sidebar-nav-link.c-active:hover{
-        color: $white;
-        background: rgba($color: $orange, $alpha: 0.6);  
-    }
+  .c-sidebar-nav-link.c-active,
+  .c-sidebar-nav-link.c-active:hover {
+    color: $white;
+    background: rgba($color: $orange, $alpha: 0.6);
+  }
 }
 
 .wrap-content-text {
-    word-wrap: break-word;
+  word-wrap: break-word;
 }
 
-.table{
-    td{
-        p{
-            margin:0;
-        }
+.table {
+  td {
+    p {
+      margin: 0;
     }
+  }
 }
 
-.float{
-    flex:right ;
-    flex-direction: row-reverse;
+.float {
+  flex: right;
+  flex-direction: row-reverse;
 }
 
-@media (min-width:"576px"){
-    .custom-dialog {
-        align-content: center;
-        .modal-dialog{
-            width: 50%;
-            align-self: center
-        }
+@media (min-width: "576px") {
+  .custom-dialog {
+    align-content: center;
+    .modal-dialog {
+      width: 50%;
+      align-self: center;
     }
+  }
 }
 
 .login-page {
-    background: linear-gradient(
-        rgba(129, 80, 80, 0.4),
-        rgba(255, 255, 255, 0.4)
-      ),url("../assets/img/softype-inc.jpg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+  background: linear-gradient(rgba(129, 80, 80, 0.4), rgba(255, 255, 255, 0.4)),
+    url("../assets/img/softype-inc.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .hrdivider {
-    position: relative;
-    margin-bottom: 20px;
-    width: 100%;
-    text-align: center;
-    span {
-        position: absolute;
-        top: -11px;
-        background: $white;
-        padding: 0 20px;
-        font-weight: bold;
-        font-size: 16px;
-      }
-}
-  
-.hr-text {
-    line-height: 1em;
-    position: relative;
-    outline: 0;
-    border: 0;
-    color: black;
-    text-align: center;
-    height: 1.5em;
-    opacity: .5;
-    &:before {
-      content: '';
-      background: linear-gradient(to right, transparent, #4e4e48, transparent);
-      position: absolute;
-      left: 0;
-      top: 50%;
-      width: 100%;
-      height: 1px;
-    }
-    &:after {
-      content: attr(data-content);
-      position: relative;
-      display: inline-block;
-      color: black;
-  
-      padding: 0 .5em;
-      line-height: 1.5em;
-      // this is really the only tricky part, you need to specify the background color of the container element...
-      color: #818078;
-      background-color: #fcfcfa;
-    }
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+  span {
+    position: absolute;
+    top: -11px;
+    background: #fff;
+    padding: 0 20px;
+    font-weight: bold;
+    font-size: 16px;
   }
+}
+
+.hr-text {
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: 0.5;
+  &:before {
+    content: "";
+    background: linear-gradient(to right, transparent, #4e4e48, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+  }
+  &:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 0.5em;
+    line-height: 1.5em;
+    // this is really the only tricky part, you need to specify the background color of the container element...
+    color: #818078;
+    background-color: #fcfcfa;
+  }
+}
 
 // profile page
 .image-container {
-    position: relative;
-    .image-overlay {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100%;
-        width: 100%;
-        opacity: 1;
-        transition: .5s ease;
-        background-color: rgba(0, 0, 0, 0.5);
-      }
-      .text {
-        position: absolute;
-        top: 45%;
-        left: 45%;
-      }
+  position: relative;
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 1;
+    transition: 0.5s ease;
+    background-color: rgba(0, 0, 0, 0.5);
   }
-  
 
-//   
- 
+  .text {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+  }
+}
+
+//  DATE PICKER
+
+// END DATE PICKER
