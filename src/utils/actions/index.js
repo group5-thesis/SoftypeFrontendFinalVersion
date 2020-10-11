@@ -13,7 +13,9 @@ import {
   ADD_LEAVE_REQUEST,
   RESPOND_TO_LEAVE_REQUEST,
   TOGGLE_SIDEBAR,
-  TOGGLE_DIALOG
+  TOGGLE_DIALOG,
+  ADD_TICKET,
+  FETCH_TICKETS
 } from "utils/constants/action-types";
 
 const ActionTypes = {
@@ -31,7 +33,9 @@ const ActionTypes = {
   FETCH_LEAVE_REQUEST,
   ADD_LEAVE_REQUEST,
   RESPOND_TO_LEAVE_REQUEST,
-  TOGGLE_DIALOG
+  TOGGLE_DIALOG,
+  ADD_TICKET,
+  FETCH_TICKETS
 };
 
 const actionCreator = (type, payload = null) => ({ type, payload });

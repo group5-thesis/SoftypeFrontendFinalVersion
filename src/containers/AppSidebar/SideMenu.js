@@ -55,7 +55,7 @@ export default [
         _tag: 'CSidebarNavTitle',
         _children: ['Leave Management'],
         user: [4],
-        
+
     },
     {
         _tag: 'CSidebarNavItem',
@@ -71,7 +71,7 @@ export default [
         user: [4],
         icon: 'cil-calendar',
     },
-    // 
+    //
     {
         _tag: 'CSidebarNavTitle',
         _children: ['Others'],
@@ -87,9 +87,9 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Tickets',
-        to: '/tickets',
-        user: [2,3],
-        icon: 'cil-graph',  
+        to: '/ticket',
+        user: [2,4],
+        icon: 'cil-graph',
     },
     {
         _tag: 'CSidebarNavItem',

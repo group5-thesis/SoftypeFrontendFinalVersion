@@ -6,17 +6,19 @@ import {
 } from 'react-router-dom'
 import { CContainer } from '@coreui/react'
 import { Loader } from 'reusable'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 // routes config
 import routes from 'router'
-import { filterModule } from 'utils/helpers'
+import { filterModule, plotArray } from 'utils/helpers'
 import Page404 from 'modules/placeholder/page404/Page404';
 import api from 'utils/api';
+import { ActionTypes, actionCreator } from 'utils/actions';
 const loading = (
   <Loader bg="transparent" />
 )
 
 const AppContent = (_props) => {
+  const dispatch = useDispatch();
   const user = useSelector(state => state.appState.auth.user)
   const { employeeId, roleId } = user
   const payload = { employeeId, roleId };
@@ -24,13 +26,27 @@ const AppContent = (_props) => {
   const retrieveLeaveRequests = async () => {
     let res = await api.post("/getLeaveRequest", payload)
     // if (!res.error) {
-        
+
     // }
     console.log(res)
   }
 
+
+  const fetchTickets = async () => {
+    let response = await api.get('/retrieve_tickets')
+    if (response.error) {
+      console.log('error');
+    }
+    else {
+      var temp = response.data.ticket_information;
+      temp = plotArray(temp)
+      dispatch(actionCreator(ActionTypes.FETCH_TICKETS, temp))
+    }
+  }
+
   useEffect(() => {
     retrieveLeaveRequests()
+    fetchTickets()
   }, [])
   return (
     <main className="c-main">

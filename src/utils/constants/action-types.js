@@ -18,3 +18,7 @@ export const RESPOND_TO_LEAVE_REQUEST = 'RESPOND_TO_LEAVE_REQUEST';
 // App module keywords
 export const TOGGLE_SIDEBAR = "TOGGLE_SIDEBAR";
 export const TOGGLE_DIALOG = "TOGGLE_DIALOG";
+
+// Ticket Module
+export const ADD_TICKET = 'ADD_TICKET'
+export const FETCH_TICKETS = 'FETCH_TICKETS'

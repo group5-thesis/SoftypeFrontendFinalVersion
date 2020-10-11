@@ -35,6 +35,10 @@ export const MONTHS = [
     "December"
 ]
 
+export const TICKET_STATUS = [
+  "Open",
+  "Closed"
+]
 
 export const STATUS = {
     Pending: "primary",
