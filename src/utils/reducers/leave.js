@@ -18,7 +18,8 @@ export default function changeState(state = initial_state, action) {
         })
       }
     case ActionTypes.FETCH_LEAVE_REQUEST:
-      return { ...state, leave_requests: DATA };
+      let { payload } = action
+      return { ...state, leave_requests: payload ? payload : DATA };
     default:
       return state;
   }

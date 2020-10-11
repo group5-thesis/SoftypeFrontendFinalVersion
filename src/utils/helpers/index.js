@@ -84,10 +84,13 @@ export const hasMissingFieds = (obj, rules) => {
 };
 
 export const checkDateRange = (start, end, isFilter = false) => {
+  //console.log({start, end});
   if (start === "" || end === "") {
+    //console.log(1);
     return -1;
   }
   if (start === end) {
+    //console.log(2);
     return -1;
   }
   start = moment(start, "YYYY-MM-DD");
@@ -95,12 +98,20 @@ export const checkDateRange = (start, end, isFilter = false) => {
 
   if (!isFilter) {
     if (start.isSameOrBefore(moment()) || end.isSameOrBefore(moment())) {
+      //console.log(3);
       return -1;
     }
   }
   let gap = moment.duration(end.diff(start)).asDays();
   return gap;
 };
+
+export const getDuration = (start, end) => {
+  end = moment(end, 'YYYY-MM-DD')
+  let duration = moment.duration(end.diff(moment(start, 'YYYY-MM-DD')))
+  return duration.asDays()
+}
+
 
 export const getAdminResponse = (code) => {
   return code ? "approved" : "rejected";
@@ -139,7 +150,7 @@ export const checkCamera = () => {
             })
             .catch((err) => {
               result.cameraError = err.name + ": " + err.message;
-              console.log(err);
+              //console.log(err);
               if (err.name == "NotAllowedError") {
                 result.cameraError = defaultError;
               }
@@ -174,3 +185,14 @@ export const filterModule = (modules, roleId) => {
   });
   return availableModule;
 };
+
+export const setWidth = (width) => {
+  return (
+    {
+      // xs: width,
+      // sm: width,
+      md: width,
+      lg: width,
+      xl: width,
+    })
+}
