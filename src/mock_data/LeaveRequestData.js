@@ -8,5 +8,7 @@ const leaveRequest = plotArray([
     { id: 2, name: "Yol Torres", date_from: date_from, date_to: date_to, category: "Service Incentive Leave (SIL)", status: "rejected", reason: "Bebe time", approver: "Admin" },
     { id: 3, name: "Yol Torres", date_from: date_from, date_to: date_to, category: "Vacation Leave (VL)", status: "pending", reason: "naa ko lakaw", approver: "Admin" }
 ])
-
+// 1  pending 
+// 0 rejected
+// 2 cancelled
 export default leaveRequest
