@@ -6,12 +6,13 @@ import {
 } from 'react-router-dom'
 import { CContainer } from '@coreui/react'
 import { Loader } from 'reusable'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 // routes config
 import routes from 'router'
 import { filterModule } from 'utils/helpers'
 import Page404 from 'modules/placeholder/page404/Page404';
 import api from 'utils/api';
+import { actionCreator, ActionTypes } from 'utils/actions';
 const loading = (
   <Loader bg="transparent" />
 )
@@ -20,13 +21,13 @@ const AppContent = (_props) => {
   const user = useSelector(state => state.appState.auth.user)
   const { employeeId, roleId } = user
   const payload = { employeeId, roleId };
-  const accessedRoutes = filterModule(routes, roleId)
+  const accessedRoutes = filterModule(routes, roleId);
+  const dispatch = useDispatch();
   const retrieveLeaveRequests = async () => {
-    let res = await api.post("/getLeaveRequest", payload)
+    dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
+    let res = await api.post("/getLeaveRequest", payload);
     // if (!res.error) {
-        
     // }
-    console.log(res)
   }
 
   useEffect(() => {

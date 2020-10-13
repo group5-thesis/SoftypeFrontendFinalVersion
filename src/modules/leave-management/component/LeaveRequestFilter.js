@@ -9,35 +9,56 @@ import {
   CInput,
   CLabel,
   CSelect,
+  CButton,
+  CContainer,
 } from "@coreui/react";
 import { ConfirmDialog } from "reusable";
-import { checkDateRange, shallowCopy, formatDate } from "utils/helpers";
+import { checkDateRange, shallowCopy, setWidth } from "utils/helpers";
 import { LEAVE_TYPES, STATUS } from "utils/constants/constant";
 
-const LeaveFilterRequest = ({ show, onStatusChange }) => {
-  const [dates, setDates] = useState({
-    from: formatDate(Date.now()),
-    to: "",
-  });
-  const [category, setCategory] = useState("");
+
+const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) => {
+  const defaultDates = {
+    from: filter.date_from,
+    to: filter.date_to || "",
+  }
   const dialog = useRef();
-  const handleOnChange = (e) => {
+  const [dates, setDates] = useState({
+    from: filter.date_from,
+    to: filter.date_to || "",
+  });
+  const [category, setCategory] = useState(filter.category || "");
+  const [employee, setEmployee] = useState(filter.employee || "");
+  const [status, setStatus] = useState(filter.status)
+
+  const handleDateOnChange = (e) => {
     const { name, value } = e.target;
     const prevState = shallowCopy(dates);
     prevState[name] = value;
-    let range = checkDateRange(prevState.from, prevState.to, true);
-    if (range < 0) {
-      dialog.current.toggle();
-      return;
+    if (name === "to") {
+      let range = checkDateRange(prevState.from, prevState.to, true);
+      if (range < 0) {
+        dialog.current.toggle();
+        return;
+      }
     }
     prevState[name] = value;
     setDates(prevState);
   };
 
-  const categoryOnChange = (e) => {
+  const handleCategoryChange = (e) => {
     const value = e.target.value;
     setCategory(value);
   };
+
+  const clearFilter = () => {
+    setStatus(filter.status)
+    setCategory("")
+    setDates(defaultDates)
+    setEmployee("")
+    onClearFilter()
+  }
+
   return (
     <>
       <ConfirmDialog
@@ -51,135 +72,159 @@ const LeaveFilterRequest = ({ show, onStatusChange }) => {
         }}
       />
       <CCollapse show={show}>
-        <CRow className="pt-4">
-          <CCol>
-            <CCard>
-              <CCardBody>
-                <CRow>
-                  <CCol>
-                    <CFormGroup className="my-0">
-                      <CLabel htmlFor="date-input" className="font-weight-bold">
-                        <span>Leave Period:</span>
-                      </CLabel>
+        <CContainer fluid>
+          <CRow className="pt-4">
+            <CCol>
+              <CCard>
+                <CCardBody>
+                  <CRow >
+                    <CCol  {...setWidth("4")}>
+                      <CFormGroup className="my-0">
+                        <CLabel htmlFor="date-input" className="font-weight-bold">
+                          <span>Leave Period:</span>
+                        </CLabel>
+                        <CRow gutters={false} >
+                          <CCol className="mr-1" {...setWidth("5")}>
+                            <CFormGroup>
+                              <CInput
+                                type="date"
+                                id="date-from"
+                                className="input-sm"
+                                size="sm"
+                                name="from"
+                                value={dates.from}
+                                onChange={handleDateOnChange}
+                                placeholder="Date From"
+                              />
+                            </CFormGroup>
+                          </CCol>
+                          <strong>
+                            {" "}&#8594;{" "}
+                          </strong>
+                          <CCol className="ml-1" >
+                            <CFormGroup>
+                              <CInput
+                                type="date"
+                                id="date-to"
+                                className="input-sm"
+                                size="sm"
+                                onChange={handleDateOnChange}
+                                name="to"
+                                value={dates.to}
+                                placeholder="Date To"
+                              />
+                            </CFormGroup>
+                          </CCol>
+                        </CRow>
+                      </CFormGroup>
+                    </CCol>
+                    <CCol  {...setWidth("2")}>
+                      <CFormGroup>
+                        <CLabel htmlFor="status" className="font-weight-bold">
+                          <span>Status:</span>
+                        </CLabel>
+                        <CSelect
+                          custom
+                          className="input-sm"
+                          size="sm"
+                          name="status"
+                          id="status"
+                          value={status}
+                          onChange={(e) => {
+                            setStatus(e.target.value)
+                          }}
+                        >
+                          <option value="" hidden>
+                            Select
+                        </option>
+                          <option value="All">All</option>
+                          {Object.keys(STATUS).map((key) => {
+                            return (
+                              <option key={key} value={key}>
+                                {key}
+                              </option>
+                            );
+                          })}
+                        </CSelect>
+                      </CFormGroup>
+                    </CCol>
+                    <CCol  {...setWidth("2")}>
+                      <CFormGroup>
+                        <CLabel htmlFor="status" className="font-weight-bold">
+                          <span>Category:</span>
+                        </CLabel>
+                        <CSelect
+                          custom
+                          name="category"
+                          size="sm"
+                          value={category || ""}
+                          onChange={(e) => {
+                            setCategory(e.target.value)
+                          }}
+                          id="category"
+                        >
+                          <option value="" hidden>
+                            Please select
+                        </option>
+                          {LEAVE_TYPES.map((_category, idx) => {
+                            return (
+                              <option key={idx} value={_category}>
+                                {_category}
+                              </option>
+                            );
+                          })}
+                        </CSelect>
+                      </CFormGroup>
+                    </CCol>
+                    <CCol  {...setWidth("2")}>
+                      <CFormGroup>
+                        <CLabel htmlFor="employee" className="font-weight-bold">
+                          <span>Employee:</span>
+                        </CLabel>
+                        <CInput
+                          className="input-sm"
+                          size="sm"
+                          placeholder="Employee name"
+                          name="employee"
+                          value={employee}
+                          onChange={(e) => {
+                            setEmployee(e.target.value)
+                          }}
+                        />
+                      </CFormGroup>
+                    </CCol>
+                    <CCol {...setWidth("2")}>
                       <CRow gutters={false}>
-                        <CCol className="mr-2">
-                          <CFormGroup>
-                            <CInput
-                              type="date"
-                              id="date-from"
-                              className="input-sm"
-                              size="sm"
-                              name="from"
-                              value={dates.from}
-                              onChange={handleOnChange}
-                              placeholder="Date From"
-                            />
+                        <CCol>
+                          <CFormGroup className="my-0">
+                            <CLabel htmlFor="date-input" className="font-weight-bold mb-1"></CLabel>
+                            <CButton block size="sm" color="info" className="mt-2" onClick={() => {
+                              onFilterRequests({
+                                status: status,
+                                employee: employee,
+                                date_from: dates.from,
+                                date_to: dates.to,
+                                category: category
+                              })
+                            }}>apply</CButton>
                           </CFormGroup>
                         </CCol>
-                        <b>to</b>
-                        <CCol className="ml-2">
-                          <CFormGroup>
-                            <CInput
-                              type="date"
-                              id="date-to"
-                              className="input-sm"
-                              size="sm"
-                              onChange={handleOnChange}
-                              name="to"
-                              value={dates.to}
-                              placeholder="Date To"
-                            />
+                        <CCol className="ml-1" >
+                          <CFormGroup className="my-0">
+                            <CLabel htmlFor="date-input" className="font-weight-bold mb-1"></CLabel>
+                            <CButton block size="sm" color="danger" className="mt-2" onClick={() => {
+                              clearFilter()
+                            }}>clear</CButton>
                           </CFormGroup>
                         </CCol>
                       </CRow>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol xs="2">
-                    <CFormGroup>
-                      <CLabel htmlFor="status" className="font-weight-bold">
-                        <span>Status:</span>
-                      </CLabel>
-                      <CSelect
-                        custom
-                        className="input-sm"
-                        size="sm"
-                        name="status"
-                        id="status"
-                        onChange={onStatusChange}
-                      >
-                        <option value="" hidden>
-                          Select
-                        </option>
-                        <option value="All">All</option>
-                        {Object.keys(STATUS).map((key) => {
-                          return (
-                            <option key={key} value={key}>
-                              {key}
-                            </option>
-                          );
-                        })}
-                      </CSelect>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol xs="3">
-                    <CFormGroup>
-                      <CLabel htmlFor="status" className="font-weight-bold">
-                        <span>Category:</span>
-                      </CLabel>
-                      <CSelect
-                        custom
-                        name="category"
-                        size="sm"
-                        value={category || ""}
-                        onChange={categoryOnChange}
-                        id="category"
-                      >
-                        <option value="" hidden>
-                          Please select
-                        </option>
-                        {LEAVE_TYPES.map((_category, idx) => {
-                          return (
-                            <option key={idx} value={Number(idx + 1)}>
-                              {_category}
-                            </option>
-                          );
-                        })}
-                      </CSelect>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol>
-                    <CFormGroup>
-                      <CLabel htmlFor="employee" className="font-weight-bold">
-                        <span>Employee:</span>
-                      </CLabel>
-                      <CSelect
-                        custom
-                        className="input-sm"
-                        size="sm"
-                        name="employee"
-                        id="status"
-                        onChange={onStatusChange}
-                      >
-                        <option value="" hidden>
-                          Select
-                        </option>
-                        <option value="All">All</option>
-                        {Object.keys(STATUS).map((key) => {
-                          return (
-                            <option key={key} value={key}>
-                              {key}
-                            </option>
-                          );
-                        })}
-                      </CSelect>
-                    </CFormGroup>
-                  </CCol>
-                </CRow>
-                <CRow> </CRow>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
+                    </CCol>
+                  </CRow>
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+        </CContainer>
       </CCollapse>
     </>
   );
