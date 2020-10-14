@@ -42,13 +42,16 @@ const EmployeeModal = () => {
         setDisabled(hasMissingFieds(employee))
       }, [employee])
 
+      
+      
+
     
 
     const addEmployee = async () => {
         // console.log(employee.roleId === undefined)
         let res = await api.post("/create_employee", employee)
-        // console.log(res)
         if (!res.error) {
+            employee.id=res.data.id
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
             console.log(employee)
         } else {

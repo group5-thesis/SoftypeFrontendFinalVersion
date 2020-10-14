@@ -29,9 +29,16 @@ const AppContent = (_props) => {
     // if (!res.error) {
     // }
   }
+  const retrieveEmployees = async () => {
+    let res = await api.get("/retrieve_employees");
+    if (!res.error) {
+      dispatch(actionCreator(ActionTypes.FETCH_EMPLOYEES, res.data.employee_information));
+    }
+  }
 
   useEffect(() => {
     retrieveLeaveRequests()
+    retrieveEmployees()
   }, [])
   return (
     <main className="c-main">

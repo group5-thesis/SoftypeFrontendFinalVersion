@@ -14,28 +14,28 @@ const User = ({ match }) => {
 
   const usersData = useSelector(state => {
     return state.appState.employee.employees.filter(el => {
-      return String(el.id) === String(match.params.id)
-    })
+      return String(el.id) === String(match.params.id)  
+     })
   })
-
-  const user = usersData.filter(_user => String(_user.id) === match.params.id)
-  if (!Object.keys(user[0]).length) {
-    return NoData
+  // console.log(usersData)
+  const user = usersData[0]
+  
+  if (!Object.keys(user.length)) {
+    return <NoData/>    
   }else{
-    shallowCopy(user[0])
+    shallowCopy(user)
   }
 
   const handleOnChange = (event) => {
     const dataHolder = shallowCopy(newUser)
     dataHolder[event.target.name] = event.target.value
-    setNewUser(setNewUser(dataHolder))
+    setNewUser(dataHolder)
   }
 
 
   const UpdateEmployee = async () => {
     let res = await api.post("/update_employee", newUser)
     if (!res.error) {
-      console.log("update: " + usersData)
       dispatch(actionCreator(ActionTypes.UPDATE_EMPLOYEE, newUser))
     }
     
