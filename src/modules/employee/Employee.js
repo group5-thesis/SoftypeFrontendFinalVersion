@@ -17,7 +17,7 @@ const User = ({ match }) => {
       return String(el.id) === String(match.params.id)  
      })
   })
-  // console.log(usersData)
+  console.log(usersData)
   const user = usersData[0]
   
   if (!Object.keys(user.length)) {

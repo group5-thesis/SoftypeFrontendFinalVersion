@@ -64,6 +64,11 @@ const Users = () => {
                             striped
                             itemsPerPage={5}
                             activePage={page}
+                            pagination
+                            onPageChange={(e) => {
+                                pageChange(e);
+                              }}
+                              activePage={page}
                             clickableRows
                             onRowClick={(item) => history.push(`/employees/profile/${item.id}`)}
                             scopedSlots={{
@@ -77,13 +82,7 @@ const Users = () => {
                                     )
                             }}
                         />
-                        <CPagination
-                            activePage={page}
-                            onActivePageChange={pageChange}
-                            pages={5}
-                            doubleArrows={false}
-                            align="center"
-                        />
+                       
                     </CCardBody>
                 </CCard>
             </CCol>

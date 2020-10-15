@@ -4,10 +4,10 @@ import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CI
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
-import {NameVAlidation} from 'utils/helpers';
 import { APP_MESSAGES } from 'utils/constants/constant';
 import { ADD_EMPLOYEE } from 'utils/constants/action-types';
-import {hasMissingFieds} from 'utils/helpers'
+import {hasMissingFieds, RULES, shallowCopy, getAge} from 'utils/helpers'
+
 
 const EmployeeModal = () => {
     let dispatch = useDispatch();
@@ -24,28 +24,54 @@ const EmployeeModal = () => {
         street: "",
         city: "",
         country: ""
-
-    },
-    )
-    const handleOnChange = (event) => {
-        let Employee = Object.assign({}, employee)
-        Employee[event.target.name] = event.target.value
-        createEmployee(Employee)
-    }
+    }    )
     
     
     const [Error, setError] = useState(APP_MESSAGES.INPUT_REQUIRED)
     const [disabled, setDisabled] = useState(true)
 
-
-    useEffect(() => {
-        setDisabled(hasMissingFieds(employee))
-      }, [employee])
-
+    const handleOnChange = (event) => {
       
-      
+        let Employee = shallowCopy(employee)
+        let {name , value} = event.target
+        let validate = validateInfo(name , value)
+        
+        if(validate){
+            Employee[name] = value
+            createEmployee(Employee)
+        }else{
+           alert(validate)
+           setDisabled(true)
+        }
+    }
 
-    
+    const validateInfo=(name , value)=>{
+        const {ageRules, nameRules, numberRules, emailRules} = RULES
+        switch (name){
+            case "birthdate":
+                return ageRules(getAge(value))
+                
+            case "firstname":
+                return nameRules(value)
+
+            case "lastname":
+                return nameRules(value)
+
+            case "middlename":
+                return nameRules(value)
+
+            case "mobileno":
+                return numberRules(value)
+
+            case "email":
+                return emailRules(value)
+
+            default:
+                return true
+
+        }
+    }
+      
 
     const addEmployee = async () => {
         // console.log(employee.roleId === undefined)
@@ -61,6 +87,10 @@ const EmployeeModal = () => {
 
     }
    
+    useEffect(() => {
+        setDisabled(hasMissingFieds(employee ))
+      }, [employee])
+
 
     return (
         <Modal {...{
@@ -71,7 +101,7 @@ const EmployeeModal = () => {
                     disabled = {disabled}
                     onClick={addEmployee}
                     className="mr-1"
-                    color="warning">
+                    color="primary">
                     Add
                 </CButton>
 
@@ -85,7 +115,6 @@ const EmployeeModal = () => {
                                 <CLabel>Firstname</CLabel>
                                 <CInput
                                     onChange={handleOnChange}
-
                                     name="firstname"
                                     value={employee.firstname || ""}
                                     placeholder="Enter Firstname"
@@ -145,8 +174,7 @@ const EmployeeModal = () => {
                                 <CInput
                                     onChange={handleOnChange}
                                     name="mobileno"
-                                    required
-                                    value={employee.mobileno || ""}
+                                    value={employee.mobileno}
                                     placeholder="Enter Mobile Number.."
 
                                 />
