@@ -1,6 +1,7 @@
 import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
 import { Promise } from "q";
+
 export const RULES = {
   required: (value) => !!value || "Required.",
   usernameRules: (v) =>
@@ -13,6 +14,18 @@ export const RULES = {
     (v && v.length >= 8) || "Password must be more than 8 characters",
   ageRules: (v) => v >= 18 || "Must be in legal age",
 };
+
+export const getAge = (dateString) => {
+  let today = new Date();
+  let birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+
 
 export const splitCamelCase = (text) => {
   return text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
@@ -167,16 +180,6 @@ export const checkCamera = () => {
         reject(result);
       });
   });
-};
-export const getAge = (dateString) => {
-  let today = new Date();
-  let birthDate = new Date(dateString);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  let m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
 };
 
 export const filterModule = (modules, roleId) => {

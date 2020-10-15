@@ -166,6 +166,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                           <option value="" hidden>
                             Please select
                         </option>
+                          <option value="All">All</option>
                           {LEAVE_TYPES.map((_category, idx) => {
                             return (
                               <option key={idx} value={_category}>
@@ -186,7 +187,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                           size="sm"
                           placeholder="Employee name"
                           name="employee"
-                          value={employee}
+                          value={employee.toLowerCase() === "all" ? "" : employee}
                           onChange={(e) => {
                             setEmployee(e.target.value)
                           }}

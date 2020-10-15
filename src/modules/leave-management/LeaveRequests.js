@@ -79,7 +79,7 @@ const LeaveRequests = (props) => {
       filter: false,
     },
     "status",
-    "approver",
+    // "approver",
     {
       key: "actions",
       label: "Options",
@@ -177,7 +177,7 @@ const LeaveRequests = (props) => {
               <CCol sm="5">
                 <h4 className="card-title mb-0">Leave Request</h4>
               </CCol>
-              <CCol sm="7" className="d-none d-md-block">
+              <CCol sm="7" className=" d-sm-block">
                 <div className="float-right  mr-3">
                   <LeaveRequestForm />
                 </div>
@@ -213,7 +213,7 @@ const LeaveRequests = (props) => {
             <CDataTable
               className="table-responsive mt-2"
               items={filteredLeaveRequest}
-              itemsPerPage={5}
+              itemsPerPage={10}
               fields={header}
               pagination
               sorter
