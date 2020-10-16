@@ -15,7 +15,7 @@ export const RULES = {
   ageRules: (v) => v >= 18 || "Must be in legal age",
 };
 
-export const getAge = (dateString) => {
+export const getAge =     (dateString) => {
   let today = new Date();
   let birthDate = new Date(dateString);
   let age = today.getFullYear() - birthDate.getFullYear();
