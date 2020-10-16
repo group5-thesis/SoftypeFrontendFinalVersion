@@ -11,6 +11,7 @@ const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
 const Ticket = React.lazy(() => import('modules/ticket/Ticket'))
+const PerformanceReview = React.lazy(() => import('modules/performance-review/PerformanceReview'))
 
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
@@ -25,7 +26,8 @@ const routes = [
     { path: '/repository', name: 'Repository', component: ListGroup, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },
-    { path: '/ticket', name: 'Ticket', component: Ticket, user: [4] }
+    { path: '/ticket', exact: true, name: 'Ticket', component: Ticket, user: [4] },
+    { path: '/employee/performance-review', exact: true, name: 'PerformanceReview', component: PerformanceReview, user: [4] }
 
 ]
 

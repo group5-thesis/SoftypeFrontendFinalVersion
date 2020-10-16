@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import Calendar from './component/Calendar'
+import Calendar from 'modules/calendar/Calendar'
 class LeaveCalendar extends Component {
   render() {
     return <Calendar {...{
       header: false,
-      showHeader: true
+      showHeader: true,
     }} />
   }
 }

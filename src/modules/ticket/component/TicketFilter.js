@@ -9,37 +9,32 @@ import {
   CInput,
   CLabel,
   CSelect,
+  CButton
 } from "@coreui/react";
-import { TICKET_TYPES, TICKET_STATUS } from "utils/constants/constant";
-import { checkDateRange, shallowCopy, formatDate } from "utils/helpers";
+import { MONTHS, YEARS, TICKET_STATUS } from "utils/constants/constant";
+import { setWidth } from "utils/helpers";
 
-const TicketFilter = ({ show, onStatusChange }) => {
+const TicketFilter = ({ show, onStatusChange, filter, onClearFilter }) => {
 
-  const [type, setType] = useState("");
+  const [now, setNow] = useState(new Date)
+  const [month, setMonth] = useState(MONTHS[filter.month])
+  const [year, setYear] = useState(filter.year)
+  const [status, setStatus] = useState(filter.status)
 
-  const [dates, setDates] = useState({
-    from: formatDate(Date.now()),
-    to: "",
-  });
+  const yearOnChange = (e) => {
+    setYear(e.target.value)
+  }
 
-  const dialog = useRef();
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    const prevState = shallowCopy(dates);
-    prevState[name] = value;
-    let range = checkDateRange(prevState.from, prevState.to, true);
-    if (range < 0) {
-      dialog.current.toggle();
-      return;
-    }
-    prevState[name] = value;
-    setDates(prevState);
-  };
+  const monthOnChange = (e) => {
+    setMonth(e.target.value)
+  }
 
-  const typeOnChange = (e) => {
-    const value = e.target.value;
-    setType(value);
-  };
+  const clearFilter = () => {
+    setMonth(MONTHS[filter.month])
+    setYear(filter.year)
+    setStatus(filter.status)
+    onClearFilter();
+  }
 
   return (
     <>
@@ -48,31 +43,62 @@ const TicketFilter = ({ show, onStatusChange }) => {
           <CCol>
             <CCard>
               <CCardBody>
-                <CRow>
-                  <CCol>
-                    <CFormGroup className="my-0">
+                <CRow >
+                  <CCol {...setWidth("3")} className="float-right">
+                    <CFormGroup>
                       <CLabel htmlFor="date-input" className="font-weight-bold">
-                        <span>Date</span>
+                        <span>Year</span>
                       </CLabel>
-                      <CRow gutters={false}>
-                        <CCol className="mr-2">
-                          <CFormGroup>
-                            <CInput
-                              type="date"
-                              id="date-from"
-                              className="input-sm"
-                              size="sm"
-                              name="from"
-                              value={dates.from}
-                              onChange={handleOnChange}
-                              placeholder="Date From"
-                            />
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
+                      <CSelect
+                        className="input-sm"
+                        size="sm"
+                        name="year"
+                        value={year}
+                        id="year"
+                        onChange={yearOnChange}
+                      >
+                        <option value="" hidden>
+                          Select
+                        </option>
+                        <option value={year} hidden>{year}</option>
+                        {YEARS.map(key => {
+                          return (
+                            <option key={key} value={key}>
+                              {key}
+                            </option>
+                          );
+                        })}
+                      </CSelect>
                     </CFormGroup>
                   </CCol>
-                  <CCol xs="2">
+                  <CCol {...setWidth("3")} className="float-right">
+                    <CFormGroup>
+                      <CLabel className="font-weight-bold">
+                        <span>Month</span>
+                      </CLabel>
+                      <CSelect
+                        className="input-sm"
+                        size="sm"
+                        name="month"
+                        value={month}
+                        id="month"
+                        onChange={monthOnChange}
+                      >
+                        <option value="" hidden>
+                          Select
+                        </option>
+                        <option value={month} hidden>{month}</option>
+                        {MONTHS.map(key => {
+                          return (
+                            <option key={key} value={key}>
+                              {key}
+                            </option>
+                          );
+                        })}
+                      </CSelect>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol {...setWidth("3")} className="float-right">
                     <CFormGroup>
                       <CLabel htmlFor="status" className="font-weight-bold">
                         <span>Status:</span>
@@ -99,8 +125,37 @@ const TicketFilter = ({ show, onStatusChange }) => {
                       </CSelect>
                     </CFormGroup>
                   </CCol>
+                  <CCol {...setWidth("3")}>
+                    <CRow gutters={false}>
+                      <CCol>
+                        <CFormGroup className="my-0">
+                          <CLabel htmlFor="date-input" className="font-weight-bold mb-1"></CLabel>
+                          <CButton block size="sm" color="info" className="mt-2"
+                          // onClick={() => {
+                          // onFilterRequests({
+                          //   status: status,
+                          //   employee: employee,
+                          //   date_from: dates.from,
+                          //   date_to: dates.to,
+                          //   category: category
+                          // })
+                          // }}
+                          >Apply</CButton>
+                        </CFormGroup>
+                      </CCol>
+                      <CCol className="ml-1" >
+                        <CFormGroup className="my-0">
+                          <CLabel htmlFor="date-input" className="font-weight-bold mb-1"></CLabel>
+                          <CButton block size="sm" color="danger" className="mt-2"
+                            onClick={() => {
+                              clearFilter()
+                            }}
+                          >Clear</CButton>
+                        </CFormGroup>
+                      </CCol>
+                    </CRow>
+                  </CCol>
                 </CRow>
-                <CRow> </CRow>
               </CCardBody>
             </CCard>
           </CCol>

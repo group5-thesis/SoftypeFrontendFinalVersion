@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButtonGroup, CButton } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux';
-import { splitCamelCase, splitSnakeCase, checkDateRange, insertProperty, shallowCopy, getAdminResponse } from 'utils/helpers'
-import Calendar from './component/Calendar';
-import NoData from 'reusable/NoData';
+import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration } from 'utils/helpers'
+import { NoData } from 'reusable';
 import { ActionTypes, actionCreator } from 'utils/actions';
-
+const Calendar = lazy(() => import('modules/calendar/Calendar'));
 const LeaveRequest = ({ match }) => {
   const dispatch = useDispatch();
   const _request = useSelector(state => {
@@ -18,7 +17,7 @@ const LeaveRequest = ({ match }) => {
   if (!Object.keys(request).length) {
     return <NoData />
   }
-  request = insertProperty(request, 'no_of_days', checkDateRange(request['date from'], request['date to']), 4);
+  request = insertProperty(request, 'no_of_days', getDuration(request['date from'], request['date to']), 4);
   let event = {
     start: request['date from'],
     end: request['date to'],
@@ -30,6 +29,10 @@ const LeaveRequest = ({ match }) => {
   const handleClick = (code) => {
     let response = getAdminResponse(code)
     dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, { id: request.id, status: response }));
+  }
+
+  const renderCalendar = () => {
+    return <Calendar {...{ _events: [event] }} />
   }
 
   return (
@@ -74,8 +77,8 @@ const LeaveRequest = ({ match }) => {
 
         </CCard>
       </CCol>
-      <CCol lg={6} className="d-md-down-none">
-        <Calendar {...{ _events: [event] }} />
+      <CCol lg={6} style={{ minHeight: '500px' }} className="d-md-down-none">
+        {renderCalendar()}
       </CCol>
     </CRow>
   )

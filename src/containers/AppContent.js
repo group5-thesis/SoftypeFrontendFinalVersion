@@ -12,25 +12,23 @@ import routes from 'router'
 import { filterModule, plotArray } from 'utils/helpers'
 import Page404 from 'modules/placeholder/page404/Page404';
 import api from 'utils/api';
-import { ActionTypes, actionCreator } from 'utils/actions';
+import { actionCreator, ActionTypes } from 'utils/actions';
 const loading = (
   <Loader bg="transparent" />
 )
 
 const AppContent = (_props) => {
-  const dispatch = useDispatch();
   const user = useSelector(state => state.appState.auth.user)
   const { employeeId, roleId } = user
   const payload = { employeeId, roleId };
-  const accessedRoutes = filterModule(routes, roleId)
+  const accessedRoutes = filterModule(routes, roleId);
+  const dispatch = useDispatch();
   const retrieveLeaveRequests = async () => {
-    let res = await api.post("/getLeaveRequest", payload)
+    dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
+    let res = await api.post("/getLeaveRequest", payload);
     // if (!res.error) {
-
     // }
-    console.log(res)
   }
-
 
   const fetchTickets = async () => {
     let response = await api.get('/retrieve_tickets')

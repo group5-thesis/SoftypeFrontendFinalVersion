@@ -22,3 +22,4 @@ export const TOGGLE_DIALOG = "TOGGLE_DIALOG";
 // Ticket Module
 export const ADD_TICKET = 'ADD_TICKET'
 export const FETCH_TICKETS = 'FETCH_TICKETS'
+export const CLOSE_TICKET = 'CLOSE_TICKET'
