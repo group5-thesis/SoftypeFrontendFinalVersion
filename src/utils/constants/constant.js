@@ -1,38 +1,38 @@
 export const USER_TYPES = [
-    'Junior consultant',
-    'Senior consultant',
-    'Team Leader',
-    'Project Manager',
-    'CEO',
-    'CIO',
-    'CTO',
-    'COO',
+  'Junior consultant',
+  'Senior consultant',
+  'Team Leader',
+  'Project Manager',
+  'CEO',
+  'CIO',
+  'CTO',
+  'COO',
 ]
 
 export const LEAVE_TYPES = [
-    "Sick Leave (SL)",
-    "Vacation Leave (VL)",
-    "Service Incentive Leave (SIL)",
-    "Maternity Leave (ML)",
-    "Paternity Leave",
-    "Parental Leave",
-    "Rehabilitation Leave",
-    "Study Leave"
+  "Sick Leave (SL)",
+  "Vacation Leave (VL)",
+  "Service Incentive Leave (SIL)",
+  "Maternity Leave (ML)",
+  "Paternity Leave",
+  "Parental Leave",
+  "Rehabilitation Leave",
+  "Study Leave"
 ]
 
 export const MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
 ]
 
 export const YEARS = [

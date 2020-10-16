@@ -99,13 +99,13 @@ const Login = (props) => {
   return (
     <CenteredLayout>
       <ConfirmDialog
-        id="cutom_dialog"
         {...{
           title: error,
           cancelButtonText: "Ok",
-          confirmButton: false
+          confirmButton: false,
         }}
-      ></ConfirmDialog>
+      >
+      </ConfirmDialog>
       <CForm>
         <h1>Welcome Back!!</h1>
         <p className="text-muted">Sign In to your account</p>
