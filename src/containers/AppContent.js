@@ -26,8 +26,6 @@ const AppContent = (_props) => {
   const retrieveLeaveRequests = async () => {
     dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     let res = await api.post("/getLeaveRequest", payload);
-    // if (!res.error) {
-    // }
   }
   const retrieveEmployees = async () => {
     let res = await api.get("/retrieve_employees");

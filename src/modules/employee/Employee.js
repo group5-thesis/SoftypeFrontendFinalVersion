@@ -18,12 +18,14 @@ const User = ({ match }) => {
      })
   })
   console.log(usersData)
-  const user = usersData[0]
   
-  if (!Object.keys(user.length)) {
+  const user = usersData[0]
+  console.log(user)
+  
+  if (!Object.keys(user).length) {
     return <NoData/>    
   }else{
-    shallowCopy(user)
+    setNewUser(user)
   }
 
   const handleOnChange = (event) => {
