@@ -41,6 +41,11 @@ export const YEARS = [
     2020
 ]
 
+export const TICKET_STATUS = {
+  1: "primary",
+  0: "success"
+}
+
 export const STATUS = {
     Pending: "primary",
     Approved: "success",

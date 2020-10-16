@@ -46,7 +46,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Departments',
-        to: '/employee/department',
+        to: '/employee/departments',
         user: [4],
         icon: 'cil-group',
     },
