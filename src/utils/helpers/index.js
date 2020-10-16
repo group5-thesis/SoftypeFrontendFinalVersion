@@ -13,6 +13,7 @@ export const RULES = {
   passwordRules: (v) =>
     (v && v.length >= 8) || "Password must be more than 8 characters",
   ageRules: (v) => v >= 18 || "Must be in legal age",
+  numberRules: (v) => /^\d+$/.test(v) || "Input must be numbers only"
 };
 
 export const getAge =     (dateString) => {
@@ -47,6 +48,7 @@ export const plotArray = (arr) => {
     return renameKey(data);
   });
 };
+
 
 export const computeDays = (day1, day2) => {
   const date1 = new Date(day1);

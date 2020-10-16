@@ -9,6 +9,27 @@ export const USER_TYPES = [
   'COO',
 ]
 
+export const ROLE = [
+    'Trainee',
+    'Junior Consultant (Technical/Functional)',
+    'Senior Consultant (Technical/Functional)',
+    'Associate Team Lead',
+    'Team Leader',
+    'Project Manager',
+    'CTO',
+    'CIO',
+    'COO',
+    'CEO',
+    'IT Admin',
+    'Admin',
+    'HR',
+    'Sales Associate',
+    'Technical Associate',
+    'Support and Documentation',
+    'Senior Sales Consultant',
+    'VP Sales and Marketing'
+]
+
 export const LEAVE_TYPES = [
   "Sick Leave (SL)",
   "Vacation Leave (VL)",

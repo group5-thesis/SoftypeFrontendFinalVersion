@@ -10,10 +10,6 @@ import {
     CRow,
     CPagination
 } from '@coreui/react'
-
-
-    
-
 import EmployeeModal from './EmployeeModal';
 
 const getBadge = status => {
@@ -62,32 +58,34 @@ const Users = () => {
                             items={usersData}
                             fields={[
                               { key: 'firstname', _classes: 'font-weight-bold' },
-                              'lastname', 'middlename','role','department', 'gender', 'mobilenumber', 'birthdate', 'email', 'street', 'city', 'country'
+                              'lastname', 'middlename',{
+                                key: "role",
+                                label: "Position",
+                                sorter: false,
+                                filter: false,
+                              },,'department', 'gender', 'mobile number', 'birthdate', 'email', 'street', 'city', 'country'
                              ]}
                             hover
                             striped
                             itemsPerPage={5}
                             activePage={page}
+                            pagination
+                            onPageChange={(e) => {
+                                pageChange(e);
+                              }}
+                              activePage={page}
                             clickableRows
-                            onRowClick={(item) => history.push(`/employees/profile/${item.id}`)}
+                            onRowClick={(item) => history.push(`/employees/profile/${item.employeeId}`)}
                             scopedSlots={{
-                                'status':
-                                    (item) => (
-                                        <td>
-                                            <CBadge color={getBadge(item.status)}>
-                                                {item.status}
-                                            </CBadge>
-                                        </td>
-                                    )
+                                // 'status':
+                                //     (item) => (
+                                //         <td>
+                                //            
+                                //         </td>
+                                //     )
                             }}
                         />
-                        <CPagination
-                            activePage={page}
-                            onActivePageChange={pageChange}
-                            pages={5}
-                            doubleArrows={false}
-                            align="center"
-                        />
+                       
                     </CCardBody>
                 </CCard>
             </CCol>
