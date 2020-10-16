@@ -38,6 +38,7 @@ const AppContent = (_props) => {
     retrieveLeaveRequests()
     retrieveEmployees()
   }, [])
+  
   return (
     <main className="c-main">
       <CContainer fluid>
