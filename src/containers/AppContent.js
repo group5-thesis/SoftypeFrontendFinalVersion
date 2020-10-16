@@ -47,6 +47,7 @@ const AppContent = (_props) => {
     retrieveLeaveRequests()
     fetchTickets()
   }, [])
+  
   return (
     <main className="c-main">
       <CContainer fluid>
