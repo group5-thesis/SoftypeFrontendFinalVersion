@@ -27,15 +27,14 @@ const AppContent = (_props) => {
     dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     let res = await api.post("/getLeaveRequest", payload);
     if (!res.error) {
-      // let {leave_requests} = res.data;
-      console.log("ok na ")
+      let {leave_requests} = res.data;
     }
   }
 
   const fetchTickets = async () => {
     let response = await api.get('/retrieve_tickets')
     if (response.error) {
-      console.log('error');
+      console.log(response.message);
     }
     else {
       var temp = response.data.ticket_information;
