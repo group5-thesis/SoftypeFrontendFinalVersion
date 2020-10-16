@@ -27,6 +27,7 @@ const User = ({ match }) => {
   }else{
     setNewUser(user)
   }
+  
 
   const handleOnChange = (event) => {
     const dataHolder = shallowCopy(newUser)
