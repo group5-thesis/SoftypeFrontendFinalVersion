@@ -2,7 +2,6 @@ import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
 import { Promise } from "q";
 
-
 export const RULES = {
   required: (value) => !!value || "Required.",
   usernameRules: (v) =>
@@ -16,6 +15,18 @@ export const RULES = {
   ageRules: (v) => v >= 18 || "Must be in legal age",
   numberRules: (v) => /^\d+$/.test(v) || "Input must be numbers only"
 };
+
+export const getAge =     (dateString) => {
+  let today = new Date();
+  let birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+
 
 export const splitCamelCase = (text) => {
   return text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
@@ -172,16 +183,6 @@ export const checkCamera = () => {
       });
   });
 };
-export const getAge = (dateString) => {
-  let today = new Date();
-  let birthDate = new Date(dateString);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  let m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-};
 
 export const filterModule = (modules, roleId) => {
   let availableModule = modules.filter(({ user }) => {
@@ -199,4 +200,8 @@ export const setWidth = (width) => {
       lg: width,
       xl: width,
     })
+}
+
+export const copyArray = (arr) => {
+  return Array.from(arr)
 }

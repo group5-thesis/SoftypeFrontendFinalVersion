@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   CCard,
   CCardBody,
@@ -13,24 +13,49 @@ import {
   CContainer,
 } from "@coreui/react";
 import { ConfirmDialog } from "reusable";
-import { setWidth, shallowCopy } from "utils/helpers";
-import { LEAVE_TYPES, STATUS, MONTHS, YEARS } from "utils/constants/constant";
+import { checkDateRange, shallowCopy, setWidth } from "utils/helpers";
+import { LEAVE_TYPES, STATUS, MONTHS } from "utils/constants/constant";
 
 const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) => {
+  
+  const defaultDates = {
+    from: filter.date_from,
+    to: filter.date_to || "",
+  }
   const dialog = useRef();
-  const [filteredValues, setFilteredValues] = useState(shallowCopy(filter))
+  const [dates, setDates] = useState({
+    from: filter.date_from,
+    to: filter.date_to || "",
+  });
+  const [category, setCategory] = useState(filter.category || "");
+  const [employee, setEmployee] = useState(filter.employee || "");
   const [status, setStatus] = useState(filter.status)
 
-  const handleOnChange = (e) => {
-    const name = e.target.name
-    const value = e.target.value
-    const obj = shallowCopy(filteredValues);
-    obj[name] = value;
-    setFilteredValues(obj)
-  }
+  const handleDateOnChange = (e) => {
+    const { name, value } = e.target;
+    const prevState = shallowCopy(dates);
+    prevState[name] = value;
+    if (name === "to") {
+      let range = checkDateRange(prevState.from, prevState.to, true);
+      if (range < 0) {
+        dialog.current.toggle();
+        return;
+      }
+    }
+    prevState[name] = value;
+    setDates(prevState);
+  };
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setCategory(value);
+  };
 
   const clearFilter = () => {
-    setFilteredValues(shallowCopy(filter))
+    setStatus(filter.status)
+    setCategory("")
+    setDates(defaultDates)
+    setEmployee("")
     onClearFilter()
   }
 
@@ -64,16 +89,19 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                               custom
                               className="input-sm"
                               size="sm"
-                              name="month"
-                              value={filteredValues.month}
-                              onChange={handleOnChange}
+                              name="status"
+                              id="status"
+                              value={status}
+                              onChange={(e) => {
+                                setStatus(e.target.value)
+                              }}
                             >
                               <option value="" hidden>
-                                {filteredValues.month}
+                                {MONTHS[Date.getMonth()]}
                               </option>
                               <option value="All">All</option>
                               {MONTHS.map((month, idx) =>
-                                <option key={month} value={idx}>
+                                <option value={idx}>
                                   {month}
                                 </option>
                               )}
@@ -85,28 +113,57 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                             <CLabel htmlFor="date-input" className="font-weight-bold">
                               <span>Year</span>
                             </CLabel>
-                            <CSelect
-                              custom
+                            <CInput
+                              type="date"
+                              id="date-to"
                               className="input-sm"
                               size="sm"
-                              name="year"
-                              value={filteredValues.year}
-                              onChange={handleOnChange}
-                            >
-                              <option value="" hidden>
-                                {filteredValues.year}
-                              </option>
-                              <option value="All">All</option>
-                              {YEARS.map((year) => {
-                                return (<option key={year} value={year}>
-                                  {year}
-                                </option>)
-                              }
-                              )}
-                            </CSelect>
+                              onChange={handleDateOnChange}
+                              name="to"
+                              value={dates.to}
+                              placeholder="Date To"
+                            />
                           </CFormGroup>
                         </CCol>
                       </CRow>
+                      {/* <CFormGroup className="my-0">
+                        <CLabel htmlFor="date-input" className="font-weight-bold">
+                          <span>Leave Period:</span>
+                        </CLabel>
+                        <CRow gutters={false} >
+                          <CCol className="mr-1" {...setWidth("5")}>
+                            <CFormGroup>
+                              <CInput
+                                type="date"
+                                id="date-from"
+                                className="input-sm"
+                                size="sm"
+                                name="from"
+                                value={dates.from}
+                                onChange={handleDateOnChange}
+                                placeholder="Date From"
+                              />
+                            </CFormGroup>
+                          </CCol>
+                          <strong>
+                            {" "}&#8594;{" "}
+                          </strong>
+                          <CCol className="ml-1" >
+                            <CFormGroup>
+                              <CInput
+                                type="date"
+                                id="date-to"
+                                className="input-sm"
+                                size="sm"
+                                onChange={handleDateOnChange}
+                                name="to"
+                                value={dates.to}
+                                placeholder="Date To"
+                              />
+                            </CFormGroup>
+                          </CCol>
+                        </CRow>
+                      </CFormGroup> */}
                     </CCol>
                     <CCol  {...setWidth("2")}>
                       <CFormGroup>
@@ -119,8 +176,10 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                           size="sm"
                           name="status"
                           id="status"
-                          value={filteredValues.status}
-                          onChange={handleOnChange}
+                          value={status}
+                          onChange={(e) => {
+                            setStatus(e.target.value)
+                          }}
                         >
                           <option value="" hidden>
                             Select
@@ -145,8 +204,10 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                           custom
                           name="category"
                           size="sm"
-                          value={filteredValues.category || ""}
-                          onChange={handleOnChange}
+                          value={category || ""}
+                          onChange={(e) => {
+                            setCategory(e.target.value)
+                          }}
                           id="category"
                         >
                           <option value="" hidden>
@@ -173,8 +234,10 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                           size="sm"
                           placeholder="Employee name"
                           name="employee"
-                          value={filteredValues.employee.toLowerCase() === "all" ? "" : filteredValues.employee}
-                          onChange={handleOnChange}
+                          value={employee.toLowerCase() === "all" ? "" : employee}
+                          onChange={(e) => {
+                            setEmployee(e.target.value)
+                          }}
                         />
                       </CFormGroup>
                     </CCol>
@@ -184,7 +247,13 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                           <CFormGroup className="my-0">
                             <CLabel htmlFor="date-input" className="font-weight-bold mb-1"></CLabel>
                             <CButton block size="sm" color="info" className="mt-2" onClick={() => {
-                              onFilterRequests(filteredValues)
+                              onFilterRequests({
+                                status: status,
+                                employee: employee,
+                                date_from: dates.from,
+                                date_to: dates.to,
+                                category: category
+                              })
                             }}>apply</CButton>
                           </CFormGroup>
                         </CCol>

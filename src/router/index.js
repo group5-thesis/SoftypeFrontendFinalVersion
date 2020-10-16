@@ -10,7 +10,17 @@ const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups
 const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
+const Ticket = React.lazy(() => import('modules/ticket/Ticket'))
+const PerformanceReview = React.lazy(() => import('modules/performance-review/PerformanceReview'))
+const Departments = React.lazy(() => import('modules/departments/Departments'))
 
+/**
+ * access levels
+ * 1 - admin only
+ * 2 - managers
+ * 3 - regular employee
+ * 4 - all
+ */
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
     { path: '/dashboard', name: 'Dashboard', component: Dashboard, user: [4] },
@@ -24,6 +34,9 @@ const routes = [
     { path: '/repository', name: 'Repository', component: ListGroup, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },
+    { path: '/ticket', exact: true, name: 'Ticket', component: Ticket, user: [4] },
+    { path: '/employee/performance-review', exact: true, name: 'PerformanceReview', component: PerformanceReview, user: [4] },
+    { path: '/employee/departments', exact: true, name: 'Departments', component: Departments, user: [4] }
 
 ]
 
