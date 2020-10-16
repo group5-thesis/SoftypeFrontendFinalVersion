@@ -23,6 +23,7 @@ const ConfirmDialog = forwardRef(
     };
     const closeDialog = () => {
       setDialog(false);
+
     };
     useImperativeHandle(ref, () => ({
       toggle() {
@@ -39,11 +40,6 @@ const ConfirmDialog = forwardRef(
           show={dialog}
           centered={centered}
           closeOnBackdrop={false}
-          onClose={() => {
-            if (onCloseCallback) {
-              onCloseCallback();
-            }
-          }}
         >
           <CModalBody>
             <blockquote className="blockquote text-center">
@@ -71,7 +67,12 @@ const ConfirmDialog = forwardRef(
               )}
 
               <CCol lg="4" className="px-1 mb-2">
-                <CButton color="danger" onClick={closeDialog} size="md" block>
+                <CButton color="danger" onClick={() => {
+                  closeDialog()
+                  if (onCloseCallback) {
+                    onCloseCallback();
+                  }
+                }} size="md" block>
                   {cancelButtonText}
                 </CButton>
               </CCol>

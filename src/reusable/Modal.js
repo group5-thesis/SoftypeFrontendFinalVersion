@@ -15,9 +15,11 @@ const Modal = forwardRef(
       size,
       centered,
       modalOnClose,
+      closeButton = false,
       children,
       btnTitle,
-      cancelBtnTitle = "cancel",
+      cancelBtnTitle = "Cancel",
+      hideCancelButton = false,
       block,
       hidden = false,
       theme = "primary",
@@ -54,21 +56,13 @@ const Modal = forwardRef(
           }}
           className="fade"
         >
-          <CModalHeader>
+          <CModalHeader closeButton={closeButton}>
             <strong>{title}</strong>
           </CModalHeader>
           <CModalBody>{children}</CModalBody>
           <CModalFooter>
             {footer}
-            {/* <CButton onClick={() => {
-                        toggle();
-                        if  (modalOnClose){
-                            modalOnClose();
-                        }
-                    }} className="mr-1" color="warning">
-                        Add
-                    </CButton> */}
-            <CButton
+            {!hideCancelButton && <CButton
               onClick={() => {
                 toggle();
                 if (modalOnClose) {
@@ -79,7 +73,7 @@ const Modal = forwardRef(
               color="danger"
             >
               {cancelBtnTitle}
-            </CButton>
+            </CButton>}
           </CModalFooter>
         </CModal>
       </>

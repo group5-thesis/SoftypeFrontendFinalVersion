@@ -199,3 +199,7 @@ export const setWidth = (width) => {
       xl: width,
     })
 }
+
+export const copyArray = (arr) => {
+  return Array.from(arr)
+}
