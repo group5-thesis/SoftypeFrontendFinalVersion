@@ -19,22 +19,28 @@ import { CenteredLayout } from "containers"
 import CIcon from "@coreui/icons-react"
 import { Modal } from "reusable"
 import api from "utils/api";
+import { formatDate } from "utils/helpers"
 
 const FileUpload = () => {
     const [file, setFile] = useState([]);
     const [description, setDescription] = useState("");
+    const [type, setType] = useState("");
+    const [path, setPath] = useState("");
 
-
+    
     const handleFileChange = (e) => {
         let { files } = e.target;
         // console.log(files)
         setFile(files[0]);
+
     };
 
     const handleDescriptionChange = (e) => {
         let { value } = e.target;
         setDescription(value);
     };
+
+
 
     const printValues = e => {
         e.preventDefault();
@@ -44,12 +50,11 @@ const FileUpload = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(file.name, description)
-
         let formdata = new FormData();
         formdata.append("file", file ,file.name);
-        formdata.append("description", description);
+        formdata.append("description",description)
         console.log(formdata);
-        let res = await api.post("/upload", formdata, true);
+        let res = await api.post("add_file", formdata, true);
         // console.log(res);
     };
 
@@ -84,7 +89,7 @@ const FileUpload = () => {
                                 name="description"
                             />
                         </CInputGroup>
-                        <CButton color="primary" className="px-32" onClick={printValues}>
+                        <CButton color="primary" className="px-32" onClick={handleSubmit}>
                             Upload File<CIcon name="cil-paper-plane" />
                         </CButton>
                     </CFormGroup>
@@ -97,12 +102,11 @@ const FileUpload = () => {
                     <CCard>
                         <CCardHeader> 
                             Images Upload       
-                           
                         </CCardHeader>
                         <CCardBody>
                         <CRow>
-                         
-                         </CRow>
+
+                        </CRow>
                         </CCardBody>
                     </CCard>
                 </CCol>
