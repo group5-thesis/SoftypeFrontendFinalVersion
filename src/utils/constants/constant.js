@@ -47,6 +47,14 @@ export const TICKET_STATUS = {
   0: "success"
 }
 
+export const QUESTIONS = [
+  "In past quarter that employee worked on how many projects?",
+  "How much tasks completed by him/her?",
+  "Is he/she taking initiatives in the project?",
+  "Is he/she giving his thoughts for solutioning and providing the best what we can do?",
+  "Contribution of him/her in every project?"
+]
+
 
 export const STATUS = {
   Pending: "primary",

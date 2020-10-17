@@ -7,6 +7,8 @@ import * as serviceWorker from './serviceWorker'
 import { icons } from 'assets/icons'
 import configureStore from 'utils/store/configureStore'
 import Root from 'app/Root'
+
+
 let store = configureStore()
 React.icons = icons
 
