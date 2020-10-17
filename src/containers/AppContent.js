@@ -9,7 +9,7 @@ import { Loader } from 'reusable'
 import { useSelector, useDispatch } from 'react-redux'
 // routes config
 import routes from 'router'
-import { filterModule } from 'utils/helpers'
+import { filterModule, plotArray } from 'utils/helpers'
 import Page404 from 'modules/placeholder/page404/Page404';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
@@ -26,17 +26,26 @@ const AppContent = (_props) => {
   const retrieveLeaveRequests = async () => {
     dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     let res = await api.post("/getLeaveRequest", payload);
-  }
-  const retrieveEmployees = async () => {
-    let res = await api.get("/retrieve_employees");
     if (!res.error) {
-      dispatch(actionCreator(ActionTypes.FETCH_EMPLOYEES, res.data.employee_information));
+      let {leave_requests} = res.data;
+    }
+  }
+
+  const fetchTickets = async () => {
+    let response = await api.get('/retrieve_tickets')
+    if (response.error) {
+      console.log(response.message);
+    }
+    else {
+      var temp = response.data.ticket_information;
+      temp = plotArray(temp)
+      dispatch(actionCreator(ActionTypes.FETCH_TICKETS, temp))
     }
   }
 
   useEffect(() => {
     retrieveLeaveRequests()
-    retrieveEmployees()
+    fetchTickets()
   }, [])
   
   return (

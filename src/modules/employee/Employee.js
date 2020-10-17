@@ -24,8 +24,6 @@ const User = ({ match }) => {
   
   if (!Object.keys(user).length) {
     return <NoData/>    
-  }else{
-    setNewUser(user)
   }
 
   const handleOnChange = (event) => {
