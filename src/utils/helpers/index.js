@@ -1,6 +1,7 @@
 import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
 import { Promise } from "q";
+
 export const RULES = {
   required: (value) => !!value || "Required.",
   usernameRules: (v) =>
@@ -12,7 +13,20 @@ export const RULES = {
   passwordRules: (v) =>
     (v && v.length >= 8) || "Password must be more than 8 characters",
   ageRules: (v) => v >= 18 || "Must be in legal age",
+  numberRules: (v) => /^\d+$/.test(v) || "Input must be numbers only"
 };
+
+export const getAge =     (dateString) => {
+  let today = new Date();
+  let birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+
 
 export const splitCamelCase = (text) => {
   return text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
@@ -34,6 +48,7 @@ export const plotArray = (arr) => {
     return renameKey(data);
   });
 };
+
 
 export const computeDays = (day1, day2) => {
   const date1 = new Date(day1);
@@ -167,16 +182,6 @@ export const checkCamera = () => {
         reject(result);
       });
   });
-};
-export const getAge = (dateString) => {
-  let today = new Date();
-  let birthDate = new Date(dateString);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  let m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
 };
 
 export const filterModule = (modules, roleId) => {

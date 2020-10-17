@@ -4,10 +4,11 @@ import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CI
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
+import {NameVAlidation} from 'utils/helpers';
 import { APP_MESSAGES } from 'utils/constants/constant';
 import { ADD_EMPLOYEE } from 'utils/constants/action-types';
-import {hasMissingFieds, RULES, shallowCopy, getAge} from 'utils/helpers'
-
+import {hasMissingFieds} from 'utils/helpers'
+import {employee} from './EmployeeModal'
 
 const EmployeeModal = () => {
     let dispatch = useDispatch();
@@ -24,85 +25,53 @@ const EmployeeModal = () => {
         street: "",
         city: "",
         country: ""
-    }    )
+
+    },
+    )
+    const handleOnChange = (event) => {
+        let Employee = Object.assign({}, employee)
+        Employee[event.target.name] = event.target.value
+        createEmployee(Employee)
+    }
     
     
     const [Error, setError] = useState(APP_MESSAGES.INPUT_REQUIRED)
     const [disabled, setDisabled] = useState(true)
 
-    const handleOnChange = (event) => {
-      
-        let Employee = shallowCopy(employee)
-        let {name , value} = event.target
-        let validate = validateInfo(name , value)
-        
-        if(validate){
-            Employee[name] = value
-            createEmployee(Employee)
-        }else{
-           alert(validate)
-           setDisabled(true)
-        }
-    }
 
-    const validateInfo=(name , value)=>{
-        const {ageRules, nameRules, numberRules, emailRules} = RULES
-        switch (name){
-            case "birthdate":
-                return ageRules(getAge(value))
-                
-            case "firstname":
-                return nameRules(value)
+    useEffect(() => {
+        setDisabled(hasMissingFieds(employee))
+      }, [employee])
 
-            case "lastname":
-                return nameRules(value)
+    
 
-            case "middlename":
-                return nameRules(value)
-
-            case "mobileno":
-                return numberRules(value)
-
-            case "email":
-                return emailRules(value)
-
-            default:
-                return true
-
-        }
-    }
-      
-
-    const addEmployee = async () => {
+    const updateEmployee = async () => {
         // console.log(employee.roleId === undefined)
         let res = await api.post("/create_employee", employee)
+        // console.log(res)
         if (!res.error) {
-            employee.id=res.data.id
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
             console.log(employee)
         } else {
            setError(res.message)
            alert(Error)
         }
+        
 
     }
    
-    useEffect(() => {
-        setDisabled(hasMissingFieds(employee ))
-      }, [employee])
-
 
     return (
         <Modal {...{
-            title: "Add Employee",
+            title: "Update Employee",
             color: "warning",
             footer:
                 <CButton
-                    disabled = {disabled}
-                    onClick={addEmployee}
+                    // disabled = {disabled}
+                    // onClick={addEmployee}
                     className="mr-1"
-                    color="primary">
-                    Add
+                    color="warning">
+                    Update
                 </CButton>
 
         }}>
@@ -115,9 +84,10 @@ const EmployeeModal = () => {
                                 <CLabel>Firstname</CLabel>
                                 <CInput
                                     onChange={handleOnChange}
+
                                     name="firstname"
                                     value={employee.firstname || ""}
-                                    placeholder="Enter Firstname"
+                                    placeholder={employee.firstname}
                                 />
                                 <CFormText className="help-block">Please enter your Firstname</CFormText>
                             </CFormGroup>
@@ -128,7 +98,7 @@ const EmployeeModal = () => {
 
                                     name="lastname"
                                     value={employee.lastname || ""}
-                                    placeholder="Enter Lastname.."
+                                    placeholder={employee.lastname}
 
                                 />
                                 <CFormText className="help-block">Please enter your Lastname</CFormText>
@@ -139,7 +109,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="middlename"
                                     value={employee.middlename || ""}
-                                    placeholder="Enter Middlename.."
+                                    placeholder={employee.middlename}
 
                                 />
                                 <CFormText className="help-block">Please enter your Middlename</CFormText>
@@ -174,8 +144,9 @@ const EmployeeModal = () => {
                                 <CInput
                                     onChange={handleOnChange}
                                     name="mobileno"
-                                    value={employee.mobileno}
-                                    placeholder="Enter Mobile Number.."
+                                    required
+                                    value={employee.mobileno || ""}
+                                    placeholder={employee.mobileno}
 
                                 />
                                 <CFormText className="help-block">Please enter your Mobile Number</CFormText>
@@ -187,7 +158,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="birthdate"
                                     value={employee.birthdate || ""}
-                                    placeholder="Enter Birthdate.."
+                                    placeholder={employee.birthdate}
 
 
                                 />
@@ -199,7 +170,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="email"
                                     value={employee.email || ""}
-                                    placeholder="Enter Email.."
+                                    placeholder={employee.email}
 
                                 />
                                 <CFormText className="help-block">Please enter your Email</CFormText>
@@ -210,7 +181,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="street"
                                     value={employee.street || ""}
-                                    placeholder="Enter Street.."
+                                    placeholder={employee.street}
 
                                 />
                                 <CFormText className="help-block">Please enter your Street</CFormText>
@@ -221,7 +192,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="city"
                                     value={employee.city || ""}
-                                    placeholder="Enter City.."
+                                    placeholder={employee.city}
 
                                 />
                                 <CFormText className="help-block">Please enter your City</CFormText>
@@ -232,7 +203,7 @@ const EmployeeModal = () => {
                                     onChange={handleOnChange}
                                     name="country"
                                     value={employee.country || ""}
-                                    placeholder="Enter Country.."
+                                    placeholder={employee.country}
 
                                 />
                                 <CFormText className="help-block">Please enter your Country</CFormText>
