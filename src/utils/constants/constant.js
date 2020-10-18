@@ -10,6 +10,8 @@ export const USER_TYPES = [
 ]
 
 export const ROLE = [
+    // 'Admin',
+    // 'HR',
     'Trainee',
     'Junior Consultant (Technical/Functional)',
     'Senior Consultant (Technical/Functional)',
@@ -21,8 +23,6 @@ export const ROLE = [
     'COO',
     'CEO',
     'IT Admin',
-    'Admin',
-    'HR',
     'Sales Associate',
     'Technical Associate',
     'Support and Documentation',

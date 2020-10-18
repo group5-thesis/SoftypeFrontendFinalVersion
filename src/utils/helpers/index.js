@@ -200,3 +200,7 @@ export const setWidth = (width) => {
       xl: width,
     })
 }
+
+export const checkNull = (str) => {
+  return str ? str : ""
+}

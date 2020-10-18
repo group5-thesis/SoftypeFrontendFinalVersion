@@ -28,9 +28,10 @@ const mapDispatchToProps = (dispatch, _) => ({
         let data = res[0]
         dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, data))
         dispatch(actionCreator(ActionTypes.LOGIN))
-      } else {
-        logout(dispatch);
-      }
+      } 
+      // else {
+      //   logout(dispatch);
+      // }
     }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED))
   },
