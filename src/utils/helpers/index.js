@@ -205,3 +205,6 @@ export const setWidth = (width) => {
 export const copyArray = (arr) => {
   return Array.from(arr)
 }
+export const checkNull = (str) => {
+  return str ? str : ""
+}

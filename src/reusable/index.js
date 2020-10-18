@@ -9,5 +9,5 @@ export {
   Loader,
   Modal,
   ConfirmDialog,
-  NoData
+  NoData,  
 }
