@@ -23,18 +23,25 @@ const AppContent = (_props) => {
   const payload = { employeeId, roleId };
   const accessedRoutes = filterModule(routes, roleId);
   const dispatch = useDispatch();
+
   const retrieveLeaveRequests = async () => {
     dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     let res = await api.post("/getLeaveRequest", payload);
     if (!res.error) {
-      let {leave_requests} = res.data;
+      let { leave_requests } = res.data;
+    }
+  }
+
+  const retrieveEmployees = async () => {
+    let res = await api.get("/retrieve_employees");
+    if (!res.error) {
+      dispatch(actionCreator(ActionTypes.FETCH_EMPLOYEES, res.data.employee_information));
     }
   }
 
   const fetchTickets = async () => {
     let response = await api.get('/retrieve_tickets')
     if (response.error) {
-      console.log(response.message);
     }
     else {
       var temp = response.data.ticket_information;
@@ -46,8 +53,9 @@ const AppContent = (_props) => {
   useEffect(() => {
     retrieveLeaveRequests()
     fetchTickets()
+    retrieveEmployees()
   }, [])
-  
+
   return (
     <main className="c-main">
       <CContainer fluid>
