@@ -20,6 +20,7 @@ import { shallowCopy, checkNull, toCapitalize } from 'utils/helpers';
 import NoData from 'reusable/NoData';
 import api from "utils/api";
 import EmployeeModal from './EmployeeModal';
+import PerformanceReviewModal from 'modules/performance-review/PerformanceReviewModal';
 import { setWidth } from 'utils/helpers';
 import res from 'assets/img'
 const User = (props) => {
@@ -87,8 +88,11 @@ const User = (props) => {
                 <h3>Employee Information</h3>
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
-                <div className="float-right" >
+                <div className="float-right px-2" >
                   <EmployeeModal isUpdate data={user} />
+                </div>
+                <div className="float-right" >
+                  <PerformanceReviewModal {...{ user }} />
                 </div>
               </CCol>
             </CRow>
@@ -125,9 +129,6 @@ const User = (props) => {
                   color="primary">
                   Upload
                 </CButton>
-
-
-
               </CCol>
               <CCol>
                 <CForm>
