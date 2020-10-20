@@ -63,17 +63,14 @@ const User = (props) => {
   }
 
   const UploadButtonHandler = () => {
-    if (!process.pending) {
-      fileInput.current.click();
-    } else {
-      alert("test")
-    }
+    //  call api upload
   }
+
 
   const FileInputChangeHandler = (e) => {
     let _temp_process = shallowCopy(process)
     _temp_process.pending = true
-    setProcess(_temp_process.pending)
+    setProcess(_temp_process)
   }
 
   return (
@@ -103,15 +100,29 @@ const User = (props) => {
                 />
                 <input type="file" accept="image/*" value={process.file} ref={fileInput} hidden onChange={FileInputChangeHandler} />
                 <CButton
-                  onClick={UploadButtonHandler}
+                  onClick={() => {
+                    fileInput.current.click();
+                  }}
                   className="mr-1 mt-3"
                   block
                   color="primary">
                   {/* {
                         disabled ? <CSpinner color="secondary" size="sm" /> : !isUpdate ? "Submit" : "Update"
                     } */}
-                  {process.pending ? "Upload" : "Change Profile Image"}
+                  Change Profile Image
                 </CButton>
+
+                <CButton
+                  onClick={UploadButtonHandler}
+                  className="mr-1 mt-3"
+                  block
+                  disabled={!process.pending}
+                  color="primary">
+                  Upload
+                </CButton>
+
+
+
               </CCol>
               <CCol>
                 <CForm>
