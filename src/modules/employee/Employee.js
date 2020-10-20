@@ -20,7 +20,6 @@ import { shallowCopy, checkNull, toCapitalize } from 'utils/helpers';
 import NoData from 'reusable/NoData';
 import api from "utils/api";
 import EmployeeModal from './EmployeeModal';
-import EmployeeCard from './EmployeeCard'
 import { setWidth } from 'utils/helpers';
 import res from 'assets/img'
 const User = (props) => {
