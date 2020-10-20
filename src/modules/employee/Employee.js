@@ -33,7 +33,8 @@ const User = (props) => {
   const [process, setProcess] = useState({
     loading: false,
     pending: false,
-    file: []
+    file: [],
+    preview: null
   })
   const user = usersData.length ? usersData[0] : null
   if (!user) {
@@ -68,8 +69,11 @@ const User = (props) => {
 
 
   const FileInputChangeHandler = (e) => {
+    // set process.file
     let _temp_process = shallowCopy(process)
     _temp_process.pending = true
+    // _temp_process.preview = ""
+
     setProcess(_temp_process)
   }
 
@@ -92,8 +96,9 @@ const User = (props) => {
           <CCardBody>
             <CRow gutters={false} className="">
               <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
+                {/* image */}
                 <CImg
-                  src={res.logoSm}
+                  src={process.perview ? process.perview : res.logoSm}
                   thumbnail
                   shape="rounded"
                   width="100%"
