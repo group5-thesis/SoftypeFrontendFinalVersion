@@ -25,10 +25,11 @@ const AppContent = (_props) => {
   const dispatch = useDispatch();
 
   const retrieveLeaveRequests = async () => {
-    dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     let res = await api.post("/getLeaveRequest", payload);
     if (!res.error) {
       let { leave_requests } = res.data;
+      dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, leave_requests));
+
     }
   }
 
