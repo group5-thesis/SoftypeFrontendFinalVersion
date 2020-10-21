@@ -198,7 +198,7 @@ export const setWidth = (width) => {
       // sm: width,
       md: width,
       lg: width,
-      xl: width,
+      xl: width,      
     })
 }
 
