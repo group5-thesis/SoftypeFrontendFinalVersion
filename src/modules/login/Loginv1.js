@@ -21,20 +21,17 @@ import { CenteredLayout } from "containers";
 import QrCodeScanner from "./QrCodeScanner";
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      credentials: {
-        username: "ytorres",
-        password: "Softype@100",
-      },
-      camera: false,
-      changed: false,
-      isLoading: false,
-      error: "",
-    };
-  }
 
+  state = {
+    credentials: {
+      username: "ytorres",
+      password: "Softype@100",
+    },
+    camera: false,
+    changed: false,
+    isLoading: false,
+    error: "",
+  };
   dialog = createRef();
 
   handleChange = (e) => {
@@ -44,7 +41,7 @@ class Login extends Component {
     this.setState({ credentials: copy });
   };
 
-  toggleDialog() {
+  toggleDialog = () => {
     this.dialog.current.toggle();
   }
 
@@ -169,8 +166,8 @@ class Login extends Component {
             {this.state.isLoading ? (
               <CSpinner color="secondary" size="sm" />
             ) : (
-              "Login"
-            )}
+                "Login"
+              )}
           </CButton>
           <hr className="hr-text" data-content="OR" />
           {!this.state.camera || this.state.isLoading ? (
@@ -185,8 +182,8 @@ class Login extends Component {
               Login with QRCode{" "}
             </CButton>
           ) : (
-            <QrCodeScanner />
-          )}
+              <QrCodeScanner />
+            )}
 
           <CButton
             block

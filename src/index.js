@@ -15,7 +15,7 @@ React.icons = icons
 disableLogger();
 
 ReactDOM.render(
-  <Root store={store} />
+    <Root store={store} />
   , document.getElementById('root')
 )
 serviceWorker.unregister()

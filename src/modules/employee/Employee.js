@@ -1,229 +1,161 @@
-import React, { useState } from 'react'
-import { CCard, CCardBody, CSelect, CCardHeader, CButton, CRow, CCol, CForm, CFormGroup, CLabel, CInput, CFormText } from '@coreui/react'
+import React, { useState, useRef } from 'react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CRow,
+  CCol,
+  CCardFooter,
+  CFormGroup,
+  CInput,
+  CLabel,
+  CForm,
+  CImg,
+  CButton,
+} from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { actionCreator, ActionTypes } from 'utils/actions';
-import { shallowCopy } from 'utils/helpers';
+import { shallowCopy, checkNull, toCapitalize } from 'utils/helpers';
 import NoData from 'reusable/NoData';
-import { Modal } from 'reusable'
 import api from "utils/api";
-
-const User = ({ match }) => {
-  const dispatch = useDispatch();
-  const [newUser, setNewUser] = useState({})
-
-  const usersData = useSelector(state => {
-    return state.appState.employee.employees.filter(el => {
-      return String(el.id) === String(match.params.id)  
-     })
+import EmployeeModal from './EmployeeModal';
+import PerformanceReviewModal from 'modules/performance-review/PerformanceReviewModal';
+import { setWidth } from 'utils/helpers';
+import res from 'assets/img'
+const User = (props) => {
+  const { match } = props
+  const employees = props.appState.employee.employees
+  const { id } = match.params
+  const fileInput = useRef()
+  const usersData = employees.filter(el => {
+    return el.employeeId.toString() === id.toString()
   })
-  console.log(usersData)
-  
-  const user = usersData[0]
-  console.log(user)
-  
-  if (!Object.keys(user).length) {
-    return <NoData/>    
+  const [process, setProcess] = useState({
+    loading: false,
+    pending: false,
+    file: [],
+    preview: null
+  })
+  const user = usersData.length ? usersData[0] : null
+  if (!user) {
+    return <NoData />
   }
 
-  const handleOnChange = (event) => {
-    const dataHolder = shallowCopy(newUser)
-    dataHolder[event.target.name] = event.target.value
-    setNewUser(dataHolder)
-  }
+  const fields = [
+    ["firstname", "middlename", "lastname"],
+    ["gender", "birthdate", "mobileno", "email",],
+    ["street", "city", "coutry"],
+    ["department", "role", "status"]
+  ];
 
-
-  const UpdateEmployee = async () => {
-    let res = await api.post("/update_employee", newUser)
-    if (!res.error) {
-      dispatch(actionCreator(ActionTypes.UPDATE_EMPLOYEE, newUser))
+  const renderContent = (key) => {
+    let val = checkNull(user[key])
+    switch (key) {
+      case "address":
+        return { key, value: `${checkNull(user.street)} ,${checkNull(user.city)} ,${checkNull(user.country)} ` }
+      case "mobileno":
+        return { key: "Mobile No.", value: val }
+      default:
+        if (key.includes("name")) {
+          val = toCapitalize(val)
+        }
+        return { key: toCapitalize(key), value: val }
     }
-    
   }
 
-  const userDetails = user ? Object.entries(user) :
-    [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
+  const UploadButtonHandler = () => {
+    //  call api upload
+  }
 
+
+  const FileInputChangeHandler = (e) => {
+    // set process.file
+    let _temp_process = shallowCopy(process)
+    _temp_process.pending = true
+    // _temp_process.preview = ""
+
+    setProcess(_temp_process)
+  }
 
   return (
-
-    <CRow>
-      <CCol lg={6}>
+    <CRow className="justify-content-center">
+      <CCol {...setWidth("12")}>
         <CCard>
           <CCardHeader>
-            User id: {match.params.id}
+            <CRow className="mb-2">
+              <CCol sm="5">
+                <h3>Employee Information</h3>
+              </CCol>
+              <CCol sm="7" className="d-none d-md-block">
+                <div className="float-right px-2" >
+                  <EmployeeModal isUpdate data={user} />
+                </div>
+                <div className="float-right" >
+                  <PerformanceReviewModal {...{ user }} />
+                </div>
+              </CCol>
+            </CRow>
           </CCardHeader>
           <CCardBody>
-            <table className="table table-striped table-hover">
-              <tbody>
-                {
-                  userDetails.map(([key, value], index) => {
-                    return (
-                      <tr key={index.toString()}>
-                        <td>{`${key}:`}</td>
-                        <td><strong>{value}</strong></td>
-                      </tr>
-                    )
-                  })
-                }
-              </tbody>
-            </table>
-            <Modal {...{
-              title: "Update Employee",
-              color: "warning",
-              footer:
+            <CRow gutters={false} className="">
+              <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
+                {/* image */}
+                <CImg
+                  src={process.perview ? process.perview : res.logoSm}
+                  thumbnail
+                  shape="rounded"
+                  width="100%"
+                />
+                <input type="file" accept="image/*" value={process.file} ref={fileInput} hidden onChange={FileInputChangeHandler} />
                 <CButton
-                  // disabled = {disabled}
-                  onClick={UpdateEmployee}
-                  className="mr-1"
-                  color="warning">
-                  Update
-          </CButton>
-            }}>
-              <CRow>
-                <CCol sm="12">
-                  <CForm action="" method="post" >
-                    <CFormGroup>
-                      <CLabel>Firstname</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="firstname"
-                        value={newUser.firstname}
-                        placeholder={user.firstname}
-                      />
-                      <CFormText className="help-block">Please enter your Firstname</CFormText>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Lastname</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="lastname"
-                        value={newUser.lastname}
-                        placeholder={user.lastname}
+                  onClick={() => {
+                    fileInput.current.click();
+                  }}
+                  className="mr-1 mt-3"
+                  block
+                  color="primary">
+                  {/* {
+                        disabled ? <CSpinner color="secondary" size="sm" /> : !isUpdate ? "Submit" : "Update"
+                    } */}
+                  Change Profile Image
+                </CButton>
 
-                      />
-                      <CFormText className="help-block">Please enter your Lastname</CFormText>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Middlename</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="middlename"
-                        value={newUser.middlename}
-                        placeholder={user.middlename}
+                <CButton
+                  onClick={UploadButtonHandler}
+                  className="mr-1 mt-3"
+                  block
+                  disabled={!process.pending}
+                  color="primary">
+                  Upload
+                </CButton>
+              </CCol>
+              <CCol>
+                <CForm>
+                  {fields.map((_field, idx) => {
+                    return <CRow key={idx} gutters={false} >
+                      {
+                        _field.map((field) => {
+                          let val = renderContent(field).value
+                          return <CCol className="px-1" {...setWidth((12 / _field.length).toString())} key={field}>
+                            <CFormGroup>
+                              <CLabel htmlFor="name"> <strong>{renderContent(field).key} </strong></CLabel>
+                              <CInput id="text-input" name="text-input" readOnly value={val && val} placeholder={!val ? "UNSET" : ""} />
+                            </CFormGroup>
+                          </CCol>
+                        }
+                        )
+                      }
+                    </CRow>
+                  })}
+                </CForm>
 
-                      />
-                      <CFormText className="help-block">Please enter your Middlename</CFormText>
-                    </CFormGroup>
-
-                    <CFormGroup>
-                      <CLabel>Role</CLabel>
-                      <CSelect name="roleId">
-                        <option value="" placeholder={user.roleId}></option>
-                        <option value={1} >Mdsadsadase</option>
-                        <option value={2}>Femadsadsadasdsle</option>
-                      </CSelect>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Gender</CLabel>
-                      <CSelect name="gender" >
-                        <option value="" placeholder={user.gender}></option>
-                        <option value='male'>Male</option>
-                        <option value='female'>Female</option>
-                      </CSelect>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Department</CLabel>
-                      <CSelect
-                        name="department">
-                        <option value="" placeholder={user.department}></option>
-                        <option value='lodge'>Lodge</option>
-                        <option value='cr'>CR</option>
-                      </CSelect>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Mobile Number</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="mobileno"
-                        required
-                        value={newUser.mobileno}
-                        placeholder={user.mobileno}
-
-                      />
-                      <CFormText className="help-block">Please enter your Mobile Number</CFormText>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Birthdate</CLabel>
-                      <CInput
-                        type='date'
-                        onChange={handleOnChange}
-                        name="birthdate"
-                        value={newUser.birthdate}
-                        placeholder={user.birthdate}
-
-
-                      />
-                      <CFormText className="help-block">Please enter your Birthdate</CFormText>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Email</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="email"
-                        value={newUser.email}
-                        placeholder={user.email}
-
-                      />
-                      <CFormText className="help-block">Please enter your Email</CFormText>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Street</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="street"
-                        value={newUser.street}
-                        placeholder={user.street}
-
-                      />
-                      <CFormText className="help-block">Please enter your Street</CFormText>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>City</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="city"
-                        value={newUser.city}
-                        placeholder={user.city}
-
-                      />
-                      <CFormText className="help-block">Please enter your City</CFormText>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel>Country</CLabel>
-                      <CInput
-                        onChange={handleOnChange}
-                        name="country"
-                        value={newUser.country}
-                        placeholder={user.country}
-
-                      />
-                      <CFormText className="help-block">Please enter your Country</CFormText>
-                    </CFormGroup>
-                  </CForm>
-                </CCol>
-              </CRow>
-            </Modal>
+              </CCol>
+            </CRow>
           </CCardBody>
-          {/* <CButtonToolbar justify="end">
-            <CButton color="warning" >Update</CButton>
-            <CButton color="danger">Delete</CButton>
-          </CButtonToolbar> */}
-
         </CCard>
       </CCol>
     </CRow>
-
   )
 }
 

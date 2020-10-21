@@ -1,241 +1,362 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from "react-redux"
-import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CFormText, } from '@coreui/react'
+import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CInvalidFeedback, CSpinner } from '@coreui/react'
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
-import { APP_MESSAGES } from 'utils/constants/constant';
-import { ADD_EMPLOYEE } from 'utils/constants/action-types';
-import {hasMissingFieds, RULES, shallowCopy, getAge} from 'utils/helpers'
+import { APP_MESSAGES, ROLE } from 'utils/constants/constant';
+import { RULES, shallowCopy, getAge } from 'utils/helpers'
+import _ from 'lodash';
 
+const defaultErrors = {
+    firstname: false,
+    lastname: false,
+    middlename: false,
+    birthdate: false,
+    email: false,
+    mobileno: false,
+    roleId: false,
+    department: false,
+    gender: false,
+    street: false,
+    city: false,
+    country: false,
+}
+const defaultEmployee = {
+    roleId: "",
+    department: "",
+    firstname: "",
+    lastname: "",
+    middlename: "",
+    gender: "",
+    mobileno: "",
+    birthdate: "",
+    email: "",
+    street: "",
+    city: "",
+    country: ""
+}
 
-const EmployeeModal = () => {
+const EmployeeModal = ({ isUpdate = false, data = null }) => {
     let dispatch = useDispatch();
-    const [employee, createEmployee] = useState({
-        roleId: "",
-        department: "",
-        firstname: "",
-        lastname: "",
-        middlename: "",
-        gender: "",
-        mobileno: "",
-        birthdate: "",
-        email: "",
-        street: "",
-        city: "",
-        country: ""
-    }    )
-    
-    
-    const [Error, setError] = useState(APP_MESSAGES.INPUT_REQUIRED)
-    const [disabled, setDisabled] = useState(true)
+    const modal = useRef()
+    const [employee, createEmployee] = useState(!data ? defaultEmployee : data)
+    const [errors, setError] = useState(defaultErrors)
+    const [disabled, setDisabled] = useState(false);
 
     const handleOnChange = (event) => {
-      
+        let _errors = shallowCopy(errors)
         let Employee = shallowCopy(employee)
-        let {name , value} = event.target
-        let validate = validateInfo(name , value)
-        
-        if(validate){
-            Employee[name] = value
-            createEmployee(Employee)
-        }else{
-           alert(validate)
-           setDisabled(true)
-        }
+        let { name, value } = event.target
+        _errors[name] = false
+        setError(_errors)
+        Employee[name] = value;
+        createEmployee(Employee)
     }
 
-    const validateInfo=(name , value)=>{
-        const {ageRules, nameRules, numberRules, emailRules} = RULES
-        switch (name){
-            case "birthdate":
-                return ageRules(getAge(value))
-                
-            case "firstname":
-                return nameRules(value)
-
-            case "lastname":
-                return nameRules(value)
-
-            case "middlename":
-                return nameRules(value)
-
-            case "mobileno":
-                return numberRules(value)
-
-            case "email":
-                return emailRules(value)
-
-            default:
-                return true
-
+    const validateInfo = (name, value) => {
+        const { ageRules, nameRules, numberRules, emailRules } = RULES
+        if (name === "birthdate") {
+            return ageRules(getAge(value))
         }
-    }
-      
 
-    const addEmployee = async () => {
-        // console.log(employee.roleId === undefined)
-        let res = await api.post("/create_employee", employee)
+        if (name.includes("name")) {
+            return nameRules(value)
+        }
+
+        if (name === "mobileno") {
+            return numberRules(value)
+        }
+
+        if (name === "email") {
+            return emailRules(value)
+        }
+
+        return value !== "" || APP_MESSAGES.INPUT_REQUIRED;
+    }
+
+    // const addEmployee = async () => {
+    //     let res = await api.post("/create_employee", employee)
+    //     if (!res.error) {
+    //         employee.id = res.data.id
+    //         dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
+    //     }
+    //     // else {
+    //     //     setError(res.message)
+    //     // }
+    // }
+    // const updateEmployee = async () => {
+    //     let res = await api.post("/create_employee", employee)
+    //     if (!res.error) {
+    //         employee.id = res.data.id
+    //         dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
+    //     }
+    //     // else {
+    //     //     setError(res.message)
+    //     // }
+    // }
+
+    const modalOnClose = () => {
+        if (!isUpdate) {
+            createEmployee(defaultEmployee)
+        }
+        setError(defaultErrors)
+    }
+
+    const onSubmit = async () => {
+        setDisabled(true)
+        let path = isUpdate ? "update_employee" : "create_employee"
+        let payload = shallowCopy(employee)
+        if (isUpdate) {
+            payload["employeeId"] = data.employeeId;
+        }
+        let res = await api.post(`/${path}`, payload)
         if (!res.error) {
-            employee.id=res.data.id
-            dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
-            console.log(employee)
-        } else {
-           setError(res.message)
-           alert(Error)
+            // console.log(res.data)
+            // dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
         }
-
+        setDisabled(false)
+        modal.current.toggle()
+        modalOnClose();
     }
-   
-    useEffect(() => {
-        setDisabled(hasMissingFieds(employee ))
-      }, [employee])
 
+
+
+    const validate = () => {
+        let _errors = shallowCopy(errors)
+        Object.entries(employee).map(([key, value]) => {
+            let valid = validateInfo(key, value);
+            _errors[key] = valid === true ? false : valid
+        })
+        setError(_errors)
+        let isValid = true;
+        _.values(_errors).map(err => {
+            if (err !== false) {
+                isValid = false
+            }
+        })
+        if (isValid) {
+            onSubmit()
+        }
+    }
+
+
+    const renderFeedback = (message) => {
+        return message !== false &&
+            <CInvalidFeedback className="help-block">
+                {message}
+            </CInvalidFeedback>
+    }
 
     return (
-        <Modal {...{
-            title: "Add Employee",
+        <Modal ref={modal} {...{
+            modalOnClose,
+            size: "lg",
+            title: isUpdate ? "Update Details" : "Add Employee",
             color: "warning",
             footer:
                 <CButton
-                    disabled = {disabled}
-                    onClick={addEmployee}
+                    disabled={disabled}
+                    onClick={validate}
                     className="mr-1"
                     color="primary">
-                    Add
+                    {
+                        disabled ? <CSpinner color="secondary" size="sm" /> : !isUpdate ? "Submit" : "Update"
+                    }
                 </CButton>
-
         }}>
 
             <CContainer fluid>
                 <CRow>
                     <CCol sm="12">
                         <CForm action="" method="post" >
-                            <CFormGroup>
-                                <CLabel>Firstname</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="firstname"
-                                    value={employee.firstname || ""}
-                                    placeholder="Enter Firstname"
-                                />
-                                <CFormText className="help-block">Please enter your Firstname</CFormText>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Lastname</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
+                            <CFormGroup row className="my-0">
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>Firstname</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="firstname"
+                                            value={employee.firstname || ""}
+                                            placeholder="Enter Firstname"
+                                            invalid={errors.firstname !== false}
+                                        //valid={!errors.firstname}
+                                        />
+                                        {renderFeedback(errors.firstname)}
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>Middlename</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="middlename"
+                                            value={employee.middlename || ""}
+                                            placeholder="Enter Middlename"
+                                            invalid={errors.middlename !== false}
+                                        />
+                                        {renderFeedback(errors.middlename)}
 
-                                    name="lastname"
-                                    value={employee.lastname || ""}
-                                    placeholder="Enter Lastname.."
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>Lastname</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="lastname"
+                                            value={employee.lastname || ""}
+                                            placeholder="Enter Lastname"
+                                            invalid={errors.lastname !== false}
+                                        />
+                                        {renderFeedback(errors.lastname)}
 
-                                />
-                                <CFormText className="help-block">Please enter your Lastname</CFormText>
+                                    </CFormGroup>
+                                </CCol>
                             </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Middlename</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="middlename"
-                                    value={employee.middlename || ""}
-                                    placeholder="Enter Middlename.."
+                            <CFormGroup row className="my-0">
+                                <CCol xs="6">
+                                    <CFormGroup>
+                                        <CLabel>Gender</CLabel>
+                                        <CSelect onChange={handleOnChange}
+                                            value={employee.gender}
+                                            invalid={errors.gender !== false}
+                                            //valid={!errors.gender}
+                                            name="gender">
+                                            <option value="" hidden>Select Gender</option>
+                                            <option value='male'>Male</option>
+                                            <option value='female'>Female</option>
+                                        </CSelect>
+                                        {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="6">
+                                    <CFormGroup>
+                                        <CLabel>Birthdate</CLabel>
+                                        <CInput
+                                            type='date'
+                                            //valid={!errors.birthdate}
+                                            onChange={handleOnChange}
+                                            name="birthdate"
+                                            invalid={errors.birthdate !== false}
+                                            onChange={handleOnChange}
+                                            value={employee.birthdate || ""}
+                                            placeholder="Enter Birthdate.."
+                                        />
+                                        {renderFeedback(errors.birthdate)}
+                                    </CFormGroup>
+                                </CCol>
+                            </CFormGroup>
+                            <CFormGroup row className="my-0">
+                                <CCol xs="6">
+                                    <CFormGroup>
+                                        <CLabel>Role</CLabel>
+                                        <CSelect
+                                            onChange={handleOnChange}
+                                            name="roleId"
+                                            //valid={!errors.roleId}
+                                            invalid={errors.roleId !== false}
+                                        >
+                                            <option value="" hidden>Select Role</option>
+                                            {ROLE.map((r, id) => {
+                                                return <option value={id} key={id} >{r}</option>
+                                            })}
+                                        </CSelect>
+                                        {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="6">
+                                    <CFormGroup>
+                                        <CLabel>Department</CLabel>
+                                        <CSelect onChange={handleOnChange}
+                                            value={employee.department}
+                                            invalid={errors.department !== false}
+                                            name="department">
+                                            <option value="" hidden>Select Department</option>
+                                            <option value='lodge'>Lodge</option>
+                                            <option value='cr'>CR</option>
+                                        </CSelect>
+                                        {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
+                            </CFormGroup>
+                            <CFormGroup row className="my-0">
+                                <CCol xs="6">
+                                    <CFormGroup>
+                                        <CLabel>Mobile Number</CLabel>
+                                        <CInput
+                                            invalid={errors.mobileno !== false}
+                                            //valid={!errors.mobileno}
+                                            onChange={handleOnChange}
+                                            name="mobileno"
+                                            value={employee.mobileno}
+                                            placeholder="Enter Mobile Number.."
 
-                                />
-                                <CFormText className="help-block">Please enter your Middlename</CFormText>
-                            </CFormGroup>
+                                        />
+                                        {renderFeedback(errors.mobileno)}
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="6">
+                                    <CFormGroup>
+                                        <CLabel>Email</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="email"
+                                            //valid={!errors.email}
+                                            value={employee.email || ""}
+                                            invalid={errors.email !== false}
+                                            placeholder="Enter Email.."
 
-                            <CFormGroup>
-                                <CLabel>Role</CLabel>
-                                <CSelect onChange={handleOnChange} name="roleId">
-                                    <option value=""></option>
-                                    <option value={1} >Mdsadsadase</option>
-                                    <option value={2}>Femadsadsadasdsle</option>
-                                </CSelect>
+                                        />
+                                        {renderFeedback(errors.email)}
+                                    </CFormGroup>
+                                </CCol>
                             </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Gender</CLabel>
-                                <CSelect onChange={handleOnChange} name="gender">
-                                    <option value=""></option>
-                                    <option value='male'>Male</option>
-                                    <option value='female'>Female</option>
-                                </CSelect>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Department</CLabel>
-                                <CSelect onChange={handleOnChange} name="department">
-                                    <option value=""></option>
-                                    <option value='lodge'>Lodge</option>
-                                    <option value='cr'>CR</option>
-                                </CSelect>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Mobile Number</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="mobileno"
-                                    value={employee.mobileno}
-                                    placeholder="Enter Mobile Number.."
+                            <CFormGroup row className="my-0">
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>Street</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="street"
+                                            //valid={!errors.street}
+                                            invalid={errors.street !== false}
+                                            value={employee.street || ""}
+                                            placeholder="Enter Street.."
 
-                                />
-                                <CFormText className="help-block">Please enter your Mobile Number</CFormText>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Birthdate</CLabel>
-                                <CInput
-                                    type='date'
-                                    onChange={handleOnChange}
-                                    name="birthdate"
-                                    value={employee.birthdate || ""}
-                                    placeholder="Enter Birthdate.."
+                                        />
+                                        {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>City</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            //valid={!errors.city}
+                                            name="city"
+                                            invalid={errors.city !== false}
+                                            value={employee.city || ""}
+                                            placeholder="Enter City.."
 
-
-                                />
-                                <CFormText className="help-block">Please enter your Birthdate</CFormText>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Email</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="email"
-                                    value={employee.email || ""}
-                                    placeholder="Enter Email.."
-
-                                />
-                                <CFormText className="help-block">Please enter your Email</CFormText>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Street</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="street"
-                                    value={employee.street || ""}
-                                    placeholder="Enter Street.."
-
-                                />
-                                <CFormText className="help-block">Please enter your Street</CFormText>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>City</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="city"
-                                    value={employee.city || ""}
-                                    placeholder="Enter City.."
-
-                                />
-                                <CFormText className="help-block">Please enter your City</CFormText>
-                            </CFormGroup>
-                            <CFormGroup>
-                                <CLabel>Country</CLabel>
-                                <CInput
-                                    onChange={handleOnChange}
-                                    name="country"
-                                    value={employee.country || ""}
-                                    placeholder="Enter Country.."
-
-                                />
-                                <CFormText className="help-block">Please enter your Country</CFormText>
+                                        />
+                                        {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>Country</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="country"
+                                            //valid={!errors.country}
+                                            invalid={errors.country !== false}
+                                            value={employee.country || ""}
+                                            placeholder="Enter Country.."
+                                        />
+                                        {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
                             </CFormGroup>
                         </CForm>
                     </CCol>
