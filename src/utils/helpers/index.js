@@ -16,7 +16,7 @@ export const RULES = {
   numberRules: (v) => /^\d+$/.test(v) || "Input must be numbers only"
 };
 
-export const getAge =     (dateString) => {
+export const getAge = (dateString) => {
   let today = new Date();
   let birthDate = new Date(dateString);
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -201,6 +201,22 @@ export const setWidth = (width) => {
       xl: width,
     })
 }
+
+export const setHeight = (height) => {
+  return (
+    {
+      height: height
+    })
+}
+
+export const setVerticallyHorizontallyCentered = () => {
+  return (
+    {
+      position: 'absolute', left: '50%', top: '50%',
+      transform: 'translate(-50%, -50%)'
+    })
+}
+
 
 export const copyArray = (arr) => {
   return Array.from(arr)

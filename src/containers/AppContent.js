@@ -28,7 +28,7 @@ const AppContent = (_props) => {
     dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
     let res = await api.post("/getLeaveRequest", payload);
     if (!res.error) {
-      let { leave_requests } = res.data;
+      // let { leave_requests } = res.data;
     }
   }
 

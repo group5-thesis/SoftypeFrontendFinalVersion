@@ -44,6 +44,7 @@ const PerformanceReview = () => { // lacking api, name of employee, submit metho
   }
 
   const toggleModal = () => {
+    setRating([0, 0, 0, 0, 0])
     modal.current.toggle();
   };
 

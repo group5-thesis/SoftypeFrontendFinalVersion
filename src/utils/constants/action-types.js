@@ -23,3 +23,9 @@ export const TOGGLE_DIALOG = "TOGGLE_DIALOG";
 export const ADD_TICKET = 'ADD_TICKET'
 export const FETCH_TICKETS = 'FETCH_TICKETS'
 export const CLOSE_TICKET = 'CLOSE_TICKET'
+
+
+// Department Module
+
+export const ADD_DEPARTMENT = 'ADD_DEPARTMENT'
+export const FETCH_DEPARTMENTS = 'FETCH_DEPARTMENTS'
