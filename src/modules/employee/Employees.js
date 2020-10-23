@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
-import {useSelector} from 'react-redux'
+import React, { useState, useEffect } from 'react';
 import {
     CBadge,
     CCard,
@@ -10,35 +8,42 @@ import {
     CRow,
     CPagination
 } from '@coreui/react'
-
-
-    
-
 import EmployeeModal from './EmployeeModal';
+import { toCapitalize } from 'utils/helpers';
+import { NoData } from 'reusable'
+
 
 const getBadge = status => {
     switch (status) {
         case 'Active': return 'success'
         case 'Inactive': return 'secondary'
-        case 'Pending': return 'warning'
-        case 'Banned': return 'danger'
-        default: return 'primary'
     }
 }
+let headers = [
+    { key: 'Name', _classes: 'font-weight-bold' },
+    { key: 'mobileno', label: "Mobile No." },
+    'email',
+    {
+        key: "role",
+        label: "Position",
+        sorter: false,
+        filter: false,
+    },
+    'gender',
+    'birthdate',
+    'department'
+]
 
-const Users = () => {   
-    const usersData = useSelector(state => {
-        return state.appState.employee.employees
-    })
-    const history = useHistory()
-    const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
+const Users = (props) => {
+    const { history, location } = props
+    const usersData = props.appState.employee.employees
+    const user = props.appState.auth.user
+    const queryPage = location.search.match(/page=([0-9]+)/, '')
     const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
     const [page, setPage] = useState(currentPage)
-
     const pageChange = newPage => {
         currentPage !== newPage && history.push(`/employees?page=${newPage}`)
     }
-
     useEffect(() => {
         currentPage !== page && setPage(currentPage)
     }, [currentPage, page])
@@ -48,7 +53,7 @@ const Users = () => {
             <CCol xl={12}>
                 <CCard>
                     <CCardBody>
-                        <CRow>
+                        <CRow className="mb-2">
                             <CCol sm="5">
                                 <h4 className="card-title mb-0">Employees</h4>
                             </CCol>
@@ -60,34 +65,32 @@ const Users = () => {
                         </CRow>
                         <CDataTable
                             items={usersData}
-                            fields={[
-                              { key: 'firstname', _classes: 'font-weight-bold' },
-                              'lastname', 'middlename','role','department', 'gender', 'mobilenumber', 'birthdate', 'email', 'street', 'city', 'country'
-                             ]}
+                            fields={headers}
                             hover
-                            striped
-                            itemsPerPage={5}
+                            // striped
+                            itemsPerPage={10}
+                            activePage={page}
+                            pagination
+                            noItemsViewSlot={<NoData />}
+                            onPageChange={(e) => {
+                                pageChange(e);
+                            }}
                             activePage={page}
                             clickableRows
-                            onRowClick={(item) => history.push(`/employees/profile/${item.id}`)}
+                            onRowClick={(emp) => {
+                                history.push(`/employees/profile/${emp.employeeId}`)
+
+                            }}
                             scopedSlots={{
-                                'status':
+                                'Name':
                                     (item) => (
                                         <td>
-                                            <CBadge color={getBadge(item.status)}>
-                                                {item.status}
-                                            </CBadge>
+                                            {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename)[0] + "."}`}
                                         </td>
                                     )
                             }}
                         />
-                        <CPagination
-                            activePage={page}
-                            onActivePageChange={pageChange}
-                            pages={5}
-                            doubleArrows={false}
-                            align="center"
-                        />
+
                     </CCardBody>
                 </CCard>
             </CCol>

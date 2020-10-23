@@ -1,6 +1,7 @@
 import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
 import { Promise } from "q";
+
 export const RULES = {
   required: (value) => !!value || "Required.",
   usernameRules: (v) =>
@@ -12,13 +13,26 @@ export const RULES = {
   passwordRules: (v) =>
     (v && v.length >= 8) || "Password must be more than 8 characters",
   ageRules: (v) => v >= 18 || "Must be in legal age",
+  numberRules: (v) => /^\d+$/.test(v) || "Input must be numbers only"
 };
 
+export const getAge = (dateString) => {
+  let today = new Date();
+  let birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+
 export const splitCamelCase = (text) => {
-  return text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+  return text && text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
 };
 export const splitSnakeCase = (text) => {
-  return text.replaceAll("_", " ").toLowerCase();
+  return text && text.replaceAll("_", " ").toLowerCase();
 };
 export const renameKey = (obj) => {
   const altObj = Object.fromEntries(
@@ -34,6 +48,7 @@ export const plotArray = (arr) => {
     return renameKey(data);
   });
 };
+
 
 export const computeDays = (day1, day2) => {
   const date1 = new Date(day1);
@@ -62,7 +77,7 @@ export const insertProperty = (obj, key, value, index) => {
 };
 
 export const toCapitalize = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  return string ? string.charAt(0).toUpperCase() + string.slice(1) : "";
 };
 
 export const formatDate = (date) => {
@@ -84,10 +99,13 @@ export const hasMissingFieds = (obj, rules) => {
 };
 
 export const checkDateRange = (start, end, isFilter = false) => {
+  //console.log({start, end});
   if (start === "" || end === "") {
+    //console.log(1);
     return -1;
   }
   if (start === end) {
+    //console.log(2);
     return -1;
   }
   start = moment(start, "YYYY-MM-DD");
@@ -95,12 +113,20 @@ export const checkDateRange = (start, end, isFilter = false) => {
 
   if (!isFilter) {
     if (start.isSameOrBefore(moment()) || end.isSameOrBefore(moment())) {
+      //console.log(3);
       return -1;
     }
   }
   let gap = moment.duration(end.diff(start)).asDays();
   return gap;
 };
+
+export const getDuration = (start, end) => {
+  end = moment(end, 'YYYY-MM-DD')
+  let duration = moment.duration(end.diff(moment(start, 'YYYY-MM-DD')))
+  return duration.asDays()
+}
+
 
 export const getAdminResponse = (code) => {
   return code ? "approved" : "rejected";
@@ -139,7 +165,7 @@ export const checkCamera = () => {
             })
             .catch((err) => {
               result.cameraError = err.name + ": " + err.message;
-              console.log(err);
+              //console.log(err);
               if (err.name == "NotAllowedError") {
                 result.cameraError = defaultError;
               }
@@ -157,16 +183,6 @@ export const checkCamera = () => {
       });
   });
 };
-export const getAge = (dateString) => {
-  let today = new Date();
-  let birthDate = new Date(dateString);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  let m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-};
 
 export const filterModule = (modules, roleId) => {
   let availableModule = modules.filter(({ user }) => {
@@ -174,3 +190,21 @@ export const filterModule = (modules, roleId) => {
   });
   return availableModule;
 };
+
+export const setWidth = (width) => {
+  return (
+    {
+      // xs: width,
+      // sm: width,
+      md: width,
+      lg: width,
+      xl: width,
+    })
+}
+
+export const copyArray = (arr) => {
+  return arr && Array.from(arr)
+}
+export const checkNull = (str) => {
+  return str ? str : ""
+}

@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import _ from 'lodash';
 import {
   CBadge,
   CCard,
@@ -12,26 +13,39 @@ import {
   CButton,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import moment from 'moment';
 import {
-  checkDateRange,
   toCapitalize,
   getAdminResponse,
   respondToRequest,
+  formatDate,
+  getDuration
 } from "utils/helpers";
 import { LeaveRequestFilter, LeaveRequestForm } from ".";
 import NoData from "reusable/NoData";
 import { ConfirmDialog } from "reusable";
-import { STATUS } from "utils/constants/constant";
+import { STATUS, MONTHS ,CURRENT_MONTH, CURRENT_YEAR} from "utils/constants/constant";
+
+const currentMonth =  MONTHS[new Date().getMonth()];
+const currentYear = new Date().getFullYear();
 const LeaveRequests = (props) => {
   const dispatch = useDispatch();
   const { history, location } = props;
   const query = new URLSearchParams(location.search);
   const queryPage = location.search.match(/page=([0-9]+)/, "");
   const queryStatus = query.get("status");
+  const default_filter = {
+    status: queryStatus ? queryStatus : "All",
+    employee: "All",
+    date_from: formatDate(Date.now()),
+    date_to: null,
+    month:CURRENT_MONTH,
+    year: CURRENT_YEAR
+  }
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1);
   const [page, setPage] = useState(currentPage);
-  const [status, setStatus] = useState(queryStatus ? queryStatus : "All");
   const [collapse, setCollapse] = useState(true);
+  const [filter, setFilter] = useState(default_filter)
   const [payload, setPayload] = useState({
     id: null,
     status: "",
@@ -39,12 +53,10 @@ const LeaveRequests = (props) => {
   });
   const dialog = useRef();
   const requestsData = useSelector((state) => {
-    return state.appState.leave.leave_requests.filter((el) => {
-      return (
-        el.status === status.toLowerCase() || status.toLowerCase() === "all"
-      );
-    });
+    return state.appState.leave.leave_requests
   });
+
+  const [filteredLeaveRequest, setFilteredLeaveRequest] = useState(requestsData);
   const header = [
     {
       key: "name",
@@ -71,7 +83,7 @@ const LeaveRequests = (props) => {
       filter: false,
     },
     "status",
-    "approver",
+    // "approver",
     {
       key: "actions",
       label: "Options",
@@ -80,22 +92,18 @@ const LeaveRequests = (props) => {
     },
   ];
 
+
   const getBadge = (STATUS, status) => {
     return STATUS[toCapitalize(status)];
   };
 
   const pageChange = (newPage) => {
     setPage(newPage);
-    currentPage !== newPage && goToRoute(newPage, status);
-  };
-
-  const handleChange = (e) => {
-    setStatus(e.target.value);
-    goToRoute(currentPage, e.target.value);
+    currentPage !== newPage && goToRoute(newPage, filter.status);
   };
 
   const goToRoute = (page, status) => {
-    history.push(`/leave/requests?page=${page}&status=${status}`);
+    history.push(`/leave/requests?page=${page}&status=${filter.status}`);
   };
 
   const viewRequestInfo = (id) => {
@@ -107,6 +115,52 @@ const LeaveRequests = (props) => {
     e.preventDefault();
   };
 
+  const onClearFilter = () => {
+    setFilter(default_filter)
+    setFilteredLeaveRequest(requestsData)
+  }
+
+  const onFilterRequests = _filter => {
+    setFilter(_filter)
+    setFilteredLeaveRequest(requestsData.filter((el) => {
+      let { status, employee, date_from, date_to, category } = _filter
+      let filter_result = {
+        date: false,
+        status: false,
+        category: false,
+        employee: false
+      }
+
+      let leave_from = moment(el["date from"]);
+      let leave_to = moment(el["date to"]);
+
+      let date_filter = {
+        from: moment(formatDate(date_from)),
+        to: _filter.date_to ? moment(formatDate(date_to)) : ""
+      }
+
+      if (status === "" || status.toLowerCase() === "all" || el.status.toLowerCase() === status.toLowerCase()) {
+        filter_result.status = true;
+      }
+
+      if (category === "" || category.toLowerCase() === "all" || el.category.toLowerCase().includes(category.toLowerCase()) || category.includes(el.category.toLowerCase())) {
+        filter_result.category = true;
+      }
+
+      if (employee === "" || employee.toLowerCase() === "all" || el.name.toLowerCase().includes(employee.toLowerCase())) {
+        filter_result.employee = true;
+      }
+
+      // date range
+      if (date_filter.to === "" || date_filter.to === null) {
+        filter_result.date = leave_from.isAfter(date_filter.from) || leave_from.isSame(date_filter.from)
+      } else {
+        filter_result.date = (leave_from.isSame(date_filter.from) || leave_from.isAfter(date_filter.from))
+          && (leave_to.isBefore(date_filter.to) || leave_to.isSame(date_filter.to))
+      }
+      return !_.valuesIn(filter_result).includes(false);
+    }));
+  }
   return (
     <CRow>
       <CCol xl={12}>
@@ -125,13 +179,13 @@ const LeaveRequests = (props) => {
           <CCardBody>
             <CRow>
               <CCol sm="5">
-                <h4 className="card-title mb-0">{status} Request</h4>
+                <h4 className="card-title mb-0">Leave Request</h4>
               </CCol>
-              <CCol sm="7" className="d-none d-md-block">
+              <CCol sm="7" className=" d-sm-block">
                 <div className="float-right  mr-3">
                   <LeaveRequestForm />
                 </div>
-                <div className="float-right mr-3">
+                <div className={`float-right mr-3 ${!collapse && "mb-2"}`} >
                   <CButton
                     color={`${collapse ? "secondary" : "primary"}`}
                     onClick={toggle}
@@ -142,7 +196,7 @@ const LeaveRequests = (props) => {
                       size={"sm"}
                       name={`${
                         !collapse ? "cil-chevron-bottom" : "cil-chevron-top"
-                      }`}
+                        }`}
                     />
                   </CButton>
                 </div>
@@ -152,16 +206,18 @@ const LeaveRequests = (props) => {
               <CCol>
                 <LeaveRequestFilter
                   {...{
+                    filter,
+                    onFilterRequests,
+                    onClearFilter,
                     show: collapse,
-                    onStatusChange: handleChange,
                   }}
                 />
               </CCol>
             </CRow>
             <CDataTable
               className="table-responsive mt-2"
-              items={requestsData}
-              itemsPerPage={5}
+              items={filteredLeaveRequest}
+              itemsPerPage={10}
               fields={header}
               pagination
               sorter
@@ -173,7 +229,7 @@ const LeaveRequests = (props) => {
               clickableRows
               scopedSlots={{
                 "no of days": (item) => (
-                  <td>{checkDateRange(item["date from"], item["date to"])}</td>
+                  < td > {getDuration(item["date from"], item["date to"])}</td>
                 ),
                 reason: (item) => (
                   <td>
@@ -197,7 +253,7 @@ const LeaveRequests = (props) => {
                           className="card-header-action"
                         >
                           <CIcon name="cib-indeed" className="text-dark " />
-                          {!isPending ? " View Details" : ""}
+                          {!isPending && "View Details"}
                         </CLink>
                       </CPopover>
                       {isPending &&
@@ -244,7 +300,7 @@ const LeaveRequests = (props) => {
           </CCardBody>
         </CCard>
       </CCol>
-    </CRow>
+    </CRow >
   );
 };
 
