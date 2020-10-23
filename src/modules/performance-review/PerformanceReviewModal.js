@@ -4,7 +4,7 @@ import { Modal } from 'reusable'
 import Questions from './component/Questions'
 import { QUESTIONS } from "utils/constants/constant";
 
-const PerformanceReviewModal = ({ user }) => { // lacking api, name of employee, submit method
+const PerformanceReviewModal = ({ employee }) => { // lacking api, name of employee, submit method
     const [rating, setRating] = useState(
         [0, 0, 0, 0, 0]
     )
@@ -26,7 +26,7 @@ const PerformanceReviewModal = ({ user }) => { // lacking api, name of employee,
             ref={modal}
             centered
             btnTitle="Add Perforrmance Review"
-            title={`${user.firstname} ${user.lastname}`}
+            title={`${employee.firstname} ${employee.lastname}`}
             modalOnClose={toggleModal}
             footer={
                 <>

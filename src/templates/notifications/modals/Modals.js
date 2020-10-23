@@ -41,7 +41,7 @@ const Modals = () => {
             <CButton onClick={() => setLarge(!large)} className="mr-1">
               Launch large modal
             </CButton>
-            <CButton onClick={() => setSmall(!large)} className="mr-1">
+            <CButton onClick={() => setSmall(!small)} className="mr-1">
               Launch small modal
             </CButton>
             <CModal 
