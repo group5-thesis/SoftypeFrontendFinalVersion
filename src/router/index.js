@@ -7,10 +7,10 @@ const LeaveRequest = React.lazy(() => import('modules/leave-management/LeaveRequ
 const LeaveCalendar = React.lazy(() => import('modules/leave-management/LeaveCalendar'))
 const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 const ListGroup = React.lazy(() => import('templates/base/list-groups/ListGroups'))
-const Upload = React.lazy(() => import('templates/base/forms/Upload'))
-const Cards = React.lazy(() => import('templates/base/cards/Cards'))
+// const Upload = React.lazy(() => import('templates/base/forms/Upload'))
+// const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 // const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-const Test =  React.lazy(() => import('modules/test/fileupload'));
+const Test =  React.lazy(() => import('modules/test/chart'));
 //path = url, 
 
 
@@ -23,12 +23,11 @@ const routes = [
     { path: '/leave/requests/:id', exact: true, name: 'Request Details', component: LeaveRequest, user: [4] },
     { path: '/leave/calendar', exact: true, name: 'Leave Calendar', component: LeaveCalendar, user: [4] },
     { path: '/forms', name: 'Forms', component: BasicForms, user: [4] },
-    { path: '/cards', name: 'Cards', component: Cards, user: [4] },
+    { path: '/cards', name: 'Cards', component: Test, user: [4] },
     { path: '/repository', name: 'Repository', component: ListGroup, user: [4] },
     // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
-    { path: '/upload', name: 'FIle Upload', component: Test, user: [4] },
+    // { path: '/chart', name: 'Organizational Chart', component: Test, user: [4] },
     
 
 ]
-
 export default routes
