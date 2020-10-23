@@ -11,10 +11,6 @@ import {
   CButton,
   CModal,
   CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CFooter,
   CImg
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
