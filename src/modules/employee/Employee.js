@@ -12,7 +12,9 @@ import {
   CForm,
   CImg,
   CButton,
+  CSpinner,
 } from '@coreui/react'
+import { config as cnf } from "utils/config";
 import CIcon from '@coreui/icons-react'
 import { useDispatch } from 'react-redux'
 import { actionCreator, ActionTypes } from 'utils/actions';
@@ -23,17 +25,19 @@ import EmployeeModal from './EmployeeModal';
 import PerformanceReviewModal from 'modules/performance-review/PerformanceReviewModal';
 import { setWidth } from 'utils/helpers';
 import res from 'assets/img'
-const User = (props) => {
+const EmployeeDetails = (props) => {
   const { match } = props
   const employees = props.appState.employee.employees
+  const dispatch = useDispatch();
   const { id } = match.params
   const fileInput = useRef()
   const [process, setProcess] = useState({
     loading: false,
     pending: false,
+    uploading: false,
     message: "Loading Data..."
   })
-  const [user, setUser] = useState(null)
+  const [employee, setEmployee] = useState(null)
   const [selectedFile, setSelectedFile] = useState()
   const [preview, setPreview] = useState()
 
@@ -48,16 +52,20 @@ const User = (props) => {
     ["gender", "birthdate", "mobileno", "email",],
     ["street", "city", "coutry"],
     ["department", "role", "status"],
-    ["SSS" ,"PHIL HEALTH" ,"PAG-IBIG"]
+    ["SSS", "PHIL HEALTH", "PAG-IBIG"]
   ];
 
   const renderContent = (key) => {
-    let val = checkNull(user[key])
+    let val = checkNull(employee[key])
     switch (key) {
       case "address":
-        return { key, value: `${checkNull(user.street)} ,${checkNull(user.city)} ,${checkNull(user.country)} ` }
+        return { key, value: `${checkNull(employee.street)} ,${checkNull(employee.city)} ,${checkNull(employee.country)} ` }
       case "mobileno":
         return { key: "Mobile No.", value: val }
+      case "mobileno":
+        return { key: "Mobile No.", value: val }
+      case "status":
+        return { key: toCapitalize(key), value: "Active" }
       default:
         if (key.includes("name")) {
           val = toCapitalize(val)
@@ -66,16 +74,32 @@ const User = (props) => {
     }
   }
 
-  const UploadButtonHandler = () => {
+  const UploadButtonHandler = async () => {
     //  call api upload
+    let payload = new FormData();
+    payload.append('file', selectedFile);
+    payload.append('employee_id', +employee.employeeId)
+    _initProcess("uploading", true)
+    let res = await api.post("/update_profile/img", payload, true);
+    _initProcess("uploading", false)
+    if (!res.error) {
+      _initProcess("pending", false);
+      let updated = res.data.employee_information;
+      setEmployee(updated)
+      dispatch(actionCreator(ActionTypes.UPDATE_EMPLOYEE, updated))
+    } else {
+      alert(res.message)
+    }
+    return
+
   }
   const FileInputChangeHandler = e => {
     if (!e.target.files || e.target.files.length === 0) {
       setSelectedFile(undefined)
+      _initProcess("pending", false)
       return
     }
-
-    _initProcess("pending", true);
+    _initProcess("pending", true)
     setSelectedFile(e.target.files[0])
   }
 
@@ -84,14 +108,15 @@ const User = (props) => {
     for (let idx = 0; idx < employees.length; idx++) {
       let el = employees[idx]
       if (el.employeeId.toString() === id.toString()) {
-        setUser(el);
+        setEmployee(el);
         break
       }
     }
     if (!selectedFile) {
+      _initProcess("pending", false)
       setPreview(undefined)
       return
-    }
+    } 
     const objectUrl = URL.createObjectURL(selectedFile)
     setPreview(objectUrl)
 
@@ -99,12 +124,8 @@ const User = (props) => {
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile, employees])
 
-
-  // if (!user) {
-  //   return <NoData {...{ title: process.message }} />
-  // } else {
   return (
-    user ?
+    employee ?
       <CRow className="justify-content-center">
         <CCol {...setWidth("12")}>
           <CCard>
@@ -115,10 +136,10 @@ const User = (props) => {
                 </CCol>
                 <CCol sm="7" className="d-none d-md-block">
                   <div className="float-right px-2" >
-                    <EmployeeModal isUpdate data={user} />
+                    <EmployeeModal isUpdate data={employee} />
                   </div>
                   <div className="float-right" >
-                    <PerformanceReviewModal {...{ user }} />
+                    <PerformanceReviewModal {...{ employee }} />
                   </div>
                 </CCol>
               </CRow>
@@ -126,18 +147,16 @@ const User = (props) => {
             <CCardBody>
               <CRow gutters={false} className="">
                 <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
-                  {/* image */}
-
                   <div style={
                     {
-                      backgroundImage: `url(${preview || (user.profile_pic || res.logoSm)})`,
+                      backgroundImage: `url(${preview || (`${cnf.API_URL_DEV}/image/images/${employee.profile_img}` || res.logoSm)})`,
                       backgroundSize: "contain",
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
                       maxHeight: "200px",
                       height: "200px",
                       width: "100%",
-                      border:"1px solid dark"
+                      border: "1px solid dark"
                     }
                   }></div>
                   <input type="file" accept="image/*" value={process.file} ref={fileInput} hidden onChange={FileInputChangeHandler} />
@@ -147,21 +166,21 @@ const User = (props) => {
                     }}
                     className="mr-1 mt-3"
                     block
+                    disabled={process.uploading}
                     color="primary">
-                    {/* {
-                        disabled ? <CSpinner color="secondary" size="sm" /> : !isUpdate ? "Submit" : "Update"
-                    } */}
                     Change Profile Image
-                </CButton>
+                  </CButton>
 
                   <CButton
                     onClick={UploadButtonHandler}
                     className="mr-1 mt-3"
                     block
-                    disabled={!process.pending}
+                    disabled={process.uploading && true || !process.pending && true}
                     color="primary">
-                    Upload
-                </CButton>
+                    {
+                      process.uploading ? <CSpinner color="secondary" size="sm" /> : "Upload"
+                    }
+                  </CButton>
                 </CCol>
                 <CCol>
                   <CForm>
@@ -188,10 +207,10 @@ const User = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-      </CRow> :
+      </CRow > :
       <NoData {...{ title: process.message }} />
   )
 }
 // }
 
-export default User
+export default EmployeeDetails
