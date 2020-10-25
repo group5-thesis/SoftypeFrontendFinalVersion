@@ -4,7 +4,7 @@ import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CI
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
-import { APP_MESSAGES, ROLE } from 'utils/constants/constant';
+import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
 import { RULES, shallowCopy, getAge } from 'utils/helpers'
 import _ from 'lodash';
 
