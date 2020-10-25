@@ -59,7 +59,7 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
 };
 
 export default {
-  post: async (url, data = null, isFormData = false, onUploadProgress = null) => callAPI("POST", url, data, isFormData, onUploadProgress=null),
+  post: async (url, data = null, isFormData = false, onUploadProgress = null) => callAPI("POST", url, data, isFormData, onUploadProgress = null),
   put: async (url, data = null) => callAPI("put", url, data),
 
   delete: async (url, data = null) => callAPI("delete", url, data),

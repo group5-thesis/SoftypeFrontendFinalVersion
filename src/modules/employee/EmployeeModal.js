@@ -258,9 +258,20 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                                             invalid={errors.roleId !== false}
                                         >
                                             <option value="" hidden>Select Role</option>
-                                            {ROLE.map((r, id) => {
-                                                return <option value={id} key={id} >{r}</option>
+                                            {ACCOUNT_ROLES.map(role => {
+                                                return (
+                                                    <optgroup label={role.category} key={role.category}>
+                                                        {
+                                                            role.roles.map((_role, idx) => {
+                                                                return (<option value={role.accountType} key={idx} >{_role}</option>)
+                                                            })
+                                                        }
+                                                    </optgroup>)
+
                                             })}
+                                            {/* {ROLE.map((r, id) => {
+                                                return <option value={id} key={id} >{r}</option>
+                                            })} */}
                                         </CSelect>
                                         {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
                                     </CFormGroup>
