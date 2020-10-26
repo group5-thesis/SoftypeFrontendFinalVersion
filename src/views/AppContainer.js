@@ -39,10 +39,14 @@ const fetchTickets = async dispatch => {
 
 
 const mapStateToProps = state => ({
-  appState: state.appState
+  appState: state.appState,
+  retrieveLeaveRequests,
+  fetchTickets,
+  retrieveEmployees,
 })
 
 const mapDispatchToProps = (dispatch, _) => ({
+
   checkLogin: async () => {
     let authStateResult = localStorage.getItem("token")
     let userId = localStorage.getItem("uId")

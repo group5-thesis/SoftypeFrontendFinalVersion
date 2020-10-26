@@ -116,7 +116,7 @@ const EmployeeDetails = (props) => {
       _initProcess("pending", false)
       setPreview(undefined)
       return
-    } 
+    }
     const objectUrl = URL.createObjectURL(selectedFile)
     setPreview(objectUrl)
 
@@ -136,7 +136,7 @@ const EmployeeDetails = (props) => {
                 </CCol>
                 <CCol sm="7" className="d-none d-md-block">
                   <div className="float-right px-2" >
-                    <EmployeeModal isUpdate data={employee} />
+                    <EmployeeModal isUpdate data={employee} retrieveEmployees={props.retrieveEmployees} />
                   </div>
                   <div className="float-right" >
                     <PerformanceReviewModal {...{ employee }} />
@@ -149,7 +149,7 @@ const EmployeeDetails = (props) => {
                 <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
                   <div style={
                     {
-                      backgroundImage: `url(${preview || (`${cnf.API_URL_DEV}/image/images/${employee.profile_img}` || res.logoSm)})`,
+                      backgroundImage: `url(${preview ? preview : (employee.profile_img ? `${cnf.API_URL_DEV}/image/images/${employee.profile_img}` : res.logoSm)})`,
                       backgroundSize: "contain",
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',

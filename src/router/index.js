@@ -9,9 +9,10 @@ const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 // const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 // const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 // const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-const Test =  React.lazy(() => import('modules/test/chart'));
+const Test = React.lazy(() => import('modules/test/chart'));
 
 const Repository = React.lazy(() => import('modules/repository/Repositoryv1'))
+const RepositoryFiles = React.lazy(() => import('modules/repository/RepositoryFiles'))
 const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
@@ -36,11 +37,11 @@ const routes = [
     { path: '/leave/calendar', exact: true, name: 'Leave Calendar', component: LeaveCalendar, user: [4] },
     { path: '/forms', name: 'Forms', component: BasicForms, user: [4] },
     { path: '/cards', name: 'Cards', component: Test, user: [4] },
-    { path: '/repository', name: 'Repository', component: Repository, user: [4] },
+    { path: '/repository', exact:true, name: 'Repository', component: Repository, user: [4] },
+    { path: '/repository/:type', exact:true, name: 'Files', component: RepositoryFiles, user: [4] },
     // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     // { path: '/chart', name: 'Organizational Chart', component: Test, user: [4] },
     { path: '/cards', name: 'Cards', component: Cards, user: [4] },
-    { path: '/repository', name: 'Repository', component: Repository, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },
     { path: '/ticket', exact: true, name: 'Ticket', component: Ticket, user: [4] },
