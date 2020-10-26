@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CCardBody, CCol, CCarouselInner, CCarouselControl, CCarouselItem, CCarousel, CRow, CButton } from "@coreui/react";
-import StarRatings from 'react-star-ratings';
+// import StarRatings from 'react-star-ratings';
 import CIcon from "@coreui/icons-react";
 import { copyArray } from 'utils/helpers';
 
@@ -28,7 +28,7 @@ const Questions = ({ rating, setRating, QUESTIONS }) => {
                     <CCarouselItem key={index}>
                       <center>
                         <h5>{`${index + 1}.) ${element}`}</h5>
-                        <StarRatings
+                        {/* <StarRatings
                           key={index}
                           rating={rating[index]}
                           starRatedColor="primary"
@@ -38,7 +38,7 @@ const Questions = ({ rating, setRating, QUESTIONS }) => {
                             setNewRating(rate, index)
                           }}
                           name='rating'
-                        />
+                        /> */}
                         <br></br>
                         <h5>
                           {
