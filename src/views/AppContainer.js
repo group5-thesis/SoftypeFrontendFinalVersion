@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch, _) => ({
       userId = +userId
       let res = await api.get(`/getProfile?userId=${userId}`)
       let { error, data } = res
-      if (!error) {
+      if ((!error) && data.length) {
         let user = data[0]
         let { employeeId, roleId } = user
         const payload = { employeeId, roleId };
