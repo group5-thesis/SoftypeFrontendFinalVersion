@@ -50,7 +50,9 @@ const mapDispatchToProps = (dispatch, _) => ({
   checkLogin: async () => {
     let authStateResult = localStorage.getItem("token")
     let userId = localStorage.getItem("uId")
+    dispatch(actionCreator(ActionTypes.LOADING_STARTED))
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
+    let payload = {}
     if (authStateResult !== null && userId !== null) {
       userId = +userId
       let res = await api.get(`/getProfile?userId=${userId}`)
@@ -58,19 +60,19 @@ const mapDispatchToProps = (dispatch, _) => ({
       if ((!error) && data.length) {
         let user = data[0]
         let { employeeId, roleId } = user
-        const payload = { employeeId, roleId };
-
+        payload = { employeeId, roleId };
         dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user))
         dispatch(actionCreator(ActionTypes.LOGIN))
-        retrieveLeaveRequests(dispatch, payload)
-        fetchTickets(dispatch)
-        retrieveEmployees(dispatch)
       }
       // else {
       //   logout(dispatch);
       // }
     }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED))
+    await retrieveLeaveRequests(dispatch, payload)
+    await fetchTickets(dispatch)
+    await retrieveEmployees(dispatch)
+    dispatch(actionCreator(ActionTypes.LOADING_DONE))
   },
   logout: () => {
     logout(dispatch)

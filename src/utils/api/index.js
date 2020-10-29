@@ -7,6 +7,7 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
     "Content-Type": "application/json",
   };
 
+
   if (isFormData) {
     headers["Content-Type"] = "multipart/form-data"
   }
@@ -28,10 +29,10 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
     headers,
     onUploadProgress
   };
-
   if (data) {
     config.data = data;
   }
+  
   try {
     let response = await axios(config);
     return response.data;
@@ -59,7 +60,7 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
 };
 
 export default {
-  post: async (url, data = null, isFormData = false, onUploadProgress = null) => callAPI("POST", url, data, isFormData, onUploadProgress = null),
+  post: async (url, data = null, isFormData = false, onUploadProgress = null) => callAPI("POST", url, data, isFormData = false, onUploadProgress = null),
   put: async (url, data = null) => callAPI("put", url, data),
 
   delete: async (url, data = null) => callAPI("delete", url, data),

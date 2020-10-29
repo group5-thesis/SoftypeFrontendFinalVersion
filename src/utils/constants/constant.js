@@ -94,7 +94,7 @@ export const FILE_TYPES = [
   {
     name: "Videos",
     icon: mdiFileVideo,
-    extensions: ["mp4", "avi", "mov", "webpm", "mpeg", "3gp", "flv"],
+    extensions: ["mp4", "avi", "mov", "mpeg", "3gp", "flv"],
   },
   {
     name: "Others",
