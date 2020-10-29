@@ -1,33 +1,24 @@
-export const USER_TYPES = [
-  'Junior consultant',
-  'Senior consultant',
-  'Team Leader',
-  'Project Manager',
-  'CEO',
-  'CIO',
-  'CTO',
-  'COO',
-]
+
+import { mdiFileDocument, mdiFileVideo, mdiFileImage, mdiFile } from '@mdi/js'
 
 export const ROLE = [
-    // 'Admin',
-    // 'HR',
-    'Trainee',
-    'Junior Consultant (Technical/Functional)',
-    'Senior Consultant (Technical/Functional)',
-    'Associate Team Lead',
-    'Team Leader',
-    'Project Manager',
-    'CTO',
-    'CIO',
-    'COO',
-    'CEO',
-    'IT Admin',
-    'Sales Associate',
-    'Technical Associate',
-    'Support and Documentation',
-    'Senior Sales Consultant',
-    'VP Sales and Marketing'
+  'HR',
+  'Trainee',
+  'Junior Consultant (Technical/Functional)',
+  'Senior Consultant (Technical/Functional)',
+  'Associate Team Lead',
+  'Team Leader',
+  'Project Manager',
+  'CTO',
+  'CIO',
+  'COO',
+  'CEO',
+  'IT Admin',
+  'Sales Associate',
+  'Technical Associate',
+  'Support and Documentation',
+  'Senior Sales Consultant',
+  'VP Sales and Marketing'
 ]
 
 export const LEAVE_TYPES = [
@@ -57,9 +48,9 @@ export const MONTHS = [
 ]
 
 export const YEARS = [
-    2018,
-    2019,
-    2020
+  2018,
+  2019,
+  2020
 ]
 
 export const TICKET_STATUS = {
@@ -77,17 +68,97 @@ export const QUESTIONS = [
 
 
 export const STATUS = {
-    Pending: "primary",
-    Approved: "success",
-    Rejected: "danger",
-    Cancelled: "warning",
+  Pending: "primary",
+  Approved: "success",
+  Rejected: "danger",
+  Cancelled: "warning",
 };
 
 export const APP_MESSAGES = {
-    LOGIN_SUCCESS: (username) => `Welcome back ${username}`,
-    INPUT_REQUIRED: "Please provide a valid information",
-    INVALID_CREDENTIALS: "Invalid credentials"
+  LOGIN_SUCCESS: (username) => `Welcome back ${username}`,
+  INPUT_REQUIRED: "Please provide a valid information",
+  INVALID_CREDENTIALS: "Invalid credentials"
 }
+
+export const FILE_TYPES = [
+  {
+    name: "Documents",
+    icon: mdiFileDocument,
+    extensions: ["pdf", "doc", "docx", "xls", "ppt"]
+  },
+  {
+    name: "Images",
+    icon: mdiFileImage,
+    extensions: ["png", "jpg", "jpeg", "gif", "bmp", "svg"]
+  },
+  {
+    name: "Videos",
+    icon: mdiFileVideo,
+    extensions: ["mp4", "avi", "mov", "mpeg", "3gp", "flv"],
+  },
+  {
+    name: "Others",
+    icon: mdiFile,
+    extensions: ["*"]
+  }
+]
+
+export const ACCOUNT_ROLES = [
+  {
+    "accountType": 1,
+    "category": "Admin Roles",
+    "roles":
+      [
+        "Admin",
+        "CEO",
+        "CIO",
+        "CFO",
+        "COO",
+        "CTO",
+        "HR Admin/Manager",
+      ],
+  }, {
+    "accountType": 2,
+    "category": "Managerial Roles",
+    "roles":
+      [
+        "Associate Technical Lead",
+        "IT Admin",
+        "Program Manager",
+        "Project Manager",
+        "Team Leader",
+        "Technical Lead",
+        "VP - Sales & Marketing",
+      ],
+  },
+  {
+    "accountType": 3,
+    "category": "Regular Roles",
+    "roles":
+      [
+        "Associate Technical Consultant",
+        "Jr Functional Consultant",
+        "Jr Marketing Consultant",
+        "Jr Technical Consultant",
+        "Sales Associate",
+        "Sr Functional Consultant",
+        "Sr Marketing Consultant",
+        "Sr Sales Consultant",
+        "Sr Tecnical Consultant",
+        "Support & Documentation",
+        "Trainee",
+      ]
+  }
+]
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];
 export const CURRENT_YEAR = new Date().getFullYear();
+
+
+export const COLORS = [
+  "gradient-info",
+  "gradient-success",
+  "gradient-primary",
+  "gradient-warning",
+  "gradient-danger",
+]
