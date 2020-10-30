@@ -1,86 +1,122 @@
-import React, { useState } from 'react'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CCollapse,
-  CFade,
-  CLink,
-  CRow,
-  CButton,
-  CModal,
-  CModalBody,
-  CImg
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import changeState from 'utils/reducers/app'
-const Cards = () => {
-  const [showCard, setShowCard] = useState(true)
-  const [small, setSmall] = useState(false)
 
-  const [appState, ChangeState] = useState({
-    activeObject: null,
-    Objects: [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9}]
-  })
-  const [collapsed, setCollapsed] = useState(false)
-
-
-  function AppActive(index){
-    changeState({...appState,activeObject: appState.Objects[index]});
-  }
-
-  function dropdown(index){
-    if(appState.Objects[index]){
-      return 'cil-chevron-bottom';
-    }else {
-      return 'cil-chevron-top'
-    }
-  }
+import React from 'react'
+import "./_card.scss"
+const EmployeeChart = (props) => {
   return (
-    <>
-    <CRow>
-      {appState.Objects.map((elements,index)=>(
-      <CCol xs="12" sm="6" md="4" className ="go" onClick={() => dropdown(index)}>
-        <CFade in={showCard}>
-          <CCard>
-            <CCardHeader>
-            <CImg
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPgEmtQwrC7r80BUtMhPaF6okDFFu41i5fRQ&usqp=CAU"
-                block
-                class="mb-1"
-              />
-              <div className="card-header-actions">
-                <CLink className="card-header-action try" onClick={() => setCollapsed(!collapsed)}>
-                  <CIcon name={collapsed ? 'cil-chevron-bottom' : 'cil-chevron-top'} />
-                </CLink>
-              </div>
-            </CCardHeader>
-            <CCollapse show={collapsed}>
-              <CCardBody onClick={() => setSmall(!small)}>
-                Leonilo Torres
-              </CCardBody>
-              <CModal
-                show={small}
-                onClose={setSmall}
-              >
-                <CModalBody>
-                  <CButton color="info">More Info</CButton>{'    '}
-                  <CButton
-                    color="danger"
-                    onClick={() => setSmall(false)}
-                  >Cancel</CButton>
-                </CModalBody>
-              </CModal>
-            </CCollapse>
-          </CCard>
-        </CFade>
-      </CCol>
-      ))}
-    </CRow>
-    </>
-    
-  )
-}
+    <div class="pg-orgchart">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+      <div class="org-chart">
+        <ul>
+          <li>
+            <div class="user">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+              <div class="name">Arvind K</div>
+              <div class="role">CEO</div>
+              <a class="manager" href="#">Arvind K</a>
+            </div>
+            <ul>
+              <li>
+                <div class="user">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                  <div class="name">Nana L</div>
+                  <div class="role">CO-CEO</div>
+                  <a class="manager" href="#">Arvind K</a>
+                </div>
+              </li>
+              <li>
+                <div class="user">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                  <div class="name">Nikunj S</div>
+                  <div class="role">Chief Operating Officer</div>
+                  <a class="manager" href="#">Arvind K</a>
+                </div>
+                <ul>
+                  <li>
+                    <div class="user">
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                      <div class="name">Kel Custodio</div>
+                      <div class="role">Lead Developer</div>
+                      <a class="manager" href="#">Nikunj S</a>
+                    </div>
+                    <ul>
+                      <li><div class="user">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                        <div class="name">Sachin Savale</div>
+                        <div class="role">Technical Lead</div>
+                        <a class="manager" href="#">Kel Custodio</a>
+                      </div>
+                      <ul>
+                      <li><div class="user">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                        <div class="name">Shahbudin Kaji</div>
+                        <div class="role">Technical Support</div>
+                        <a class="manager" href="#">Sachin Savale</a>
+                      </div>
+                      </li>
+                      <li><div class="user">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                        <div class="name">Jaydas Sakhare</div>
+                        <div class="role">Technical Support</div>
+                        <a class="manager" href="#">Sachin Savale</a>
+                      </div>
+                      </li>
+                      <li><div class="user">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                        <div class="name">Vishal Pitale</div>
+                        <div class="role">Technical Support</div>
+                        <a class="manager" href="#">Sachin Savale</a>
+                      </div>
+                      </li>
+                      <li><div class="user">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                        <div class="name">Madhu Rai</div>
+                        <div class="role">Technical Support</div>
+                        <a class="manager" href="#">Sachin Savale</a>
+                      </div>
+                      </li>
+                      </ul>
+                      </li>
+                      <li>
+                        <div class="user">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                        <div class="name">Nitesh Devadiga</div>
+                        <div class="role">Developer</div>
+                        <a class="manager" href="#">Kel Custodio</a>
+                      </div>
+                      </li>
+                      <li><div class="user">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                        <div class="name">Amol Jagkar</div>
+                        <div class="role">Developer</div>
+                        <a class="manager" href="#">Kel Custodio</a>
+                      </div></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <div class="user">
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                      <div class="name">Manisha H</div>
+                      <div class="role">Developer</div>
+                      <a class="manager" href="#">Nikunj S</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="user">
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" class="img-responsive" />
+                      <div class="name">Moses R</div>
+                      <div class="role">Developer</div>
+                      <a class="manager" href="#">Nikunj S</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
 
-export default Cards
+export default EmployeeChart;
+
