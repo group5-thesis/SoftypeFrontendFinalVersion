@@ -1,54 +1,120 @@
 import React, { useState, useEffect } from "react"
 import {
-  CButton,
-  CModal,
-  CForm,
-  CInput,
-  CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
-  CSpinner,
-  CInvalidFeedback,} from "@coreui/react"
-  import { CenteredLayout } from "containers"
-  import CIcon from "@coreui/icons-react"
+    CCol,
+    CCard,
+    CCardHeader,
+    CCardBody,
+    CRow,
+    CButton,
+    CInput,
+    CInputGroup,
+    CInputGroupPrepend,
+    CInputGroupText,
+    CForm,
+    CInputFile,
+    CFormGroup,
+    CLabel
+} from "@coreui/react"
+import { CenteredLayout } from "containers"
+import CIcon from "@coreui/icons-react"
+import { Modal } from "reusable"
+import api from "utils/api";
+import { formatDate } from "utils/helpers"
 
 const FileUpload = () => {
-    const [credentials, setCredentials] = useState({
-        file: "",
-        description:""
-    })
+    const [file, setFile] = useState([]);
+    const [description, setDescription] = useState("");
+    const [type, setType] = useState("");
+    const [path, setPath] = useState("");
 
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setCredentials({ [name]: value })
-    }
+
+    const handleFileChange = (e) => {
+        let { files } = e.target;
+        // console.log(files)
+        setFile(files[0]);
+
+    };
+
+    const handleDescriptionChange = (e) => {
+        let { value } = e.target;
+        setDescription(value);
+    };
+
+
+
+    const printValues = e => {
+        e.preventDefault();
+        console.log(file, description);
+      };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(file.name, description)
+        let formdata = new FormData();
+        formdata.append("file", file ,file.name);
+        formdata.append("description",description)
+        console.log(formdata);
+        let res = await api.post("add_file", formdata, true);
+        // console.log(res);
+    };
 
     return (
-       
+
         <CenteredLayout>
-        <CButton  color="primary" className="px-32" >
-            Attach File     <CIcon name="cil-paperclip" />
-        </CButton>
-        <CInputGroup className="mb-3">
-                <CInputGroupPrepend>
-                    <CInputGroupText>
-                          <CIcon name="cil-pencil" />
-                    </CInputGroupText>
-                </CInputGroupPrepend>
-                
-                <CInput
-                    type="text"
-                    value={credentials.description || ""}
-                    placeholder="Description"
-                    name="description"
-                    autoComplete="text"
-                    onChange={handleChange}
-                />
-            </CInputGroup>
-            <CButton  color="primary" className="px-32" >
-            Upload File<CIcon name="cil-paper-plane" />
-        </CButton>
-    </CenteredLayout>
+            <Modal  {...{
+                title: "File upload",
+                btnTitle: "click me",
+                className: "mb-6",
+                size: "lg",
+            }}>
+                <CForm >
+                    <CFormGroup row>
+                        <CInputFile
+                            color="primary"
+                            id="file-input"
+                            onChange={handleFileChange}
+                            name="file"
+                        />
+
+                        <CInputGroup className="mb-3">
+                            <CInputGroupPrepend>
+                                <CInputGroupText>
+                                    <CIcon name="cil-pencil" />
+                                </CInputGroupText>
+                            </CInputGroupPrepend>
+
+                            <CInput
+                                value={description || ""}
+                                id="desc-input"
+                                onChange={handleDescriptionChange}
+                                name="description"
+                            />
+                        </CInputGroup>
+                        <CButton color="primary" className="px-32" onClick={handleSubmit}>
+                            Upload File<CIcon name="cil-paper-plane" />
+                        </CButton>
+                    </CFormGroup>
+                </CForm>
+
+            </Modal>
+
+            <CRow>
+                <CCol xs="12" lg="6">
+                    <CCard>
+                        <CCardHeader>
+                            Images Upload
+                        </CCardHeader>
+                        <CCardBody>
+                        <CRow>
+
+                        </CRow>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+            </CRow>
+
+        </CenteredLayout>
+
     )
 }
 
