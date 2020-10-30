@@ -57,7 +57,7 @@ const Modal = forwardRef(
           className="fade"
         >
           <CModalHeader closeButton={closeButton}>
-            <h3>{title}</h3>
+            <h4>{title}</h4>
           </CModalHeader>
           <CModalBody>{children}</CModalBody>
           <CModalFooter>

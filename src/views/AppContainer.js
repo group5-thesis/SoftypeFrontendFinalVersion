@@ -37,6 +37,20 @@ const fetchTickets = async dispatch => {
   }
 }
 
+const retrieveDepartments = async dispatch => {
+  let res = await api.get("/retrieve_departments");
+  if (!res.error) {
+    dispatch(actionCreator(ActionTypes.FETCH_DEPARTMENTS, res.data.departments));
+  }
+}
+
+const retrievePerformanceReviews = async dispatch => {
+  let res = await api.get("/retrieve_performance_reviews");
+  if (!res.error) {
+    dispatch(actionCreator(ActionTypes.FETCH_PERFORMANCE_REVIEWS, res.data.performance_review_information));
+  }
+}
+
 
 const mapStateToProps = state => ({
   appState: state.appState,

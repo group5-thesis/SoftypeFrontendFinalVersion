@@ -3,6 +3,10 @@ import { CButton } from "@coreui/react";
 import { Modal } from 'reusable'
 import Questions from './component/Questions'
 import { QUESTIONS } from "utils/constants/constant";
+import { useSelector, useDispatch } from 'react-redux'
+import { actionCreator, ActionTypes } from 'utils/actions';
+import PerformanceReviewModel from 'models/PerformanceReviewModel'
+import api from "utils/api"
 
 const PerformanceReviewModal = ({ employee }) => { // lacking api, name of employee, submit method
     const [rating, setRating] = useState(
