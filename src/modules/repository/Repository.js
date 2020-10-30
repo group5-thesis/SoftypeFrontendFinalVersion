@@ -24,7 +24,6 @@ const FileUpload = () => {
     }
 
     return (
-       
         <CenteredLayout>
         <CButton  color="primary" className="px-32" >
             Attach File     <CIcon name="cil-paperclip" />

@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react'
+import React, { Component } from 'react'
 import api from 'utils/api'
 import { CCol, CRow, CSpinner } from '@coreui/react'
 import { toCapitalize, getAge } from 'utils/helpers'

@@ -16,7 +16,13 @@ import {
   TOGGLE_DIALOG,
   ADD_TICKET,
   FETCH_TICKETS,
-  CLOSE_TICKET
+  CLOSE_TICKET,
+  FILE_DOCUMENTS,
+  FILE_IMAGES,
+  FILE_VIDEOS,
+  FILE_OTHERS,
+  LOADING_STARTED,
+  LOADING_DONE
 } from "utils/constants/action-types";
 
 const ActionTypes = {
@@ -37,17 +43,14 @@ const ActionTypes = {
   TOGGLE_DIALOG,
   ADD_TICKET,
   FETCH_TICKETS,
-  CLOSE_TICKET
+  CLOSE_TICKET,
+  FILE_DOCUMENTS,
+  FILE_IMAGES,
+  FILE_VIDEOS,
+  FILE_OTHERS,
+  LOADING_STARTED,
+  LOADING_DONE
 };
 
 const actionCreator = (type, payload = null) => ({ type, payload });
 export { ActionTypes, actionCreator };
-
-// export function updateEmployee(data) {  
-//   return dispatch => {  
-//       return dispatch({  
-//           type: 'UPDATE_EMPLOYEE',  
-//           payload: data  
-//       });  
-//   }  
-// };  

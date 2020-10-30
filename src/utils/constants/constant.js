@@ -1,4 +1,6 @@
 
+import { mdiFileDocument, mdiFileVideo, mdiFileImage, mdiFile } from '@mdi/js'
+
 export const ROLE = [
   'HR',
   'Trainee',
@@ -81,18 +83,22 @@ export const APP_MESSAGES = {
 export const FILE_TYPES = [
   {
     name: "Documents",
+    icon: mdiFileDocument,
     extensions: ["pdf", "doc", "docx", "xls", "ppt"]
   },
   {
     name: "Images",
+    icon: mdiFileImage,
     extensions: ["png", "jpg", "jpeg", "gif", "bmp", "svg"]
   },
   {
     name: "Videos",
-    extensions: ["mp4", "avi", "mov", "webpm", "mpeg", "3gp", "flv"],
+    icon: mdiFileVideo,
+    extensions: ["mp4", "avi", "mov", "mpeg", "3gp", "flv"],
   },
   {
     name: "Others",
+    icon: mdiFile,
     extensions: ["*"]
   }
 ]
@@ -147,3 +153,12 @@ export const ACCOUNT_ROLES = [
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];
 export const CURRENT_YEAR = new Date().getFullYear();
+
+
+export const COLORS = [
+  "gradient-info",
+  "gradient-success",
+  "gradient-primary",
+  "gradient-warning",
+  "gradient-danger",
+]

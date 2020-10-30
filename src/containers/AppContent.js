@@ -13,6 +13,7 @@ import { filterModule, plotArray } from 'utils/helpers'
 import Page404 from 'modules/placeholder/page404/Page404';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
+
 const loading = (
   <Loader bg="transparent" />
 )

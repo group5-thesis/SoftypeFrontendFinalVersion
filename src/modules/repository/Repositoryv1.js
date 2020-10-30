@@ -1,100 +1,58 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
-    CBadge,
     CCard,
     CCardBody,
     CCardHeader,
     CCol,
-    CListGroup,
-    CListGroupItem,
     CRow,
-    CTabContent,
-    CTabPane,
-    CProgress
+    CContainer,
+    CCardFooter,
+    CBadge
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react';
-
-
+import { FILE_TYPES } from 'utils/constants/constant'
+import Icon from '@mdi/react'
+import colors from 'assets/theme/colors'
+import { setWidth } from 'utils/helpers';
+import { useHistory } from 'react-router-dom'
+import RepositoryModal from './RepositoryModal';
 const Repository = () => {
-    const files = [
-        {
-            uploadedBy: "test",
-            date_uplpaded: Date.now(),
-            path: "/images/photo.png",
-            type: "image",
-            description: "test"
-        },
-        {
-            uploadedBy: "test",
-            date_uplpaded: Date.now(),
-            path: "/images/photo.png",
-            type: "image",
-            description: "test"
-        },
-        {
-            uploadedBy: "test",
-            date_uplpaded: Date.now(),
-            path: "/images/photo.png",
-            type: "image",
-            description: "test"
-        },
+    const history = useHistory();
+    const { $blue, $orange, $green, $red } = colors;
+    const $theme = [
+        ['info', 'primary', 'danger', 'success'],
+        [$blue, $orange, $red, $green]
     ]
-
+    const goToRoute = (route) => {
+        history.push(`/repository/${route}`)
+    }
     return (
         <>
-            <CRow>
-                <CCol sm="12" xl="12">
-                    <CCard>
-                        <CCardHeader>
-                            Company Files
-                        </CCardHeader>
-                        <CCardBody>
-                            <table className="table table-hover table-outline mb-0 d-none d-sm-table">
-                                <thead className="thead-light">
-                                    <tr>
-                                        <th>User</th>
-                                        {/* <th className="text-center">Country</th>
-                                        <th>Usage</th>
-                                        <th className="text-center">Payment Method</th> */}
-                                        <th>Activity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div>Yiorgos Avraamu</div>
-                                            <div className="small text-muted">
-                                                <span>New</span> | Registered: Jan 1, 2015
-                      </div>
-                                        </td>
-                                        {/* <td className="text-center">
-                                            <CIcon height={25} name="cif-us" title="us" id="us" />
-                                        </td>
-                                        <td>
-                                            <div className="clearfix">
-                                                <div className="float-left">
-                                                    <strong>50%</strong>
-                                                </div>
-                                                <div className="float-right">
-                                                    <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
-                                                </div>
-                                            </div>
-                                            <CProgress className="progress-xs" color="success" value="50" />
-                                        </td>
-                                        <td className="text-center">
-                                            <CIcon height={25} name="cib-cc-mastercard" />
-                                        </td> */}
-                                        <td>
-                                            <div className="small text-muted">Last login</div>
-                                            <strong>10 sec ago</strong>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
+            <CContainer>
+                <CRow span={9} >
+                    {FILE_TYPES.map((fileType, idx) => {
+                        return (
+                            <CCol {...setWidth(6)} key={`card_${idx}`}>
+                                <CCard id={fileType.name} style={{ cursor: 'pointer' }} onClick={() => {
+                                    goToRoute(fileType.name.toLowerCase())
+                                }} className="mx-4" accentColor={$theme[0][idx]}>
+                                    <CCardHeader>
+                                        <h2 className="text-center">{fileType.name}</h2>
+                                    </CCardHeader>
+                                    <CCardBody style={{ textAlign: "center" }}>
+                                        <Icon size={5} color={$theme[1][idx]} path={fileType.icon} />
+                                    </CCardBody>
+                                    <CCardFooter className="justify-content-center">
+                                        {fileType.extensions.map(ext => {
+                                            return <CBadge key={ext} className="px-3 py-2 mx-1" color={$theme[0][idx]} shape="pill">{ext}</CBadge>
+                                        })}
+                                    </CCardFooter>
+                                </CCard>
+                            </CCol>
+                        )
+                    })}
+                </CRow>
+            </CContainer>
+            <RepositoryModal {...{ isHidden: true }} />
         </>
     )
 }
