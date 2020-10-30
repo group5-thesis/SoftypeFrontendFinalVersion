@@ -70,7 +70,9 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         payload.append("type", type)
         payload.append("employeeId", +employeeId)
         let res = await api.post("/add_file", payload, true);
-        console.log(res)
+        if (res.error) {
+            alert(res.message)
+        }
     }
 
     const _onError = (err) => {
@@ -131,7 +133,16 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
                 modalOnClose={modalOnCloseCallback}
                 footer={
                     <>
-                        <CButton color="primary" onClick={preUpload} >Submit</CButton>
+                        <CButton
+                            disabled={isLoading}
+                            onClick={preUpload}
+                            className="mr-1"
+                            color="primary">
+                            {
+                                isLoading ? <CSpinner color="secondary" size="sm" /> : 'Upload'
+                            }
+                        </CButton>
+                        {/* <CButton color="primary" onClick={preUpload} >Submit</CButton> */}
                         <CButton color="danger" onClick={() => {
                             modal.current.toggle()
                             modalOnCloseCallback()

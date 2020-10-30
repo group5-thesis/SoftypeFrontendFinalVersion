@@ -52,11 +52,7 @@ const AppContent = (_props) => {
     }
   }
 
-  // useEffect(() => {
-  //   retrieveLeaveRequests()
-  //   fetchTickets()
-  //   retrieveEmployees()
-  // }, [])
+
 
   return (
     <main className="c-main">

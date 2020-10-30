@@ -1,7 +1,7 @@
 import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
 import { Promise } from "q";
-
+import { config } from "utils/config"
 export const RULES = {
   required: (value) => !!value || "Required.",
   usernameRules: (v) =>
@@ -122,8 +122,8 @@ export const checkDateRange = (start, end, isFilter = false) => {
 };
 
 export const getDuration = (start, end) => {
-  end = moment(end, 'YYYY-MM-DD')
-  let duration = moment.duration(end.diff(moment(start, 'YYYY-MM-DD')))
+  end = moment(end, "YYYY-MM-DD")
+  let duration = moment.duration(end.diff(moment(start, "YYYY-MM-DD")))
   return duration.asDays()
 }
 
@@ -198,7 +198,7 @@ export const setWidth = (width) => {
       // sm: width,
       md: width,
       lg: width,
-      xl: width,      
+      xl: width,
     })
 }
 
@@ -212,4 +212,25 @@ export const checkNull = (str) => {
 export const getFileExtension = (filename) => {
   var ext = /^.+\.([^.]+)$/.exec(filename);
   return ext == null ? "" : ext[1];
+}
+
+export const getBaseUrl = () => {
+  return process.env.NODE_ENV === "production" ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV;
+}
+
+export const downloadFile = async (route, filename, callback) => {
+  fetch(`${getBaseUrl()}/file/${route}`)
+    .then(resp => resp.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      callback(true)
+    })
+    .catch((err) => callback(false, err));
 }

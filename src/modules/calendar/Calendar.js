@@ -21,10 +21,11 @@ const localizer = momentLocalizer(moment)
 //     },
 //   })
 
-const Basic = props => (
+const Basic = ({ header }) => {
   // const localizer =  Calendar.momentLocalizer(moment)
   // return(
-  <div>
+  return(
+  < div >
     <CCard>
       <CCardBody>
         <Calendar
@@ -56,8 +57,8 @@ const Basic = props => (
     {/* <CCard
        events = {events}
     /> */}
-  </div>
-)
+  </div >)
+}
 // }
 
 
