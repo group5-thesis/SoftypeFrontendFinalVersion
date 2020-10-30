@@ -1,39 +1,67 @@
-import React, { Component } from 'react'
-import { CCard, CCardHeader, CCardBody } from '@coreui/react';
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-export default class Calendar extends Component {
-  render() {
-    let { _events = [], header = true, showHeader = false, startDate = null } = this.props
-    console.log(_events)
-    return (
-      // <CCard style={{ height: '95%' }}>
-      //   {
-      //     header &&
-      //     <CCardHeader>
-      //       Calendar View
-      //     </CCardHeader>
-      //   }
+import React from 'react'
+// import { momentLocalizer, Views } from 'react-big-calendar'
+import events from './events'
+// import * as dates from './dates'
+// import moment from 'moment'
+import { Calendar, momentLocalizer } from 'react-big-calendar'
+import moment from 'moment'
+import "react-big-calendar/lib/css/react-big-calendar.css"
+import views from 'views';
+import { CCard, CCardBody } from '@coreui/react';
 
-      //   <CCardBody >
-          <FullCalendar
-            themeSystem="bootstrap"
-            slotMinWidth='100%'
-            dayMinWidth='100%'
-            weekends
-            defaultDate={_events.length && _events[0]["start"]}
-            eventOverlap
-            plugins={[dayGridPlugin]}
-            footerToolbar={null}
-            headerToolbar={{
-              right: showHeader && 'prev,next',
-              center: 'title',
-              left: ''
-            }}
-            events={_events}
-          />
-      //   </CCardBody>
-      // </CCard>
-    )
-  }
-}
+const localizer = momentLocalizer(moment)
+
+
+// let allViews = Object.keys(Views).map(k => Views[k])
+
+// const ColoredDateCellWrapper = ({ children }) =>
+//   React.cloneElement(React.Children.only(children), {
+//     style: {
+//       backgroundColor: 'lightblue'
+//     },
+//   })
+
+const Basic = props => (
+  // const localizer =  Calendar.momentLocalizer(moment)
+  // return(
+  <div>
+    <CCard>
+      <CCardBody>
+        <Calendar
+          localizer={localizer}
+          // view= {views.month}
+          events={events}
+
+          startAccessor='start'
+          endAccessor='end'
+          style={{ height: 600, backgroundColor: 'white' }}
+
+        // events={events}
+        // culture = 'en-GB'
+        // views={allViews}
+        // step={60}
+        // showMultiDayTimes
+        // max={dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours')}
+        // defaultDate={new Date(2015, 3, 1)}
+        // components={{
+        //   timeSlotWrapper: ColoredDateCellWrapper,
+        // }}
+        // localizer={localizer}
+
+
+        />
+      </CCardBody>
+    </CCard>
+
+    {/* <CCard
+       events = {events}
+    /> */}
+  </div>
+)
+// }
+
+
+
+
+
+export default Basic

@@ -14,7 +14,7 @@ const AppLayout = (props) => {
   }
   return (
     <div className="c-app c-default-layout">
-      <AppSidebar {...props}/>
+      <AppSidebar {...props} />
       <div className="c-wrapper">
         <AppHeader {...props} />
         <div className="c-body">

@@ -17,11 +17,12 @@ import {
   ADD_TICKET,
   FETCH_TICKETS,
   CLOSE_TICKET,
-  FETCH_DEPARTMENTS,
-  ADD_DEPARTMENT,
-  FETCH_PERFORMANCE_REVIEWS,
-  ADD_PERFORMANCE_REVIEW,
-  FETCH_PERFORMANCE_REVIEWS_BY_REVIEWER
+  FILE_DOCUMENTS,
+  FILE_IMAGES,
+  FILE_VIDEOS,
+  FILE_OTHERS,
+  LOADING_STARTED,
+  LOADING_DONE
 } from "utils/constants/action-types";
 
 const ActionTypes = {
@@ -43,21 +44,13 @@ const ActionTypes = {
   ADD_TICKET,
   FETCH_TICKETS,
   CLOSE_TICKET,
-  FETCH_DEPARTMENTS,
-  ADD_DEPARTMENT,
-  FETCH_PERFORMANCE_REVIEWS,
-  ADD_PERFORMANCE_REVIEW,
-  FETCH_PERFORMANCE_REVIEWS_BY_REVIEWER
+  FILE_DOCUMENTS,
+  FILE_IMAGES,
+  FILE_VIDEOS,
+  FILE_OTHERS,
+  LOADING_STARTED,
+  LOADING_DONE
 };
 
 const actionCreator = (type, payload = null) => ({ type, payload });
 export { ActionTypes, actionCreator };
-
-// export function updateEmployee(data) {
-//   return dispatch => {
-//       return dispatch({
-//           type: 'UPDATE_EMPLOYEE',
-//           payload: data
-//       });
-//   }
-// };

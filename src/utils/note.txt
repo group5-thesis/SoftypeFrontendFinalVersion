@@ -1,1 +1,10 @@
 please study about react-redux for our state management
+
+//react
+//react hooks
+//react-redux 
+//spread operator
+//getting input value react
+
+Todo list
+-delete and update

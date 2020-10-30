@@ -198,7 +198,7 @@ export const setWidth = (width) => {
       // sm: width,
       md: width,
       lg: width,
-      xl: width,
+      xl: width,      
     })
 }
 
@@ -223,4 +223,9 @@ export const copyArray = (arr) => {
 }
 export const checkNull = (str) => {
   return str ? str : ""
+}
+
+export const getFileExtension = (filename) => {
+  var ext = /^.+\.([^.]+)$/.exec(filename);
+  return ext == null ? "" : ext[1];
 }
