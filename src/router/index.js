@@ -13,6 +13,7 @@ const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
 const Ticket = React.lazy(() => import('modules/ticket/Ticket'))
 const PerformanceReview = React.lazy(() => import('modules/performance-review/PerformanceReview'))
 const Departments = React.lazy(() => import('modules/departments/Departments'))
+const Department = React.lazy(() => import('modules/departments/component/Department'))
 
 /**
  * access levels
@@ -36,8 +37,8 @@ const routes = [
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },
     { path: '/ticket', exact: true, name: 'Ticket', component: Ticket, user: [4] },
     { path: '/employee/performance-review', exact: true, name: 'PerformanceReview', component: PerformanceReview, user: [4] },
-    { path: '/employee/departments', exact: true, name: 'Departments', component: Departments, user: [4] }
-
+    { path: '/employee/departments', exact: true, name: 'Departments', component: Departments, user: [4] },
+    { path: '/employee/departments/:id', exact: true, name: 'Department Details', component: Department, user: [4] }
 ]
 
 export default routes

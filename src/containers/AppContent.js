@@ -24,36 +24,42 @@ const AppContent = (_props) => {
   const accessedRoutes = filterModule(routes, roleId);
   const dispatch = useDispatch();
 
-  const retrieveLeaveRequests = async () => {
-    dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST));
-    let res = await api.post("/getLeaveRequest", payload);
-    if (!res.error) {
-      // let { leave_requests } = res.data;
-    }
-  }
+  // const retrieveLeaveRequests = async () => {
+  //   let res = await api.post("/getLeaveRequest", payload);
+  //   if (!res.error) {
+  //     let { leave_requests } = res.data;
+  //     dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, leave_requests));
 
-  const retrieveEmployees = async () => {
-    let res = await api.get("/retrieve_employees");
-    if (!res.error) {
-      dispatch(actionCreator(ActionTypes.FETCH_EMPLOYEES, res.data.employee_information));
-    }
-  }
+  //   }
+  // }
 
-  const fetchTickets = async () => {
-    let response = await api.get('/retrieve_tickets')
-    if (response.error) {
-    }
-    else {
-      var temp = response.data.ticket_information;
-      temp = plotArray(temp)
-      dispatch(actionCreator(ActionTypes.FETCH_TICKETS, temp))
-    }
-  }
+  // const retrieveEmployees = async () => {
+  //   let res = await api.get("/retrieve_employees");
+  //   if (!res.error) {
+  //     dispatch(actionCreator(ActionTypes.FETCH_EMPLOYEES, res.data.employee_information));
+  //   }
+  // }
+
+  // const retrieveDepartments = async () => {
+  //   let res = await api.get("/retrieve_departments");
+  //   if (!res.error) {
+  //     dispatch(actionCreator(ActionTypes.FETCH_DEPARTMENTS, res.data.departments));
+  //   }
+  // }
+
+  // const fetchTickets = async () => {
+  //   let response = await api.get('/retrieve_tickets')
+  //   if (response.error) {
+  //   }
+  //   else {
+  //     var temp = response.data.ticket_information;
+  //     temp = plotArray(temp)
+  //     dispatch(actionCreator(ActionTypes.FETCH_TICKETS, temp))
+  //   }
+  // }
 
   useEffect(() => {
-    retrieveLeaveRequests()
-    fetchTickets()
-    retrieveEmployees()
+
   }, [])
 
   return (

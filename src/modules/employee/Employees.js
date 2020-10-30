@@ -19,11 +19,25 @@ const getBadge = status => {
         case 'Inactive': return 'secondary'
     }
 }
+let headers = [
+    { key: 'Name', _classes: 'font-weight-bold' },
+    { key: 'mobileno', label: "Mobile No." },
+    'email',
+    {
+        key: "role",
+        label: "Position",
+        sorter: false,
+        filter: false,
+    },
+    'gender',
+    'birthdate',
+    'department'
+]
 
 const Users = (props) => {
-
     const { history, location } = props
     const usersData = props.appState.employee.employees
+    const user = props.appState.auth.user
     const queryPage = location.search.match(/page=([0-9]+)/, '')
     const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
     const [page, setPage] = useState(currentPage)
@@ -51,17 +65,7 @@ const Users = (props) => {
                         </CRow>
                         <CDataTable
                             items={usersData}
-                            fields={[
-                                { key: 'Name', _classes: 'font-weight-bold' },
-                                { key: 'mobileno', label: "Mobile No." },
-                                'email',
-                                {
-                                    key: "role",
-                                    label: "Position",
-                                    sorter: false,
-                                    filter: false,
-                                }, 'gender', 'birthdate', 'department'
-                            ]}
+                            fields={headers}
                             hover
                             // striped
                             itemsPerPage={10}

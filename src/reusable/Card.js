@@ -6,7 +6,7 @@ import {
   CCardFooter,
   CCardSubtitle,
   CCardText,
-  CCardTitle
+  CCardTitle,
 } from "@coreui/react";
 import { setHeight, setVerticallyHorizontallyCentered } from "utils/helpers";
 
@@ -23,7 +23,9 @@ const Card = forwardRef(
       text,
       height = 0,
       clickable = false,
-      onClickMethod
+      onClickMethod,
+      color,
+      isIcon = false
     },
     ref
   ) => {
@@ -40,7 +42,7 @@ const Card = forwardRef(
 
     return (
       <>
-        <CCard style={setHeight(height)} onClick={onClickMethod}>
+        <CCard style={setHeight(height)} color={color} onClick={onClickMethod}>
           {
             !showHeader ? "" : (
               <CCardHeader >
@@ -48,14 +50,16 @@ const Card = forwardRef(
               </CCardHeader>
             )
           }
-          <CCardBody style={clickable ? { cursor: "pointer" } : {}}>
+          <CCardBody style={{ cursor: clickable && "pointer" , maxWidth: "100px"} }>
             <CCardTitle>
               {title}
             </CCardTitle>
             <CCardSubtitle>
               {subtitle}
             </CCardSubtitle>
-            <CCardText style={centeredText ? setVerticallyHorizontallyCentered() : {}} >
+            <CCardText
+              style={centeredText ? setVerticallyHorizontallyCentered() : {}}
+              className={!isIcon ? "text-white font-weight-bold h2" : "font-weight-bold h2"}>
               {text}
             </CCardText>
           </CCardBody>

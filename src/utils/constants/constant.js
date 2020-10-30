@@ -75,12 +75,33 @@ export const QUESTIONS = [
   "Contribution of him/her in every project?"
 ]
 
+export const RATINGS = [
+  "Good",
+  "Very Good",
+  "Best",
+  "Excellent",
+  "Outstanding"
+]
+
 export const STATUS = {
   Pending: "primary",
   Approved: "success",
   Rejected: "danger",
   Cancelled: "warning",
 };
+
+export const PERFORMANCE_REVIEW_STATUS = {
+  Pending: "warning",
+  Done: "success",
+};
+
+export const COLORS = [
+  "gradient-primary",
+  "gradient-info",
+  "gradient-warning",
+  "gradient-success",
+  "gradient-danger"
+]
 
 export const APP_MESSAGES = {
   LOGIN_SUCCESS: (username) => `Welcome back ${username}`,

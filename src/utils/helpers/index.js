@@ -29,10 +29,10 @@ export const getAge = (dateString) => {
 
 
 export const splitCamelCase = (text) => {
-  return text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+  return text && text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
 };
 export const splitSnakeCase = (text) => {
-  return text.replaceAll("_", " ").toLowerCase();
+  return text && text.replaceAll("_", " ").toLowerCase();
 };
 export const renameKey = (obj) => {
   const altObj = Object.fromEntries(
@@ -77,7 +77,7 @@ export const insertProperty = (obj, key, value, index) => {
 };
 
 export const toCapitalize = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  return string ? string.charAt(0).toUpperCase() + string.slice(1) : "";
 };
 
 export const formatDate = (date) => {
@@ -219,7 +219,7 @@ export const setVerticallyHorizontallyCentered = () => {
 
 
 export const copyArray = (arr) => {
-  return Array.from(arr)
+  return arr && Array.from(arr)
 }
 export const checkNull = (str) => {
   return str ? str : ""

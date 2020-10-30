@@ -8,13 +8,9 @@ import {
   CSelect
 } from "@coreui/react";
 
-const AddDepartment = ({ employees , onChange, data}) => {
+const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) => {
 
   const [emps, setEmps] = useState(employees)
-
-  useEffect(() => {
-    console.log(emps, "emps")
-  }, [])
 
   return (
     <CRow>
@@ -27,7 +23,9 @@ const AddDepartment = ({ employees , onChange, data}) => {
             placeholder="e.g Technical"
             onChange={onChange}
             value={data.department_name}
+            invalid={errors.department_name !== false}
           />
+          {renderFeedback(errors.department_name)}
         </CFormGroup>
         <CFormGroup >
           <CLabel>Department Head : </CLabel>
@@ -36,11 +34,12 @@ const AddDepartment = ({ employees , onChange, data}) => {
             id="department_head"
             onChange={onChange}
             value={Number(data.department_head)}
+            invalid={errors.department_head !== false}
           >
-            <option value="" hidden>
+            <option key={"default"} value="" hidden>
               Select Employee
             </option>
-            <option value=""></option>
+            {/* <option value=""></option> */}
             {
               emps.map(e => {
                 return (
@@ -51,6 +50,7 @@ const AddDepartment = ({ employees , onChange, data}) => {
               })
             }
           </CSelect>
+          {renderFeedback(errors.department_head)}
         </CFormGroup>
       </CCol>
     </CRow >

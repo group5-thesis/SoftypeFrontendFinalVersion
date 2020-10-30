@@ -95,6 +95,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
     //     //     setError(res.message)
     //     // }
     // }
+
     const modalOnClose = () => {
         if (!isUpdate) {
             createEmployee(defaultEmployee)
@@ -111,16 +112,12 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
         }
         let res = await api.post(`/${path}`, payload)
         if (!res.error) {
-            console.log(res.data)
+            // console.log(res.data)
             // dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
         }
         setDisabled(false)
         modal.current.toggle()
         modalOnClose();
-
-        // else {
-        //     setError(res.message)
-        // }
     }
 
 
@@ -197,8 +194,6 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                                             value={employee.middlename || ""}
                                             placeholder="Enter Middlename"
                                             invalid={errors.middlename !== false}
-                                        //valid={!errors.middlename}
-
                                         />
                                         {renderFeedback(errors.middlename)}
 
@@ -213,8 +208,6 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                                             value={employee.lastname || ""}
                                             placeholder="Enter Lastname"
                                             invalid={errors.lastname !== false}
-                                        //valid={!errors.lastname}
-
                                         />
                                         {renderFeedback(errors.lastname)}
 
@@ -277,7 +270,6 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                                         <CLabel>Department</CLabel>
                                         <CSelect onChange={handleOnChange}
                                             value={employee.department}
-                                            //valid={!errors.department}
                                             invalid={errors.department !== false}
                                             name="department">
                                             <option value="" hidden>Select Department</option>

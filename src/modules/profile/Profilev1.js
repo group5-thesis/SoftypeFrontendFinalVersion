@@ -77,7 +77,7 @@ class ProfilePage extends Component {
                                         <CSpinner className="text" color="warning" variant="grow" />
                                     </div>}
                                 </div>
-                                {!loading && <a download={user.qr_code.split("/")[1].replace("svg", "png")} href={src} className="text-center ml-4 mt-3 h6">Download Qr Code</a>}
+                                {(!loading && user.qr_code) && <a download={user.qr_code.split("/")[1].replace("svg", "png")} href={src} className="text-center ml-4 mt-3 h6">Download Qr Code</a>}
                             </CCol>
                         </CRow>
                     </CCol>
