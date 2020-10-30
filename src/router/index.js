@@ -19,6 +19,7 @@ const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
 const Ticket = React.lazy(() => import('modules/ticket/Ticket'))
 const PerformanceReview = React.lazy(() => import('modules/performance-review/PerformanceReview'))
 const Departments = React.lazy(() => import('modules/departments/Departments'))
+const Department = React.lazy(() => import('modules/departments/component/Department'))
 
 /**
  * access levels

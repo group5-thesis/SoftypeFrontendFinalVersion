@@ -202,6 +202,22 @@ export const setWidth = (width) => {
     })
 }
 
+export const setHeight = (height) => {
+  return (
+    {
+      height: height
+    })
+}
+
+export const setVerticallyHorizontallyCentered = () => {
+  return (
+    {
+      position: 'absolute', left: '50%', top: '50%',
+      transform: 'translate(-50%, -50%)'
+    })
+}
+
+
 export const copyArray = (arr) => {
   return arr && Array.from(arr)
 }

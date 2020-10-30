@@ -43,6 +43,7 @@
     "react-avatar": "^3.9.7",
     "react-big-calendar": "^0.28.1",
     "react-dom": "^16.13.1",
+    "react-organizational-chart": "^2.0.0",
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.2.1",
     "react-redux-modal-flex": "^2.0.0",

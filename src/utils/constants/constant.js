@@ -66,6 +66,13 @@ export const QUESTIONS = [
   "Contribution of him/her in every project?"
 ]
 
+export const RATINGS = [
+  "Good",
+  "Very Good",
+  "Best",
+  "Excellent",
+  "Outstanding"
+]
 
 export const STATUS = {
   Pending: "primary",
