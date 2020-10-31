@@ -6,8 +6,6 @@ const AppLayout = React.lazy(() => import('containers/AppLayout'));
 const Login = React.lazy(() => import('modules/login/Loginv1'));
 const ForgotPassword = React.lazy(() => import('modules/forgot-password/Forgot-Password'));
 const Page404 = React.lazy(() => import('modules/placeholder/page404/Page404'));
-// const Calendar = React.lazy(() => import('modules/calendar/Calendar'));
-const Todo = React.lazy(() => import('modules/organizational-chart/organizational-chart'));
 const loading = (<Loader />)
 class App extends Component {
   render() {
@@ -18,7 +16,6 @@ class App extends Component {
             <Route exact path="/login" {...this.props} name="Login Page" render={(props) => {
               return <Login {...props} />
             }} />
-            <Route exact path="/lorly" name="Todo" component={Todo} {...this.props} />
             <Route exact path="/account-recovery" name="Forgot Password" component={ForgotPassword} {...this.props} />
             <Route exact path="/404" name="Page 404" render={props => <Page404 {...props} />} />
             <Route path="/" {...this.props} name="Home" render={(props) => {
