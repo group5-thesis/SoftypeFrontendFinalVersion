@@ -100,12 +100,14 @@ const RepositoryFiles = (props) => {
             <RepositoryModal {...{ type: fileType, isHidden: true }} />
             {
                 (files && !files.length) ? <NoData  {...{ title: loading ? 'loading data' : (!files.length && 'No Files') }} />
-                    : files.map(file => {
-                        let filename = `${file.filename}.${getFileExtension(file.path)}`
-                        let queued = onQueue.includes(file.path)
-                        return (
-                            <CRow key={file.path}>
-                                <CCol sm="4" md="3" lg="3" >
+                    :
+                    <CRow>
+                        {files.map(file => {
+                            let filename = `${file.filename}.${getFileExtension(file.path)}`
+                            let queued = onQueue.includes(file.path)
+                            return (
+
+                                <CCol sm="4" md="3" lg="3" key={file.path} >
                                     <CCard accentColor={$theme[0][theme]}>
                                         <CCardHeader className="font-weight-bold">
                                             <small> <strong>{filename}</strong></small>
@@ -143,9 +145,10 @@ const RepositoryFiles = (props) => {
                                         </CCardFooter>
                                     </CCard>
                                 </CCol>
-                            </CRow>
-                        )
-                    })}
+                            )
+                        })}
+                    </CRow>
+            }
 
             {/* {(files.length) && files.map(file => {
                     let filename = `${file.filename}.${getFileExtension(file.path)}`
