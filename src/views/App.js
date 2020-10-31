@@ -7,7 +7,7 @@ const Login = React.lazy(() => import('modules/login/Loginv1'));
 const ForgotPassword = React.lazy(() => import('modules/forgot-password/Forgot-Password'));
 const Page404 = React.lazy(() => import('modules/placeholder/page404/Page404'));
 // const Calendar = React.lazy(() => import('modules/calendar/Calendar'));
-const Todo = React.lazy(() => import('modules/organizational-chart/chart'));
+const Todo = React.lazy(() => import('modules/organizational-chart/organizational-chart'));
 const loading = (<Loader />)
 class App extends Component {
   render() {

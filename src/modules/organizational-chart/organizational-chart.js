@@ -1,6 +1,6 @@
 
 import React from 'react'
-import "./_card.scss"
+import "./_chart.scss"
 const EmployeeChart = (props) => {
   return (
     <div class="pg-orgchart">

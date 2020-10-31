@@ -9,7 +9,7 @@ const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 // const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 // const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 // const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-const Chart = React.lazy(() => import('modules/organizational-chart/chart'));
+const Chart = React.lazy(() => import('modules/organizational-chart/organizational-chart'));
 
 const Repository = React.lazy(() => import('modules/repository/Repositoryv1'))
 const RepositoryFiles = React.lazy(() => import('modules/repository/RepositoryFiles'))
@@ -36,7 +36,7 @@ const routes = [
     { path: '/leave/requests/:id', exact: true, name: 'Request Details', component: LeaveRequest, user: [4] },
     { path: '/leave/calendar', exact: true, name: 'Leave Calendar', component: LeaveCalendar, user: [4] },
     { path: '/forms', name: 'Forms', component: BasicForms, user: [4] },
-    { path: '/cards', name: 'Cards', component: Test, user: [4] },
+    // { path: '/cards', name: 'Cards', component: Test, user: [4] },
     { path: '/repository', exact:true, name: 'Repository', component: Repository, user: [4] },
     { path: '/repository/:type', exact:true, name: 'Files', component: RepositoryFiles, user: [4] },
     // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
