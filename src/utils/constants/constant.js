@@ -74,6 +74,12 @@ export const RATINGS = [
   "Outstanding"
 ]
 
+
+export const PERFORMANCE_REVIEW_STATUS = {
+  Pending: "warning",
+  Done: "success",
+};
+
 export const STATUS = {
   Pending: "primary",
   Approved: "success",
@@ -169,3 +175,12 @@ export const COLORS = [
   "gradient-warning",
   "gradient-danger",
 ]
+
+/**
+export const COLORS = [
+  "gradient-primary",
+  "gradient-info",
+  "gradient-warning",
+  "gradient-success",
+  "gradient-danger"
+] */

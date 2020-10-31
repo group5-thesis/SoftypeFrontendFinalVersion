@@ -31,7 +31,7 @@ const fetchTickets = async dispatch => {
 }
 
 const fetchCompanyVideos = async dispatch => {
-    let response = await api.get('/retrieve_files_by_type/images')
+    let response = await api.get('/retrieve_files_by_type/videos')
     if (!response.error) {
         var payload = response.data.files;
         payload = plotArray(payload)
@@ -40,7 +40,7 @@ const fetchCompanyVideos = async dispatch => {
     return response;
 }
 const fetchCompanyImages = async dispatch => {
-    let response = await api.get('/retrieve_files_by_type/videos')
+    let response = await api.get('/retrieve_files_by_type/images')
     if (!response.error) {
         var payload = response.data.files;
         payload = plotArray(payload)

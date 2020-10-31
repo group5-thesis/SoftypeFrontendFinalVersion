@@ -4,6 +4,7 @@ import Modal from './Modal'
 import ConfirmDialog from './ConfirmDialog'
 import NoData from './NoData'
 import Card from './Card'
+import LoadingButton from './LoadingButton'
 
 export {
   DocsLink,
@@ -11,5 +12,6 @@ export {
   Modal,
   ConfirmDialog,
   NoData,
-  Card
+  Card,
+  LoadingButton
 }
