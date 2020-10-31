@@ -9,7 +9,7 @@ const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 // const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 // const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 // const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-const Test = React.lazy(() => import('modules/test/chart'));
+const Chart = React.lazy(() => import('modules/organizational-chart/chart'));
 
 const Repository = React.lazy(() => import('modules/repository/Repositoryv1'))
 const RepositoryFiles = React.lazy(() => import('modules/repository/RepositoryFiles'))
@@ -40,7 +40,7 @@ const routes = [
     { path: '/repository', exact:true, name: 'Repository', component: Repository, user: [4] },
     { path: '/repository/:type', exact:true, name: 'Files', component: RepositoryFiles, user: [4] },
     // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
-    // { path: '/chart', name: 'Organizational Chart', component: Test, user: [4] },
+    { path: '/chart', name: 'Organizational Chart', component: Chart, user: [4] },
     { path: '/cards', name: 'Cards', component: Cards, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },
