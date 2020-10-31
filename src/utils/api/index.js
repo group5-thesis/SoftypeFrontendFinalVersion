@@ -7,7 +7,6 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
     "Content-Type": "application/json",
   };
 
-
   if (isFormData) {
     headers["Content-Type"] = "multipart/form-data"
   }

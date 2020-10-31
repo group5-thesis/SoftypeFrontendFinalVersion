@@ -40,7 +40,7 @@ export default [
         _tag: 'CSidebarNavItem',
         name: 'Performance Reviews',
         to: '/employee/performance-review',
-        user: [2],
+        user: [4],
         icon: 'cil-smile-plus',
     },
     {

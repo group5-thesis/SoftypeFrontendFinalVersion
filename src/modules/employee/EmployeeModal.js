@@ -52,8 +52,10 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         _errors[name] = false
         setError(_errors)
         if (name === "role") {
-            let { role, accountType } = value
-            Employee[name] = role;
+            debugger
+            let { role, accountType } = JSON.parse(value)
+            console.log(value)
+            Employee['role'] = role;
             Employee["accountType"] = +accountType;
         } else {
             Employee[name] = value;
@@ -274,7 +276,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                                     <optgroup label={role.category} key={role.category}>
                                                         {
                                                             role.roles.map((_role, idx) => {
-                                                                return (<option value={{ role: _role, accountType: role.accountType }} key={idx} >{_role}</option>)
+                                                                return (<option value={JSON.stringify({ role: _role, accountType: role.accountType })} key={idx} >{_role}</option>)
                                                             })
                                                         }
                                                     </optgroup>)

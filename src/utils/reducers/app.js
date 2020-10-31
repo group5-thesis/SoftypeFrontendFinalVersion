@@ -3,7 +3,7 @@ import { ActionTypes } from "utils/actions";
 const initial_state = {
   sidebarShow: 'responsive',
   sideMenu: [],
-  loading: false
+  loading: false,
 }
 
 export default function changeState(state = initial_state, action) {
