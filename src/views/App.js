@@ -18,7 +18,6 @@ class App extends Component {
             <Route exact path="/login" {...this.props} name="Login Page" render={(props) => {
               return <Login {...props} />
             }} />
-            <Route exact path="/lorly" name="Todo" component={Todo} {...this.props} />
             <Route exact path="/account-recovery" name="Forgot Password" component={ForgotPassword} {...this.props} />
             <Route exact path="/404" name="Page 404" render={props => <Page404 {...props} />} />
             <Route path="/" {...this.props} name="Home" render={(props) => {

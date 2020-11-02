@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CCardBody, CCol, CCarouselInner, CCarouselControl, CCarouselItem, CCarousel, CRow, CButton } from "@coreui/react";
-import StarRatings from 'react-star-ratings';
+// import StarRatings from 'react-star-ratings';
 import CIcon from "@coreui/icons-react";
 import { copyArray } from 'utils/helpers';
 
-const Questions = ({ rating, setRating, QUESTIONS }) => {
+const Questions = ({ rating, setRating, activeIndex, setActiveIndex, QUESTIONS }) => {
 
-  // https://www.npmjs.com/package/react-star-ratings
 
   const setNewRating = (rate, idx) => {
     let arr = copyArray(rating)
@@ -14,13 +13,14 @@ const Questions = ({ rating, setRating, QUESTIONS }) => {
     setRating(arr)
   }
 
-  const [activeIndex, setActiveIndex] = useState(0)
 
   return (
     <CRow>
       <CCol xl={12}>
         <CCardBody >
-          <CCarousel activeIndex={activeIndex}>
+          <CCarousel activeIndex={activeIndex} onSlideChange={(e) => {
+            setActiveIndex(e)
+          }}>
             <CCarouselInner>
               {
                 QUESTIONS.map((element, index) => {
@@ -28,7 +28,7 @@ const Questions = ({ rating, setRating, QUESTIONS }) => {
                     <CCarouselItem key={index}>
                       <center>
                         <h5>{`${index + 1}.) ${element}`}</h5>
-                        <StarRatings
+                        {/* <StarRatings
                           key={index}
                           rating={rating[index]}
                           starRatedColor="primary"
@@ -38,7 +38,7 @@ const Questions = ({ rating, setRating, QUESTIONS }) => {
                             setNewRating(rate, index)
                           }}
                           name='rating'
-                        />
+                        /> */}
                         <br></br>
                         <h5>
                           {
@@ -60,7 +60,7 @@ const Questions = ({ rating, setRating, QUESTIONS }) => {
                 <CIcon size={"sm"} color="primary" name={"cil-chevron-left"} />
               </CButton>
             </CCarouselControl>
-            <CCarouselControl direction="next" className="mt-5">
+            <CCarouselControl direction="next" className="mt-5" >
               <CButton>
                 <CIcon size={"sm"} color="primary" name={"cil-chevron-right"} />
               </CButton>

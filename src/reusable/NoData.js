@@ -7,7 +7,7 @@ const NoData = ({title}) => {
         <>
             <CWidgetSimple header="" text="" >
                 <CIcon size={'9xl'} name={'cilFile'} />
-                <p> {title ? title : "No Data"}</p>
+                <h1> {title ? title : "No Data"}</h1>
             </CWidgetSimple>
         </>
     )

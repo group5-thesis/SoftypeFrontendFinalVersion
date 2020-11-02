@@ -19,6 +19,7 @@ const Calendar = React.lazy(() => import('modules/calendar/Calendar'))
 const Ticket = React.lazy(() => import('modules/ticket/Ticket'))
 const PerformanceReview = React.lazy(() => import('modules/performance-review/PerformanceReview'))
 const Departments = React.lazy(() => import('modules/departments/Departments'))
+const Department = React.lazy(() => import('modules/departments/component/Department'))
 
 /**
  * access levels
@@ -27,9 +28,11 @@ const Departments = React.lazy(() => import('modules/departments/Departments'))
  * 3 - regular employee
  * 4 - all
  */
+
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
     { path: '/dashboard', name: 'Dashboard', component: Dashboard, user: [4] },
+    { path: '//employee/organization-chart', name: 'Organization Chart', component: OrganizationChart, user: [4] },
     { path: '/employees', exact: true, name: 'Employees', component: Employees, user: [2, 1] },
     { path: '/employees/profile/:id', exact: true, name: 'Employee', component: Employee, user: [2, 1] },
     { path: '/leave/requests', exact: true, name: 'Leave Requests', component: LeaveRequests, user: [4] },
@@ -40,7 +43,7 @@ const routes = [
     { path: '/repository', exact:true, name: 'Repository', component: Repository, user: [4] },
     { path: '/repository/:type', exact:true, name: 'Files', component: RepositoryFiles, user: [4] },
     // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
-    { path: '/chart', name: 'Organizational Chart', component: Chart, user: [4] },
+    // { path: '/chart', name: 'Organizational Chart', component: Chart, user: [4] },
     { path: '/cards', name: 'Cards', component: Cards, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },

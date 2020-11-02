@@ -28,6 +28,6 @@ export const CLOSE_TICKET = 'CLOSE_TICKET';
 
 // Repository
 export const FILE_DOCUMENTS = 'FILE_DOCUMENT';
-export const FILE_IMAGES = 'FILE_DOCUMENT';
-export const FILE_VIDEOS = 'FILE_DOCUMENT';
-export const FILE_OTHERS = 'FILE_DOCUMENT';
+export const FILE_IMAGES = 'FILE_IMAGES';
+export const FILE_VIDEOS = 'FILE_VIDEOS';
+export const FILE_OTHERS = 'FILE_OTHERS';
