@@ -139,7 +139,7 @@ const EmployeeDetails = (props) => {
                     <EmployeeModal isUpdate data={employee} retrieveEmployees={props.retrieveEmployees} />
                   </div>
                   <div className="float-right" >
-                    <PerformanceReviewModal {...{ employee }} />
+                    <PerformanceReviewModal {...{ user: employee, }} />
                   </div>
                 </CCol>
               </CRow>

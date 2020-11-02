@@ -10,7 +10,8 @@ import {
   fetchCompanyFiles,
   fetchCompanyVideos,
   fetchCompanyImages,
-  fetchCompanyDocuments
+  fetchCompanyDocuments,
+  fetchDepartments
 } from 'utils/helpers/fetch'
 
 const logout = dispatch => {
@@ -24,6 +25,7 @@ const mapStateToProps = state => ({
   retrieveLeaveRequests,
   fetchTickets,
   retrieveEmployees,
+  fetchDepartments
 })
 
 const retrieve = async (dispatch, payload ) => {
@@ -35,8 +37,9 @@ const retrieve = async (dispatch, payload ) => {
   let resp5 = await fetchCompanyVideos(dispatch)
   let resp6 = await fetchCompanyImages(dispatch)
   let resp7 = await fetchCompanyDocuments(dispatch)
+  let resp8 = await fetchDepartments(dispatch)
   let hasError = false;
-  let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7]
+  let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8]
   responses.map(resp => {
     if (resp.error) {
       hasError = true

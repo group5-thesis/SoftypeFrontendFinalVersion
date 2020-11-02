@@ -48,8 +48,10 @@ const routes = [
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },
     { path: '/ticket', exact: true, name: 'Ticket', component: Ticket, user: [4] },
-    { path: '/employee/departments', exact: true, name: 'Departments', component: Departments, user: [4] }
-
+    { path: '/employee/departments', exact: true, name: 'Departments', component: Departments, user: [4] },
+    { path: '/employee/performance-review', exact: true, name: 'PerformanceReview', component: PerformanceReview, user: [4] },
+    { path: '/employee/departments', exact: true, name: 'Departments', component: Departments, user: [4] },
+    { path: '/employee/departments/:id', exact: true, name: 'Department Details', component: Department, user: [4] }
 ]
 
 export default routes

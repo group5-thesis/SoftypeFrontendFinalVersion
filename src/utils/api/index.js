@@ -31,7 +31,7 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
   if (data) {
     config.data = data;
   }
-  
+
   try {
     let response = await axios(config);
     return response.data;
