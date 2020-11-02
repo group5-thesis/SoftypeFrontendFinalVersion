@@ -65,7 +65,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                               className="input-sm"
                               size="sm"
                               name="month"
-                              value={filteredValues.month}
+                              value={filteredValues.month || ""}
                               onChange={handleOnChange}
                             >
                               <option value="" hidden>
@@ -90,7 +90,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                               className="input-sm"
                               size="sm"
                               name="year"
-                              value={filteredValues.year}
+                              value={filteredValues.year|| ""}
                               onChange={handleOnChange}
                             >
                               <option value="" hidden>
@@ -119,7 +119,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                           size="sm"
                           name="status"
                           id="status"
-                          value={filteredValues.status}
+                          value={filteredValues.status|| "all"}
                           onChange={handleOnChange}
                         >
                           <option value="" hidden>

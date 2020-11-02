@@ -64,13 +64,13 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         payload.append("description", description)
         payload.append("type", type)
         payload.append("employeeId", +employeeId)
-        setIsLoading(false)
+        setIsLoading(true)
         let res = await api.post("/add_file", payload, true);
         if (res.error) {
             alert(res.message)
         }
-        toggleModal()
         setIsLoading(false)
+        toggleModal()
     }
 
     const _onError = (err) => {
@@ -101,7 +101,6 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
             _onError(2)
         }
         if (description.trim().split(" ").length > 50) {
-            console.log("max")
             return _onError(1)
         }
 

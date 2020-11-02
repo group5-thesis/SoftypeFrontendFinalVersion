@@ -7,6 +7,7 @@ import api from "utils/api";
 import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
 import { RULES, shallowCopy, getAge } from 'utils/helpers'
 import _ from 'lodash';
+//  ["SSS", "PHIL HEALTH", "PAG-IBIG"]
 
 const defaultErrors = {
     firstname: false,
@@ -35,7 +36,11 @@ const defaultEmployee = {
     email: "",
     street: "",
     city: "",
-    country: ""
+    country: "",
+    sss: "",
+    phil_health_no: "",
+    pag_ibig_no: ""
+
 }
 
 const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null }) => {
@@ -54,7 +59,6 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         if (name === "role") {
             debugger
             let { role, accountType } = JSON.parse(value)
-            console.log(value)
             Employee['role'] = role;
             Employee["accountType"] = +accountType;
         } else {
@@ -376,6 +380,45 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             placeholder="Enter Country.."
                                         />
                                         {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
+                            </CFormGroup>
+                            <CFormGroup row className="my-0">
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>SSS NO.</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="sss"
+                                            //valid={!errors.street}
+                                            // invalid={errors.sss !== false}
+                                            value={employee.sss || ""}
+                                            placeholder="SSS NO."
+
+                                        />
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>PHIL HEALTH NO.</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="phil_health_no"
+                                            value={employee.phil_health_no || ""}
+                                            placeholder="PHIL HEALTH NO."
+
+                                        />
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>PAGIBIG NO.</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="pag_ibig_no"
+                                            value={employee.pag_ibig_no || ""}
+                                            placeholder="PAGIBIG NO."
+                                        />
                                     </CFormGroup>
                                 </CCol>
                             </CFormGroup>

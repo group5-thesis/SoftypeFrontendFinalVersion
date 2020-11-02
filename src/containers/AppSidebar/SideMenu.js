@@ -1,6 +1,6 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-/**
+import { mdiHammerScrewdriver, mdiViewDashboard, mdiFamilyTree  } from '@mdi/js';/**
  * access levels
  * 1 - admin only
  * 2 - managers
@@ -8,13 +8,20 @@ import CIcon from '@coreui/icons-react'
  * 4 - all
  */
 
+const generateIcon = (path) => {
+    return `<svg viewBox="0 0 24 24" role="presentation" ><path d="${path}" /></svg>`
+}
+
+const customIcon = path => {    
+    return <CIcon content={generateIcon(path)} customClasses="c-sidebar-nav-icon" />
+}
 export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Dashboard',
         to: '/dashboard',
         user: [4],
-        icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />
+        icon: customIcon(mdiViewDashboard)
     },
     // Employee module
     {
@@ -34,7 +41,7 @@ export default [
         name: 'Organization Chart',
         to: '/employee/organization-chart',
         user: [4],
-        icon: 'cil-group',
+        icon: customIcon(mdiFamilyTree),
     },
     {
         _tag: 'CSidebarNavItem',
@@ -76,20 +83,13 @@ export default [
         _tag: 'CSidebarNavTitle',
         _children: ['Others'],
         user: [4],
-    },
-    // {
-    //     _tag: 'CSidebarNavItem',
-    //     name: 'Monitoring',
-    //     to: '/monitoring',
-    //     user: [1],
-    //     icon: 'cil-graph',
-    // },
+    },  
     {
         _tag: 'CSidebarNavItem',
-        name: 'Tickets',
-        to: '/ticket',
-        user: [2,4],
-        icon: 'cil-graph',
+        name: 'Office Equipment Requests',
+        to: '/requests',
+        user: [2, 4],
+        icon: customIcon(mdiHammerScrewdriver)
     },
     {
         _tag: 'CSidebarNavItem',
