@@ -79,7 +79,6 @@ const Login = (props) => {
 
   }
 
-
   return (
     <CenteredLayout>
       <ConfirmDialog

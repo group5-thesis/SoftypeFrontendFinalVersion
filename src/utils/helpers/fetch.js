@@ -23,7 +23,7 @@ const retrieveEmployees = async dispatch => {
 const fetchTickets = async dispatch => {
     let response = await api.get('/retrieve_tickets')
     if (!response.error) {
-        var payload = response.data.ticket_information;
+        let payload = response.data.ticket_information;
         payload = plotArray(payload)
         dispatch(actionCreator(ActionTypes.FETCH_TICKETS, payload))
     }
@@ -31,18 +31,18 @@ const fetchTickets = async dispatch => {
 }
 
 const fetchCompanyVideos = async dispatch => {
-    let response = await api.get('/retrieve_files_by_type/images')
+    let response = await api.get('/retrieve_files_by_type/videos')
     if (!response.error) {
-        var payload = response.data.files;
+        let payload = response.data.files;
         payload = plotArray(payload)
         dispatch(actionCreator(ActionTypes.FILE_VIDEOS, payload))
     }
     return response;
 }
 const fetchCompanyImages = async dispatch => {
-    let response = await api.get('/retrieve_files_by_type/videos')
+    let response = await api.get('/retrieve_files_by_type/images')
     if (!response.error) {
-        var payload = response.data.files;
+        let payload = response.data.files;
         payload = plotArray(payload)
         dispatch(actionCreator(ActionTypes.FILE_IMAGES, payload))
     }
@@ -51,7 +51,7 @@ const fetchCompanyImages = async dispatch => {
 const fetchCompanyDocuments = async dispatch => {
     let response = await api.get('/retrieve_files_by_type/documents')
     if (!response.error) {
-        var payload = response.data.files;
+        let payload = response.data.files;
         payload = plotArray(payload)
         dispatch(actionCreator(ActionTypes.FILE_DOCUMENTS, payload))
     }
@@ -60,11 +60,20 @@ const fetchCompanyDocuments = async dispatch => {
 const fetchCompanyFiles = async dispatch => {
     let response = await api.get('/retrieve_files_by_type/others')
     if (!response.error) {
-        var payload = response.data.files;
+        let payload = response.data.files;
         payload = plotArray(payload)
         dispatch(actionCreator(ActionTypes.FILE_OTHERS, payload))
     }
     return response;
+}
+
+const fetchDepartments = async dispatch => {
+  let response = await api.get('/retrieve_departments')
+  if (!response.error) {
+      let payload = response.data.departments;
+      dispatch(actionCreator(ActionTypes.FETCH_DEPARTMENTS, payload))
+  }
+  return response;
 }
 
 export {
@@ -74,5 +83,6 @@ export {
     fetchCompanyFiles,
     fetchCompanyVideos,
     fetchCompanyImages,
-    fetchCompanyDocuments
+    fetchCompanyDocuments,
+    fetchDepartments
 }

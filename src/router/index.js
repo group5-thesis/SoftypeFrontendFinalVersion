@@ -9,7 +9,7 @@ const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 // const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 // const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 // const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-const Test = React.lazy(() => import('modules/test/chart'));
+const OrganizationChart = React.lazy(() => import('modules/organizational-chart/organizational-chart'));
 
 const Repository = React.lazy(() => import('modules/repository/Repositoryv1'))
 const RepositoryFiles = React.lazy(() => import('modules/repository/RepositoryFiles'))
@@ -28,24 +28,25 @@ const Department = React.lazy(() => import('modules/departments/component/Depart
  * 3 - regular employee
  * 4 - all
  */
+
 const routes = [
     { path: '/', exact: true, name: 'Home', user: [4] },
     { path: '/dashboard', name: 'Dashboard', component: Dashboard, user: [4] },
+    { path: '/employee/organization-chart', name: 'Organization Chart', component: OrganizationChart, user: [4] },
     { path: '/employees', exact: true, name: 'Employees', component: Employees, user: [2, 1] },
     { path: '/employees/profile/:id', exact: true, name: 'Employee', component: Employee, user: [2, 1] },
     { path: '/leave/requests', exact: true, name: 'Leave Requests', component: LeaveRequests, user: [4] },
     { path: '/leave/requests/:id', exact: true, name: 'Request Details', component: LeaveRequest, user: [4] },
     { path: '/leave/calendar', exact: true, name: 'Leave Calendar', component: LeaveCalendar, user: [4] },
     { path: '/forms', name: 'Forms', component: BasicForms, user: [4] },
-    { path: '/cards', name: 'Cards', component: Test, user: [4] },
+    // { path: '/cards', name: 'Cards', component: Test, user: [4] },
     { path: '/repository', exact:true, name: 'Repository', component: Repository, user: [4] },
     { path: '/repository/:type', exact:true, name: 'Files', component: RepositoryFiles, user: [4] },
     // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
-    // { path: '/chart', name: 'Organizational Chart', component: Test, user: [4] },
     { path: '/cards', name: 'Cards', component: Cards, user: [4] },
     { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
     { path: '/upload', name: 'Upload', component: Upload, user: [4] },
-    { path: '/ticket', exact: true, name: 'Ticket', component: Ticket, user: [4] },
+    { path: '/requests', exact: true, name: 'Ticket', component: Ticket, user: [4] },
     { path: '/employee/departments', exact: true, name: 'Departments', component: Departments, user: [4] }
 
 ]

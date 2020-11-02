@@ -1,25 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     CButton, CCard, CCardBody,
-    CModal,
-    CForm,
     CInput,
-    CInputGroup,
-    CInputGroupPrepend,
-    CInputGroupText,
-    CSpinner,
     CInvalidFeedback,
     CRow,
     CCol,
     CTextarea,
-    CFormGroup,
 } from "@coreui/react";
-import { Modal } from 'reusable'
+import { Modal, LoadingButton } from 'reusable'
 import Icon from '@mdi/react';
 import { mdiFilePlusOutline, mdiPlus } from '@mdi/js'
 import colors from 'assets/theme/colors'
 import { FILE_TYPES } from 'utils/constants/constant'
-import { getFileExtension, shallowCopy } from 'utils/helpers'
+import { getFileExtension } from 'utils/helpers'
 import api from 'utils/api';
 import { useSelector } from 'react-redux';
 
@@ -39,8 +32,10 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
 
     const modalOnCloseCallback = () => {
         _onError(0);
-        setFile("");
-        setDescription("")
+        if (!isLoading) {
+            setFile("");
+            setDescription("")
+        }
     }
     const fileInputChangeHandler = (e) => {
         _onError(0);
@@ -69,10 +64,13 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         payload.append("description", description)
         payload.append("type", type)
         payload.append("employeeId", +employeeId)
+        setIsLoading(true)
         let res = await api.post("/add_file", payload, true);
         if (res.error) {
             alert(res.message)
         }
+        setIsLoading(false)
+        toggleModal()
     }
 
     const _onError = (err) => {
@@ -103,7 +101,6 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
             _onError(2)
         }
         if (description.trim().split(" ").length > 50) {
-            console.log("max")
             return _onError(1)
         }
 
@@ -115,8 +112,6 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         modal.current.toggle()
     }
 
-    useEffect(() => {
-    }, [error])
 
 
     return (
@@ -133,16 +128,7 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
                 modalOnClose={modalOnCloseCallback}
                 footer={
                     <>
-                        <CButton
-                            disabled={isLoading}
-                            onClick={preUpload}
-                            className="mr-1"
-                            color="primary">
-                            {
-                                isLoading ? <CSpinner color="secondary" size="sm" /> : 'Upload'
-                            }
-                        </CButton>
-                        {/* <CButton color="primary" onClick={preUpload} >Submit</CButton> */}
+                        <LoadingButton {...{ isLoading, submit: preUpload, btnText: 'Upload' }} />
                         <CButton color="danger" onClick={() => {
                             modal.current.toggle()
                             modalOnCloseCallback()
@@ -153,7 +139,7 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
             >
                 <CRow className="justify-content-center">
                     <CCol sm="8" md="8" lg="8" >
-                        <CCard style={{ cursor: 'pointer' }} accentColor={file && 'info'} className={`${error.file && 'mb-0'}`} onClick={() => {
+                        <CCard style={{ cursor: 'pointer' }} accentColor={error.file.length ? 'danger' : file && 'info'} className={`${error.file && 'mb-0'}`} onClick={() => {
                             fileInput.current.click();
                         }}>
                             <CCardBody style={{ textAlign: "center" }}>
