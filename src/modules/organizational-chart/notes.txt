@@ -1,0 +1,125 @@
+
+// import './_card.scss';
+// import * as React from "react";
+// import data from "./data.json";
+// import {
+//   CCard,
+//   CCardBody,
+//   CCardHeader,
+//   CCol,
+//   CRow,
+// } from '@coreui/react';
+// import { DocsLink } from 'reusable'
+
+
+
+// const Card = (props) => {
+//   return (
+//     <>
+//       {props.data.map((item) => (
+//         <>
+//           <CRow>
+//             <CCol xs="12" sm="6" md="4">
+//               <CCard>
+//                 <CCardBody>
+//                   {/* <li className="Card">
+//                     {item.name}
+//                     {item.children?.length && <Card data={item.children} />}
+//                   </li> */}
+//                 </CCardBody>
+//               </CCard>
+//             </CCol>
+//           </CRow>
+//         </>
+//       ))}
+//     </>
+//   );
+// };
+// const EmployeeChart = (props) => {
+//   return (
+//     <div>
+//       Employee Chart
+//       <Card data={data} />
+//     </div>
+//   );
+// };
+// export default EmployeeChart;
+
+
+import React, { useState } from 'react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CCollapse,
+  CFade,
+  CLink,
+  CRow,
+  CButton,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CFooter,
+  CImg
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import changeState from 'utils/reducers/app'
+const Cards = () => {
+  const [showCard, setShowCard] = useState(true)
+  const [small, setSmall] = useState(false)
+
+  const [appState, ChangeState] = useState({
+    activeObject: null,
+    Objects: [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9}]
+  })
+
+
+  return (
+    <>
+    <CRow>
+      {appState.Objects.map((elements,index)=>(
+      <CCol xs="12" sm="6" md="4">
+        <CFade in={showCard}>
+          <CCard>
+            <CCardHeader>
+              {/* <div className="card-header-actions">
+                <CLink className="card-header-action try" onClick={() => setCollapsed(!collapsed)}>
+                  <CIcon name={collapsed ? 'cil-chevron-bottom' : 'cil-chevron-top'} />
+                </CLink>
+              </div> */}
+            </CCardHeader>
+            {/* <CCollapse show={collapsed}> */}
+              <CCardBody onClick={() => setSmall(!small)}>
+              <CImg
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPgEmtQwrC7r80BUtMhPaF6okDFFu41i5fRQ&usqp=CAU"
+                block
+                class="mb-1"
+              />
+              </CCardBody>
+              <CModal
+                show={small}
+                onClose={setSmall}
+              >
+                <CModalBody>
+                  <CButton color="info">More Info</CButton>{'    '}
+                  <CButton
+                    color="danger"
+                    onClick={() => setSmall(false)}
+                  >Cancel</CButton>
+                </CModalBody>
+              </CModal>
+            {/* </CCollapse> */}
+          </CCard>
+        </CFade>
+      </CCol>
+      ))}
+    </CRow>
+    </>
+    
+  )
+}
+
+export default Cards
