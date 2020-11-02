@@ -11,6 +11,6 @@ const NoData = ({title}) => {
             </CWidgetSimple>
         </>
     )
-}   
+}
 
 export default NoData

@@ -20,7 +20,8 @@ import {
   fetchCompanyFiles,
   fetchCompanyVideos,
   fetchCompanyImages,
-  fetchCompanyDocuments
+  fetchCompanyDocuments,
+  fetchDepartments
 } from 'utils/helpers/fetch'
 const loading = (
   <Loader bg="transparent" />
@@ -43,6 +44,7 @@ const AppContent = (_props) => {
     let resp5 = await fetchCompanyVideos(dispatch)
     let resp6 = await fetchCompanyImages(dispatch)
     let resp7 = await fetchCompanyDocuments(dispatch)
+    let resp8 = await fetchDepartments(dispatch)
     dispatch(actionCreator(ActionTypes.LOADING_DONE))
     let hasError = false;
     let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7]

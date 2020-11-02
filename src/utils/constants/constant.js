@@ -80,6 +80,13 @@ export const PERFORMANCE_REVIEW_STATUS = {
   Done: "success",
 };
 
+export const COLORS = [
+  "gradient-primary",
+  "gradient-info",
+  "gradient-warning",
+  "gradient-success",
+  "gradient-danger"
+]
 export const STATUS = {
   Pending: "primary",
   Approved: "success",
@@ -166,21 +173,3 @@ export const ACCOUNT_ROLES = [
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];
 export const CURRENT_YEAR = new Date().getFullYear();
-
-
-export const COLORS = [
-  "gradient-info",
-  "gradient-success",
-  "gradient-primary",
-  "gradient-warning",
-  "gradient-danger",
-]
-
-/**
-export const COLORS = [
-  "gradient-primary",
-  "gradient-info",
-  "gradient-warning",
-  "gradient-success",
-  "gradient-danger"
-] */

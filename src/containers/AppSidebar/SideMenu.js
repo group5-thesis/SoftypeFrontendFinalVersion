@@ -1,6 +1,6 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-import { mdiHammerScrewdriver, mdiViewDashboard, mdiFamilyTree  } from '@mdi/js';/**
+import { mdiHammerScrewdriver, mdiViewDashboard, mdiFamilyTree, mdiAccountCog } from '@mdi/js';/**
  * access levels
  * 1 - admin only
  * 2 - managers
@@ -12,7 +12,7 @@ const generateIcon = (path) => {
     return `<svg viewBox="0 0 24 24" role="presentation" ><path d="${path}" /></svg>`
 }
 
-const customIcon = path => {    
+const customIcon = path => {
     return <CIcon content={generateIcon(path)} customClasses="c-sidebar-nav-icon" />
 }
 export default [
@@ -83,7 +83,7 @@ export default [
         _tag: 'CSidebarNavTitle',
         _children: ['Others'],
         user: [4],
-    },  
+    },
     {
         _tag: 'CSidebarNavItem',
         name: 'Office Equipment Requests',
@@ -98,13 +98,13 @@ export default [
         user: [4],
         icon: 'cil-folder',
     },
-    // {
-    //     _tag: 'CSidebarNavItem',
-    //     name: 'Tasks',
-    //     to: '/tasks',
-    //     user: 4,
-    //     icon: 'cil-task',
-    // },
+    {
+        _tag: 'CSidebarNavItem',
+        name: 'My Account',
+        to: '/myAccount',
+        user: [4],
+        icon: customIcon(mdiAccountCog)
+    },
 
 ]
 
