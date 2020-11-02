@@ -9,7 +9,7 @@ import PerformanceReviewModel from 'models/PerformanceReviewModel'
 import api from "utils/api"
 
 const PerformanceReviewModal = ({ user }) => {
-
+  console.log(user);
   const reviewer = useSelector(state => {
     let authed = state.appState.auth.user;
     return {

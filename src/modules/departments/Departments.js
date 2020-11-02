@@ -53,7 +53,6 @@ const Departments = (props) => {
   const retrieve_managers = async () => {
     let res = await api.get("/retrieve_department_managers");
     if (!res.error) {
-      console.log(res);
       // setManagers(res.data.department_manager_information)
     } else {
       alert("error");

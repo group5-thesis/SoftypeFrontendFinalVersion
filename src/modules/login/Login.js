@@ -79,23 +79,6 @@ const Login = (props) => {
 
   }
 
-  // const loginWithQrCode = () => {
-  //   checkCamera().then(() => {
-  //     setCamera(true)
-  //   }).catch(err => {
-  //     setCamera(false)
-  //     setError(err.cameraError)
-  //     toggleDialog(dispatch)
-  //   })
-  // }
-  // useEffect(() => {
-  //   checkCamera().then(() => {
-  //     setCamera(true)
-  //   }).catch(err => {
-  //     setCamera(false)
-  //     setError(err.cameraError)
-  //   })
-  // }, [])
   return (
     <CenteredLayout>
       <ConfirmDialog

@@ -3,6 +3,16 @@ import { ActionTypes, actionCreator } from "utils/actions"
 import { connect } from "react-redux"
 import api from 'utils/api'
 import { plotArray } from 'utils/helpers'
+import {
+  retrieveLeaveRequests,
+  retrieveEmployees,
+  fetchTickets,
+  fetchCompanyFiles,
+  fetchCompanyVideos,
+  fetchCompanyImages,
+  fetchCompanyDocuments,
+  fetchDepartments
+} from 'utils/helpers/fetch'
 
 const logout = dispatch => {
   dispatch(actionCreator(ActionTypes.LOGOUT))
@@ -10,79 +20,65 @@ const logout = dispatch => {
   localStorage.removeItem("uId")
 }
 
-const retrieveLeaveRequests = async (dispatch, payload) => {
-  let res = await api.post("/getLeaveRequest", payload);
-  if (!res.error) {
-    let { leave_requests } = res.data;
-    dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, leave_requests));
-
-  }
-}
-
-const retrieveEmployees = async dispatch => {
-  let res = await api.get("/retrieve_employees");
-  if (!res.error) {
-    dispatch(actionCreator(ActionTypes.FETCH_EMPLOYEES, res.data.employee_information));
-  }
-}
-
-const fetchTickets = async dispatch => {
-  let response = await api.get('/retrieve_tickets')
-  if (response.error) {
-  }
-  else {
-    var temp = response.data.ticket_information;
-    temp = plotArray(temp)
-    dispatch(actionCreator(ActionTypes.FETCH_TICKETS, temp))
-  }
-}
-
-const retrieveDepartments = async dispatch => {
-  let res = await api.get("/retrieve_departments");
-  if (!res.error) {
-    dispatch(actionCreator(ActionTypes.FETCH_DEPARTMENTS, res.data.departments));
-  }
-}
-
-const retrievePerformanceReviews = async dispatch => {
-  let res = await api.get("/retrieve_performance_reviews");
-  if (!res.error) {
-    dispatch(actionCreator(ActionTypes.FETCH_PERFORMANCE_REVIEWS, res.data.performance_review_information));
-  }
-}
-
-
 const mapStateToProps = state => ({
-  appState: state.appState
+  appState: state.appState,
+  retrieveLeaveRequests,
+  fetchTickets,
+  retrieveEmployees,
+  fetchDepartments
 })
+
+const retrieve = async (dispatch, payload ) => {
+  let retry = 5;
+  let resp1 = await retrieveLeaveRequests(dispatch, payload)
+  let resp2 = await fetchTickets(dispatch)
+  let resp3 = await retrieveEmployees(dispatch)
+  let resp4 = await fetchCompanyFiles(dispatch)
+  let resp5 = await fetchCompanyVideos(dispatch)
+  let resp6 = await fetchCompanyImages(dispatch)
+  let resp7 = await fetchCompanyDocuments(dispatch)
+  let resp8 = await fetchDepartments(dispatch)
+  let hasError = false;
+  let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8]
+  responses.map(resp => {
+    if (resp.error) {
+      hasError = true
+    }
+  })
+
+  if (hasError) {
+    if (retry !== 0) {
+      retrieve(dispatch, payload)
+      --retry;
+    } else { alert("Error in fetching some data") }
+  }
+}
 
 const mapDispatchToProps = (dispatch, _) => ({
   checkLogin: async () => {
     let authStateResult = localStorage.getItem("token")
     let userId = localStorage.getItem("uId")
+    dispatch(actionCreator(ActionTypes.LOADING_STARTED))
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
+    let payload = {}
     if (authStateResult !== null && userId !== null) {
       userId = +userId
       let res = await api.get(`/getProfile?userId=${userId}`)
       let { error, data } = res
-      if (!error) {
+      if ((!error) && data.length) {
         let user = data[0]
         let { employeeId, roleId } = user
-        const payload = { employeeId, roleId };
-
+        payload = { employeeId, roleId };
         dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user))
         dispatch(actionCreator(ActionTypes.LOGIN))
-        retrieveLeaveRequests(dispatch, payload)
-        fetchTickets(dispatch)
-        retrieveEmployees(dispatch)
-        retrieveDepartments(dispatch)
-        retrievePerformanceReviews(dispatch)
+        await retrieve(dispatch, payload)
       }
       // else {
       //   logout(dispatch);
       // }
     }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED))
+    dispatch(actionCreator(ActionTypes.LOADING_DONE))
   },
   logout: () => {
     logout(dispatch)

@@ -29,7 +29,6 @@ const PerformanceReview = () => { // Performance details lacking
   };
 
   useEffect(() => {
-
   }, []);
 
   return (

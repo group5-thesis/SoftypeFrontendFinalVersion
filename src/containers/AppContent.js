@@ -47,20 +47,6 @@ const AppContent = (_props) => {
   //   }
   // }
 
-  // const fetchTickets = async () => {
-  //   let response = await api.get('/retrieve_tickets')
-  //   if (response.error) {
-  //   }
-  //   else {
-  //     var temp = response.data.ticket_information;
-  //     temp = plotArray(temp)
-  //     dispatch(actionCreator(ActionTypes.FETCH_TICKETS, temp))
-  //   }
-  // }
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <main className="c-main">

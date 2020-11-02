@@ -32,7 +32,7 @@ export default [
     {
         _tag: 'CSidebarNavItem',
         name: 'Organization Chart',
-        to: '/employee/organization',
+        to: '/employee/organization-chart',
         user: [4],
         icon: 'cil-group',
     },
