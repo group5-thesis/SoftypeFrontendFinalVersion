@@ -37,9 +37,9 @@ export default function (ComposedComponent) {
             }
 
             this.setState({ isDisconnected: true })
-            setTimeout(() => {
-                this.handleConnectionChange()
-            }, 200)
+            // setTimeout(() => {
+            //     this.handleConnectionChange()
+            // }, 200)
         }
 
         render() {

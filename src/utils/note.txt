@@ -2,7 +2,7 @@ please study about react-redux for our state management
 
 //react
 //react hooks
-//react-redux 
+//react-redux
 //spread operator
 //getting input value react
 

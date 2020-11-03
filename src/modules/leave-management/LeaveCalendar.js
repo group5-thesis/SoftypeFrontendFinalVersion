@@ -6,6 +6,9 @@ class LeaveCalendar extends Component {
     return <Calendar {...{
       header: false,
       showHeader: true,
+      header: {
+        right: false
+      }
     }} />
   }
 }

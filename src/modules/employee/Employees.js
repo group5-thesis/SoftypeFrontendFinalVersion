@@ -59,7 +59,7 @@ const Users = (props) => {
                             </CCol>
                             <CCol sm="7" className="d-none d-md-block">
                                 <div className="float-right" >
-                                    <EmployeeModal />
+                                    <EmployeeModal retrieveEmployees={props.retrieveEmployees} />
                                 </div>
                             </CCol>
                         </CRow>

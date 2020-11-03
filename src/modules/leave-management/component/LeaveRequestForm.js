@@ -12,13 +12,19 @@ import {
 } from '@coreui/react'
 import { Modal } from 'reusable'
 import LeaveRequestModel from 'models/LeaveRequestModel'
-import { shallowCopy, checkDateRange, toCapitalize, renameKey, hasMissingFieds } from 'utils/helpers'
+import { shallowCopy, checkDateRange, toCapitalize, renameKey, hasMissingFieds, checkNull } from 'utils/helpers'
 import { useSelector, useDispatch } from 'react-redux'
 import { LEAVE_TYPES } from 'utils/constants/constant'
 import { actionCreator, ActionTypes } from 'utils/actions';
 import api from 'utils/api'
+import _ from 'lodash'
 
 const LeaveFormRequest = ({ request }) => {
+    let _errors = {
+        dates: false,
+        reason: false,
+        category: false
+    }
     const dispatch = useDispatch();
     const user = useSelector(state => {
         let authed = state.appState.auth.user;
@@ -34,42 +40,60 @@ const LeaveFormRequest = ({ request }) => {
     const modalRef = useRef()
     const [data, setData] = useState(request ? request : LeaveRequestModel)
     const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to))
-    const [hasErrors, setHasErrors] = useState(true)
+    // const [hasErrors, setHasErrors] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-   
+    const [errors, setErrors] = useState(_errors);
+
     const validateDate = () => {
         let gap = checkDateRange(data.date_from, data.date_to)
         setNoOfDays(gap > 0 ? gap : 0)
-        checkErrors()
+    }
+
+    const validateInfo = async () => {
+        let { category, date_from, date_to, reason } = data
+        if (category === "" || category === null) {
+            _errors.category = true;
+        }
+        if (date_from === "" || date_to === null || date_to === "" || date_from === "") {
+            _errors.dates = true;
+        }
+
+        if (reason === "" || reason === null) {
+            _errors.reason = true
+        }
+        _errors.dates = invalidDate;
+        setErrors(_errors);
+        if (!Object.values(_errors).includes(true)) {
+            handleSubmit()
+        } 
+    
     }
 
     const handleOnChange = (e) => {
         let key = e.target.name
         let value = e.target.value
         let copy = shallowCopy(data)
+        _errors = shallowCopy(errors)
+        _errors[key.includes('date_') ? 'dates' : key] = false;
+        setErrors(_errors)
         copy[key] = value
         validateDate()
         setData(copy)
-        setHasErrors(hasMissingFieds(copy))
     }
-
     const invalidDate = useMemo(() => {
         return (noOfDays <= 0)
     }, [noOfDays])
 
     const modalOnClose = () => {
         setData(LeaveRequestModel)
+        _errors = _.mapValues(_errors, () => false);
+        setErrors(_errors)
     }
 
-    const checkErrors = () => {
-        for (const [_, value] of Object.entries(data)) {
-            if (value === '') {
-                setHasErrors(true)
-                return
-            }
-        }
-        setHasErrors(false)
-    }
+    // const checkErrors = () => {
+    //     setHasErrors(hasMissingFieds(data))
+
+    // }
 
     const handleSubmit = async () => {
         setIsLoading(true)
@@ -86,25 +110,24 @@ const LeaveFormRequest = ({ request }) => {
 
     useEffect(() => {
         validateDate()
-        checkErrors()
-    }, [data ,validateDate])
+    }, [data])
 
     const actions = () => (
         <>
-            <CButton color="primary" disabled={hasErrors || invalidDate || isLoading} onClick={handleSubmit}>
+            <CButton color="primary" disabled={isLoading} onClick={validateInfo}>
                 {
                     isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
                 }
             </CButton>
         </>
     )
-    
+
     return (
         <Modal ref={modalRef} {...{
             title: "Request Leave",
             footer: actions(),
             modalOnClose,
-            cancelBtnTitle:"Close",
+            cancelBtnTitle: "Close",
             size: "lg"
         }}>
             <CFormGroup >
@@ -121,8 +144,7 @@ const LeaveFormRequest = ({ request }) => {
                             name="date_from"
                             value={data.date_from}
                             onChange={handleOnChange}
-                            invalid={invalidDate}
-                            valid={!invalidDate}
+                            invalid={errors.dates}
                             placeholder="Date From" />
                     </CFormGroup>
                 </CCol>
@@ -135,13 +157,12 @@ const LeaveFormRequest = ({ request }) => {
                             onChange={handleOnChange}
                             name="date_to"
                             value={data.date_to}
-                            invalid={invalidDate}
-                            valid={!invalidDate}
+                            invalid={errors.dates}
                             placeholder="Date To" />
                     </CFormGroup>
                 </CCol>
                 <CCol xs="12">
-                    <CInvalidFeedback className="help-block" style={{ display: invalidDate ? 'block' : 'none' }}>
+                    <CInvalidFeedback className="help-block" style={{ display: errors.dates ? 'block' : 'none' }}>
                         <strong>Criteria : </strong>
                         <ul>
                             <li>Start date must be later than today.</li>
@@ -158,8 +179,7 @@ const LeaveFormRequest = ({ request }) => {
                 <CLabel htmlFor="Category">Category : </CLabel>
                 <CSelect
                     custom name="category"
-                    invalid={!data.category}
-                    valid={data.category !== ''}
+                    invalid={errors.category}
                     value={data.category || ""}
                     onChange={handleOnChange}
                     id="category">
@@ -175,8 +195,7 @@ const LeaveFormRequest = ({ request }) => {
                     onChange={handleOnChange}
                     name="reason"
                     value={data.reason}
-                    invalid={!data.reason}
-                    valid={data.reason !== ''}
+                    invalid={errors.reason}
                     rows="5"
                 />
                 <CInvalidFeedback className="help-block">

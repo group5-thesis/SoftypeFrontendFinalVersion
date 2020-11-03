@@ -4,9 +4,10 @@ import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CI
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
-import { APP_MESSAGES, ROLE } from 'utils/constants/constant';
+import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
 import { RULES, shallowCopy, getAge } from 'utils/helpers'
 import _ from 'lodash';
+//  ["SSS", "PHIL HEALTH", "PAG-IBIG"]
 
 const defaultErrors = {
     firstname: false,
@@ -15,7 +16,7 @@ const defaultErrors = {
     birthdate: false,
     email: false,
     mobileno: false,
-    roleId: false,
+    role: false,
     department: false,
     gender: false,
     street: false,
@@ -23,7 +24,8 @@ const defaultErrors = {
     country: false,
 }
 const defaultEmployee = {
-    roleId: "",
+    role: "",
+    accountType: "",
     department: "",
     firstname: "",
     lastname: "",
@@ -34,10 +36,14 @@ const defaultEmployee = {
     email: "",
     street: "",
     city: "",
-    country: ""
+    country: "",
+    sss: "",
+    phil_health_no: "",
+    pag_ibig_no: ""
+
 }
 
-const EmployeeModal = ({ isUpdate = false, data = null }) => {
+const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null }) => {
     let dispatch = useDispatch();
     const modal = useRef()
     const [employee, createEmployee] = useState(!data ? defaultEmployee : data)
@@ -50,7 +56,14 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
         let { name, value } = event.target
         _errors[name] = false
         setError(_errors)
-        Employee[name] = value;
+        if (name === "role") {
+            debugger
+            let { role, accountType } = JSON.parse(value)
+            Employee['role'] = role;
+            Employee["accountType"] = +accountType;
+        } else {
+            Employee[name] = value;
+        }
         createEmployee(Employee)
     }
 
@@ -112,6 +125,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
         }
         let res = await api.post(`/${path}`, payload)
         if (!res.error) {
+            retrieveEmployees(dispatch)
             // console.log(res.data)
             // dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
         }
@@ -221,9 +235,10 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                                         <CSelect onChange={handleOnChange}
                                             value={employee.gender}
                                             invalid={errors.gender !== false}
-                                            //valid={!errors.gender}
                                             name="gender">
-                                            <option value="" hidden>Select Gender</option>
+                                            {
+                                                !employee.gender && <option value="" hidden>Select Gender</option>
+                                            }
                                             <option value='male'>Male</option>
                                             <option value='female'>Female</option>
                                         </CSelect>
@@ -253,13 +268,23 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                                         <CLabel>Role</CLabel>
                                         <CSelect
                                             onChange={handleOnChange}
-                                            name="roleId"
-                                            //valid={!errors.roleId}
-                                            invalid={errors.roleId !== false}
+                                            name="role"
+                                            invalid={errors.role !== false}
                                         >
-                                            <option value="" hidden>Select Role</option>
-                                            {ROLE.map((r, id) => {
-                                                return <option value={id} key={id} >{r}</option>
+                                            {
+                                                !employee.role && <option value="" hidden>Select Role</option>
+                                            }
+
+                                            {ACCOUNT_ROLES.map(role => {
+                                                return (
+                                                    <optgroup label={role.category} key={role.category}>
+                                                        {
+                                                            role.roles.map((_role, idx) => {
+                                                                return (<option value={JSON.stringify({ role: _role, accountType: role.accountType })} key={idx} >{_role}</option>)
+                                                            })
+                                                        }
+                                                    </optgroup>)
+
                                             })}
                                         </CSelect>
                                         {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
@@ -355,6 +380,45 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                                             placeholder="Enter Country.."
                                         />
                                         {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
+                                    </CFormGroup>
+                                </CCol>
+                            </CFormGroup>
+                            <CFormGroup row className="my-0">
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>SSS NO.</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="sss"
+                                            //valid={!errors.street}
+                                            // invalid={errors.sss !== false}
+                                            value={employee.sss || ""}
+                                            placeholder="SSS NO."
+
+                                        />
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>PHIL HEALTH NO.</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="phil_health_no"
+                                            value={employee.phil_health_no || ""}
+                                            placeholder="PHIL HEALTH NO."
+
+                                        />
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="4">
+                                    <CFormGroup>
+                                        <CLabel>PAGIBIG NO.</CLabel>
+                                        <CInput
+                                            onChange={handleOnChange}
+                                            name="pag_ibig_no"
+                                            value={employee.pag_ibig_no || ""}
+                                            placeholder="PAGIBIG NO."
+                                        />
                                     </CFormGroup>
                                 </CCol>
                             </CFormGroup>

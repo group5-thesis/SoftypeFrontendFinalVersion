@@ -18,7 +18,7 @@ import { config as cnf } from "utils/config";
 import CIcon from '@coreui/icons-react'
 import { useDispatch } from 'react-redux'
 import { actionCreator, ActionTypes } from 'utils/actions';
-import { shallowCopy, checkNull, toCapitalize } from 'utils/helpers';
+import { shallowCopy, checkNull, toCapitalize, getBaseUrl } from 'utils/helpers';
 import NoData from 'reusable/NoData';
 import api from "utils/api";
 import EmployeeModal from './EmployeeModal';
@@ -39,6 +39,7 @@ const EmployeeDetails = (props) => {
   })
   const [employee, setEmployee] = useState(null)
   const [selectedFile, setSelectedFile] = useState()
+  const [exist, toggleExist] = useState(false)
   const [preview, setPreview] = useState()
 
   const _initProcess = (key, val) => {
@@ -112,11 +113,12 @@ const EmployeeDetails = (props) => {
         break
       }
     }
+
     if (!selectedFile) {
       _initProcess("pending", false)
       setPreview(undefined)
       return
-    } 
+    }
     const objectUrl = URL.createObjectURL(selectedFile)
     setPreview(objectUrl)
 
@@ -136,10 +138,10 @@ const EmployeeDetails = (props) => {
                 </CCol>
                 <CCol sm="7" className="d-none d-md-block">
                   <div className="float-right px-2" >
-                    <EmployeeModal isUpdate data={employee} />
+                    <EmployeeModal isUpdate data={employee} retrieveEmployees={props.retrieveEmployees} />
                   </div>
                   <div className="float-right" >
-                    <PerformanceReviewModal {...{ employee }} />
+                    <PerformanceReviewModal {...{ user: employee, }} />
                   </div>
                 </CCol>
               </CRow>
@@ -147,18 +149,32 @@ const EmployeeDetails = (props) => {
             <CCardBody>
               <CRow gutters={false} className="">
                 <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
-                  <div style={
-                    {
-                      backgroundImage: `url(${preview || (`${cnf.API_URL_DEV}/image/images/${employee.profile_img}` || res.logoSm)})`,
-                      backgroundSize: "contain",
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                      maxHeight: "200px",
-                      height: "200px",
-                      width: "100%",
-                      border: "1px solid dark"
-                    }
-                  }></div>
+                  {
+                    function () {
+                      let pic = false;
+                      let url = `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`
+                      fetch(url, { method: 'HEAD' })
+                        .then(res => {
+                          if (res.ok) {
+                            pic = true;
+                          }
+                        })
+                      return <div style={
+                        {
+                          //
+                          backgroundImage: `url(${preview ? preview : (employee.profile_img ? pic ? url : res.logoSm : res.logoSm)})`,
+                          backgroundSize: "contain",
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'center',
+                          maxHeight: "200px",
+                          height: "200px",
+                          width: "100%",
+                          border: "1px solid dark"
+                        }
+                      }></div>
+                    }()
+
+                  }
                   <input type="file" accept="image/*" value={process.file} ref={fileInput} hidden onChange={FileInputChangeHandler} />
                   <CButton
                     onClick={() => {

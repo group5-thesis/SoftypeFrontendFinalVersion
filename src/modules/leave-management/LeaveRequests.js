@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { mdiAccount } from '@mdi/js'
 import _ from 'lodash';
 import {
   CBadge,
@@ -24,9 +25,9 @@ import {
 import { LeaveRequestFilter, LeaveRequestForm } from ".";
 import NoData from "reusable/NoData";
 import { ConfirmDialog } from "reusable";
-import { STATUS, MONTHS ,CURRENT_MONTH, CURRENT_YEAR} from "utils/constants/constant";
+import { STATUS, MONTHS, CURRENT_MONTH, CURRENT_YEAR } from "utils/constants/constant";
 
-const currentMonth =  MONTHS[new Date().getMonth()];
+const currentMonth = MONTHS[new Date().getMonth()];
 const currentYear = new Date().getFullYear();
 const LeaveRequests = (props) => {
   const dispatch = useDispatch();
@@ -39,8 +40,9 @@ const LeaveRequests = (props) => {
     employee: "All",
     date_from: formatDate(Date.now()),
     date_to: null,
-    month:CURRENT_MONTH,
-    year: CURRENT_YEAR
+    month: CURRENT_MONTH,
+    year: CURRENT_YEAR,
+    category: 'All'
   }
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1);
   const [page, setPage] = useState(currentPage);
