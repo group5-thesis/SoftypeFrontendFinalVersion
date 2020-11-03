@@ -5,53 +5,39 @@ import {
   CCardHeader,
   CRow,
   CCol,
-  CCardFooter,
   CFormGroup,
   CInput,
   CLabel,
   CForm,
-  CImg,
   CButton,
   CSpinner,
 } from "@coreui/react";
 import { config as cnf } from "utils/config";
-import CIcon from "@coreui/icons-react";
 import { useDispatch } from "react-redux";
 import { actionCreator, ActionTypes } from "utils/actions";
-import {
-  shallowCopy,
-  checkNull,
-  toCapitalize,
-  getBaseUrl,
-} from "utils/helpers";
-import NoData from "reusable/NoData";
+import { checkNull, toCapitalize } from "utils/helpers";
 import api from "utils/api";
-import EmployeeModal from "./EmployeeModal";
-import PerformanceReviewModal from "modules/performance-review/PerformanceReviewModal";
+import EmployeeModal from "modules/employee/EmployeeModal";
 import { setWidth } from "utils/helpers";
 import res from "assets/img";
-const EmployeeDetails = (props) => {
+const MyAccount = (props) => {
+  console.log(props);
   let _process = {
     loading: false,
     pending: false,
     uploading: false,
   };
-  const { match } = props;
-  const employees = props.appState.employee.employees;
+  const user = props.appState.auth.user;
   const dispatch = useDispatch();
-  const { id } = match.params;
   const fileInput = useRef();
   const [process, setProcess] = useState(_process);
-  const [employee, setEmployee] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
-  const [exist, toggleExist] = useState(false);
   const [preview, setPreview] = useState();
 
   const _initProcess = (key, val) => {
-    let _temp_process = shallowCopy(process);
     _process[key] = val;
     setProcess(_process);
-    console.log(_process)
+    console.log(_process);
   };
 
   const fields = [
@@ -63,14 +49,14 @@ const EmployeeDetails = (props) => {
   ];
 
   const renderContent = (key) => {
-    let val = checkNull(employee[key]);
+    let val = checkNull(user[key]);
     switch (key) {
       case "address":
         return {
           key,
-          value: `${checkNull(employee.street)} ,${checkNull(
-            employee.city
-          )} ,${checkNull(employee.country)} `,
+          value: `${checkNull(user.street)} ,${checkNull(
+            user.city
+          )} ,${checkNull(user.country)} `,
         };
       case "mobileno":
         return { key: "Mobile No.", value: val };
@@ -90,15 +76,14 @@ const EmployeeDetails = (props) => {
     //  call api upload
     let payload = new FormData();
     payload.append("file", selectedFile);
-    payload.append("employee_id", +employee.employeeId);
+    payload.append("employee_id", +user.employeeId);
     _initProcess("uploading", true);
     let res = await api.post("/update_profile/img", payload, true);
     _initProcess("uploading", false);
     if (!res.error) {
       _initProcess("pending", false);
       let updated = res.data.employee_information;
-      setEmployee(updated);
-      dispatch(actionCreator(ActionTypes.UPDATE_EMPLOYEE, updated));
+      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS), updated);
     } else {
       alert(res.message);
     }
@@ -115,13 +100,6 @@ const EmployeeDetails = (props) => {
   };
 
   useEffect(() => {
-    for (let idx = 0; idx < employees.length; idx++) {
-      let el = employees[idx];
-      if (el.employeeId.toString() === id.toString()) {
-        setEmployee(el);
-        break;
-      }
-    }
     if (!selectedFile) {
       _initProcess("pending", false);
       setPreview(undefined);
@@ -132,27 +110,24 @@ const EmployeeDetails = (props) => {
 
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile, employees, employee]);
+  }, [selectedFile]);
 
-  return employee ? (
+  return (
     <CRow className="justify-content-center">
       <CCol {...setWidth("12")}>
         <CCard>
           <CCardHeader>
             <CRow className="mb-2">
               <CCol sm="5">
-                <h3>Employee Information</h3>
+                <h3>My Profile</h3>
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 <div className="float-right px-2">
                   <EmployeeModal
                     isUpdate
-                    data={employee}
+                    data={user}
                     retrieveEmployees={props.retrieveEmployees}
                   />
-                </div>
-                <div className="float-right">
-                  <PerformanceReviewModal {...{ user: employee }} />
                 </div>
               </CCol>
             </CRow>
@@ -162,7 +137,7 @@ const EmployeeDetails = (props) => {
               <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
                 {(function () {
                   let pic = false;
-                  let url = `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
+                  let url = `${cnf.API_URL_DEV}/image/images/${user.profile_img}`;
                   fetch(url, { method: "HEAD" }).then((res) => {
                     if (res.ok) {
                       pic = true;
@@ -175,7 +150,7 @@ const EmployeeDetails = (props) => {
                         backgroundImage: `url(${
                           preview
                             ? preview
-                            : employee.profile_img
+                            : user.profile_img
                             ? pic
                               ? url
                               : res.logoSm
@@ -267,10 +242,8 @@ const EmployeeDetails = (props) => {
         </CCard>
       </CCol>
     </CRow>
-  ) : (
-    <NoData  />
   );
 };
 // }
 
-export default EmployeeDetails;
+export default MyAccount;

@@ -21,7 +21,7 @@ const retrieveEmployees = async dispatch => {
 }
 
 const fetchTickets = async dispatch => {
-    let response = await api.get('/retrieve_tickets')
+    let response = await api.get('/retrieve_officeRequests')
     if (!response.error) {
         let payload = response.data.ticket_information;
         payload = plotArray(payload)

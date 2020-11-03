@@ -32,7 +32,13 @@ const LeaveRequest = ({ match }) => {
   }
 
   const renderCalendar = () => {
-    return <Calendar {...{ _events: [event] }} />
+    return <Calendar  {...{
+      header: {
+        right: false,
+        left: false
+      },
+      _events: [event]
+    }} />
   }
 
   return (
