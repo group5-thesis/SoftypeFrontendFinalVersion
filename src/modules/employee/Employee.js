@@ -29,6 +29,7 @@ import api from "utils/api";
 import EmployeeModal from "./EmployeeModal";
 import PerformanceReviewModal from "modules/performance-review/PerformanceReviewModal";
 import { setWidth } from "utils/helpers";
+import { Redirect } from 'react-router-dom'
 import res from "assets/img";
 const EmployeeDetails = (props) => {
   let _process = {
@@ -38,20 +39,19 @@ const EmployeeDetails = (props) => {
   };
   const { match } = props;
   const employees = props.appState.employee.employees;
+  const user = props.appState.auth.user;
   const dispatch = useDispatch();
   const { id } = match.params;
   const fileInput = useRef();
   const [process, setProcess] = useState(_process);
   const [employee, setEmployee] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
-  const [exist, toggleExist] = useState(false);
   const [preview, setPreview] = useState();
 
   const _initProcess = (key, val) => {
     let _temp_process = shallowCopy(process);
     _process[key] = val;
     setProcess(_process);
-    console.log(_process)
   };
 
   const fields = [
@@ -134,6 +134,11 @@ const EmployeeDetails = (props) => {
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile, employees, employee]);
 
+
+  if (user.employeeId.toString() === id) {
+    return <Redirect to="/myAccount" />
+  }
+
   return employee ? (
     <CRow className="justify-content-center">
       <CCol {...setWidth("12")}>
@@ -176,11 +181,11 @@ const EmployeeDetails = (props) => {
                           preview
                             ? preview
                             : employee.profile_img
-                            ? pic
-                              ? url
+                              ? pic
+                                ? url
+                                : res.logoSm
                               : res.logoSm
-                            : res.logoSm
-                        })`,
+                          })`,
                         backgroundSize: "contain",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center",
@@ -224,8 +229,8 @@ const EmployeeDetails = (props) => {
                   {process.uploading ? (
                     <CSpinner color="secondary" size="sm" />
                   ) : (
-                    "Upload"
-                  )}
+                      "Upload"
+                    )}
                 </CButton>
               </CCol>
               <CCol>
@@ -268,8 +273,8 @@ const EmployeeDetails = (props) => {
       </CCol>
     </CRow>
   ) : (
-    <NoData  />
-  );
+      <NoData />
+    );
 };
 // }
 

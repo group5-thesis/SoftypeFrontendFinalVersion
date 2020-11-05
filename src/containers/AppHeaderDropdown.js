@@ -8,7 +8,6 @@ import {
   CImg,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import res from "assets/img";
 import { Modal } from "reusable";
 import Avatar from "react-avatar";
 const ProfilePage = React.lazy(() => import("modules/profile/Profilev1"));
@@ -40,7 +39,11 @@ const AppHeaderDropdown = (props) => {
             hidden: true,
           }}
         >
-          <ProfilePage {...{ auth, history }} />
+          <ProfilePage {...{
+            auth, history, toggleModal: () => {
+              modalRef.current.toggle();
+            }
+          }} />
         </Modal>
       )}
       <CDropdownToggle className="c-header-nav-link" caret={false}>

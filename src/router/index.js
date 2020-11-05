@@ -107,7 +107,7 @@ const routes = [
   {
     path: "/requests",
     exact: true,
-    name: "Ticket",
+    name: "Office Supplies Request",
     component: Ticket,
     user: [4],
   },

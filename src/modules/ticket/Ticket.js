@@ -45,11 +45,15 @@ const Ticket = (props) => {
   })
 
   const fields = [
-    { key: 'date requested', _style: { width: '20%' } },
-    { key: 'name', _style: { width: '25%' } },
-    { key: 'item', _style: { width: '20%' } },
-    { key: 'quantity', _style: { width: '%20' } },
-    { key: 'status', _style: { width: '%10' } }
+    { key: 'transaction no', label: 'request no.' },
+    { key: 'date requested', _style: { width: '15%' } },
+    { key: 'name', label: 'Requestor', _style: { width: '15%' } },
+    { key: 'item', _style: { width: '15%' } },
+    { key: 'price' },
+    { key: 'quantity' },
+    { key: 'total' },
+    { key: 'status' },
+    { key: 'date needed' }
   ]
 
   const requestsData = useSelector((state) => {
@@ -59,7 +63,6 @@ const Ticket = (props) => {
   const [filteredTicketRequest, setFilteredTicketRequest] = useState();
 
   useEffect(() => {
-    console.log(filter)
     setFilteredTicketRequest(requestsData)
   }, [requestsData]);
 
@@ -82,7 +85,7 @@ const Ticket = (props) => {
   };
 
   const resolveTicket = async (msg) => {
-    msg === "Approved" ? setRemarks(1) : setRemarks(0)
+    setRemarks(1)
     dialog.current.toggle();
     modal.current.toggle();
   }
@@ -93,7 +96,7 @@ const Ticket = (props) => {
       employeeId: user.employeeId,
       indicator: remarks
     }
-    let res = await api.post("/close_ticket", data)
+    let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.CLOSE_TICKET, renameKey(res.data.ticket_information[0])))
     } else {
@@ -102,7 +105,6 @@ const Ticket = (props) => {
   }
 
   const onClearFilter = () => {
-    console.log("clear filter")
     setFilter(default_filter)
     setFilteredTicketRequest(requestsData)
   }
@@ -116,7 +118,7 @@ const Ticket = (props) => {
             show: dialog,
             centered: true,
             onConfirm,
-            title: remarks === "Resolved" ? "Are you sure to Approve the Request?" : "Are you sure to Reject the Request?",
+            title: "Resolve Request?",
             onCloseCallback: () => {
               modal.current.toggle();
             }
@@ -125,7 +127,7 @@ const Ticket = (props) => {
         <Modal
           ref={modal}
           centered
-          title="Ticket Request Details"
+          title="Request Details"
           modalOnClose={toggleModal}
           hidden
           closeButton
@@ -133,11 +135,8 @@ const Ticket = (props) => {
             (tickets && tickets.status === 1) &&
             <>
               <CButton color="primary" onClick={() => {
-                resolveTicket('Approved')
-              }}>Approve</CButton>
-              <CButton color="danger" onClick={() => {
-                resolveTicket('Rejected')
-              }}>Reject</CButton>
+                resolveTicket('resolve')
+              }}>Resolve</CButton>
             </>
           }
           hideCancelButton
@@ -179,7 +178,7 @@ const Ticket = (props) => {
                   {...{
                     show: collapse,
                     onStatusChange: handleChange,
-                    filter : filter,
+                    filter: filter,
                     onClearFilter
                   }} />
               </CCol>

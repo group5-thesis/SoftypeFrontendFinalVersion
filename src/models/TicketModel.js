@@ -2,8 +2,11 @@ export default {
   employeeId: null,
   name: '',
   item: '',
-  quantity: '',
-  description: ''
+  quantity: 0,
+  // description: '',
+  date_needed: '',
+  price: 0,
+  total_price: 0
 }
 
 

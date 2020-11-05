@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useHistory } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
@@ -21,7 +22,7 @@ import EmployeeModal from "modules/employee/EmployeeModal";
 import { setWidth } from "utils/helpers";
 import res from "assets/img";
 const MyAccount = (props) => {
-  console.log(props);
+
   let _process = {
     loading: false,
     pending: false,
@@ -29,6 +30,7 @@ const MyAccount = (props) => {
   };
   const user = props.appState.auth.user;
   const dispatch = useDispatch();
+  const history = useHistory();
   const fileInput = useRef();
   const [process, setProcess] = useState(_process);
   const [selectedFile, setSelectedFile] = useState();
@@ -37,7 +39,6 @@ const MyAccount = (props) => {
   const _initProcess = (key, val) => {
     _process[key] = val;
     setProcess(_process);
-    console.log(_process);
   };
 
   const fields = [
@@ -49,7 +50,7 @@ const MyAccount = (props) => {
   ];
 
   const renderContent = (key) => {
-    let val = checkNull(user[key]);
+    let val = user[key];
     switch (key) {
       case "address":
         return {
@@ -64,6 +65,12 @@ const MyAccount = (props) => {
         return { key: "Mobile No.", value: val };
       case "status":
         return { key: toCapitalize(key), value: "Active" };
+      case "SSS":
+        val = user['sss'] || ''
+      case "PHIL HEALTH":
+        val = user['phil_health_no'] || ''
+      case "PAG-IBIG":
+        val = user['pag_ibig_no'] || ''
       default:
         if (key.includes("name")) {
           val = toCapitalize(val);
@@ -129,6 +136,17 @@ const MyAccount = (props) => {
                     retrieveEmployees={props.retrieveEmployees}
                   />
                 </div>
+                <div className="float-right px-2">
+                  <CButton
+                    disabled={process.uploading}
+                    color="primary"
+                    onClick={() => {
+                      history.push("/change-password")
+                    }}
+                  >
+                    Change Password
+                </CButton>
+                </div>
               </CCol>
             </CRow>
           </CCardHeader>
@@ -138,11 +156,13 @@ const MyAccount = (props) => {
                 {(function () {
                   let pic = false;
                   let url = `${cnf.API_URL_DEV}/image/images/${user.profile_img}`;
-                  fetch(url, { method: "HEAD" }).then((res) => {
-                    if (res.ok) {
-                      pic = true;
-                    }
-                  });
+                  fetch(url, { method: "HEAD" })
+                    .then((res) => {
+                      if (res.ok) {
+                        pic = true;
+                      }
+                    })
+                    .catch(err => console.log(err));
                   return (
                     <div
                       style={{
@@ -151,11 +171,11 @@ const MyAccount = (props) => {
                           preview
                             ? preview
                             : user.profile_img
-                            ? pic
-                              ? url
+                              ? pic
+                                ? url
+                                : res.logoSm
                               : res.logoSm
-                            : res.logoSm
-                        })`,
+                          })`,
                         backgroundSize: "contain",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center",
@@ -199,8 +219,8 @@ const MyAccount = (props) => {
                   {process.uploading ? (
                     <CSpinner color="secondary" size="sm" />
                   ) : (
-                    "Upload"
-                  )}
+                      "Upload"
+                    )}
                 </CButton>
               </CCol>
               <CCol>
@@ -225,7 +245,7 @@ const MyAccount = (props) => {
                                   id="text-input"
                                   name="text-input"
                                   readOnly
-                                  value={val && val}
+                                  value={val || ''}
                                   placeholder={!val ? "UNSET" : ""}
                                 />
                               </CFormGroup>
