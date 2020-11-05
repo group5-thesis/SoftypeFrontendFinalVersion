@@ -9,7 +9,7 @@ const BasicForms = React.lazy(() => import('templates/base/cards/Cards'))
 // const Upload = React.lazy(() => import('templates/base/forms/Upload'))
 // const Cards = React.lazy(() => import('templates/base/cards/Cards'))
 // const Calendar = React.lazy(() => import('views/calendar/Calendar'))
-const OrganizationChart = React.lazy(() => import('modules/organizational-chart/organizational-chart'));
+const OrganizationChart = React.lazy(() => import('modules/organizational-chart/chart'));
 
 const Repository = React.lazy(() => import('modules/repository/Repositoryv1'))
 const RepositoryFiles = React.lazy(() => import('modules/repository/RepositoryFiles'))
