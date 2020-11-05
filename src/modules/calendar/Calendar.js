@@ -10,17 +10,18 @@ const localizer = momentLocalizer(moment)
 
 
 const Basic = ({header}) => {
-  // const header = {right, left, center} 
+  const {right=true, left=true, center=true} = header
   return(
     <div>
     <CCard>
       <CCardBody>
         <Calendar
-          header={false}
+          // header={}
           localizer={localizer}
           // view= {views.month}
           events={events}
-
+          // components={toolbar}
+          components = {{toolbar : null}}
           startAccessor='start'
           endAccessor='end'
           style={{ height: 600, backgroundColor: 'white' }}
