@@ -1,63 +1,39 @@
 import React from 'react'
 // import { momentLocalizer, Views } from 'react-big-calendar'
-import events from './events'
-// import * as dates from './dates'
-// import moment from 'moment'
+import _events from './events'
+import CalendarToolbar from './CalendarToolbar';
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import "react-big-calendar/lib/css/react-big-calendar.css"
-import views from 'views';
 import { CCard, CCardBody } from '@coreui/react';
-
 const localizer = momentLocalizer(moment)
+const MyCalendar = ({ header = { right: true, left: true, center: true }, events = [], style = { height: 500 } }) => {
+  return (
+    < div >
+      <CCard>
+        <CCardBody>
+          <Calendar
+            localizer={localizer}
+            events={events.length ? events : _events}
+            popup
+            startAccessor='start'
+            endAccessor='end'
+            style={style}
 
-
-// let allViews = Object.keys(Views).map(k => Views[k])
-
-// const ColoredDateCellWrapper = ({ children }) =>
-//   React.cloneElement(React.Children.only(children), {
-//     style: {
-//       backgroundColor: 'lightblue'
-//     },
-//   })
-
-const Basic = ({ header }) => {
-  // const localizer =  Calendar.momentLocalizer(moment)
-  // return(
-  return(
-  < div >
-    <CCard>
-      <CCardBody>
-        <Calendar
-          localizer={localizer}
-          // view= {views.month}
-          events={events}
-
-          startAccessor='start'
-          endAccessor='end'
-          style={{ height: 600, backgroundColor: 'white' }}
-
-        // events={events}
-        // culture = 'en-GB'
-        // views={allViews}
-        // step={60}
-        // showMultiDayTimes
-        // max={dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours')}
-        // defaultDate={new Date(2015, 3, 1)}
-        // components={{
-        //   timeSlotWrapper: ColoredDateCellWrapper,
-        // }}
-        // localizer={localizer}
-
-
-        />
-      </CCardBody>
-    </CCard>
-
-    {/* <CCard
-       events = {events}
-    /> */}
-  </div >)
+            // events={events}
+            // culture = 'en-GB'
+            // views={allViews}
+            // step={60}
+            // showMultiDayTimes
+            // max={dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours')}
+            defaultDate={events.length && events[0]['start']}
+            components={{
+              toolbar: (rest) => <CalendarToolbar {...rest} {...{ header }} />,
+            }}
+          />
+        </CCardBody>
+      </CCard>
+    </div >)
 }
 // }
 
@@ -65,4 +41,4 @@ const Basic = ({ header }) => {
 
 
 
-export default Basic
+export default MyCalendar

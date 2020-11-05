@@ -14,17 +14,19 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { CenteredLayout } from 'containers';
+import { Redirect } from 'react-router-dom'
 
 const ForgotPassword = (props) => {
   let { history } = props;
-  let already_logged = useSelector(state => {
+  let isLoggedIn = useSelector(state => {
     return state.appState.auth.already_logged
   })
-  useEffect(() => {
-    already_logged && history.push("/")
-  }, [])
-  return (
+  
+  if (isLoggedIn) {
+    return <Redirect to="/" />
+  }
 
+  return (
     <CenteredLayout>
       <CForm>
         <h1>Forgot Password</h1>
