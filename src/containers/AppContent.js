@@ -30,7 +30,6 @@ const AppContent = (_props) => {
   const dispatch = useDispatch();
   const retrieve = async (payload) => {
     dispatch(actionCreator(ActionTypes.LOADING_STARTED));
-    let retry = 5;
     let resp1 = await retrieveLeaveRequests(dispatch, payload);
     let resp2 = await fetchTickets(dispatch);
     let resp3 = await retrieveEmployees(dispatch);
@@ -41,21 +40,21 @@ const AppContent = (_props) => {
     let resp8 = await fetchDepartments(dispatch);
     dispatch(actionCreator(ActionTypes.LOADING_DONE));
     let hasError = false;
-    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7];
+    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7,resp8];
     responses.map((resp) => {
       if (resp.error) {
         hasError = true;
       }
     });
 
-    if (hasError) {
-      if (retry !== 0) {
-        retrieve(payload);
-        --retry;
-      } else {
-        alert("Error in fetching some data");
-      }
-    }
+    // if (hasError) {
+    //   if (retry !== 0) {
+    //     retrieve(payload);
+    //     --retry;
+    //   } else {
+    //     alert("Error in fetching some data");
+    //   }
+    // }
   };
 
   useEffect(() => {

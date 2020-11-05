@@ -27,7 +27,8 @@ import {
   ADD_DEPARTMENT,
   FETCH_PERFORMANCE_REVIEWS,
   ADD_PERFORMANCE_REVIEW,
-  FETCH_PERFORMANCE_REVIEWS_BY_REVIEWER
+  FETCH_PERFORMANCE_REVIEWS_BY_REVIEWER,
+  TOGGLE_NOTIFICATION
 } from "utils/constants/action-types";
 
 const ActionTypes = {
@@ -59,7 +60,8 @@ const ActionTypes = {
   FILE_VIDEOS,
   FILE_OTHERS,
   LOADING_STARTED,
-  LOADING_DONE
+  LOADING_DONE,
+  TOGGLE_NOTIFICATION
 };
 
 const actionCreator = (type, payload = null) => ({ type, payload });

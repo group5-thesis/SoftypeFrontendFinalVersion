@@ -36,8 +36,8 @@ let headers = [
 
 const Users = (props) => {
     const { history, location } = props
-    const usersData = props.appState.employee.employees
     const user = props.appState.auth.user
+    const usersData = props.appState.employee.employees.filter(emp => emp.employeeId !== user.employeeId)
     const queryPage = location.search.match(/page=([0-9]+)/, '')
     const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
     const [page, setPage] = useState(currentPage)
@@ -86,6 +86,12 @@ const Users = (props) => {
                                     (item) => (
                                         <td>
                                             {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename)[0] + "."}`}
+                                        </td>
+                                    ),
+                                'Department':
+                                    (item) => (
+                                        <td>
+                                            {item.department || ""}
                                         </td>
                                     )
                             }}

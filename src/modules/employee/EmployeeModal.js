@@ -7,7 +7,6 @@ import api from "utils/api";
 import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
 import { RULES, shallowCopy, getAge } from 'utils/helpers'
 import _ from 'lodash';
-//  ["SSS", "PHIL HEALTH", "PAG-IBIG"]
 
 const defaultErrors = {
     firstname: false,
