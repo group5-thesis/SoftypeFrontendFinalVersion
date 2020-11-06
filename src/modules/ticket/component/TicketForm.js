@@ -16,14 +16,21 @@ import TicketModel from 'models/TicketModel'
 import { useSelector, useDispatch } from 'react-redux'
 import { shallowCopy, hasMissingFieds, toCapitalize, renameKey } from 'utils/helpers';
 import api from 'utils/api';
+import _ from 'lodash';
+import moment from 'moment';
 
 
 const TicketForm = () => {
+  const defaultErrors = {
+    item: false,
+    quantity: false,
+    date_needed: false,
+    price: false,
+  }
   const dispatch = useDispatch();
-  const [hasErrors, setHasErrors] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState(TicketModel)
-
+  const [errors, setErrors] = useState(defaultErrors)
 
   const user = useSelector(state => {
     let authed = state.appState.auth.user;
@@ -43,26 +50,39 @@ const TicketForm = () => {
     let value = e.target.value
     let copy = shallowCopy(data)
     copy[key] = value
+    let _total = copy['price'] * copy['quantity']
+    copy['total_price'] = _total > 0 ? _total : 0;
     setData(copy)
-    setHasErrors(hasMissingFieds(copy))
   }
 
-
-  const checkErrors = () => {
-    for (const [_, value] of Object.entries(data)) {
-      if (value === '') {
-        setHasErrors(true)
-        return
-      }
+  const validate = () => {
+    let dateValid = moment(data.date_needed).isSameOrAfter(moment());
+    let _errors = {}
+    let { item, quantity, date_needed, price } = data
+    if (!item) {
+      _errors['item'] = true;
     }
-    setHasErrors(false)
+    if (quantity < 1) {
+      _errors['quantity'] = true;
+    }
+    if (!date_needed || !dateValid) {
+      _errors['date_needed'] = true;
+    }
+    if (price < 1) {
+      _errors['price'] = true;
+    }
+    setErrors(_errors)
+    if (_.values(_errors).includes(true)) {
+      return
+    }
+    handleSubmit()
   }
 
   const handleSubmit = async () => {
     setIsLoading(true)
-    let res = await api.post("/create_ticket", data)
+    let res = await api.post("/create_officeRequest ", data)
     if (!res.error) {
-      dispatch(actionCreator(ActionTypes.ADD_TICKET, renameKey(res.data.ticket_information[0])))
+      dispatch(actionCreator(ActionTypes.ADD_TICKET, renameKey(res.data.officeRequest_information[0])))
       modalRef.current.toggle()
       modalOnClose()
     } else {
@@ -71,14 +91,37 @@ const TicketForm = () => {
     setIsLoading(false)
   }
 
-  const modalOnClose = () => {
-    setData(TicketModel)
+  const renderError = (field) => {
+    let message = "";
+    switch (field) {
+      case 'date_needed':
+        message = "Invalid date";
+        break;
+      case 'quantity':
+        message = "Invalid Quantity";
+        break;
+      case 'price':
+        message = "Invalid Price";
+        break;
+      case 'item':
+        message = "Item is required";
+        break;
     }
+
+    return <CInvalidFeedback className="help-block">
+      {message}
+    </CInvalidFeedback>
+  }
+
+  const modalOnClose = () => {
+    setErrors(defaultErrors)
+    setData(TicketModel)
+  }
   const modalRef = useRef()
 
   const actions = () => (
     <>
-      <CButton color="primary" disabled={hasErrors || isLoading} onClick={handleSubmit}>
+      <CButton color="primary" disabled={isLoading} onClick={validate}>
         {
           isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
         }
@@ -86,57 +129,66 @@ const TicketForm = () => {
     </>
   )
 
-  useEffect(() => {
-    checkErrors()
-  }, [data])
-
   return (
     <Modal ref={modalRef} {...{
-      title: "Form Request",
+      title: "New Request",
       footer: actions(),
       modalOnClose,
       cancelBtnTitle: "Close"
     }}>
       <CFormGroup >
-        <CLabel>Name : </CLabel>
+        <CLabel>Requestor : </CLabel>
         <CInput id="name" value={data.name} disabled />
       </CFormGroup>
       <CFormGroup >
         <CLabel>Item : </CLabel>
         <CInput
           name="item"
-          id="item"
           onChange={handleOnChange}
-          invalid={!data.item}
-          valid={data.item !== ''}
+          invalid={errors.item}
+          placeholder="name/brand ect."
           value={data.item || ""}
         />
+        {renderError('item')}
+
       </CFormGroup>
       <CFormGroup >
         <CLabel>Quantity : </CLabel>
         <CInput
-          id="name"
           type="number"
           name="quantity"
-          onChange={handleOnChange}
           value={data.quantity}
-          invalid={!data.quantity}
-          valid={data.quantity !== ''}
+          onChange={handleOnChange}
+          invalid={errors.quantity}
+          placeholder="0"
         />
+        {renderError('quantity')}
       </CFormGroup>
       <CFormGroup >
-        <CLabel>Description : </CLabel>
-        <CTextarea
+        <CLabel>Price per item : </CLabel>
+        <CInput
+          type="number"
+          name="price"
+          value={data.price}
           onChange={handleOnChange}
-          name="description"
-          value={data.description}
-          invalid={!data.description}
-          valid={data.description !== ''}
-          rows="3"
+          invalid={errors.price}
+          placeholder="0.00"
         />
-        <CInvalidFeedback className="help-block">
-          Please provide a valid reason
-        </CInvalidFeedback>
+        {renderError('price')}
+      </CFormGroup>
+      <CFormGroup >
+        <CLabel>Total Price : </CLabel>
+        <CInput id="name" value={data.total_price} disabled />
+      </CFormGroup>
+      <CFormGroup >
+        <CLabel htmlFor="date-input">Date Needed : </CLabel>
+        <CInput
+          type="date"
+          onChange={handleOnChange}
+          name="date_needed"
+          invalid={errors.date_needed}
+          placeholder="Date Needed" />
+        {renderError('date_needed')}
       </CFormGroup>
     </Modal>
   )

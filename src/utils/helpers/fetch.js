@@ -23,9 +23,9 @@ const retrieveEmployees = async dispatch => {
 const fetchTickets = async dispatch => {
   let response = await api.get('/retrieve_officeRequests')
   if (!response.error) {
-    let payload = response.data.officeRequest_information;
-    payload = plotArray(payload)
-    dispatch(actionCreator(ActionTypes.FETCH_TICKETS, payload))
+      let payload = response.data.officeRequest_information;
+      payload = plotArray(payload)
+      dispatch(actionCreator(ActionTypes.FETCH_TICKETS, payload))
   }
   return response;
 }

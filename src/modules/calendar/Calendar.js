@@ -7,19 +7,18 @@ import moment from 'moment'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { CCard, CCardBody } from '@coreui/react';
 const localizer = momentLocalizer(moment)
-const MyCalendar = ({ header = { right: true, left: true, center: true }, events = [] }) => {
+const MyCalendar = ({ header = { right: true, left: true, center: true }, events = [], style = { height: 500 } }) => {
   return (
     < div >
       <CCard>
         <CCardBody>
           <Calendar
             localizer={localizer}
-            // view= {views.month}
-            events={events}
+            events={events.length ? events : _events}
             popup
             startAccessor='start'
             endAccessor='end'
-            style={{ height: 600, backgroundColor: 'white' }}
+            style={style}
 
             // events={events}
             // culture = 'en-GB'
@@ -27,7 +26,7 @@ const MyCalendar = ({ header = { right: true, left: true, center: true }, events
             // step={60}
             // showMultiDayTimes
             // max={dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours')}
-            // defaultDate={new Date(2015, 3, 1)}
+            defaultDate={events.length && events[0]['start']}
             components={{
               toolbar: (rest) => <CalendarToolbar {...rest} {...{ header }} />,
             }}

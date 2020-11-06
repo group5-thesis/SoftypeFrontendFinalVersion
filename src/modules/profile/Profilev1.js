@@ -68,7 +68,7 @@ class ProfilePage extends Component {
                   Name:{" "}
                   {`${toCapitalize(user.firstname)} ${
                     user.middlename && toCapitalize(user.middlename) + " "
-                  }${toCapitalize(user.lastname)}`}
+                    }${toCapitalize(user.lastname)}`}
                 </h3>
                 {Object.entries(userDetails).map(([key, value]) => {
                   return (
@@ -81,6 +81,7 @@ class ProfilePage extends Component {
                   block
                   className="mr-1 px-4"
                   onClick={() => {
+                    this.props.toggleModal()
                     this.props.history.push("/myAccount");
                   }}
                   color="primary"
