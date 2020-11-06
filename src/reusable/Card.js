@@ -1,4 +1,5 @@
 import React, { useState, forwardRef, useImperativeHandle } from "react";
+import "./card.scss"
 import {
   CCard,
   CCardBody,
@@ -25,7 +26,15 @@ const Card = forwardRef(
       clickable = false,
       onClickMethod,
       color,
-      isIcon = false
+      isIcon = false,
+      setImg = false,
+      image,
+      animation = false,
+      textClass,
+      imgClass,
+      textStyle,
+      dept_role,
+      textRoleStyle
     },
     ref
   ) => {
@@ -41,7 +50,7 @@ const Card = forwardRef(
     }));
 
     return (
-      <>
+      <div className={animation ? "user" : ""}>
         <CCard style={setHeight(height)} color={color} onClick={onClickMethod}>
           {
             !showHeader ? "" : (
@@ -50,16 +59,23 @@ const Card = forwardRef(
               </CCardHeader>
             )
           }
-          <CCardBody style={{ cursor: clickable && "pointer" , maxWidth: "100px"} }>
+          <CCardBody style={{ cursor: clickable && "pointer", maxWidth: "100px" }}>
             <CCardTitle>
               {title}
             </CCardTitle>
             <CCardSubtitle>
               {subtitle}
             </CCardSubtitle>
+            {
+              setImg ?
+                <div style={{ position: 'absolute', left: '50%', top: '30%', transform: 'translate(-50%, -50%)' }}>
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" className={imgClass} />
+                </div> : ""
+            }
             <CCardText
-              style={centeredText ? setVerticallyHorizontallyCentered() : {}}
-              className={!isIcon ? "text-white font-weight-bold h2" : "font-weight-bold h2"}>
+              style={centeredText ? setVerticallyHorizontallyCentered() : textStyle}
+              className={textClass}
+            >
               {text}
             </CCardText>
           </CCardBody>
@@ -71,7 +87,7 @@ const Card = forwardRef(
             )
           }
         </CCard>
-      </>
+      </div>
     );
   }
 );

@@ -7,6 +7,8 @@ import ticket from './ticket'
 import files from './files'
 import department from './department'
 import performance_review from './performance_review'
+import department_manager from './department_managers'
+import department_employee from './department_employees'
 
 const rootReducer = combineReducers({
   auth,
@@ -16,7 +18,9 @@ const rootReducer = combineReducers({
   ticket,
   files,
   department,
-  performance_review
+  performance_review,
+  department_manager,
+  department_employee
 })
 
 export default rootReducer;

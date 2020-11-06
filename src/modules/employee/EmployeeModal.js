@@ -56,7 +56,6 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         _errors[name] = false
         setError(_errors)
         if (name === "role") {
-            debugger
             let { role, accountType } = JSON.parse(value)
             Employee['role'] = role;
             Employee["accountType"] = +accountType;
