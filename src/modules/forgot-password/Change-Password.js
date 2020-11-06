@@ -126,15 +126,6 @@ const ChangePassword = (props) => {
                     }} placeholder="confirm new password" />
                 </CInputGroup>
                 <LoadingButton {...{ block: true, isLoading, submit: validate, btnText: 'Submit' }} />
-                <CRow>
-                    <CCol xs="6">
-                    </CCol>
-                    <CCol xs="6" className="text-right px-0">
-                        <CButton className="float-right" color="link" onClick={() => {
-                            history.push("/login")
-                        }}>Back to Login</CButton>
-                    </CCol>
-                </CRow>
             </CForm>
         </CenteredLayout>
     )
