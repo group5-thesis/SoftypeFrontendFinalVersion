@@ -13,7 +13,7 @@ const LeaveCalendar = React.lazy(() =>
 );
 const BasicForms = React.lazy(() => import("templates/base/cards/Cards"));
 const OrganizationChart = React.lazy(() =>
-  import("modules/organizational-chart/organizational-chart")
+  import("modules/organizational-chart/SoftypeOrgChart")
 );
 const Repository = React.lazy(() => import("modules/repository/Repositoryv1"));
 const RepositoryFiles = React.lazy(() =>
