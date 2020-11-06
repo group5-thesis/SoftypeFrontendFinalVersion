@@ -14,21 +14,23 @@ const CustomNodeChart = () => {
         name: "Nikunj S",
         title: "DEPARTMENT MANAGER",
         children: [
-          { id: "n4", name: "Kel Custodio", title: "SENIOR ENGINEER",
-          children: [
-            { id: "n5", name: "Sachin Savale", title: "ENGINEER",
+          {
+            id: "n4", name: "Kel Custodio", title: "SENIOR ENGINEER",
             children: [
-                { id: "n4", name: "Shahbudin Kaji", title: "ENGINEER"},
-                { id: "n4", name: "Jaydas Sakhare", title: "ENGINEER"},
-                { id: "n4", name: "Visahl Pitale", title: "ENGINEER"},
-                { id: "n4", name: "Madhu Rai", title: "ENGINEER"}
-        ]
-        },
-            { id: "n6", name: "Nitesh Devadiga", title: "ENGINEER" },
-            { id: "n7", name: "Amol Jagkar", title: "ENGINEER" }
-          ],
-        },
-          {id: "n8", name: "Manashi H",title: "SENIOR ENGINEER"},
+              {
+                id: "n5", name: "Sachin Savale", title: "ENGINEER",
+                children: [
+                  { id: "n4.1", name: "Shahbudin Kaji", title: "ENGINEER" },
+                  { id: "n4.2", name: "Jaydas Sakhare", title: "ENGINEER" },
+                  { id: "n4.3", name: "Visahl Pitale", title: "ENGINEER" },
+                  { id: "n4.4", name: "Madhu Rai", title: "ENGINEER" }
+                ]
+              },
+              { id: "n6", name: "Nitesh Devadiga", title: "ENGINEER" },
+              { id: "n7", name: "Amol Jagkar", title: "ENGINEER" }
+            ],
+          },
+          { id: "n8", name: "Manashi H", title: "SENIOR ENGINEER" },
           { id: "n9", name: "Moses R", title: "SENIOR ENGINEER" },
           { id: "n10", name: "Prachi S", title: "SENIOR ENGINEER" }
         ]
@@ -41,7 +43,7 @@ const CustomNodeChart = () => {
       datasource={ds}
       chartClass="myChart"
       NodeTemplate={MyNode}
-      pan={true} 
+      pan={true}
       zoom={true}
     />
   );
