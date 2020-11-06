@@ -47,19 +47,7 @@ const Departments = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
 
-
-  const [managers, setManagers] = useState([]);
-
-  const retrieve_managers = async () => {
-    let res = await api.get("/retrieve_department_managers");
-    if (!res.error) {
-      // setManagers(res.data.department_manager_information)
-    } else {
-      alert("error");
-    }
-  }
-
-  const handleSubmit = async () => { // Lacking submit department
+  const handleSubmit = async () => {
     setIsLoading(true)
     let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
     if (!res.error) {
@@ -106,6 +94,7 @@ const Departments = (props) => {
 
   const toggleModal = () => {
     setData(DepartmentModel)
+    setError(defaultErrors)
     modal.current.toggle();
   };
 
@@ -128,10 +117,6 @@ const Departments = (props) => {
     history.push(`/employee/departments/${id}`);
   };
 
-  useEffect(() => {
-    retrieve_managers()
-  }, [managers])
-
   return (
     <>
       <CRow>
@@ -142,9 +127,11 @@ const Departments = (props) => {
                 <Card
                   color={COLORS[Math.ceil(index / COLORS.length)]}
                   clickable
+                  animation
                   centeredText
                   height={200}
                   text={dept.department_name}
+                  textClass={"text-white font-weight-bold h2"}
                   onClickMethod={() => {
                     viewDepartmentInfo(dept.department_id)
                   }}
@@ -183,6 +170,7 @@ const Departments = (props) => {
                 color={colors.$grey}
               />
             }
+            animation
             isIcon
             clickable
             centeredText
