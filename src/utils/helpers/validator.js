@@ -1,8 +1,8 @@
+import { copyArray } from '.';
 const moment = require('moment')
 const Consts = require("./Consts")
 const validate = (value, options = {}) => {
-    let errors = []
-
+    let errors = new Array()
     if (options.minLength) {
         errors.push({
             ok: checkMinLength(value, options.minLength),
