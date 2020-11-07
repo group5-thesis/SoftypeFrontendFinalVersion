@@ -75,7 +75,7 @@ const DepartmentEmployees = ({ match }) => {
             <CCardHeader>
               <CRow>
                 <CCol sm="5">
-                  <h4 className="card-title mb-0">{`Department Manager: ${"Test"}`}</h4>
+                  <h4 className="card-title mb-0">{`Department Manager: ${"Rangie Laurente"}`}</h4>
                 </CCol>
                 <CCol sm="7" className="d-none d-md-block">
                   <div className="float-right">
@@ -98,6 +98,9 @@ const DepartmentEmployees = ({ match }) => {
                     height={200}
                     animation
                     setImg
+                    text={
+                      "Lebron James"
+                    }
                     // text={
                     //   `${key.manager_firstname} ${key.manager_lastname}`
                     // }
@@ -120,6 +123,9 @@ const DepartmentEmployees = ({ match }) => {
                     height={200}
                     animation
                     setImg
+                    text={
+                      "Kobe Bryant"
+                    }
                     // text={
                     //   `${key.manager_firstname} ${key.manager_lastname}`
                     // }

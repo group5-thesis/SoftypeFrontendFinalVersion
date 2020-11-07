@@ -11,7 +11,7 @@ import {
   CInput
 } from "@coreui/react";
 
-const AddDepartmentEmployee = ({managers}) => {
+const AddDepartmentEmployee = (managers) => {
 
   // console.log(managers)
   // console.log(managers[0])
@@ -25,11 +25,11 @@ const AddDepartmentEmployee = ({managers}) => {
       <CCol xl={12}>
         <CFormGroup >
           <CLabel>Department Head: </CLabel>
-          {/* <CInput id="head" value={managers[0].department_head} disabled /> */}
+          <CInput id="head" value={'Lorly Sugal'} disabled />
         </CFormGroup>
         <CFormGroup >
           <CLabel>Department Manager: </CLabel>
-          {/* <CInput id="manager" value={`${managers[0].manager_firstname} ${managers[0].manager_lastname}`} disabled /> */}
+          <CInput id="manager" value={`Rangie Laurente`} disabled />
         </CFormGroup>
         <CFormGroup >
           <CLabel>Department Employee: </CLabel>
