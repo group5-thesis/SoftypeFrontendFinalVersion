@@ -1,4 +1,4 @@
 export const config = {
-    API_URL_DEV:  "https://5ccf526e76f2.ngrok.io/api",
+    API_URL_DEV:  "https://26b15133180c.ngrok.io/api",
     API_URL_LIVE: ""
 };
