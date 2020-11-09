@@ -7,9 +7,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actionCreator, ActionTypes } from 'utils/actions';
 import PerformanceReviewModel from 'models/PerformanceReviewModel'
 import api from "utils/api"
+import { LoadingButton } from 'reusable'
 
 const PerformanceReviewModal = ({ user }) => {
-  console.log(user);
   const reviewer = useSelector(state => {
     let authed = state.appState.auth.user;
     return {
@@ -24,9 +24,9 @@ const PerformanceReviewModal = ({ user }) => {
     [0, 0, 0, 0, 0]
   )
 
-  const [isZero, setIsZero] = useState(true)
   const [review, setReview] = useState(PerformanceReviewModel)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isLoading, toggleIsLoading] = useState(false)
 
   PerformanceReviewModel.reviewer = reviewer.employeeId;
   PerformanceReviewModel.employee_reviewed = user.employeeId
@@ -47,20 +47,25 @@ const PerformanceReviewModal = ({ user }) => {
   };
 
   const submitReview = async () => {
+    toggleIsLoading(true)
     let res = await api.post("/create_performance_review", review)
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_PERFORMANCE_REVIEW, res.data.performance_review_information[0]))
-      toggleModal()
     } else {
       alert("error")
     }
     toggleModal()
+    toggleIsLoading(false)
+  }
+  const validate = () => {
+    if (!rating.includes(0)) {
+      submitReview()
+    } else {
+      alert("Please add some review")
+    }
+
   }
 
-  useEffect(() => {
-    let checkZero = rating.every((rate) => rate > 0)
-    setIsZero(!checkZero)
-  }, [rating, review, activeIndex]);
 
   return (
     <Modal
@@ -71,7 +76,7 @@ const PerformanceReviewModal = ({ user }) => {
       modalOnClose={toggleModal}
       footer={
         <>
-          <CButton color="primary" onClick={submitReview} disabled={isZero}>Submit</CButton>
+          <LoadingButton {...{ isLoading, submit: validate, btnText: 'Submit' }} />
           <CButton color="danger" onClick={() => {
             toggleModal()
           }} >Cancel</CButton>

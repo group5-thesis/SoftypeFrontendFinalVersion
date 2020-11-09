@@ -59,20 +59,36 @@ export const TICKET_STATUS = {
 }
 
 export const QUESTIONS = [
-  "In past quarter that employee worked on how many projects?",
-  "How much tasks completed by him/her?",
-  "Is he/she taking initiatives in the project?",
-  "Is he/she giving his thoughts for solutioning and providing the best what we can do?",
-  "Contribution of him/her in every project?"
+  "Quality of Works",
+  "Relationship with Co-workers",
+  "Initiative",
+  "Communication",
+  "Attitude",
 ]
 
-export const RATINGS = [
-  "Good",
-  "Very Good",
-  "Best",
-  "Excellent",
-  "Outstanding"
-]
+export const RATINGS = {
+  1: 'Need Improvement',
+  2: 'Good',
+  3: 'Highly Observed',
+  4: 'Excellent',
+  5: 'Outstanding',
+}
+
+// export const QUESTIONS = [
+//   "In past quarter that employee worked on how many projects?",
+//   "How much tasks completed by him/her?",
+//   "Is he/she taking initiatives in the project?",
+//   "Is he/she giving his thoughts for solutioning and providing the best what we can do?",
+//   "Contribution of him/her in every project?"
+// ]
+
+// export const RATINGS = [
+//   "Good",
+//   "Very Good",
+//   "Best",
+//   "Excellent",
+//   "Outstanding"
+// ]
 
 
 export const PERFORMANCE_REVIEW_STATUS = {

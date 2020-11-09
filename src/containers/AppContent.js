@@ -44,7 +44,7 @@ const AppContent = (_props) => {
     let resp10 = await fetchDepartmentManagers(dispatch);
     dispatch(actionCreator(ActionTypes.LOADING_DONE));
     let hasError = false;
-    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7,resp8];
+    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8];
     responses.map((resp) => {
       if (resp.error) {
         hasError = true;
@@ -62,8 +62,13 @@ const AppContent = (_props) => {
   };
 
   useEffect(() => {
+    _props.history.listen(location => {
+      if (location.pathname !== "/myAccount") {
+        sessionStorage.setItem("_tab", 0)
+      }
+    })
     retrieve(payload);
-  }, []);
+  }, [_props.location]);
 
   return (
     <main className="c-main">
@@ -71,34 +76,34 @@ const AppContent = (_props) => {
         {isAppLoading ? (
           loading
         ) : (
-          <Suspense fallback={loading}>
-            <Switch>
-              {accessedRoutes.map((route, idx) => {
-                return (
-                  route.component && (
-                    <Route
-                      key={idx}
-                      path={route.path}
-                      exact={route.exact}
-                      name={route.name}
-                      render={(props) => (
-                        <route.component {...{ ..._props, ...props }} />
-                      )}
-                    />
-                  )
-                );
-              })}
-              <Route
-                exact
-                path="/404"
-                name="Page 404"
-                render={(props) => <Page404 {...props} />}
-              />
-              <Redirect from="/" to="/dashboard" />
-              <Redirect from="*" to="/404" />
-            </Switch>
-          </Suspense>
-        )}
+            <Suspense fallback={loading}>
+              <Switch>
+                {accessedRoutes.map((route, idx) => {
+                  return (
+                    route.component && (
+                      <Route
+                        key={idx}
+                        path={route.path}
+                        exact={route.exact}
+                        name={route.name}
+                        render={(props) => (
+                          <route.component {...{ ..._props, ...props }} />
+                        )}
+                      />
+                    )
+                  );
+                })}
+                <Route
+                  exact
+                  path="/404"
+                  name="Page 404"
+                  render={(props) => <Page404 {...props} />}
+                />
+                <Redirect from="/" to="/dashboard" />
+                <Redirect from="*" to="/404" />
+              </Switch>
+            </Suspense>
+          )}
       </CContainer>
     </main>
   );

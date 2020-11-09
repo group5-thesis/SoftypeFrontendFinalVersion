@@ -26,8 +26,7 @@ const QrCodeScanner = (props) => {
   };
   const handleScan = (data) => {
     if (data) {
-      setResult(data);
-      // loginWithQr()
+      setResult(JSON.parse(data));
     }
   };
 
