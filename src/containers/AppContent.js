@@ -18,6 +18,8 @@ import {
   fetchCompanyImages,
   fetchCompanyDocuments,
   fetchDepartments,
+  fetchDepartmentEmployees,
+  fetchDepartmentManagers
 } from "utils/helpers/fetch";
 const loading = <Loader bg="transparent" app={false} />;
 
@@ -30,7 +32,6 @@ const AppContent = (_props) => {
   const dispatch = useDispatch();
   const retrieve = async (payload) => {
     dispatch(actionCreator(ActionTypes.LOADING_STARTED));
-    let retry = 5;
     let resp1 = await retrieveLeaveRequests(dispatch, payload);
     let resp2 = await fetchTickets(dispatch);
     let resp3 = await retrieveEmployees(dispatch);
@@ -39,28 +40,35 @@ const AppContent = (_props) => {
     let resp6 = await fetchCompanyImages(dispatch);
     let resp7 = await fetchCompanyDocuments(dispatch);
     let resp8 = await fetchDepartments(dispatch);
+    let resp9 = await fetchDepartmentEmployees(dispatch);
+    let resp10 = await fetchDepartmentManagers(dispatch);
     dispatch(actionCreator(ActionTypes.LOADING_DONE));
     let hasError = false;
-    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7];
+    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8];
     responses.map((resp) => {
       if (resp.error) {
         hasError = true;
       }
     });
 
-    if (hasError) {
-      if (retry !== 0) {
-        retrieve(payload);
-        --retry;
-      } else {
-        alert("Error in fetching some data");
-      }
-    }
+    // if (hasError) {
+    //   if (retry !== 0) {
+    //     retrieve(payload);
+    //     --retry;
+    //   } else {
+    //     alert("Error in fetching some data");
+    //   }
+    // }
   };
 
   useEffect(() => {
+    _props.history.listen(location => {
+      if (location.pathname !== "/myAccount") {
+        sessionStorage.setItem("_tab", 0)
+      }
+    })
     retrieve(payload);
-  }, []);
+  }, [_props.location]);
 
   return (
     <main className="c-main">
@@ -68,34 +76,34 @@ const AppContent = (_props) => {
         {isAppLoading ? (
           loading
         ) : (
-          <Suspense fallback={loading}>
-            <Switch>
-              {accessedRoutes.map((route, idx) => {
-                return (
-                  route.component && (
-                    <Route
-                      key={idx}
-                      path={route.path}
-                      exact={route.exact}
-                      name={route.name}
-                      render={(props) => (
-                        <route.component {...{ ..._props, ...props }} />
-                      )}
-                    />
-                  )
-                );
-              })}
-              <Route
-                exact
-                path="/404"
-                name="Page 404"
-                render={(props) => <Page404 {...props} />}
-              />
-              <Redirect from="/" to="/dashboard" />
-              <Redirect from="*" to="/404" />
-            </Switch>
-          </Suspense>
-        )}
+            <Suspense fallback={loading}>
+              <Switch>
+                {accessedRoutes.map((route, idx) => {
+                  return (
+                    route.component && (
+                      <Route
+                        key={idx}
+                        path={route.path}
+                        exact={route.exact}
+                        name={route.name}
+                        render={(props) => (
+                          <route.component {...{ ..._props, ...props }} />
+                        )}
+                      />
+                    )
+                  );
+                })}
+                <Route
+                  exact
+                  path="/404"
+                  name="Page 404"
+                  render={(props) => <Page404 {...props} />}
+                />
+                <Redirect from="/" to="/dashboard" />
+                <Redirect from="*" to="/404" />
+              </Switch>
+            </Suspense>
+          )}
       </CContainer>
     </main>
   );

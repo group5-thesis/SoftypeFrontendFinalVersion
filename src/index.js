@@ -18,5 +18,5 @@ ReactDOM.render(
     <Root store={store} />
   , document.getElementById('root')
 )
-serviceWorker.unregister()
+serviceWorker.register()
 

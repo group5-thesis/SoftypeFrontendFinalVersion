@@ -3,7 +3,7 @@ import { CCardBody, CCol, CCarouselInner, CCarouselControl, CCarouselItem, CCaro
 import StarRatings from 'react-star-ratings';
 import CIcon from "@coreui/icons-react";
 import { copyArray } from 'utils/helpers';
-
+import { RATINGS } from 'utils/constants/constant'
 const Questions = ({ rating, setRating, activeIndex, setActiveIndex, QUESTIONS }) => {
 
 
@@ -42,11 +42,7 @@ const Questions = ({ rating, setRating, activeIndex, setActiveIndex, QUESTIONS }
                         <br></br>
                         <h5>
                           {
-                            rating[index] === 1 ? "Good" // 1 star Good
-                              : rating[index] === 2 ? "Very Good" // 2 stars Very Good
-                                : rating[index] === 3 ? "Best" // 3 stars Best
-                                  : rating[index] === 4 ? "Excellent" // 4 starts Excellent
-                                    : rating[index] === 5 ? "Outstanding" : " " // 5 stars Outstanding
+                            RATINGS[("" + rating[index])]
                           }
                         </h5>
                       </center>

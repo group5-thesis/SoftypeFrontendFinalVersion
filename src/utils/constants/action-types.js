@@ -18,12 +18,12 @@ export const RESPOND_TO_LEAVE_REQUEST = 'RESPOND_TO_LEAVE_REQUEST';
 // App module keywords
 export const TOGGLE_SIDEBAR = "TOGGLE_SIDEBAR";
 export const TOGGLE_DIALOG = "TOGGLE_DIALOG";
+export const TOGGLE_NOTIFICATION = "TOGGLE_NOTIFICATION";
 
 // Ticket Module
 export const ADD_TICKET = 'ADD_TICKET'
 export const FETCH_TICKETS = 'FETCH_TICKETS'
 export const CLOSE_TICKET = 'CLOSE_TICKET'
-
 
 // Department Module
 export const ADD_DEPARTMENT = 'ADD_DEPARTMENT'
@@ -41,3 +41,11 @@ export const FILE_DOCUMENTS = 'FILE_DOCUMENT';
 export const FILE_IMAGES = 'FILE_IMAGES';
 export const FILE_VIDEOS = 'FILE_VIDEOS';
 export const FILE_OTHERS = 'FILE_OTHERS';
+
+// Department Manager
+export const ADD_DEPARTMENT_MANAGER = "ADD_DEPARTMENT_MANAGER"
+export const FETCH_DEPARTMENT_MANAGERS = "FETCH_DEPARTMENT_MANAGERS"
+
+// Department Employee
+export const ADD_DEPARTMENT_EMPLOYEE = "ADD_DEPARTMENT_EMPLOYEE"
+export const FETCH_DEPARTMENT_EMPLOYEES = "FETCH_DEPARTMENT_EMPLOYEES"

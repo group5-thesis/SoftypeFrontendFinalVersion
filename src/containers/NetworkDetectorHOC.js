@@ -1,45 +1,30 @@
 import React, { Component } from 'react'
 import { CAlert } from '@coreui/react'
-
+import Pusher from 'pusher-js';
+import { actionCreator, ActionTypes } from "utils/actions";
+import { connect } from 'react-redux'
 export default function (ComposedComponent) {
     class NetworkDetector extends Component {
         state = {
-            isDisconnected: false
+            isDisconnected: false,
+            notify: false
         }
 
         componentDidMount() {
-            this.handleConnectionChange()
-            window.addEventListener('online', this.handleConnectionChange)
-            window.addEventListener('offline', this.handleConnectionChange)
+            const pusher = new Pusher('a76305e0740371c8f208', {
+                cluster: 'ap1',
+                encrypted: true,
+                secret: '79c2513d7d36b3e18c1d'
+            });
+            const channel = pusher.subscribe('softypeChannel');
+            channel.bind('message', notif => {
+                this.notificationReceived(notif)
+            });
+            console.log(this.props)
         }
 
-        componentWillUnmount() {
-            window.removeEventListener('online', this.handleConnectionChange)
-            window.removeEventListener('offline', this.handleConnectionChange)
-        }
-
-
-        handleConnectionChange = () => {
-            const condition = navigator.onLine ? 'online' : 'offline'
-            if (condition === 'online') {
-                const webPing = setInterval(
-                    () => {
-                        fetch('//google.com', {
-                            mode: 'no-cors',
-                        })
-                            .then(() => {
-                                this.setState({ isDisconnected: false }, () => {
-                                    return clearInterval(webPing)
-                                })
-                            }).catch(() => this.setState({ isDisconnected: true }))
-                    }, 2000)
-                return
-            }
-
-            this.setState({ isDisconnected: true })
-            // setTimeout(() => {
-            //     this.handleConnectionChange()
-            // }, 200)
+        notificationReceived = (notif) => {
+            console.log(notif)
         }
 
         render() {
@@ -56,5 +41,17 @@ export default function (ComposedComponent) {
         }
     }
 
-    return NetworkDetector
+    // return NetworkDetector
+
+    const mapStateToProps = (state) => ({
+        app: state.appState.app
+    })
+
+    const mapDispatchToProps = {
+        removeNotification: dispatch => {
+            dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: null, message: '' }))
+        }
+    }
+
+    return connect(mapStateToProps, mapDispatchToProps)(NetworkDetector)
 }

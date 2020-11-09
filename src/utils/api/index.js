@@ -16,7 +16,7 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
     headers.Authorization = `Bearer ${token}`;
   }
 
-  if (process.env.NODE_ENV === "production") {
+  if (!cnf.IS_DEV) {
     url = `${cnf.API_URL_LIVE}${url}`;
   } else {
     url = `${cnf.API_URL_DEV}${url}`;

@@ -43,13 +43,13 @@ export default [
         user: [4],
         icon: customIcon(mdiFamilyTree),
     },
-    {
-        _tag: 'CSidebarNavItem',
-        name: 'Performance Reviews',
-        to: '/employee/performance-review',
-        user: [4],
-        icon: 'cil-smile-plus',
-    },
+    // {
+    //     _tag: 'CSidebarNavItem',
+    //     name: 'Performance Reviews',
+    //     to: '/employee/performance-review',
+    //     user: [4],
+    //     icon: 'cil-smile-plus',
+    // },
     {
         _tag: 'CSidebarNavItem',
         name: 'Departments',

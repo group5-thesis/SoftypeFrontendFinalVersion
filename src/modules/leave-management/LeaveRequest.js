@@ -19,8 +19,8 @@ const LeaveRequest = ({ match }) => {
   }
   request = insertProperty(request, 'no_of_days', getDuration(request['date from'], request['date to']), 4);
   let event = {
-    start: request['date from'],
-    end: request['date to'],
+    start: new Date(request['date from']),
+    end: new Date(request['date to']),
     title: request.category
   }
 
@@ -32,12 +32,19 @@ const LeaveRequest = ({ match }) => {
   }
 
   const renderCalendar = () => {
-    return <Calendar {...{ _events: [event] }} />
+    return <Calendar  {...{
+      header: {
+        right: false,
+        left: false
+      },
+      style: { height: 450 },
+      events: [event]
+    }} />
   }
 
   return (
     <CRow>
-      <CCol lg={6}>
+      <CCol lg={6} style={{ overflowY: 'auto', height: 450 }}>
         <CCard>
           <CCardHeader>
             Leave Request ID : {match.params.id}

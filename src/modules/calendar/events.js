@@ -161,7 +161,7 @@ export default [
     },
     {
         id: 24,
-        title: 'Iyot',
+        title:'Event Name',
         start: new Date(2020, 10, 10, 10, 10, 0),
         end: new Date(2020, 10, 10, 10, 0, 0),
     },

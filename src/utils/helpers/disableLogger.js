@@ -1,10 +1,8 @@
 
-
+import { config } from 'utils/config'
 const disableLogger = () => {
-    if (process.env.NODE_ENV === 'production') {
+    if (!config.IS_DEV) {
         console.log = () => { };
     }
 }
-
-
 export { disableLogger };

@@ -38,7 +38,7 @@ export const renameKey = (obj) => {
   const altObj = Object.fromEntries(
     Object.entries(obj).map(([key, value]) => [
       splitSnakeCase(splitCamelCase(key)),
-      value,
+      value !== null ? value : "",
     ])
   );
   return altObj;
@@ -231,7 +231,7 @@ export const getFileExtension = (filename) => {
 }
 
 export const getBaseUrl = () => {
-  return process.env.NODE_ENV === "production" ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV;
+  return !config.IS_DEV ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV;
 }
 
 export const downloadFile = async (route, filename, callback) => {

@@ -1,15 +1,25 @@
 import { ActionTypes } from "utils/actions";
 
 const initial_state = {
-  sidebarShow: 'responsive',
+  sidebarShow: "responsive",
   sideMenu: [],
   loading: false,
-}
+  notify: false,
+  message: {},
+};
 
 export default function changeState(state = initial_state, action) {
   switch (action.type) {
     case ActionTypes.TOGGLE_SIDEBAR:
       return { ...state, ...action.payload };
+    case ActionTypes.TOGGLE_NOTIFICATION:
+      let { message } = action.payload;
+      let { notify } = state
+      return {
+        ...state,
+        ...{ notify: !notify, message: message },
+      };
+
     case ActionTypes.LOADING_STARTED:
       return { ...state, loading: true };
     case ActionTypes.LOADING_DONE:
