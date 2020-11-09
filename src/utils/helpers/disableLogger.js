@@ -5,6 +5,4 @@ const disableLogger = () => {
         console.log = () => { };
     }
 }
-
-
 export { disableLogger };
