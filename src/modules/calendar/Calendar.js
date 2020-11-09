@@ -1,11 +1,7 @@
 import React from 'react'
-<<<<<<< HEAD
-import events from './events'
-=======
 // import { momentLocalizer, Views } from 'react-big-calendar'
 import _events from './events'
 import CalendarToolbar from './CalendarToolbar';
->>>>>>> f11a8a596a0923489be51ed1b27efbe90875cc40
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import "react-big-calendar/lib/css/react-big-calendar.css"

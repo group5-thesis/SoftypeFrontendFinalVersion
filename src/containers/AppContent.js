@@ -40,7 +40,7 @@ const AppContent = (_props) => {
     let resp6 = await fetchCompanyImages(dispatch);
     let resp7 = await fetchCompanyDocuments(dispatch);
     let resp8 = await fetchDepartments(dispatch);
-    let resp9 = await fetchDepartmentEmployees(dispatch);
+    // let resp9 = await fetchDepartmentEmployees(dispatch);
     let resp10 = await fetchDepartmentManagers(dispatch);
     dispatch(actionCreator(ActionTypes.LOADING_DONE));
     let hasError = false;
