@@ -94,6 +94,15 @@ const fetchDepartmentEmployees = async dispatch => {
   return response;
 }
 
+const fetchPerformanceReviews = async dispatch => {
+  let response = await api.get('/create_performance_review')
+  if (!response.error) {
+    let payload = response.data.performance_review_information;
+    dispatch(actionCreator(ActionTypes.FETCH_PERFORMANCE_REVIEWS, payload))
+  }
+  return response;
+}
+
 export {
   retrieveLeaveRequests,
   retrieveEmployees,
@@ -104,5 +113,6 @@ export {
   fetchCompanyDocuments,
   fetchDepartments,
   fetchDepartmentManagers,
-  fetchDepartmentEmployees
+  fetchDepartmentEmployees,
+  fetchPerformanceReviews
 }

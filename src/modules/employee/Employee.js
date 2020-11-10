@@ -74,8 +74,6 @@ const EmployeeDetails = (props) => {
         };
       case "mobileno":
         return { key: "Mobile No.", value: val };
-      case "mobileno":
-        return { key: "Mobile No.", value: val };
       case "status":
         return { key: toCapitalize(key), value: "Active" };
       default:

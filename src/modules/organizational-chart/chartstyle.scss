@@ -5,6 +5,7 @@
         rgba(0, 0, 0, 0) 10%
       ),
       linear-gradient(rgba(33, 90, 136, 0.15) 10%, rgba(0, 0, 0, 0) 10%) !important;
+      background:white!important;
   }
   
   .orgchart.myChart > ul > li > ul li::before {
@@ -14,6 +15,9 @@
   .orgchart.myChart > ul > li > ul li .oc-node::before,
   .orgchart.myChart ul li .oc-node:not(:only-child)::after {
     background-color: #215a88;
+  }
+  .orgchart.myChart .oc-node{
+    justify-content: center
   }
   
   .orgchart.myChart .oc-node .position {

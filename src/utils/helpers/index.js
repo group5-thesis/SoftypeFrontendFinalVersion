@@ -38,7 +38,7 @@ export const renameKey = (obj) => {
   const altObj = Object.fromEntries(
     Object.entries(obj).map(([key, value]) => [
       splitSnakeCase(splitCamelCase(key)),
-      value,
+      value !== null ? value : "",
     ])
   );
   return altObj;

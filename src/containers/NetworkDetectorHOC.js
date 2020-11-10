@@ -1,60 +1,72 @@
 import React, { Component } from 'react'
-import { CAlert } from '@coreui/react'
-
+import { CAlert, CToast, CToaster, CToastHeader, CToastBody } from '@coreui/react'
+import Pusher from 'pusher-js';
+import { actionCreator, ActionTypes } from "utils/actions";
+import colors from 'assets/theme/colors';
 export default function (ComposedComponent) {
     class NetworkDetector extends Component {
         state = {
-            isDisconnected: false
+            isDisconnected: false,
+            notify: false
         }
 
         componentDidMount() {
-            this.handleConnectionChange()
-            window.addEventListener('online', this.handleConnectionChange)
-            window.addEventListener('offline', this.handleConnectionChange)
+            const pusher = new Pusher('a76305e0740371c8f208', {
+                cluster: 'ap1',
+                encrypted: true,
+                secret: '79c2513d7d36b3e18c1d'
+            });
+            const channel = pusher.subscribe('softypeChannel');
+            channel.bind('message', notif => {
+                this.notificationReceived(notif)
+            });
         }
 
-        componentWillUnmount() {
-            window.removeEventListener('online', this.handleConnectionChange)
-            window.removeEventListener('offline', this.handleConnectionChange)
-        }
-
-
-        handleConnectionChange = () => {
-            const condition = navigator.onLine ? 'online' : 'offline'
-            if (condition === 'online') {
-                const webPing = setInterval(
-                    () => {
-                        fetch('//google.com', {
-                            mode: 'no-cors',
-                        })
-                            .then(() => {
-                                this.setState({ isDisconnected: false }, () => {
-                                    return clearInterval(webPing)
-                                })
-                            }).catch(() => this.setState({ isDisconnected: true }))
-                    }, 2000)
-                return
-            }
-
-            this.setState({ isDisconnected: true })
-            // setTimeout(() => {
-            //     this.handleConnectionChange()
-            // }, 200)
+        notificationReceived = (notif) => {
+            console.log(notif)
         }
 
         render() {
-            const { isDisconnected } = this.state
+            let { notification, notify } = this.props.appState.app
             return (
-                <div>
-                    {isDisconnected && (
-                        <CAlert closeButton color="warning" show={isDisconnected} style={{ position: "absolute", top: "0", left: "0", right: "0", textAlign: "center" }}><p>No internet connection.</p></CAlert>
+                <>
+                    {(notify && !notification) && (
+                        <CToaster
+                            position={"top-right"}
+                            className={`mr-2 alert ${notification.type === "error" ? "alert-danger" : "alert-success"}`}
+                        >
+                            <CToast
+                                onStateChange={(e) => {
+                                    if (!e) {
+                                        this.props.dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, null));
+                                    }
+                                }}
+                                show={true}
+                                autohide={2000}
+                                style={{ border: 'none', boxShadow: 'none', backgroundColor: 'transparent' }}
+                                fade={true}
+                            >
+                                <CToastHeader
+                                    style={{ backgroundColor: 'transparent' }}
+                                    className="text-dark"
+                                    closeButton={false}>
+                                    <strong>{notification.type}</strong>
+                                </CToastHeader>
+                                <CToastBody
+                                    className="text-dark"
+                                    style={{ backgroundColor: 'transparent' }}
+                                >
+                                    {notification.message}
+                                </CToastBody>
+                            </CToast>
+                        </CToaster>
+                        // <CAlert closeButton color={message.type === "error" ? "danger" : "success"} show={notify} style={{ position: "absolute", top: "0", left: "0", right: "0", textAlign: "center" }}><p>{message.message}</p></CAlert>
                     )
                     }
                     <ComposedComponent {...this.props} />
-                </div>
+                </>
             )
         }
     }
-
     return NetworkDetector
 }

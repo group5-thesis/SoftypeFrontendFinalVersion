@@ -165,4 +165,21 @@
     color: $orange
   }
 }
+.my-tabs {
+  // .nav-link:not(.active):hover{
+  //   border: none;
+  // }
+  background-color: white;
+  .nav-link.active{
+     color:$orange;
+    font-weight: bold;
+    background-color: white;
+    border-bottom: 4px $orange solid;
+  }
+  .nav-link:not(.active){
+    color: $grey-dark;
+  }
+
+}
+
 

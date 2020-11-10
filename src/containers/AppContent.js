@@ -19,7 +19,8 @@ import {
   fetchCompanyDocuments,
   fetchDepartments,
   fetchDepartmentEmployees,
-  fetchDepartmentManagers
+  fetchDepartmentManagers,
+  fetchPerformanceReviews
 } from "utils/helpers/fetch";
 const loading = <Loader bg="transparent" app={false} />;
 
@@ -42,28 +43,30 @@ const AppContent = (_props) => {
     let resp8 = await fetchDepartments(dispatch);
     let resp9 = await fetchDepartmentEmployees(dispatch);
     let resp10 = await fetchDepartmentManagers(dispatch);
+    let resp11 = await fetchPerformanceReviews(dispatch);
     dispatch(actionCreator(ActionTypes.LOADING_DONE));
     let hasError = false;
-    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7,resp8];
+    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8, resp9, resp10, resp11];
     responses.map((resp) => {
       if (resp.error) {
         hasError = true;
       }
     });
 
-    // if (hasError) {
-    //   if (retry !== 0) {
-    //     retrieve(payload);
-    //     --retry;
-    //   } else {
-    //     alert("Error in fetching some data");
-    //   }
-    // }
+    if (hasError) {
+
+      dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'error', message: "Error in fetching data." }));
+    }
   };
 
   useEffect(() => {
+    _props.history.listen(location => {
+      if (location.pathname !== "/myAccount") {
+        sessionStorage.setItem("_tab", 0)
+      }
+    })
     retrieve(payload);
-  }, []);
+  }, [_props.location]);
 
   return (
     <main className="c-main">
@@ -71,34 +74,34 @@ const AppContent = (_props) => {
         {isAppLoading ? (
           loading
         ) : (
-          <Suspense fallback={loading}>
-            <Switch>
-              {accessedRoutes.map((route, idx) => {
-                return (
-                  route.component && (
-                    <Route
-                      key={idx}
-                      path={route.path}
-                      exact={route.exact}
-                      name={route.name}
-                      render={(props) => (
-                        <route.component {...{ ..._props, ...props }} />
-                      )}
-                    />
-                  )
-                );
-              })}
-              <Route
-                exact
-                path="/404"
-                name="Page 404"
-                render={(props) => <Page404 {...props} />}
-              />
-              <Redirect from="/" to="/dashboard" />
-              <Redirect from="*" to="/404" />
-            </Switch>
-          </Suspense>
-        )}
+            <Suspense fallback={loading}>
+              <Switch>
+                {accessedRoutes.map((route, idx) => {
+                  return (
+                    route.component && (
+                      <Route
+                        key={idx}
+                        path={route.path}
+                        exact={route.exact}
+                        name={route.name}
+                        render={(props) => (
+                          <route.component {...{ ..._props, ...props }} />
+                        )}
+                      />
+                    )
+                  );
+                })}
+                <Route
+                  exact
+                  path="/404"
+                  name="Page 404"
+                  render={(props) => <Page404 {...props} />}
+                />
+                <Redirect from="/" to="/dashboard" />
+                <Redirect from="*" to="/404" />
+              </Switch>
+            </Suspense>
+          )}
       </CContainer>
     </main>
   );
