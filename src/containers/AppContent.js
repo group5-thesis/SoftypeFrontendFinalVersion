@@ -59,14 +59,14 @@ const AppContent = (_props) => {
     }
   };
 
-  useEffect(() => {
-    _props.history.listen(location => {
-      if (location.pathname !== "/myAccount") {
-        sessionStorage.setItem("_tab", 0)
-      }
-    })
-    retrieve(payload);
-  }, [_props.location]);
+  // useEffect(() => {
+  //   _props.history.listen(location => {
+  //     if (location.pathname !== "/myAccount") {
+  //       sessionStorage.setItem("_tab", 0)
+  //     }
+  //   })
+  //   retrieve(payload);
+  // }, [_props.location]);
 
   return (
     <main className="c-main">
