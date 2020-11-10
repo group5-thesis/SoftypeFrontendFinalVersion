@@ -20,7 +20,6 @@ export default function (ComposedComponent) {
             channel.bind('message', notif => {
                 this.notificationReceived(notif)
             });
-            console.log()
         }
 
         notificationReceived = (notif) => {
@@ -28,15 +27,20 @@ export default function (ComposedComponent) {
         }
 
         render() {
-            let { message, notify } = this.props.appState.app
+            let { notification, notify } = this.props.appState.app
             return (
                 <>
-                    {notify && (
+                    {(notify && !notification) && (
                         <CToaster
                             position={"top-right"}
-                            className={`alert ${message.type === "error"?"alert-danger":"alert-success"}`}
+                            className={`mr-2 alert ${notification.type === "error" ? "alert-danger" : "alert-success"}`}
                         >
                             <CToast
+                                onStateChange={(e) => {
+                                    if (!e) {
+                                        this.props.dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, null));
+                                    }
+                                }}
                                 show={true}
                                 autohide={2000}
                                 style={{ border: 'none', boxShadow: 'none', backgroundColor: 'transparent' }}
@@ -46,13 +50,13 @@ export default function (ComposedComponent) {
                                     style={{ backgroundColor: 'transparent' }}
                                     className="text-dark"
                                     closeButton={false}>
-                                    <strong>{message.type}</strong>
+                                    <strong>{notification.type}</strong>
                                 </CToastHeader>
                                 <CToastBody
                                     className="text-dark"
                                     style={{ backgroundColor: 'transparent' }}
                                 >
-                                    {message.message}
+                                    {notification.message}
                                 </CToastBody>
                             </CToast>
                         </CToaster>

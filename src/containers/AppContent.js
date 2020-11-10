@@ -54,6 +54,7 @@ const AppContent = (_props) => {
     });
 
     if (hasError) {
+
       dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'error', message: "Error in fetching data." }));
     }
   };

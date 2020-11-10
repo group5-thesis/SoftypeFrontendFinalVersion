@@ -5,7 +5,7 @@ const initial_state = {
   sideMenu: [],
   loading: false,
   notify: false,
-  message: { type: '', message: '' },
+  notification: { type: '', message: '' },
 };
 
 export default function changeState(state = initial_state, action) {
@@ -13,11 +13,10 @@ export default function changeState(state = initial_state, action) {
     case ActionTypes.TOGGLE_SIDEBAR:
       return { ...state, ...action.payload };
     case ActionTypes.TOGGLE_NOTIFICATION:
-      let { message } = action.payload;
       let { notify } = state
       return {
         ...state,
-        ...{ notify: !notify, message: message },
+        ...{ notify: !notify, notification: action.payload },
       };
 
     case ActionTypes.LOADING_STARTED:
