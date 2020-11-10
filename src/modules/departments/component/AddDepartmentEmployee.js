@@ -1,59 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   CCol,
   CRow,
   CFormGroup,
   CLabel,
   CSelect,
-  CListGroup,
-  CListGroupItem,
-  CInputCheckbox,
   CInput
 } from "@coreui/react";
 
-const AddDepartmentEmployee = (managers) => {
+const AddDepartmentEmployee = ({ _departmentManager, employees, onChange, data, renderFeedback, errors }) => {
 
-  // console.log(managers)
-  // console.log(managers[0])
-
-  // const [departmentHead, setDepartmentHead] = useState()
-
-  // console.log(managers[0].department_head)
+  const [dept, setDept] = useState(_departmentManager[0])
 
   return (
     <CRow>
       <CCol xl={12}>
         <CFormGroup >
           <CLabel>Department Head: </CLabel>
-          <CInput id="head" value={'Lorly Sugal'} disabled />
+          <CInput id="head" value={dept.department_head} placeholder={"TEST holder"} disabled />
         </CFormGroup>
         <CFormGroup >
           <CLabel>Department Manager: </CLabel>
-          <CInput id="manager" value={`Rangie Laurente`} disabled />
+          <CInput id="manager" value={`${dept.manager_firstname} ${dept.manager_lastname}`} disabled />
         </CFormGroup>
         <CFormGroup >
           <CLabel>Department Employee: </CLabel>
           <CSelect
             name="employeeId"
             id="employeeId"
-          // onChange={onChange}
-          // value={Number(data.department_head)}
-          // invalid={errors.department_head !== false}
+            onChange={onChange}
+            value={Number(data.employeeId)}
+            invalid={errors.employeeId !== false}
           >
             <option key={"default"} value="" hidden>
               Select Employee
             </option>
-            {/* {
+            {
               employees.map(e => {
-                return (
-                  <option key={e.employeeId} value={e.employeeId}>
-                    {e.firstname} {e.lastname}
-                  </option>
-                )
+                if (!e.department_managerId) {
+                  if (e.department_managerId !== dept.managerId) {
+                    if (e.accountType === 3) {
+                      return (
+                        <option key={e.employeeId} value={e.employeeId}>
+                          {e.firstname} {e.lastname}
+                        </option>
+                      )
+                    }
+                  }
+                }
               })
-            } */}
+            }
           </CSelect>
-          {/* {renderFeedback(errors.department_head)} */}
+          {renderFeedback(errors.department_head)}
         </CFormGroup>
       </CCol>
     </CRow >
