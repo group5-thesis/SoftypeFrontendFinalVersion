@@ -16,7 +16,7 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
     <CRow>
       <CCol xl={12}>
         <CFormGroup >
-          <CLabel>Department Name : </CLabel>
+          <CLabel>Department Name* : </CLabel>
           <CInput
             id="department_name"
             name="department_name"
@@ -28,7 +28,7 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
           {renderFeedback(errors.department_name)}
         </CFormGroup>
         <CFormGroup >
-          <CLabel>Department Head : </CLabel>
+          <CLabel>Department Head* : </CLabel>
           <CSelect
             name="department_head"
             id="department_head"
@@ -39,7 +39,6 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
             <option key={"default"} value="" hidden>
               Select Employee
             </option>
-            {/* <option value=""></option> */}
             {
               emps.map(e => {
                 return (

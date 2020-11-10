@@ -27,8 +27,6 @@ import NoData from "reusable/NoData";
 import { ConfirmDialog } from "reusable";
 import { STATUS, MONTHS, CURRENT_MONTH, CURRENT_YEAR } from "utils/constants/constant";
 
-const currentMonth = MONTHS[new Date().getMonth()];
-const currentYear = new Date().getFullYear();
 const LeaveRequests = (props) => {
   const dispatch = useDispatch();
   const { history, location } = props;
