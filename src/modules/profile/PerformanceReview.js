@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CBadge, CCard, CCardBody, CCol, CDataTable, CCollapse, CRow, CButton } from "@coreui/react";
 import { QUESTIONS, RATINGS } from 'utils/constants/constant'
 import colors from 'assets/theme/colors'
-const PerformanceReview = () => { // Performance details lacking
-
+const PerformanceReview = () => { 
+    // Performance details lacking
     const dummyData = [
         {
             month: 'January',

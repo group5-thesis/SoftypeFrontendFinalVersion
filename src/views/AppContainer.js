@@ -39,6 +39,7 @@ const mapDispatchToProps = (dispatch, _) => ({
   logout: () => {
     logout(dispatch)
   },
+  dispatch
 })
 export default connect(
   mapStateToProps,

@@ -5,7 +5,7 @@ const initial_state = {
   sideMenu: [],
   loading: false,
   notify: false,
-  message: {},
+  message: { type: '', message: '' },
 };
 
 export default function changeState(state = initial_state, action) {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { CAlert } from '@coreui/react'
+import { CAlert, CToast, CToaster, CToastHeader, CToastBody } from '@coreui/react'
 import Pusher from 'pusher-js';
 import { actionCreator, ActionTypes } from "utils/actions";
-import { connect } from 'react-redux'
+import colors from 'assets/theme/colors';
 export default function (ComposedComponent) {
     class NetworkDetector extends Component {
         state = {
@@ -20,7 +20,7 @@ export default function (ComposedComponent) {
             channel.bind('message', notif => {
                 this.notificationReceived(notif)
             });
-            console.log(this.props)
+            console.log()
         }
 
         notificationReceived = (notif) => {
@@ -28,30 +28,41 @@ export default function (ComposedComponent) {
         }
 
         render() {
-            const { isDisconnected } = this.state
+            let { message, notify } = this.props.appState.app
             return (
-                <div>
-                    {isDisconnected && (
-                        <CAlert closeButton color="warning" show={isDisconnected} style={{ position: "absolute", top: "0", left: "0", right: "0", textAlign: "center" }}><p>No internet connection.</p></CAlert>
+                <>
+                    {notify && (
+                        <CToaster
+                            position={"top-right"}
+                            className={`alert ${message.type === "error"?"alert-danger":"alert-success"}`}
+                        >
+                            <CToast
+                                show={true}
+                                autohide={2000}
+                                style={{ border: 'none', boxShadow: 'none', backgroundColor: 'transparent' }}
+                                fade={true}
+                            >
+                                <CToastHeader
+                                    style={{ backgroundColor: 'transparent' }}
+                                    className="text-dark"
+                                    closeButton={false}>
+                                    <strong>{message.type}</strong>
+                                </CToastHeader>
+                                <CToastBody
+                                    className="text-dark"
+                                    style={{ backgroundColor: 'transparent' }}
+                                >
+                                    {message.message}
+                                </CToastBody>
+                            </CToast>
+                        </CToaster>
+                        // <CAlert closeButton color={message.type === "error" ? "danger" : "success"} show={notify} style={{ position: "absolute", top: "0", left: "0", right: "0", textAlign: "center" }}><p>{message.message}</p></CAlert>
                     )
                     }
                     <ComposedComponent {...this.props} />
-                </div>
+                </>
             )
         }
     }
-
-    // return NetworkDetector
-
-    const mapStateToProps = (state) => ({
-        app: state.appState.app
-    })
-
-    const mapDispatchToProps = {
-        removeNotification: dispatch => {
-            dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: null, message: '' }))
-        }
-    }
-
-    return connect(mapStateToProps, mapDispatchToProps)(NetworkDetector)
+    return NetworkDetector
 }
