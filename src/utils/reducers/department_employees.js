@@ -10,6 +10,8 @@ export default function changeState(state = initial_state, action) {
       return { ...state, department_employees: [...state.department_employees, action.payload] };
     case ActionTypes.FETCH_DEPARTMENT_EMPLOYEES:
       return { ...state, department_employees: action.payload }
+    case ActionTypes.DELETE_DEPARTMENT_EMPLOYEE:
+      return { ...state, department_employees: action.payload }
     default:
       return state;
   }

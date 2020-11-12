@@ -83,6 +83,7 @@ const Department = ({ match }) => {
     let res = await api.post("/add_department_manager", { department_manager: data.department_manager, departmentId: data.department_id })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_MANAGER, res.data.department_manager_information[0]))
+
       toggleModal()
     } else {
       alert("error")
@@ -132,7 +133,6 @@ const Department = ({ match }) => {
   }
 
   const viewEmployees = (e) => {
-    // history.push(`/employee/departments/employees/${e.managerId}/${e.department_id}`);
     sessionStorage.setItem('managerId', e.managerId);
     history.push(`/employee/departments/employees/${e.managerId}`);
   }
@@ -211,7 +211,7 @@ const Department = ({ match }) => {
                           animation
                           setImg
                           text={
-                            `${key.manager_firstname} ${key.manager_lastname}`
+                            `${key.manager_firstname}`
                           }
                           dept_role={key.role}
                           textClass={"font-weight-bold"}

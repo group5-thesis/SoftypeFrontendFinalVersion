@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 import colors from "assets/theme/colors"
+import { retrieveEmployees } from 'utils/helpers/fetch';
 
 const Departments = (props) => {
 
@@ -54,6 +55,7 @@ const Departments = (props) => {
     let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
+      retrieveEmployees(dispatch)
       toggleModal()
     } else {
       alert("error")

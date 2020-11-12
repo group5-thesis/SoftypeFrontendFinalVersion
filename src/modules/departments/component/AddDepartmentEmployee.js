@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import {
   CCol,
   CRow,
@@ -8,10 +9,28 @@ import {
   CInput
 } from "@coreui/react";
 
-const AddDepartmentEmployee = ({ _departmentManager, employees, onChange, data, renderFeedback, errors }) => {
+const AddDepartmentEmployee = ({ _departmentManager, onChange, data, renderFeedback, errors }) => {
 
   const [dept, setDept] = useState(_departmentManager[0])
 
+  const stateEmployees = useSelector((state) => {
+    return state.appState.employee.employees
+  });
+
+  const checkIfAdded = (employee) => {
+    if (employee.accountType !== 3 || employee.department_managerId === dept.managerId || employee.department_managerId) {
+      return true
+    }
+    return false;
+  }
+
+  const _employee = stateEmployees.filter(e => {
+    return !checkIfAdded(e)
+  })
+
+  useEffect(() => {
+    return
+  }, [stateEmployees])
   return (
     <CRow>
       <CCol xl={12}>
@@ -36,18 +55,12 @@ const AddDepartmentEmployee = ({ _departmentManager, employees, onChange, data, 
               Select Employee
             </option>
             {
-              employees.map(e => {
-                if (!e.department_managerId) {
-                  if (e.department_managerId !== dept.managerId) {
-                    if (e.accountType === 3) {
-                      return (
-                        <option key={e.employeeId} value={e.employeeId}>
-                          {e.firstname} {e.lastname}
-                        </option>
-                      )
-                    }
-                  }
-                }
+              _employee.map((e, index) => {
+                return (
+                  <option key={"emp" + index} value={e.employeeId}>
+                    {e.firstname} {e.lastname}
+                  </option>
+                )
               })
             }
           </CSelect>
