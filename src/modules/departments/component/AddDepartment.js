@@ -16,11 +16,25 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
   const stateDepartmentManagers = useSelector((state) => {
     return state.appState.department_manager.department_managers
   });
+
   const stateDepartments = useSelector((state) => {
     return state.appState.department.departments
   });
 
   const checkIfDeptHead = emp => {
+    if (stateDepartments.length < 1) {
+      if (emp.accountType !== 2) {
+        return true
+      }
+    }
+    if (stateDepartmentManagers < 1) {
+      for (let i = 0; i < stateDepartments.length; i++) {
+        const _emp_h = stateDepartments[i];
+        if (emp.accountType !== 2 || _emp_h.department_head_employeeId === emp.employeeId) {
+          return true
+        }
+      }
+    }
     for (let idx = 0; idx < stateDepartmentManagers.length; idx++) {
       const _emp_m = stateDepartmentManagers[idx];
       for (let i = 0; i < stateDepartments.length; i++) {

@@ -22,6 +22,14 @@ const AddDepartmentManager = ({ employees, onChange, data, renderFeedback, error
   });
 
   const checkIfAdded = (employee) => {
+    if (stateDepartmentManagers.length < 1) {
+      for (let i = 0; i < stateDepartments.length; i++) {
+        const _emp_h = stateDepartments[i];
+        if (employee.accountType !== 2 || _emp_h.department_head_employeeId === employee.employeeId) {
+          return true
+        }
+      }
+    }
     for (let idx = 0; idx < stateDepartmentManagers.length; idx++) {
       const _emp_m = stateDepartmentManagers[idx];
       for (let i = 0; i < stateDepartments.length; i++) {
