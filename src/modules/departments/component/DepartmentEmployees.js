@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setWidth, shallowCopy, RULES, copyArray } from 'utils/helpers';
+import { setWidth, shallowCopy, RULES, copyArray, } from 'utils/helpers';
+import { fetchDepartmentEmployees, retrieveEmployees } from 'utils/helpers/fetch';
 import {
   CRow,
   CCol,
@@ -12,12 +13,13 @@ import {
   CImg,
   CInvalidFeedback
 } from '@coreui/react';
-import { NoData, Card, Modal } from 'reusable';
+import { NoData, Card, Modal, ConfirmDialog } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentEmployee from './AddDepartmentEmployee'
 import DepartmentEmployee from "models/DepartmentEmployeeModel"
 import {
-  mdiPlus
+  mdiPlus,
+  mdiTrashCanOutline
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import api from 'utils/api';
@@ -35,17 +37,15 @@ const DepartmentEmployees = ({ match }) => {
   const [errors, setError] = useState(defaultErrors)
   const [data, setData] = useState(DepartmentEmployee)
   const [managerId, setManagerId] = useState(match.params.id)
+  const [removeEmployee, setRemoveEmployee] = useState(false)
   const modal = useRef();
   const dispatch = useDispatch();
+  const dialog = useRef();
 
   if (!match.params.id) {
     let d = sessionStorage.getItem('managerId');
     setManagerId(d);
   }
-
-  const employees = useSelector((state) => {
-    return state.appState.employee.employees
-  });
 
   const _departmentEmployees = useSelector(state => {
     return state.appState.department_employee.department_employees.filter(el => {
@@ -119,6 +119,7 @@ const DepartmentEmployees = ({ match }) => {
     })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_EMPLOYEE, res.data.employee_information[0]))
+      retrieveEmployees(dispatch)
       toggleModal()
     } else {
       alert("error")
@@ -126,13 +127,46 @@ const DepartmentEmployees = ({ match }) => {
     setIsLoading(false)
   }
 
+  const removeDepartmentEmployee = () => {
+    setRemoveEmployee(true)
+  }
+
+  const cancelRemoveDepartmentEmployee = () => {
+    setRemoveEmployee(false)
+  }
+
+  const handleDeleteEmployee = async (dept_employeeId) => {
+    let res = await api.post('/delete_department_employee', { id: dept_employeeId })
+    if (!res.error) {
+      retrieveEmployees(dispatch)
+      fetchDepartmentEmployees(dispatch);
+    } else {
+      alert(res);
+    }
+    if (_departmentEmployees.length <= 1) {
+      setRemoveEmployee(false)
+    }
+  }
+
   return (
     <CRow className="justify-content-center">
       <CCol {...setWidth("12")}>
+        <ConfirmDialog
+          ref={dialog}
+          id="custom_dialog"
+          {...{
+            show: dialog,
+            onConfirm: () => {
+              handleDeleteEmployee(localStorage.getItem("d_emp_id"))
+            },
+            title: "Are you sure you want to do this?",
+          }}
+        >
+        </ConfirmDialog>
         <Modal
           ref={modal}
           centered
-          title="Add Department Employee"
+          title={removeEmployee ? "Are you sure to do this?" : "Add Department Employee"}
           hidden
           modalOnClose={() => {
             modal.current.toggle()
@@ -150,7 +184,9 @@ const DepartmentEmployees = ({ match }) => {
           }
           hideCancelButton
         >
-          <AddDepartmentEmployee {...{ _departmentManager, employees, onChange, data, renderFeedback, errors }} />
+          {
+            removeEmployee ? "Test Delete?" : <AddDepartmentEmployee {...{ _departmentManager, onChange, data, renderFeedback, errors }} />
+          }
         </Modal>
         <CCard>
           <CCardHeader>
@@ -160,9 +196,11 @@ const DepartmentEmployees = ({ match }) => {
               </CCol>
               <CCol sm="6" className="d-none d-md-block">
                 <div className="float-right">
-                  <CButton color="primary" onClick={() => {
-                    modal.current.toggle()
-                  }}>Add Department Employees</CButton>
+                  <CButton color={removeEmployee ? "danger" : "primary"} onClick={() => {
+                    removeEmployee ? cancelRemoveDepartmentEmployee() : removeDepartmentEmployee()
+                  }} disabled={_departmentEmployees.length === 0}>
+                    {removeEmployee ? "Cancel Delete" : "Delete Department Employees"}
+                  </CButton>
                 </div>
               </CCol>
             </CRow>
@@ -174,45 +212,61 @@ const DepartmentEmployees = ({ match }) => {
                   return (
                     <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
                       <Card
-                        clickable
+                        clickable={removeEmployee}
                         height={200}
                         animation
                         setImg
                         text={
-                          `${key.firstname} ${key.lastname}`
+                          `${key.firstname}`
                         }
                         dept_role={key.role}
                         textClass={"font-weight-bold"}
                         textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
                         imgClass={"img_dept"}
                         textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
-                      // onClickMethod={() => {
-                      //   toggleModal();
-                      // }}
+                        onClickMethod={() => {
+                          if (removeEmployee) {
+                            dialog.current.toggle()
+                            localStorage.setItem("d_emp_id", key.department_employeeId)
+                          }
+                        }}
+                        deleteCard={removeEmployee}
+                        deleteButton={
+                          <Icon path={mdiTrashCanOutline}
+                            size={4}
+                            horizontal
+                            vertical
+                            rotate={180}
+                            color={colors.$white_bis}
+                          />
+                        }
                       />
                     </CCol>
                   )
                 })
               }
-              <CCol sm="6" lg="3">
-                <Card
-                  animation
-                  text={
-                    <Icon path={mdiPlus}
-                      size={4}
-                      horizontal
-                      vertical
-                      rotate={180}
-                      color={colors.$grey}
+              {
+                removeEmployee ? "" :
+                  <CCol sm="6" lg="3">
+                    <Card
+                      animation
+                      text={
+                        <Icon path={mdiPlus}
+                          size={4}
+                          horizontal
+                          vertical
+                          rotate={180}
+                          color={colors.$grey}
+                        />
+                      }
+                      isIcon
+                      clickable
+                      centeredText
+                      height={200}
+                      onClickMethod={toggleModal}
                     />
-                  }
-                  isIcon
-                  clickable
-                  centeredText
-                  height={200}
-                  onClickMethod={toggleModal}
-                />
-              </CCol>
+                  </CCol>
+              }
             </CRow>
           </CCardBody>
         </CCard>
