@@ -42,7 +42,7 @@ const AppContent = (_props) => {
     let resp6 = await fetchCompanyImages(dispatch);
     let resp7 = await fetchCompanyDocuments(dispatch);
     let resp8 = await fetchDepartments(dispatch);
-    // let resp9 = await fetchDepartmentEmployees(dispatch);
+    let resp9 = await fetchDepartmentEmployees(dispatch);
     let resp10 = await fetchDepartmentManagers(dispatch);
     let resp11 = await fetchPerformanceReviews(dispatch);
     let resp12 = await fetchEmployeeAccounts(dispatch);
