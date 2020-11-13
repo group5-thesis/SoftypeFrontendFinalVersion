@@ -20,6 +20,8 @@ const Accounts = () => {
 
   const [disableAccount, setDisableAccount] = useState(false)
   const [resetAccount, setResetAccount] = useState(false)
+  const [accountDisable, setAccountDisable] = useState({})
+  const [accountReset, setAccountReset] = useState({})
   const dialog = useRef();
 
   const stateAccounts = useSelector((state) => {
@@ -44,12 +46,16 @@ const Accounts = () => {
     { key: 'action', _style: { width: '20%' } },
   ]
 
-  const clickedDisableBtn = () => {
+  const clickedDisableBtn = (user) => {
+    console.log(user)
+    // setAccountDisable(user)
     dialog.current.toggle()
     setDisableAccount(true)
   }
 
-  const clickedResetBtn = () => {
+  const clickedResetBtn = (user) => {
+    // setAccountReset(user)
+    console.log(user)
     dialog.current.toggle()
     setResetAccount(true)
   }
@@ -63,6 +69,11 @@ const Accounts = () => {
     console.log("Reset Account")
     setResetAccount(false)
   }
+
+  useEffect(() => {
+    // console.log(accountDisable)
+    return
+  }, [accountDisable])
 
   return (
     <CRow>
@@ -130,7 +141,9 @@ const Accounts = () => {
                   (item) => (
                     <td>
                       <CPopover header="Disable Account">
-                        <CButton onClick={clickedDisableBtn}>
+                        <CButton onClick={() => {
+                          clickedDisableBtn(item)
+                        }}>
                           <Icon path={mdiAccountOffOutline}
                             size={1}
                             horizontal
@@ -141,7 +154,9 @@ const Accounts = () => {
                         </CButton>
                       </CPopover>
                       <CPopover header="Reset Account">
-                        <CButton onClick={clickedResetBtn}>
+                        <CButton onClick={() => {
+                          clickedResetBtn(item)
+                        }}>
                           <Icon path={mdiLockReset}
                             size={1}
                             horizontal
