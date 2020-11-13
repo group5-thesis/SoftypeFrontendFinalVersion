@@ -82,6 +82,7 @@ class Login extends Component {
   };
 
   componentDidMount() {
+      sessionStorage.clear();
     if (!this.props.already_logged) {
       checkCamera()
         .then(() => {
