@@ -37,6 +37,13 @@ export default [
         icon: 'cil-user',
     },
     {
+      _tag: 'CSidebarNavItem',
+      name: 'Employee Accunts',
+      to: '/accounts',
+      user: [1, 2],
+      icon: customIcon(mdiAccountCog),
+  },
+    {
         _tag: 'CSidebarNavItem',
         name: 'Organization Chart',
         to: '/employee/organization-chart',

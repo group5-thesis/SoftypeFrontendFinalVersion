@@ -20,7 +20,8 @@ import {
   fetchDepartments,
   fetchDepartmentEmployees,
   fetchDepartmentManagers,
-  fetchPerformanceReviews
+  fetchPerformanceReviews,
+  fetchEmployeeAccounts
 } from "utils/helpers/fetch";
 const loading = <Loader bg="transparent" app={false} />;
 
@@ -44,9 +45,10 @@ const AppContent = (_props) => {
     let resp9 = await fetchDepartmentEmployees(dispatch);
     let resp10 = await fetchDepartmentManagers(dispatch);
     let resp11 = await fetchPerformanceReviews(dispatch);
+    let resp12 = await fetchEmployeeAccounts(dispatch);
     dispatch(actionCreator(ActionTypes.LOADING_DONE));
     let hasError = false;
-    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8, resp9, resp10, resp11];
+    let responses = [resp1, resp2, resp3, resp4, resp5, resp6, resp7, resp8, resp9, resp10, resp11, resp12];
     responses.map((resp) => {
       if (resp.error) {
         hasError = true;

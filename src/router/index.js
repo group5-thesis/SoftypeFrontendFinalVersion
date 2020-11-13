@@ -32,6 +32,7 @@ const Department = React.lazy(() =>
   import("modules/departments/component/Department")
 );
 const MyAccount = React.lazy(() => import("modules/profile/AccountManagement"));
+const Accounts = React.lazy(() => import("modules/accounts/EmployeeAccount"));
 
 /**
  * access levels
@@ -62,6 +63,13 @@ const routes = [
     exact: true,
     name: "Employee",
     component: Employee,
+    user: [2, 1],
+  },
+  {
+    path: "/accounts",
+    exact: true,
+    name: "Accounts",
+    component: Accounts,
     user: [2, 1],
   },
   {
