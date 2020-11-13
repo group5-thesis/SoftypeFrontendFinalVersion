@@ -15,6 +15,8 @@ import { NoData, ConfirmDialog } from 'reusable'
 import Icon from '@mdi/react';
 import { mdiAccountOffOutline, mdiLockReset } from '@mdi/js';
 import colors from 'assets/theme/colors';
+import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
+import api from 'utils/api'
 
 const Accounts = () => {
 
@@ -23,6 +25,9 @@ const Accounts = () => {
   const [accountDisable, setAccountDisable] = useState({})
   const [accountReset, setAccountReset] = useState({})
   const dialog = useRef();
+  const dispatch = useDispatch();
+  
+  
 
   const stateAccounts = useSelector((state) => {
     return state.appState.accounts.accounts
@@ -47,33 +52,46 @@ const Accounts = () => {
   ]
 
   const clickedDisableBtn = (user) => {
+    setAccountDisable(user)
     console.log(user)
-    // setAccountDisable(user)
     dialog.current.toggle()
     setDisableAccount(true)
   }
 
   const clickedResetBtn = (user) => {
-    // setAccountReset(user)
+    setAccountReset(user)
     console.log(user)
     dialog.current.toggle()
     setResetAccount(true)
   }
 
-  const handleDisableAccount = () => {
+  const handleDisableAccount = async () => {
     console.log("Disable Account")
+    let res = await api.post('/disable_employee_account', "user ID")
+    console.log(res)
+    if (!res.error) {
+      fetchEmployeeAccounts(dispatch)
+    } else {
+      alert(res);
+    }
     setDisableAccount(false)
   }
 
-  const handleResetAccount = () => {
+  const handleResetAccount = async () => {
     console.log("Reset Account")
+    let res = await api.post('/reset_employee_account', "user ID")
+    if (!res.error) {
+      fetchEmployeeAccounts(dispatch)
+    } else {
+      alert(res);
+    }
     setResetAccount(false)
   }
 
   useEffect(() => {
-    // console.log(accountDisable)
-    return
-  }, [accountDisable])
+      // console.log(accountDisable)
+      return
+    }, [accountDisable, accountReset])
 
   return (
     <CRow>
