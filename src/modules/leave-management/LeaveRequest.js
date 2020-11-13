@@ -1,8 +1,8 @@
-import React, { lazy } from 'react'
+import React, { lazy, useRef, useState } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButtonGroup, CButton } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration } from 'utils/helpers'
-import { NoData } from 'reusable';
+import { NoData, ConfirmDialog } from 'reusable';
 import { ActionTypes, actionCreator } from 'utils/actions';
 const Calendar = lazy(() => import('modules/calendar/Calendar'));
 const LeaveRequest = ({ match }) => {
@@ -12,6 +12,9 @@ const LeaveRequest = ({ match }) => {
       return el.id.toString() === match.params.id.toString()
     })[0]
   })
+  const user = useSelector(state => state.appState.auth.user)
+  const [response, setResponse] = useState();
+  const dialog = useRef()
 
   let request = shallowCopy(_request);
   if (!Object.keys(request).length) {
@@ -27,10 +30,15 @@ const LeaveRequest = ({ match }) => {
   const leaveDetails = request ? Object.entries(request) : []
 
   const handleClick = (code) => {
-    let response = getAdminResponse(code)
-    dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, { id: request.id, status: response }));
+    let payload = getAdminResponse(code)
+    console.log(payload)
+    setResponse(payload);
+    dialog.current.toggle();
   }
 
+  const respondToRequest = () => {
+    dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, { id: request.id, status: response }));
+  }
   const renderCalendar = () => {
     return <Calendar  {...{
       header: {
@@ -44,12 +52,30 @@ const LeaveRequest = ({ match }) => {
 
   return (
     <CRow>
-      <CCol lg={6} style={{ overflowY: 'auto', height: 450 }}>
-        <CCard>
+      <ConfirmDialog
+        ref={dialog}
+        {...{
+          show: dialog,
+          onConfirm: respondToRequest,
+          title: `${response}`,
+        }}
+      ></ConfirmDialog>
+      <CCol lg={6} >
+        <CCard style={{ maxHeight: 500 }} >
           <CCardHeader>
             Leave Request ID : {match.params.id}
+            {(request.status === 'pending' && user.roleId !== 3) &&
+              <CButtonGroup style={{ float: "right" }}>
+                <CButton color="primary" onClick={() => {
+                  handleClick(1)
+                }} className="mr-2">Accept</CButton>
+                <CButton onClick={() => {
+                  handleClick(0)
+                }} color="danger">Reject</CButton>
+              </CButtonGroup>
+            }
           </CCardHeader>
-          <CCardBody>
+          <CCardBody style={{ overflowY: 'auto', }}>
             <table className="table table-hover " style={{ borderBottom: "1px solid grey" }}>
               <tbody>
                 {
@@ -70,16 +96,7 @@ const LeaveRequest = ({ match }) => {
                 }
               </tbody>
             </table>
-            {request.status === 'pending' &&
-              <CButtonGroup style={{ float: "right" }}>
-                <CButton color="primary" onClick={() => {
-                  handleClick(1)
-                }} className="mr-2">Accept</CButton>
-                <CButton onClick={() => {
-                  handleClick(0)
-                }} color="danger">Reject</CButton>
-              </CButtonGroup>
-            }
+
           </CCardBody>
 
         </CCard>

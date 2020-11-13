@@ -32,7 +32,7 @@ export default function (ComposedComponent) {
                 <>
                     {(notify && !notification) && (
                         <CToaster
-                            position={"top-right"}
+                            position={"bottom-center"}
                             className={`mr-2 alert ${notification.type === "error" ? "alert-danger" : "alert-success"}`}
                         >
                             <CToast

@@ -6,11 +6,20 @@ import {
     CRow,
     CButton,
 } from "@coreui/react"
-const LoadingButton = ({ isLoading, submit, btnText, className = "mr-1", color = "primary", block = false }) => {
+const LoadingButton = ({
+    isLoading,
+    submit,
+    sm = false,
+    lg = false,
+    btnText,
+    className = "mr-1",
+    color = "primary",
+    block = false }) => {
     return (
         <CButton
             disabled={isLoading}
             onClick={submit}
+            size={sm ? 'sm' : lg ? 'lg' : ''}
             className={className}
             block={block}
             color={color}>
