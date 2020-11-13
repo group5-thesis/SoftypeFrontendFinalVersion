@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 import colors from "assets/theme/colors"
+import { retrieveEmployees } from 'utils/helpers/fetch';
 
 const Departments = (props) => {
 
@@ -33,7 +34,9 @@ const Departments = (props) => {
     return emp.map(e => {
       return {
         name: `${e.firstname} ${e.lastname}`,
-        employeeId: e.employeeId
+        employeeId: e.employeeId,
+        accountType: e.accountType,
+        role: e.role
       }
     })
   })
@@ -52,14 +55,15 @@ const Departments = (props) => {
     let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
-      modal.current.toggle()
+      retrieveEmployees(dispatch)
+      toggleModal()
     } else {
       alert("error")
     }
     setIsLoading(false)
   }
 
-  const requestsData = useSelector((state) => {
+  const stateDepartments = useSelector((state) => {
     return state.appState.department.departments
   });
 
@@ -114,6 +118,7 @@ const Departments = (props) => {
   }
 
   const viewDepartmentInfo = (id) => {
+    sessionStorage.setItem('deptId', id);
     history.push(`/employee/departments/${id}`);
   };
 
@@ -121,7 +126,7 @@ const Departments = (props) => {
     <>
       <CRow>
         {
-          requestsData.map((dept, index) => {
+          stateDepartments.map((dept, index) => {
             return (
               <CCol sm="6" lg="3" key={dept.department_id + "crd"}>
                 <Card

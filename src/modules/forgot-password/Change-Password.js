@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
     CButton,
     CCard,
@@ -16,7 +16,7 @@ import {
     CRow,
     CAlert
 } from '@coreui/react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { CenteredLayout } from 'containers';
 import Icon from '@mdi/react'
 import { mdiKey, mdiEye } from '@mdi/js'
@@ -25,37 +25,71 @@ import Consts from 'utils/helpers/Consts'
 import { LoadingButton } from 'reusable';
 import colors from 'assets/theme/colors';
 import api from 'utils/api'
+import { actionCreator, ActionTypes } from "utils/actions";
 const ChangePassword = (props) => {
     let { history } = props;
     let user = useSelector(state => {
         return state.appState.auth.user
     })
-    const [currentPassword, setCurrentPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [isLoading, toggleLoading] = useState(false)
-    const [errors, setErrors] = useState([])
-    const [show, toggleShow] = useState(false)
-    const [showPassword, toggleShowPassword] = useState(false)
+    const dispatch = useDispatch();
+    const email = sessionStorage.getItem('email') !== null ? sessionStorage.getItem('email') : '0';
+    const _isOTP = sessionStorage.getItem('_isOTP');
+    console.log(email, _isOTP)
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isLoading, toggleLoading] = useState(false);
+    const [errors, setErrors] = useState([]);
+    const [show, toggleShow] = useState(false);
+    const [showPassword, toggleShowPassword] = useState(false);
     const submit = async () => {
-        toggleLoading(true)
-        let res = await api.post("/changePassword", {
-            userId: user.userId,
+        let payload = {
             current_password: currentPassword,
             new_password: newPassword,
-            password_confirmation: confirmPassword,
-        })
+            isOtp: 0
+        }
+
+        if (user) {
+            payload["userId"] = user.userId;
+
+        } else {
+            payload['isOtp'] = 1;
+            payload["email"] = email;
+        }
+
+        toggleLoading(true);
+        let res = await api.post("/changePassword", payload)
         toggleLoading(false)
+
+        if (res.error) {
+            setErrors([{ message: res.message }])
+            toggleShow(true)
+        } else {
+            sessionStorage.clear();
+            if (_isOTP && email) {
+                localStorage.clear();
+                return history.push('login');
+            }
+            sessionStorage.clear();
+            history.push('/my-account');
+        }
         setErrors([{ message: res.message }])
-        toggleShow(true)
+        return toggleShow(true)
     }
     const validate = () => {
         toggleShow(false)
         setErrors([])
-        let isFilled = newPassword !== '' && currentPassword !== '' && confirmPassword !== '';
+        const messageRequired = "Inputs are required"
+        let isFilled = newPassword !== '' && confirmPassword !== '';
         if (!isFilled) {
-            setErrors([{ message: "Inputs are required" }])
+            setErrors([{ message: messageRequired }])
             return toggleShow(true)
+        }
+        if (!_isOTP) {
+            if (currentPassword !== '') {
+                setErrors([{ message: messageRequired }])
+                return toggleShow(true)
+            }
         }
         if (newPassword !== confirmPassword) {
             setErrors([{ message: "Passwords don't match" }])
@@ -66,13 +100,11 @@ const ChangePassword = (props) => {
             setErrors(validation.errors)
             return toggleShow(true)
         }
-        // if (validation.ok) {
         submit();
-        // }
     }
     return (
         <CenteredLayout md={5}>
-            <CForm className="mx-2 my-2" onSubmit={validate}>
+            <CForm className="mx-2 my-2" onSubmit={(e) => { e.preventDefault(); }}>
                 <h1>Change Password</h1>
                 {
                     show &&
@@ -88,6 +120,19 @@ const ChangePassword = (props) => {
                     </CAlert>
                 }
                 <input id="userName" name="username" hidden autoComplete="username" />
+                {
+                    (_isOTP === null) && <CInputGroup className="mb-3 mt-3">
+                        <CInputGroupPrepend>
+                            <CInputGroupText>
+                                <Icon path={mdiKey} size={0.9} color={colors.$grey_dark} />
+                            </CInputGroupText>
+                        </CInputGroupPrepend>
+                        <CInput disabled={isLoading} type={showPassword ? "text" : "password"} value={currentPassword} onChange={(e) => {
+                            let { value } = e.target;
+                            setCurrentPassword(value)
+                        }} placeholder="current password" autoComplete="current-password" />
+                    </CInputGroup>
+                }
 
                 <CInputGroup className="mb-3 mt-3">
                     <CInputGroupPrepend>
@@ -95,27 +140,16 @@ const ChangePassword = (props) => {
                             <Icon path={mdiKey} size={0.9} color={colors.$grey_dark} />
                         </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type={showPassword ? "text" : "password"} value={currentPassword} onChange={(e) => {
-                        let { value } = e.target;
-                        setCurrentPassword(value)
-                    }} placeholder="current password" autoComplete="current-password" />
-                </CInputGroup>
-                <CInputGroup className="mb-3 mt-3">
-                    <CInputGroupPrepend>
-                        <CInputGroupText>
-                            <Icon path={mdiKey} size={0.9} color={colors.$grey_dark} />
-                        </CInputGroupText>
-                    </CInputGroupPrepend>
-                    <CInput type={showPassword ? "text" : "password"} value={newPassword} onChange={(e) => {
+                    <CInput disabled={isLoading} type={showPassword ? "text" : "password"} value={newPassword} onChange={(e) => {
                         let { value } = e.target;
                         setNewPassword(value)
                     }} placeholder="new password" autoComplete="new-password" />
                 </CInputGroup>
                 <CInputGroup className="mb-3 mt-3">
                     <CInputGroupPrepend>
-                        <CInputGroupText>   <Icon path={mdiKey} size={0.9} color={colors.$grey_dark} /></CInputGroupText>
+                        <CInputGroupText> <Icon path={mdiKey} size={0.9} color={colors.$grey_dark} /></CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => {
+                    <CInput disabled={isLoading} type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => {
                         let { value } = e.target;
                         setConfirmPassword(value)
                     }} placeholder="confirm new password" autoComplete="confirm-password" />
@@ -130,12 +164,12 @@ const ChangePassword = (props) => {
                     />
                     <CLabel variant="checkbox" className="form-check-label" htmlFor="showPassword">show password</CLabel>
                 </CFormGroup>
-                <LoadingButton {...{ block: true, isLoading, submit: validate, btnText: 'Submit' }} />
+                <LoadingButton  {...{ block: true, isLoading, submit: validate, btnText: 'Submit' }} />
                 <CRow>
                     <CCol xs="6">
                     </CCol>
                     <CCol xs="6" className="text-right px-0">
-                        <CButton className="float-right" color="link" onClick={() => {
+                        <CButton disabled={isLoading} className="float-right" color="link" onClick={() => {
                             history.push("/myAccount")
                         }}>Back</CButton>
                     </CCol>

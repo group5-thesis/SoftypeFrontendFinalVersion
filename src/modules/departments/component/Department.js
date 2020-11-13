@@ -20,7 +20,8 @@ import Icon from '@mdi/react';
 import { useHistory } from "react-router-dom";
 import { APP_MESSAGES } from 'utils/constants/constant';
 import {
-  mdiPlus
+  mdiPlus,
+  mdiTrashCanOutline
 } from '@mdi/js';
 import _ from 'lodash';
 import api from 'utils/api';
@@ -34,16 +35,32 @@ const Department = ({ match }) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
-  const [managers, setManagers] = useState([])
   const [data, setData] = useState(DepartmentManager)
+  const [deptId, setDeptId] = useState(match.params.id)
 
   const modal = useRef();
 
+  // router params pass as department Id
+  if (!match.params.id) {
+    let d = sessionStorage.getItem('deptId');
+    setDeptId(d);
+  }
+
+  // use to display only the department name and head
   const _request = useSelector(state => {
     return state.appState.department.departments.filter(el => {
-      return el.department_id.toString() === match.params.id.toString()
+      return el.department_id.toString() === deptId.toString()
     })
   })
+
+  // use to display all the managers in the department
+  const _departmentManagers = useSelector(state => {
+    return state.appState.department_manager.department_managers.filter(el => {
+      return el.department_id.toString() === deptId.toString()
+    })
+  })
+
+  // use to display as option to add department manager
   const employees = useSelector((state) => {
     return state.appState.employee.employees
   });
@@ -60,22 +77,14 @@ const Department = ({ match }) => {
     modal.current.toggle();
   };
 
-  const retrieve_managers = async () => {
-    let res = await api.post('/retrieve_managers_by_department', { departmentId: match.params.id });
-    if (!res.error) {
-      setManagers(res.data.department_managers)
-    } else {
-      alert('error');
-    }
-  }
-
   const handleSubmit = async () => {
     setIsLoading(true)
     data.department_id = match.params.id
     let res = await api.post("/add_department_manager", { department_manager: data.department_manager, departmentId: data.department_id })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_MANAGER, res.data.department_manager_information[0]))
-      modal.current.toggle()
+
+      toggleModal()
     } else {
       alert("error")
     }
@@ -124,12 +133,9 @@ const Department = ({ match }) => {
   }
 
   const viewEmployees = (e) => {
-    history.push(`/employee/departments/employees/${e.managerId}/${e.department_id}`);
+    sessionStorage.setItem('managerId', e.managerId);
+    history.push(`/employee/departments/employees/${e.managerId}`);
   }
-
-  useEffect(() => {
-    retrieve_managers()
-  }, []);
 
   return (
     !request.length ? <NoData /> :
@@ -196,7 +202,7 @@ const Department = ({ match }) => {
               </CRow>
               <CRow>
                 {
-                  managers.map((key, index) => {
+                  _departmentManagers.map((key, index) => {
                     return (
                       <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
                         <Card
@@ -205,7 +211,7 @@ const Department = ({ match }) => {
                           animation
                           setImg
                           text={
-                            `${key.manager_firstname} ${key.manager_lastname}`
+                            `${key.manager_firstname}`
                           }
                           dept_role={key.role}
                           textClass={"font-weight-bold"}

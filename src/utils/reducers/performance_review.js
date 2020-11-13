@@ -3,6 +3,7 @@ import { copyArray } from "../helpers";
 
 const initial_state = {
   performance_reviews: [],
+  my_performance_reviews: [], 
 }
 
 export default function changeState(state = initial_state, action) {
