@@ -37,6 +37,7 @@ const DepartmentEmployees = ({ match }) => {
   const [errors, setError] = useState(defaultErrors)
   const [data, setData] = useState(DepartmentEmployee)
   const [managerId, setManagerId] = useState(match.params.id)
+  const [departmentEmployeeId, setDepartmentEmployeeId] = useState()
   const [removeEmployee, setRemoveEmployee] = useState(false)
   const modal = useRef();
   const dispatch = useDispatch();
@@ -157,7 +158,7 @@ const DepartmentEmployees = ({ match }) => {
           {...{
             show: dialog,
             onConfirm: () => {
-              handleDeleteEmployee(localStorage.getItem("d_emp_id"))
+              handleDeleteEmployee(departmentEmployeeId)
             },
             title: "Are you sure you want to do this?",
           }}
@@ -227,7 +228,7 @@ const DepartmentEmployees = ({ match }) => {
                         onClickMethod={() => {
                           if (removeEmployee) {
                             dialog.current.toggle()
-                            localStorage.setItem("d_emp_id", key.department_employeeId)
+                            setDepartmentEmployeeId(key.department_employeeId)
                           }
                         }}
                         deleteCard={removeEmployee}
