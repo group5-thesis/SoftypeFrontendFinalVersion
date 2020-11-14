@@ -8,35 +8,31 @@ import {
   CDataTable,
   CRow,
   CButton,
-  CPagination,
+  CSpinner,
   CPopover
 } from '@coreui/react'
 import { NoData, ConfirmDialog } from 'reusable'
 import Icon from '@mdi/react';
-import { mdiAccountOffOutline, mdiLockReset } from '@mdi/js';
+import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline } from '@mdi/js';
 import colors from 'assets/theme/colors';
+import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
+import api from 'utils/api';
 
 const Accounts = () => {
 
   const [disableAccount, setDisableAccount] = useState(false)
   const [resetAccount, setResetAccount] = useState(false)
+  const [enableAccount, setEnableAccount] = useState(false)
   const [accountDisable, setAccountDisable] = useState({})
   const [accountReset, setAccountReset] = useState({})
+  const [accountEnable, setAccountEnable] = useState({})
   const dialog = useRef();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false)
 
   const stateAccounts = useSelector((state) => {
     return state.appState.accounts.accounts
   });
-
-  const getBadge = (status) => {
-    switch (status) {
-      case 'Active': return 'success'
-      case 'Inactive': return 'secondary'
-      case 'Pending': return 'warning'
-      case 'Banned': return 'danger'
-      default: return 'primary'
-    }
-  }
 
   const fields = [
     { key: 'name', _style: { width: '25%' } },
@@ -46,34 +42,64 @@ const Accounts = () => {
     { key: 'action', _style: { width: '20%' } },
   ]
 
-  const clickedDisableBtn = (user) => {
-    console.log(user)
-    // setAccountDisable(user)
+  const clickedDisableBtn = (user) => { // Disable Account Button
+    setAccountDisable(user)
     dialog.current.toggle()
     setDisableAccount(true)
   }
 
-  const clickedResetBtn = (user) => {
-    // setAccountReset(user)
-    console.log(user)
+  const clickedEnableBtn = (user) => { // Enable Account Button
+    setAccountEnable(user)
+    dialog.current.toggle()
+    setEnableAccount(true)
+  }
+
+  const clickedResetBtn = (user) => { // Reset Account Button
+    setAccountReset(user)
     dialog.current.toggle()
     setResetAccount(true)
   }
 
-  const handleDisableAccount = () => {
-    console.log("Disable Account")
+  const handleDisableAccount = async () => {
+    setIsLoading(true)
+    let res = await api.post('/disable_employee_account', { userId: accountDisable.userId })
+    setIsLoading(false)
+    if (!res.error) {
+      fetchEmployeeAccounts(dispatch)
+    } else {
+      alert(res.error);
+    }
     setDisableAccount(false)
   }
 
-  const handleResetAccount = () => {
-    console.log("Reset Account")
+  const handleResetAccount = async () => { // Lacking
+    setIsLoading(true)
+    let res = await api.post('/reset_employee_account', { userId: accountReset.userId })
+    setIsLoading(false)
+    if (!res.error) {
+      fetchEmployeeAccounts(dispatch)
+    } else {
+      alert(res);
+    }
     setResetAccount(false)
   }
 
+  const handleEnableAccount = async () => {
+    setIsLoading(true)
+    let res = await api.post('/enable_employee_account', { userId: accountEnable.userId })
+    setIsLoading(false)
+    if (!res.error) {
+      fetchEmployeeAccounts(dispatch)
+    } else {
+      alert(res);
+    }
+    setEnableAccount(false)
+
+  }
+
   useEffect(() => {
-    // console.log(accountDisable)
     return
-  }, [accountDisable])
+  }, [accountDisable, accountReset, accountEnable])
 
   return (
     <CRow>
@@ -84,13 +110,14 @@ const Accounts = () => {
           {...{
             show: dialog,
             onConfirm: () => {
-              disableAccount ? handleDisableAccount() : resetAccount ? handleResetAccount() : console.log()
+              disableAccount ? handleDisableAccount() : resetAccount ? handleResetAccount() : enableAccount ? handleEnableAccount() : console.log()
             },
             onCloseCallback: () => {
               setDisableAccount(false)
               setResetAccount(false)
+              setEnableAccount(false)
             },
-            title: `Are you sure to ${disableAccount ? "disable" : resetAccount ? "reset" : ""} this account?`
+            title: `Are you sure to ${disableAccount ? "deactivate" : resetAccount ? "reset" : enableAccount ? "activate" : ""} this account?`
           }}
         >
         </ConfirmDialog>
@@ -99,6 +126,13 @@ const Accounts = () => {
             <CRow className="mb-3">
               <CCol sm="5">
                 <h4 className="card-title mb-0">Accounts</h4>
+              </CCol>
+              <CCol sm="7">
+                <div className="float-right">
+                  {
+                    isLoading && <CSpinner color="primary" />
+                  }
+                </div>
               </CCol>
             </CRow>
             <CDataTable
@@ -132,41 +166,47 @@ const Accounts = () => {
                 'status':
                   (item) => (
                     <td>
-                      <CBadge color={item.isDisabled === 0 ? "success" : "danger"}>
-                        {item.isDisabled === 0 ? "Active" : "Inactive"}
+                      <CBadge color={item.isDeactivated === 0 ? "success" : "danger"}>
+                        {item.isDeactivated === 0 ? "Activated" : "Deactivated"}
                       </CBadge>
                     </td>
                   ),
                 'action':
                   (item) => (
                     <td>
-                      <CPopover header="Disable Account">
+                      <CPopover header={`${item.isDeactivated === 0 ? "Deactivate" : "Activate"} Account`}>
                         <CButton onClick={() => {
-                          clickedDisableBtn(item)
+                          item.isDeactivated === 0 ? clickedDisableBtn(item) : clickedEnableBtn(item)
                         }}>
-                          <Icon path={mdiAccountOffOutline}
+                          <Icon path={item.isDeactivated === 0 ? mdiAccountOffOutline : mdiAccountCheckOutline}
                             size={1}
                             horizontal
                             vertical
                             rotate={180}
-                            color={colors.$red}
+                            color={item.isDeactivated === 0 ? colors.$red : colors.$green}
                           />
                         </CButton>
                       </CPopover>
-                      <CPopover header="Reset Account">
-                        <CButton onClick={() => {
-                          clickedResetBtn(item)
-                        }}>
-                          <Icon path={mdiLockReset}
-                            size={1}
-                            horizontal
-                            vertical
-                            rotate={180}
-                            color={colors.$orange}
-                          />
-                        </CButton>
-                      </CPopover>
-
+                      {
+                        item.isDeactivated === 0 ?
+                          <CPopover header="Reset Account">
+                            <CButton
+                              onClick={() => {
+                                clickedResetBtn(item)
+                              }}
+                              disabled={item.isPasswordChanged === 0}
+                            >
+                              <Icon path={mdiLockReset}
+                                size={1}
+                                horizontal
+                                vertical
+                                rotate={180}
+                                color={colors.$orange}
+                              />
+                            </CButton>
+                          </CPopover>
+                          : ""
+                      }
                     </td>
                   )
               }}
@@ -174,7 +214,7 @@ const Accounts = () => {
           </CCardBody>
         </CCard>
       </CCol>
-    </CRow>
+    </CRow >
   )
 }
 

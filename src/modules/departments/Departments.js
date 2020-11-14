@@ -67,9 +67,14 @@ const Departments = (props) => {
     return state.appState.department.departments
   });
 
+  console.log(stateDepartments)
+
   const validateInfo = (name, value) => {
     const { required } = RULES
     if (name === "department_name") {
+      stateDepartments.filter(dept => {
+        return name === dept.department_name
+      });
       return required(value)
     }
     if (name === "department_head") {
