@@ -185,7 +185,7 @@ const LeaveFormRequest = ({ request }) => {
                     id="category">
                     <option value="" hidden>Please select</option>
                     {LEAVE_TYPES.map((category, idx) => {
-                        return <option key={idx} value={Number(idx + 1)}>{category}</option>
+                        return <option key={idx} value={category}>{category}</option>
                     })}
                 </CSelect>
             </CFormGroup>

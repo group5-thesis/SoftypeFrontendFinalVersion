@@ -10,10 +10,26 @@ export let navigate = {
 }
 
 class CustomToolbar extends React.Component {
+    constructor(props) {
+        super(props)
+
+    }
+
+    componentDidUpdate() {
+        let payload = this.props.label.split(" ");
+        this.props.onMonthChange(payload[0])
+        this.props.onYearChange(payload[1])
+    }
+
+    navigate = action => {
+        this.props.onNavigate(action);
+    }
+    handleChange = (event) => {
+        this.props.onView(event.target.value);
+    };
     render() {
-        console.log(this.props)
         let { label, views, header } = this.props
-        let { right = true, center = true, left = true } = header
+        let { right = true, left = true } = header
         return (
             <div className="rbc-toolbar">
                 {
@@ -40,12 +56,6 @@ class CustomToolbar extends React.Component {
             </div>
         )
     }
-    navigate = action => {
-        this.props.onNavigate(action)
-    }
-    handleChange = (event) => {
-        this.props.onView(event.target.value);
-    };
 
 }
 
