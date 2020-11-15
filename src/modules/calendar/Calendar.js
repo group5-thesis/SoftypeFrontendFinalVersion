@@ -24,7 +24,8 @@ const MyCalendar = ({
         closeButton: true,
         hideCancelButton: true,
         hidden: true,
-        size:'sm'
+        size: 'sm',
+        noFooter: true
       }} ref={modal}>
         <CalendarPopUp event={selected} />
       </Modal>

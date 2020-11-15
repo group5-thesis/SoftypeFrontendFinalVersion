@@ -1,6 +1,7 @@
 import React from "react"
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { CFormGroup, CSelect } from "@coreui/react";
+import { MONTHS } from 'utils/constants/constant'
 
 export let navigate = {
     PREVIOUS: 'PREV',
@@ -16,9 +17,10 @@ class CustomToolbar extends React.Component {
     }
 
     componentDidUpdate() {
-        let payload = this.props.label.split(" ");
-        this.props.onMonthChange(payload[0])
-        this.props.onYearChange(payload[1])
+        const month = MONTHS[this.props.date.getMonth()];
+        const year = this.props.date.getFullYear()
+        this.props.onMonthChange(month)
+        this.props.onYearChange(year)
     }
 
     navigate = action => {

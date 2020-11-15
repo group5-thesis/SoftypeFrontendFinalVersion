@@ -38,8 +38,8 @@ const MyAccount = (props) => {
     pending: false,
     uploading: false,
   };
-  const tab = sessionStorage.getItem("_tab") ? +sessionStorage.getItem("_tab") : 0
   const user = props.appState.auth.user;
+  const tab = user.roleId !== 3 ? 0 : sessionStorage.getItem("_tab") ? +sessionStorage.getItem("_tab") : 0
   const dispatch = useDispatch();
   const history = useHistory();
   const fileInput = useRef();
@@ -127,11 +127,11 @@ const MyAccount = (props) => {
     setPreview(objectUrl);
 
     // free memory when ever this component is unmounted
-    return () =>{
+    return () => {
       sessionStorage.removeItem('_tab')
       URL.revokeObjectURL(objectUrl)
     };
-  }, [selectedFile ]);
+  }, [selectedFile]);
 
   return (
     <>
@@ -140,7 +140,6 @@ const MyAccount = (props) => {
           <CTabs activeTab={tab} onActiveTabChange={(e) => {
             console.log(e)
             sessionStorage.setItem("_tab", e)
-
           }}>
             <CNav variant="tabs" className="my-tabs">
               <CNavItem  >
@@ -148,11 +147,14 @@ const MyAccount = (props) => {
                   <Icon path={mdiAccountCogOutline} size={1} />My Profile
                 </CNavLink>
               </CNavItem>
-              <CNavItem >
-                <CNavLink>
-                  <Icon path={mdiAccountStar} size={1} />My Ratings
+              {
+                user.roleId === 3 &&
+                <CNavItem >
+                  <CNavLink>
+                    <Icon path={mdiAccountStar} size={1} />My Ratings
                 </CNavLink>
-              </CNavItem>
+                </CNavItem>
+              }
             </CNav>
             <CTabContent>
               <CTabPane>
