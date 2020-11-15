@@ -74,10 +74,10 @@ const AppHeaderDropdown = (props) => {
           <CIcon name="cil-user" className="mfe-2" />
           Profile
         </CDropdownItem>
-        <CDropdownItem>
+        {/* <CDropdownItem>
           <CIcon name="cil-settings" className="mfe-2" />
           Settings
-        </CDropdownItem>
+        </CDropdownItem> */}
         <CDropdownItem divider />
         <CDropdownItem onClick={logout}>
           <CIcon name="cil-account-logout" className="mfe-2" />

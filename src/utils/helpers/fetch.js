@@ -2,12 +2,12 @@ import api from 'utils/api';
 import { plotArray } from 'utils/helpers'
 import { ActionTypes, actionCreator } from "utils/actions"
 
-
 const retrieveLeaveRequests = async (dispatch, payload) => {
-  let res = await api.post("/getLeaveRequest", payload);
+  // let res = await api.post("/getLeaveRequest", payload);
+  let res = await api.post("/filterLeaveRequest", payload);
   if (!res.error) {
     let { leave_requests } = res.data;
-    dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, leave_requests));
+    dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, plotArray(leave_requests)));
   }
   return res;
 }
@@ -23,9 +23,9 @@ const retrieveEmployees = async dispatch => {
 const fetchTickets = async dispatch => {
   let response = await api.get('/retrieve_officeRequests')
   if (!response.error) {
-      let payload = response.data.officeRequest_information;
-      payload = plotArray(payload)
-      dispatch(actionCreator(ActionTypes.FETCH_TICKETS, payload))
+    let payload = response.data.officeRequest_information;
+    payload = plotArray(payload)
+    dispatch(actionCreator(ActionTypes.FETCH_TICKETS, payload))
   }
   return response;
 }
@@ -95,7 +95,7 @@ const fetchDepartmentEmployees = async dispatch => {
 }
 
 const fetchPerformanceReviews = async dispatch => {
-  let response = await api.get('/create_performance_review')
+  let response = await api.get('/retrieve_performance_reviews')
   if (!response.error) {
     let payload = response.data.performance_review_information;
     dispatch(actionCreator(ActionTypes.FETCH_PERFORMANCE_REVIEWS, payload))

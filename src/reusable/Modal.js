@@ -21,13 +21,13 @@ const Modal = forwardRef(
       cancelBtnTitle = "Cancel",
       hideCancelButton = false,
       block,
+      noFooter = false,
       hidden = false,
       theme = "primary",
     },
     ref
   ) => {
     const [modal, setModal] = useState(false);
-    // let { title, footer, size, centered, modalOnClose, children, btnTitle,  = "cancel", block, hidden = false } = props
     const toggle = () => {
       setModal(!modal);
     };
@@ -60,21 +60,24 @@ const Modal = forwardRef(
             <h4>{title}</h4>
           </CModalHeader>
           <CModalBody>{children}</CModalBody>
-          <CModalFooter>
-            {footer}
-            {!hideCancelButton && <CButton
-              onClick={() => {
-                toggle();
-                if (modalOnClose) {
-                  modalOnClose();
-                }
-              }}
-              className="mr-1"
-              color="danger"
-            >
-              {cancelBtnTitle}
-            </CButton>}
-          </CModalFooter>
+          {
+            !noFooter &&
+            <CModalFooter>
+              {footer}
+              {!hideCancelButton && <CButton
+                onClick={() => {
+                  toggle();
+                  if (modalOnClose) {
+                    modalOnClose();
+                  }
+                }}
+                className="mr-1"
+                color="danger"
+              >
+                {cancelBtnTitle}
+              </CButton>}
+            </CModalFooter>
+          }
         </CModal>
       </>
     );
