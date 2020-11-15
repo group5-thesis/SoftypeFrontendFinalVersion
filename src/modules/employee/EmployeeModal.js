@@ -6,6 +6,7 @@ import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
 import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
 import { RULES, shallowCopy, getAge } from 'utils/helpers'
+import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
 import _ from 'lodash';
 
 const defaultErrors = {
@@ -126,6 +127,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             // retrieveEmployees(dispatch)
             // console.log(res.data)
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
+            fetchEmployeeAccounts(dispatch)
         }
         setDisabled(false)
         modal.current.toggle()
