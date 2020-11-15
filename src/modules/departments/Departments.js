@@ -50,24 +50,31 @@ const Departments = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
 
-  const handleSubmit = async () => {
-    setIsLoading(true)
-    let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
-    if (!res.error) {
-      dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
-      retrieveEmployees(dispatch)
-      toggleModal()
-    } else {
-      alert("error")
-    }
-    setIsLoading(false)
-  }
-
   const stateDepartments = useSelector((state) => {
     return state.appState.department.departments
   });
 
-  console.log(stateDepartments)
+  // console.log(stateDepartments)
+
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    let isExist = _.filter(stateDepartments, function (key) {
+      return key.department_name.toLowerCase().trim() === data.department_name.toLowerCase().trim();
+    });
+    if (isExist.length === 0) {
+      let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
+      if (!res.error) {
+        dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
+        retrieveEmployees(dispatch)
+        toggleModal()
+      } else {
+        alert("error")
+      }
+      setIsLoading(false)
+    }else{
+      alert("Department is Existed!")
+    }
+  }
 
   const validateInfo = (name, value) => {
     const { required } = RULES
@@ -124,7 +131,7 @@ const Departments = (props) => {
 
   const viewDepartmentInfo = (id) => {
     sessionStorage.setItem('deptId', id);
-    history.push(`/employee/departments/${id}`);
+    history.push(`/employee/departments/departmentDetails?id=${id}`);
   };
 
   return (

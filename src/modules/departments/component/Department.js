@@ -17,7 +17,7 @@ import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
 import DepartmentManager from "models/DepartmentManagerModel"
 import Icon from '@mdi/react';
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import { APP_MESSAGES } from 'utils/constants/constant';
 import {
   mdiPlus,
@@ -27,7 +27,7 @@ import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
 
-const Department = ({ match }) => {
+const Department = ({ match, location }) => {
 
   const defaultErrors = {
     department_manager: false
@@ -36,15 +36,20 @@ const Department = ({ match }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
   const [data, setData] = useState(DepartmentManager)
-  const [deptId, setDeptId] = useState(match.params.id)
-
-  const modal = useRef();
-
-  // router params pass as department Id
-  if (!match.params.id) {
-    let d = sessionStorage.getItem('deptId');
-    setDeptId(d);
+  const query = new URLSearchParams(location.search);
+  // const [deptId, setDeptId] = useState()
+  const history = useHistory();
+  const dispatch = useDispatch();
+  let deptId = query.get("id");
+  if (deptId === null || deptId === '' || deptId === undefined) {
+    deptId = sessionStorage.getItem('deptId')
+    history.replace({
+      pathname: '/employee/departments/departmentDetails',
+      search: `?id=${deptId.toString()}`
+    })
   }
+  sessionStorage.setItem('deptId', deptId)
+  const modal = useRef();
 
   // use to display only the department name and head
   const _request = useSelector(state => {
@@ -66,8 +71,7 @@ const Department = ({ match }) => {
   });
 
   let request = copyArray(_request);
-  const history = useHistory();
-  const dispatch = useDispatch();
+
 
   const departmentDetails = request[0]
 
@@ -134,8 +138,20 @@ const Department = ({ match }) => {
 
   const viewEmployees = (e) => {
     sessionStorage.setItem('managerId', e.managerId);
-    history.push(`/employee/departments/employees/${e.managerId}`);
+    history.push(`/employee/departments/departmentDetails/employees/${e.managerId}`);
   }
+
+
+  // useEffect(() => {
+  //   // router params pass as department Id
+  //   console.log(match.params.id, "Params Id")
+  //   if (match.params.id === "employees") {
+  //     // http://localhost:3000/employee/departments/1
+  //     let d = sessionStorage.getItem('deptId');
+  //     setDeptId(d);
+  //   }
+  //   console.log(deptId, "dept Id")
+  // }, [deptId])
 
   return (
     !request.length ? <NoData /> :
@@ -203,20 +219,22 @@ const Department = ({ match }) => {
               <CRow>
                 {
                   _departmentManagers.map((key, index) => {
+                    console.log(key)
                     return (
                       <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
                         <Card
                           clickable
                           height={200}
                           animation
-                          setImg
+                          setImg={key.profile_img !== null}
                           text={
                             `${key.manager_firstname}`
                           }
+                          imgSrc={key.profile_img}
                           dept_role={key.role}
                           textClass={"font-weight-bold"}
                           textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
-                          imgClass={"img_dept"}
+                          imgClass={key.profile_img !== null ? "img_dept" : ""}
                           textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
                           onClickMethod={() => {
                             viewEmployees(key)
