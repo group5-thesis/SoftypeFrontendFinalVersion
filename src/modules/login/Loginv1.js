@@ -7,6 +7,7 @@ import {
   CInputGroupPrepend,
   CInputGroupText,
   CSpinner,
+  CAlert,
   CInvalidFeedback,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
@@ -20,6 +21,7 @@ import api from "utils/api";
 import { CenteredLayout } from "containers";
 import QrCodeScanner from "./QrCodeScanner";
 
+const invalidCredentialsMessage = "Invalid Credentials"
 class Login extends Component {
 
   state = {
@@ -31,11 +33,13 @@ class Login extends Component {
     changed: false,
     isLoading: false,
     error: "",
+    cameraError: '',
+    showError: false
   };
   dialog = createRef();
 
   handleChange = (e) => {
-    this.setState({ changed: true });
+    this.setState({ changed: true, showError: false, error: '' });
     let copy = shallowCopy(this.state.credentials);
     copy[e.target.name] = e.target.value;
     this.setState({ credentials: copy });
@@ -52,8 +56,8 @@ class Login extends Component {
         this.state.credentials.password === "" ||
         this.state.credentials.username === ""
       ) {
-        this.setState({ error: APP_MESSAGES.INPUT_REQUIRED });
-        this.toggleDialog();
+        this.setState({ showError: true, error: APP_MESSAGES.INPUT_REQUIRED });
+        // this.toggleDialog();
         return;
       }
       this.setState({ isLoading: true });
@@ -62,8 +66,18 @@ class Login extends Component {
       this.setState({ isLoading: false });
       if (!res.error) {
         let { access_token, account_information } = res.data;
+        let user;
+        if (account_information.length) {
+          user = account_information[0];
+        }
+
+        if (!user) {
+          this.setState({ showError: true, error: APP_MESSAGES.INPUT_REQUIRED });
+          this.setState({ error: invalidCredentialsMessage, showError: true });
+          this.setState({ isLoading: false });
+        }
         localStorage.setItem("token", access_token);
-        localStorage.setItem("uId", account_information[0].userId);
+        localStorage.setItem("uId", user.userId);
         dispatch(
           actionCreator(
             ActionTypes.FETCH_PROFILE_SUCCESS,
@@ -74,30 +88,31 @@ class Login extends Component {
         dispatch(actionCreator(ActionTypes.LOGIN));
         history.replace("/");
       } else {
-        this.setState({ error: res.message });
+        this.setState({ error: res.message, showError: true });
         this.setState({ isLoading: false });
-        this.toggleDialog();
+        // this.toggleDialog();
       }
     }
   };
 
   componentDidMount() {
-      sessionStorage.clear();
+    sessionStorage.clear();
     if (!this.props.already_logged) {
       checkCamera()
         .then(() => {
           this.setState({ camera: true });
         })
         .catch((err) => {
-          this.setState({ camera: false });
-          this.setState({ error: err.cameraError });
+          this.setState({ cameraError: err.cameraError, camera: false });
         });
     }
   }
   render() {
+    let { showError, error } = this.state
     if (this.props.already_logged) {
       return <Redirect to="/dashboard" />;
     }
+    sessionStorage.clear();
     return (
       <CenteredLayout>
         <ConfirmDialog
@@ -105,13 +120,19 @@ class Login extends Component {
           ref={this.dialog}
           {...{
             confirmButton: false,
-            title: this.state.error,
+            title: this.state.cameraError,
             cancelButtonText: "Ok",
           }}
         ></ConfirmDialog>
         <CForm>
           <h2>Welcome Back</h2>
           <p className="text-muted">Sign In to your account</p>
+          {
+            showError &&
+            <CAlert color="danger" className="text-center">
+              {error}
+            </CAlert>
+          }
           <CInputGroup className="mb-3">
             <CInputGroupPrepend>
               <CInputGroupText>
@@ -190,6 +211,7 @@ class Login extends Component {
             block
             className="float-center"
             color="link"
+            disabled={this.state.isLoading}
             onClick={() => {
               this.props.history.push("/account-recovery");
             }}
