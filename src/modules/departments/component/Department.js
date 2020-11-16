@@ -26,6 +26,7 @@ import {
 import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
+import department_icon_default from "../../../assets/img/default_dept_icon.png"
 
 const Department = ({ match, location }) => {
 
@@ -72,7 +73,6 @@ const Department = ({ match, location }) => {
 
   let request = copyArray(_request);
 
-
   const departmentDetails = request[0]
 
   const toggleModal = () => {
@@ -83,11 +83,10 @@ const Department = ({ match, location }) => {
 
   const handleSubmit = async () => {
     setIsLoading(true)
-    data.department_id = match.params.id
+    data.department_id = deptId
     let res = await api.post("/add_department_manager", { department_manager: data.department_manager, departmentId: data.department_id })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_MANAGER, res.data.department_manager_information[0]))
-
       toggleModal()
     } else {
       alert("error")
@@ -140,7 +139,6 @@ const Department = ({ match, location }) => {
     sessionStorage.setItem('managerId', e.managerId);
     history.push(`/employee/departments/departmentDetails/employees/${e.managerId}`);
   }
-
 
   // useEffect(() => {
   //   // router params pass as department Id
@@ -208,8 +206,9 @@ const Department = ({ match, location }) => {
                     clickable
                     height={200}
                     animation
-                    setImg
+                    setImg={departmentDetails.department_head_profileImg !== null ? false : true}
                     imgClass={"img_dept_head"}
+                    imgSrc={departmentDetails.department_head_profileImg === null ? department_icon_default : departmentDetails.department_head_profileImg}
                     text={departmentDetails.department_head}
                     textClass={"font-weight-bold"}
                     textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
@@ -226,15 +225,15 @@ const Department = ({ match, location }) => {
                           clickable
                           height={200}
                           animation
-                          setImg={key.profile_img !== null}
+                          setImg={key.profile_img !== null ? false : true}
                           text={
                             `${key.manager_firstname}`
                           }
-                          imgSrc={key.profile_img}
+                          imgSrc={key.profile_img === null ? department_icon_default : key.profile_img}
                           dept_role={key.role}
                           textClass={"font-weight-bold"}
                           textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
-                          imgClass={key.profile_img !== null ? "img_dept" : ""}
+                          imgClass={"img_dept"}
                           textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
                           onClickMethod={() => {
                             viewEmployees(key)

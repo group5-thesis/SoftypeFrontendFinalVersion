@@ -142,7 +142,7 @@ const Departments = (props) => {
             return (
               <CCol sm="6" lg="3" key={dept.department_id + "crd"}>
                 <Card
-                  color={COLORS[Math.ceil(index / COLORS.length)]}
+                  color={COLORS[index]}
                   clickable
                   animation
                   centeredText
