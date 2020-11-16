@@ -20,9 +20,10 @@ const getBadge = status => {
     }
 }
 let headers = [
-    { key: 'Name', _classes: 'font-weight-bold' },
-    { key: 'mobileno', label: "Mobile No." },
-    'email',
+
+    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "15%" }, },
+    { key: 'mobileno', label: "Mobile No.",_style: { width: "10%" } },
+    { key: 'email', _style: { width: "15%" } },
     {
         key: "role",
         label: "Position",
@@ -31,7 +32,7 @@ let headers = [
     },
     'gender',
     'birthdate',
-    'department'
+    { key: 'department_name', label: "Department" }
 ]
 
 const Users = (props) => {
@@ -67,7 +68,6 @@ const Users = (props) => {
                             items={usersData}
                             fields={headers}
                             hover
-                            // striped
                             itemsPerPage={10}
                             activePage={page}
                             pagination
@@ -79,7 +79,6 @@ const Users = (props) => {
                             clickableRows
                             onRowClick={(emp) => {
                                 history.push(`/employees/profile/${emp.employeeId}`)
-
                             }}
                             scopedSlots={{
                                 'Name':
@@ -88,12 +87,15 @@ const Users = (props) => {
                                             {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename)[0] + "."}`}
                                         </td>
                                     ),
-                                'Department':
-                                    (item) => (
-                                        <td>
-                                            {item.department || ""}
-                                        </td>
-                                    )
+                                'department_name':
+                                    (item) => {
+                                        return (
+                                            <td>
+
+                                                {item.department_name ? item.department_name : <em>UNSET</em>}
+                                            </td>
+                                        )
+                                    }
                             }}
                         />
 
