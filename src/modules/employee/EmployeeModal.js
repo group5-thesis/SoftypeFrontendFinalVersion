@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from "react-redux"
-import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CInvalidFeedback, CSpinner } from '@coreui/react'
-import { Modal } from 'reusable'
+import { useDispatch, useSelector } from "react-redux"
+import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CInvalidFeedback, CAlert, CSpinner } from '@coreui/react'
+import { Modal, LoadingButton, ConfirmDialog } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
 import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
@@ -17,7 +17,7 @@ const defaultErrors = {
     email: false,
     mobileno: false,
     role: false,
-    department: false,
+    // department: false,
     gender: false,
     street: false,
     city: false,
@@ -26,7 +26,7 @@ const defaultErrors = {
 const defaultEmployee = {
     role: "",
     accountType: "",
-    department: "",
+    // department: "",
     firstname: "",
     lastname: "",
     middlename: "",
@@ -45,12 +45,16 @@ const defaultEmployee = {
 
 const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null }) => {
     let dispatch = useDispatch();
-    const modal = useRef()
+    const modal = useRef();
+    const dialog = useRef();
     const [employee, createEmployee] = useState(!data ? defaultEmployee : data)
     const [errors, setError] = useState(defaultErrors)
     const [disabled, setDisabled] = useState(false);
+    const departments = useSelector(state => state.appState.department.departments)
+    const [responseError, setResponseError] = useState();
 
     const handleOnChange = (event) => {
+        setResponseError('')
         let _errors = shallowCopy(errors)
         let Employee = shallowCopy(employee)
         let { name, value } = event.target
@@ -82,6 +86,10 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
 
         if (name === "email") {
             return emailRules(value)
+        }
+
+        if (['sss', 'phil_health_no', 'pag_ibig_no'].includes(name)) {
+            return false
         }
 
         return value !== "" || APP_MESSAGES.INPUT_REQUIRED;
@@ -128,6 +136,8 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             // console.log(res.data)
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
             fetchEmployeeAccounts(dispatch)
+        } else {
+            setResponseError(res.message);
         }
         setDisabled(false)
         modal.current.toggle()
@@ -149,8 +159,9 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                 isValid = false
             }
         })
+        debugger
         if (isValid) {
-            onSubmit()
+            dialog.current.toggle()
         }
     }
 
@@ -169,20 +180,34 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             title: isUpdate ? "Update Details" : "Add Employee",
             color: "warning",
             footer:
-                <CButton
-                    disabled={disabled}
-                    onClick={validate}
-                    className="mr-1"
-                    color="primary">
-                    {
-                        disabled ? <CSpinner color="secondary" size="sm" /> : !isUpdate ? "Submit" : "Update"
-                    }
-                </CButton>
+                <>
+                    <LoadingButton  {...{ isLoading: disabled, submit: validate, btnText: !isUpdate ? "Submit" : "Update" }} />
+                    {/* <CButton
+                        disabled={disabled}
+                        onClick={validate}
+                        className="mr-1"
+                        color="primary">
+                        {
+                            disabled ? <CSpinner color="secondary" size="sm" /> : !isUpdate ? "Submit" : "Update"
+                        }
+                    </CButton> */}
+                </>
         }}>
 
             <CContainer fluid>
+                <ConfirmDialog
+                    id="cutom_dialog"
+                    ref={dialog}
+                    {...{
+                        onConfirm: () => {
+                            onSubmit();
+                        },
+                        title: "Please confirm.",
+                    }}
+                ></ConfirmDialog>
                 <CRow>
                     <CCol sm="12">
+                        {responseError && responseError.length > 0 ? <CAlert color="danger justify-content-center text-align-center">{responseError}</CAlert> : null}
                         <CForm action="" method="post" >
                             <CFormGroup row className="my-0">
                                 <CCol xs="4">
@@ -290,7 +315,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
                                     </CFormGroup>
                                 </CCol>
-                                <CCol xs="6">
+                                {/* <CCol xs="6">
                                     <CFormGroup>
                                         <CLabel>Department</CLabel>
                                         <CSelect onChange={handleOnChange}
@@ -298,14 +323,14 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             invalid={errors.department !== false}
                                             name="department">
                                             <option value="" hidden>Select Department</option>
-                                            <option value='lodge'>Lodge</option>
-                                            <option value='cr'>CR</option>
+                                            {
+                                                departments.map(dept => <option key={dept.department_id} value={dept.department_id}>{dept.department_name}</option>)
+                                            }
+
                                         </CSelect>
                                         {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
                                     </CFormGroup>
-                                </CCol>
-                            </CFormGroup>
-                            <CFormGroup row className="my-0">
+                                </CCol> */}
                                 <CCol xs="6">
                                     <CFormGroup>
                                         <CLabel>Mobile Number</CLabel>
@@ -321,7 +346,10 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         {renderFeedback(errors.mobileno)}
                                     </CFormGroup>
                                 </CCol>
-                                <CCol xs="6">
+                            </CFormGroup>
+                            <CFormGroup row className="my-0">
+
+                                <CCol >
                                     <CFormGroup>
                                         <CLabel>Email</CLabel>
                                         <CInput

@@ -14,7 +14,7 @@ const AppLayout = (props) => {
     return <Redirect to="/login" />
   } else if (Number(user.is_password_changed) === 0) {
     return <Redirect to="/change-password" />
-  }
+  } 
   return (
     <div className="c-app c-default-layout">
       <AppSidebar {...props} />

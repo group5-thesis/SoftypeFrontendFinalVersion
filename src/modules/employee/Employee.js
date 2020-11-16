@@ -98,7 +98,7 @@ const EmployeeDetails = (props) => {
       setEmployee(updated);
       dispatch(actionCreator(ActionTypes.UPDATE_EMPLOYEE, updated));
     } else {
-      alert(res.message);
+      dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'error', message: res.message }));
     }
     return;
   };
@@ -137,6 +137,8 @@ const EmployeeDetails = (props) => {
     return <Redirect to="/myAccount" />
   }
 
+  // let url = `${getBaseUrl()}/file/images/${employee.profile_img}`
+
   return employee ? (
     <CRow className="justify-content-center">
       <CCol {...setWidth("12")}>
@@ -163,14 +165,39 @@ const EmployeeDetails = (props) => {
           <CCardBody>
             <CRow gutters={false} className="">
               <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
-                {(function () {
+                {<div
+                  style={{
+                    //
+                    backgroundImage: `url(${
+                      preview
+                        ? preview
+                        : employee.profile_img ?
+                          // ? pic
+                          //   ? url
+                          //   : res.logoSm
+                          `${getBaseUrl()}/file/images/${employee.profile_img}`
+                          : res.logoSm
+                      })`,
+                    backgroundSize: "contain",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                    maxHeight: "200px",
+                    height: "200px",
+                    width: "100%",
+                    border: "1px solid dark",
+                  }}
+                ></div>
+                  /* {(function () {
                   let pic = false;
-                  let url = `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
-                  fetch(url, { method: "HEAD" }).then((res) => {
+                  let url = `${getBaseUrl()}/file/images/${employee.profile_img}`//`${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
+                 
+                  fetch(url, { method: "GET" }).then((res) => {
                     if (res.ok) {
                       pic = true;
                     }
-                  });
+                  }).catch(err=>console.log(err));
+                  debugger
+
                   return (
                     <div
                       style={{
@@ -178,10 +205,11 @@ const EmployeeDetails = (props) => {
                         backgroundImage: `url(${
                           preview
                             ? preview
-                            : employee.profile_img
-                              ? pic
-                                ? url
-                                : res.logoSm
+                            : employee.profile_img ?
+                              // ? pic
+                              //   ? url
+                              //   : res.logoSm
+                              url
                               : res.logoSm
                           })`,
                         backgroundSize: "contain",
@@ -194,7 +222,7 @@ const EmployeeDetails = (props) => {
                       }}
                     ></div>
                   );
-                })()}
+                })()} */}
                 <input
                   type="file"
                   accept="image/*"
