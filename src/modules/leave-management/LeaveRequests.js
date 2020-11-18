@@ -18,7 +18,10 @@ import {
   getAdminResponse,
   respondToRequest,
   plotArray,
-  getDuration
+  getDuration,
+  dispatchNotification,
+  cancelRequest,
+  formatDate
 } from "utils/helpers";
 import { LeaveRequestFilter, LeaveRequestForm } from ".";
 import NoData from "reusable/NoData";
@@ -26,6 +29,8 @@ import { ConfirmDialog } from "reusable";
 import { STATUS, LEAVE_REQUEST_FILTER } from "utils/constants/constant";
 import { ActionTypes, actionCreator } from "utils/actions";
 import { retrieveLeaveRequests } from "utils/helpers/fetch";
+import { config } from 'utils/config';
+import moment from 'moment'
 const LeaveRequests = (props) => {
   const dispatch = useDispatch();
   const { history, location } = props;
@@ -38,16 +43,18 @@ const LeaveRequests = (props) => {
   const [collapse, setCollapse] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [filter, setFilter] = useState(default_filter)
+  const [isCancel, setIsCancel] = useState(false)
   const [payload, setPayload] = useState({
     id: null,
     status: "",
     statusCode: null,
+    noOfDays: 0
   });
   const dialog = useRef();
   const requestsData = useSelector((state) => {
     return state.appState.leave.leave_requests
   });
-  const user = useSelector(state => state.appState.auth.user)
+  const user = useSelector(state => state.appState.auth.user);
   const header = [
     {
       key: "name",
@@ -100,6 +107,8 @@ const LeaveRequests = (props) => {
     history.push(`/leave/requests/${id}`);
   };
 
+
+
   const toggle = (e) => {
     setCollapse(!collapse);
     e.preventDefault();
@@ -127,16 +136,14 @@ const LeaveRequests = (props) => {
       let filterRes = await retrieveLeaveRequests(dispatch, payload)
       setLoading(false)
       if (filterRes.error) {
-        dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'error', message: filterRes.message }))
-        setTimeout(() => {
-          dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: '', message: '' }))
-        }, 3000)
+        dispatchNotification(dispatch, { type: 'error', message: filterRes.message })
       } else {
         dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, plotArray(filterRes.data.leave_requests)));
       }
     }
   }
   useEffect(() => {
+
     return () => { }
   }, [])
   return (
@@ -148,9 +155,14 @@ const LeaveRequests = (props) => {
           {...{
             show: dialog,
             onConfirm: () => {
-              respondToRequest(dispatch, payload);
+              if (!isCancel) {
+                return respondToRequest(dispatch, payload);
+              }
+              dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'info', message: "Please wait" }))
+
+              return cancelRequest(dispatch, payload.id)
             },
-            title: `${payload.statusCode ? "Approve" : "Reject"}`,
+            title: isCancel ? "Cancel Request?" : `${payload.statusCode ? "Approve" : "Reject"}`,
           }}
         ></ConfirmDialog>
         <CCard>
@@ -161,7 +173,7 @@ const LeaveRequests = (props) => {
               </CCol>
               <CCol sm="7" className=" d-sm-block">
                 {
-                  user.roleId > 1 &&
+                  (config.IS_DEV || user.roleId > 1) &&
                   <div className="float-right  mr-3">
                     <LeaveRequestForm />
                   </div>
@@ -229,6 +241,23 @@ const LeaveRequests = (props) => {
                   let isPending = item.status.toLowerCase() === "pending";
                   return (
                     <td>
+                      {(item['employee id'] === user.employeeId && isPending) &&
+                        <CPopover header={"cancel request"}>
+                          <CLink
+                            onClick={() => {
+                              setPayload({
+                                id: item.id,
+                              });
+
+                              setIsCancel(true);
+                              dialog.current.toggle();
+                            }}
+                            className="card-header-action"
+                          >
+                            <CIcon name="cil-trash" className="text-danger" />
+                          </CLink>
+                        </CPopover>}
+
                       <CPopover header="View Details">
                         <CLink
                           onClick={() => viewRequestInfo(item.id)}
@@ -257,10 +286,14 @@ const LeaveRequests = (props) => {
                             <CPopover header={el.header} key={id}>
                               <CLink
                                 onClick={() => {
+                                  let isBefore = moment(item["date from"]).isBefore(moment());
+                                  setIsCancel(false);
                                   setPayload({
+                                    noOfDays: getDuration(isBefore ? formatDate(new Date()) : item['date from'], item["date to"]),
                                     id: item.id,
                                     status: getAdminResponse(el.code),
                                     statusCode: el.code,
+                                    approver:user.employeeId
                                   });
                                   dialog.current.toggle();
                                 }}

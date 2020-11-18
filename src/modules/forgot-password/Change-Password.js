@@ -54,7 +54,7 @@ const ChangePassword = (props) => {
       isOtp: 0,
       userId: null
     }
-    debugger
+    //debugger
     if (user) {
       payload["userId"] = user.userId;
     } else {
@@ -77,10 +77,10 @@ const ChangePassword = (props) => {
       }
       sessionStorage.clear();
       if (user.is_password_changed === 0) {
-        debugger
+        //debugger
         let res1 = await api.get(`/getProfile?userId=${user.userId}`)
         let newUser = res1.data[0]
-        debugger;
+        //debugger;
         dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, newUser))
         return history.push('/dashboard');
 

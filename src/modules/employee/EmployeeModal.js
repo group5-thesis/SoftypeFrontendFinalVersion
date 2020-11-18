@@ -159,7 +159,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                 isValid = false
             }
         })
-        debugger
+        //debugger
         if (isValid) {
             dialog.current.toggle()
         }
@@ -349,7 +349,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                             </CFormGroup>
                             <CFormGroup row className="my-0">
 
-                                <CCol >
+                                <CCol xs="6">
                                     <CFormGroup>
                                         <CLabel>Email</CLabel>
                                         <CInput
@@ -362,6 +362,21 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
 
                                         />
                                         {renderFeedback(errors.email)}
+                                    </CFormGroup>
+                                </CCol>
+                                <CCol xs="6">
+                                    <CFormGroup>
+                                        <CLabel>Status</CLabel>
+                                        <CSelect onChange={handleOnChange}
+                                            value={employee.isActive}
+                                            name="isActive">
+                                            <option value="" hidden>{isUpdate ? employee.isActive === 1 ? 'Active' : 'Inactive' : 'Select Status'}</option>
+                                            {
+                                                [{ status: 'Active', value: 1 },
+                                                { status: 'Inctive', value: 0 }]
+                                                    .map(st => <option key={st.value} value={st.value}>{st.status}</option>)
+                                            }
+                                        </CSelect>
                                     </CFormGroup>
                                 </CCol>
                             </CFormGroup>

@@ -9,6 +9,12 @@ export default function changeState(state = initial_state, action) {
   switch (action.type) {
     case ActionTypes.ADD_LEAVE_REQUEST:
       return { ...state, leave_requests: [...state.leave_requests, action.payload] };
+    case ActionTypes.CANCEL_LEAVE_REQUEST:
+      return {
+        ...state, leave_requests: state.leave_requests.filter((request) => {
+          return request.id.toString() !== action.payload.id.toString()
+        })
+      };
     case ActionTypes.RESPOND_TO_LEAVE_REQUEST:
       return {
         ...state,
