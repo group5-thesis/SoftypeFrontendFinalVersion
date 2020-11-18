@@ -152,9 +152,12 @@ const Ticket = (props) => {
                 <h4 className="card-title mb-0">{Number(status) === 1 ? 'Open' : status === 'All' ? status : 'Closed'} Requests</h4>
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
-                <div className="float-right  mr-3">
-                  <TicketForm />
-                </div>
+                {
+                  user.roleId > 1 &&
+                  <div className="float-right  mr-3">
+                    <TicketForm />
+                  </div>
+                }
                 <div className={`float-right mr-3 ${!collapse && "mb-2"}`} >
                   <CButton
                     color={`${collapse ? "secondary" : "primary"}`}

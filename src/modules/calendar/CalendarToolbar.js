@@ -17,17 +17,19 @@ class CustomToolbar extends React.Component {
     }
 
     componentDidUpdate() {
-        const month = MONTHS[this.props.date.getMonth()];
-        const year = this.props.date.getFullYear()
-        this.props.onMonthChange(month)
-        this.props.onYearChange(year)
+        if(this.props.clickable){
+            const month = MONTHS[this.props.date.getMonth()];
+            const year = this.props.date.getFullYear()
+            this.props.onMonthChange(month)
+            this.props.onYearChange(year)
+        }
     }
 
     navigate = action => {
         this.props.onNavigate(action);
     }
     handleChange = (event) => {
-        this.props.onView(event.target.value);
+        this.props.onView(this.props.clickable?event.target.value:'month');
     };
     render() {
         let { label, views, header } = this.props

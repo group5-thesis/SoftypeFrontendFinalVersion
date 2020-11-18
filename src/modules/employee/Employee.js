@@ -150,14 +150,19 @@ const EmployeeDetails = (props) => {
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 <div className="float-right px-2">
-                  <EmployeeModal
-                    isUpdate
-                    data={employee}
-                    retrieveEmployees={props.retrieveEmployees}
-                  />
+                  {
+                    (user.roleId === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) &&
+                    <EmployeeModal
+                      isUpdate
+                      data={employee}
+                      retrieveEmployees={props.retrieveEmployees}
+                    />
+                  }
                 </div>
                 <div className="float-right">
-                  <PerformanceReviewModal {...{ user: employee }} />
+                  {
+                    (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} />
+                  }
                 </div>
               </CCol>
             </CRow>
@@ -196,7 +201,7 @@ const EmployeeDetails = (props) => {
                       pic = true;
                     }
                   }).catch(err=>console.log(err));
-                  debugger
+                  //debugger
 
                   return (
                     <div

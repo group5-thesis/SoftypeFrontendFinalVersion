@@ -1,9 +1,10 @@
 import React, { lazy, useRef, useState } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButtonGroup, CButton } from '@coreui/react'
+import CIcon from "@coreui/icons-react";
 import { useSelector, useDispatch } from 'react-redux';
-import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration } from 'utils/helpers'
+import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration, dispatchNotification, respondToRequest, cancelRequest } from 'utils/helpers'
 import { NoData, ConfirmDialog } from 'reusable';
-import { ActionTypes, actionCreator } from 'utils/actions';
+
 const Calendar = lazy(() => import('modules/calendar/Calendar'));
 const LeaveRequest = ({ match }) => {
   const dispatch = useDispatch();
@@ -14,12 +15,13 @@ const LeaveRequest = ({ match }) => {
   })
   const user = useSelector(state => state.appState.auth.user)
   const [response, setResponse] = useState();
+  const [isCancel, setIsCancel] = useState(false);
   const dialog = useRef()
 
-  let request = shallowCopy(_request);
-  if (!Object.keys(request).length) {
+  if (!Object.keys(_request).length) {
     return <NoData />
   }
+  let request = shallowCopy(_request);
   request = insertProperty(request, 'no_of_days', getDuration(request['date from'], request['date to']), 4);
   let event = {
     start: new Date(request['date from']),
@@ -30,15 +32,17 @@ const LeaveRequest = ({ match }) => {
   const leaveDetails = request ? Object.entries(request) : []
 
   const handleClick = (code) => {
-    let payload = getAdminResponse(code)
-    console.log(payload)
+    setIsCancel(false);
+    let payload = {
+      id: request.id,
+      approver: user.employeeId,
+      status: getAdminResponse(code),
+      statusCode: code,
+    }
     setResponse(payload);
     dialog.current.toggle();
   }
 
-  const respondToRequest = () => {
-    dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, { id: request.id, status: response }));
-  }
   const renderCalendar = () => {
     return <Calendar  {...{
       header: {
@@ -46,7 +50,8 @@ const LeaveRequest = ({ match }) => {
         left: false
       },
       style: { height: 450 },
-      events: [event]
+      events: [event],
+      clickable: false
     }} />
   }
 
@@ -56,8 +61,11 @@ const LeaveRequest = ({ match }) => {
         ref={dialog}
         {...{
           show: dialog,
-          onConfirm: respondToRequest,
-          title: `${response}`,
+          onConfirm: () => {
+            if (!isCancel) return respondToRequest(dispatch, response);
+            return cancelRequest(dispatch, request.id);
+          },
+          title: !isCancel ? `${response && response.status}` : 'Cancel Request?',
         }}
       ></ConfirmDialog>
       <CCol lg={6} >
@@ -72,6 +80,13 @@ const LeaveRequest = ({ match }) => {
                 <CButton onClick={() => {
                   handleClick(0)
                 }} color="danger">Reject</CButton>
+                {
+                  user.employeeId === request['employee id'] && <CButton onClick={() => {
+                    setIsCancel(true);
+                    dialog.current.toggle();
+                  }} color="danger">   <CIcon name="cil-trash" className="text-danger" />Cancel</CButton>
+                }
+
               </CButtonGroup>
             }
           </CCardHeader>
@@ -92,7 +107,6 @@ const LeaveRequest = ({ match }) => {
                       </tr>
                     )
                   })
-
                 }
               </tbody>
             </table>

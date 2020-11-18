@@ -13,6 +13,7 @@ const MyCalendar = ({
   style = { height: 500 },
   onYearChange,
   onMonthChange,
+  clickable = true,
   isLoading = false }) => {
   const modal = useRef();
   const [selected, setSelected] = useState()
@@ -42,13 +43,16 @@ const MyCalendar = ({
             endAccessor='end'
             selectable
             style={style}
+            defaultView={'month'}
             defaultDate={events.length ? events[0]['start'] : new Date(Date.now())}
             onSelectEvent={event => {
-              setSelected(event);
-              modal.current.toggle();
+              if(clickable){
+                setSelected(event);
+                modal.current.toggle();
+              }
             }}
             components={{
-              toolbar: (rest) => <CalendarToolbar {...rest} {...{ header, onMonthChange, onYearChange }} />,
+              toolbar: (rest) => <CalendarToolbar {...rest} {...{clickable, header, onMonthChange, onYearChange }} />,
             }}
           />
         </CCardBody>

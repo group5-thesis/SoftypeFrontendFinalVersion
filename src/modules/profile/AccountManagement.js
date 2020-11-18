@@ -138,7 +138,6 @@ const MyAccount = (props) => {
       <CCard>
         <CCardBody>
           <CTabs activeTab={tab} onActiveTabChange={(e) => {
-            console.log(e)
             sessionStorage.setItem("_tab", e)
           }}>
             <CNav variant="tabs" className="my-tabs">
@@ -216,9 +215,8 @@ const MyAccount = (props) => {
                               disabled={process.uploading}
                               color="primary"
                             >
-                              Change Profile Image
-                </CButton>
-
+                                Change Profile Image
+                            </CButton>
                             <CButton
                               onClick={UploadButtonHandler}
                               className="mr-1 mt-3"
@@ -234,6 +232,17 @@ const MyAccount = (props) => {
                                   "Upload"
                                 )}
                             </CButton>
+                            <CButton
+                                block
+                                className="mr-1 mt-3"
+                                disabled={process.uploading}
+                                color="primary"
+                                onClick={() => {
+                                  history.push("/change-password")
+                                }}
+                              >
+                                Change Password
+                              </CButton>
                           </CCol>
                           <CCol>
                             <CForm>
@@ -269,30 +278,6 @@ const MyAccount = (props) => {
                           </CCol>
                         </CRow>
                       </CCardBody>
-                      <CCardFooter>
-                        <CRow >
-                          <CCol>
-                            <div className="float-right px-2">
-                              <EmployeeModal
-                                isUpdate
-                                data={user}
-                                retrieveEmployees={props.retrieveEmployees}
-                              />
-                            </div>
-                            <div className="float-right px-2">
-                              <CButton
-                                disabled={process.uploading}
-                                color="primary"
-                                onClick={() => {
-                                  history.push("/change-password")
-                                }}
-                              >
-                                Change Password
-                              </CButton>
-                            </div>
-                          </CCol>
-                        </CRow>
-                      </CCardFooter>
                     </CCard>
                   </CCol>
                 </CRow>

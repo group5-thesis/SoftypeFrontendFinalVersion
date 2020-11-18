@@ -13,6 +13,7 @@ export const FETCH_EMPLOYEES = 'FETCH_EMPLOYEES';
 // Leave module keywords
 export const FETCH_LEAVE_REQUEST = 'FETCH_LEAVE_REQUEST';
 export const ADD_LEAVE_REQUEST = 'ADD_LEAVE_REQUEST';
+export const CANCEL_LEAVE_REQUEST = 'CANCEL_LEAVE_REQUEST';
 export const RESPOND_TO_LEAVE_REQUEST = 'RESPOND_TO_LEAVE_REQUEST';
 
 // App module keywords
