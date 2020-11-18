@@ -156,30 +156,38 @@ const TicketForm = () => {
         {renderError('item')}
 
       </CFormGroup>
-      <CFormGroup >
-        <CLabel>Price per item : </CLabel>
-        <CInput
-          type="number"
-          name="price"
-          value={data.price}
-          onChange={handleOnChange}
-          invalid={errors.price}
-          placeholder="0.00"
-        />
-        {renderError('price')}
+      <CFormGroup row className="my-0">
+        <CCol xs="6">
+          <CFormGroup >
+            <CLabel>Price per item : </CLabel>
+            <CInput
+              type="number"
+              name="price"
+              value={data.price}
+              onChange={handleOnChange}
+              invalid={errors.price}
+              placeholder="0.00"
+            />
+            {renderError('price')}
+          </CFormGroup>
+        </CCol>
+        <CCol xs="6">
+          <CFormGroup >
+            <CLabel>Quantity : </CLabel>
+            <CInput
+              type="number"
+              name="quantity"
+              value={data.quantity}
+              onChange={handleOnChange}
+              invalid={errors.quantity}
+              placeholder="0"
+            />
+            {renderError('quantity')}
+          </CFormGroup>
+        </CCol>
       </CFormGroup>
-      <CFormGroup >
-        <CLabel>Quantity : </CLabel>
-        <CInput
-          type="number"
-          name="quantity"
-          value={data.quantity}
-          onChange={handleOnChange}
-          invalid={errors.quantity}
-          placeholder="0"
-        />
-        {renderError('quantity')}
-      </CFormGroup>
+
+
       <CFormGroup >
         <CLabel>Total Price : </CLabel>
         <CInput id="name" value={data.total_price} disabled />

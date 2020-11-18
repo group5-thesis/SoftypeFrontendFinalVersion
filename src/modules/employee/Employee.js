@@ -201,7 +201,7 @@ const EmployeeDetails = (props) => {
                       pic = true;
                     }
                   }).catch(err=>console.log(err));
-                  //debugger
+                  //
 
                   return (
                     <div

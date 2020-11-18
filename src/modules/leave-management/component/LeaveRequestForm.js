@@ -151,14 +151,14 @@ const LeaveFormRequest = ({ request }) => {
         setIsLoading(true)
         let res = await api.post("/create_request_leave", data)
         if (!res.error) {
+            console.log(res.data)
             const { employeeId, roleId } = user;
             let payload = LEAVE_REQUEST_FILTER('All');
-            // dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
-            retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
+            dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
             modalRef.current.toggle()
             modalOnClose()
         } else {
-            return dispatchNotification(dispatch, { type: 'error', message: res.message });
+            dispatchNotification(dispatch, { type: 'error', message: res.message });
         }
         setIsLoading(false)
     }

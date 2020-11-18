@@ -232,7 +232,7 @@ export const checkCamera = () => {
               //console.log(err);
               if (err.name == "NotAllowedError") {
                 console.log(err)
-                // debugger
+                // 
                 result.cameraError = defaultError;
               }
               reject(result);

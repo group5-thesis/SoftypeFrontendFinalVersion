@@ -37,7 +37,7 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
     }
     const _onError = message => {
         // let currentError = copyArray(error)
-        //debugger
+        //
         if (!error.includes(message)) {
             return setError([...error, message])
         }
