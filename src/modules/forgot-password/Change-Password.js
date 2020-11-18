@@ -76,7 +76,7 @@ const ChangePassword = (props) => {
         return history.push('/login');
       }
       sessionStorage.clear();
-      if (user.is_password_changed === 0) {
+      if (user?.is_password_changed === 0) {
         //debugger
         let res1 = await api.get(`/getProfile?userId=${user.userId}`)
         let newUser = res1.data[0]
@@ -142,7 +142,7 @@ const ChangePassword = (props) => {
         }
         <input id="userName" name="username" hidden autoComplete="username" />
         {
-          (_isOTP === null || !user.is_password_changed === 0) && <CInputGroup className="mb-3 mt-3">
+          (_isOTP === null || !user?.is_password_changed === 0) && <CInputGroup className="mb-3 mt-3">
             <CInputGroupPrepend>
               <CInputGroupText>
                 <Icon path={mdiKey} size={0.9} color={colors.$grey_dark} />

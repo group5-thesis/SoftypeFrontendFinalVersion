@@ -26,6 +26,7 @@ const TicketForm = () => {
     quantity: false,
     date_needed: false,
     price: false,
+    purpose: false
   }
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false)
@@ -58,7 +59,7 @@ const TicketForm = () => {
   const validate = () => {
     let dateValid = moment(data.date_needed).isSameOrAfter(moment());
     let _errors = {}
-    let { item, quantity, date_needed, price } = data
+    let { item, quantity, date_needed, price, purpose } = data
     if (!item) {
       _errors['item'] = true;
     }
@@ -70,6 +71,9 @@ const TicketForm = () => {
     }
     if (price < 1) {
       _errors['price'] = true;
+    }
+    if (!purpose) {
+      _errors['purpose'] = true;
     }
     setErrors(_errors)
     if (_.values(_errors).includes(true)) {
@@ -153,18 +157,6 @@ const TicketForm = () => {
 
       </CFormGroup>
       <CFormGroup >
-        <CLabel>Quantity : </CLabel>
-        <CInput
-          type="number"
-          name="quantity"
-          value={data.quantity}
-          onChange={handleOnChange}
-          invalid={errors.quantity}
-          placeholder="0"
-        />
-        {renderError('quantity')}
-      </CFormGroup>
-      <CFormGroup >
         <CLabel>Price per item : </CLabel>
         <CInput
           type="number"
@@ -177,8 +169,33 @@ const TicketForm = () => {
         {renderError('price')}
       </CFormGroup>
       <CFormGroup >
+        <CLabel>Quantity : </CLabel>
+        <CInput
+          type="number"
+          name="quantity"
+          value={data.quantity}
+          onChange={handleOnChange}
+          invalid={errors.quantity}
+          placeholder="0"
+        />
+        {renderError('quantity')}
+      </CFormGroup>
+      <CFormGroup >
         <CLabel>Total Price : </CLabel>
         <CInput id="name" value={data.total_price} disabled />
+      </CFormGroup>
+      <CFormGroup>
+        <CLabel htmlFor="textarea-input">Purpose : </CLabel>
+        <CTextarea
+          onChange={handleOnChange}
+          name="purpose"
+          value={data.purpose}
+          invalid={errors.purpose}
+          rows="5"
+        />
+        <CInvalidFeedback className="help-block">
+          Please provide a valid information
+                  </CInvalidFeedback>
       </CFormGroup>
       <CFormGroup >
         <CLabel htmlFor="date-input">Date Needed : </CLabel>

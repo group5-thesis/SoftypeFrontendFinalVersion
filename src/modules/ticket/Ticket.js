@@ -10,7 +10,7 @@ import TicketFilter from "./component/TicketFilter";
 import TicketForm from "./component/TicketForm";
 import TicketDetails from "./component/TicketDetails";
 import api from 'utils/api'
-
+import { config } from 'utils/config'
 
 const Ticket = (props) => {
 
@@ -153,7 +153,7 @@ const Ticket = (props) => {
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 {
-                  user.roleId > 1 &&
+                  (config.IS_DEV || user.roleId > 1) &&
                   <div className="float-right  mr-3">
                     <TicketForm />
                   </div>
