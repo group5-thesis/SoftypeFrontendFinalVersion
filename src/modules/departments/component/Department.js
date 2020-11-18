@@ -11,7 +11,7 @@ import {
   CInvalidFeedback,
   CImg
 } from '@coreui/react';
-import { copyArray, setWidth, toCapitalize, shallowCopy, RULES } from 'utils/helpers';
+import { copyArray, setWidth, toCapitalize, shallowCopy, RULES, getBaseUrl } from 'utils/helpers';
 import { NoData, Card, Modal } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
@@ -140,6 +140,14 @@ const Department = ({ match, location }) => {
     history.push(`/employee/departments/departmentDetails/employees/${e.managerId}`);
   }
 
+  const viewDepartmentDetails = async (e) => {
+    let res = await api.get(`/retrieve_limited_department/${e.department_id}`)
+    if (!res.error) {
+      console.log(res)
+    } else {
+      alert("error")
+    }
+  }
   // useEffect(() => {
   //   // router params pass as department Id
   //   console.log(match.params.id, "Params Id")
@@ -180,10 +188,16 @@ const Department = ({ match, location }) => {
             <CCardHeader>
               <CRow>
                 <CCol className="d-none d-md-block">
-                  <div className="float-right" >
+                  {/* <div className="float-right" >
                     <CButton color="primary" onClick={() => {
                       modal.current.toggle()
                     }}>Add Department Manager</CButton>
+                  </div> */}
+                  <div className="float-right" >
+                    <CButton color="primary" onClick={() => {
+                      // modal.current.toggle()
+                      viewDepartmentDetails(departmentDetails)
+                    }}>View Department Details</CButton>
                   </div>
                 </CCol>
               </CRow>
@@ -206,9 +220,9 @@ const Department = ({ match, location }) => {
                     clickable
                     height={200}
                     animation
-                    setImg={departmentDetails.department_head_profileImg !== null ? false : true}
+                    setImg
                     imgClass={"img_dept_head"}
-                    imgSrc={departmentDetails.department_head_profileImg === null ? department_icon_default : departmentDetails.department_head_profileImg}
+                    imgSrc={departmentDetails.department_head_profileImg !== null ? `${getBaseUrl()}/file/images/${departmentDetails.department_head_profileImg}` : department_icon_default}
                     text={departmentDetails.department_head}
                     textClass={"font-weight-bold"}
                     textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
@@ -218,18 +232,17 @@ const Department = ({ match, location }) => {
               <CRow>
                 {
                   _departmentManagers.map((key, index) => {
-                    console.log(key)
                     return (
                       <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
                         <Card
                           clickable
                           height={200}
                           animation
-                          setImg={key.profile_img !== null ? false : true}
+                          setImg
                           text={
                             `${key.manager_firstname}`
                           }
-                          imgSrc={key.profile_img === null ? department_icon_default : key.profile_img}
+                          imgSrc={key.profile_img === null ? department_icon_default : `${getBaseUrl()}/file/images/${key.profile_img}`}
                           dept_role={key.role}
                           textClass={"font-weight-bold"}
                           textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}

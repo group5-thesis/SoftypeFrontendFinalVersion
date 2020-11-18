@@ -20,7 +20,7 @@ import { useHistory } from "react-router-dom";
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 import colors from "assets/theme/colors"
-import { retrieveEmployees } from 'utils/helpers/fetch';
+import { retrieveEmployees, fetchDepartmentManagers, fetchDepartments } from 'utils/helpers/fetch';
 
 const Departments = (props) => {
 
@@ -66,14 +66,16 @@ const Departments = (props) => {
       if (!res.error) {
         dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
         retrieveEmployees(dispatch)
+        fetchDepartmentManagers(dispatch)
+        fetchDepartments(dispatch)
         toggleModal()
       } else {
         alert("error")
       }
-      setIsLoading(false)
-    }else{
+    } else {
       alert("Department is Existed!")
     }
+    setIsLoading(false)
   }
 
   const validateInfo = (name, value) => {
