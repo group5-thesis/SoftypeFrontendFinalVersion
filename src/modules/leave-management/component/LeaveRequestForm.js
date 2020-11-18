@@ -15,8 +15,9 @@ import { Modal } from 'reusable'
 import LeaveRequestModel from 'models/LeaveRequestModel'
 import { shallowCopy, checkDateRange, toCapitalize, renameKey, dispatchNotification } from 'utils/helpers'
 import { useSelector, useDispatch } from 'react-redux'
-import { LEAVE_TYPES } from 'utils/constants/constant'
+import { LEAVE_TYPES, LEAVE_REQUEST_FILTER } from 'utils/constants/constant'
 import { actionCreator, ActionTypes } from 'utils/actions';
+import { retrieveLeaveRequests } from 'utils/helpers/fetch'
 import api from 'utils/api'
 import _ from 'lodash'
 import moment from 'moment';
@@ -150,11 +151,14 @@ const LeaveFormRequest = ({ request }) => {
         setIsLoading(true)
         let res = await api.post("/create_request_leave", data)
         if (!res.error) {
+            console.log(res.data)
+            const { employeeId, roleId } = user;
+            let payload = LEAVE_REQUEST_FILTER('All');
             dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
             modalRef.current.toggle()
             modalOnClose()
         } else {
-            alert("error")
+            dispatchNotification(dispatch, { type: 'error', message: res.message });
         }
         setIsLoading(false)
     }

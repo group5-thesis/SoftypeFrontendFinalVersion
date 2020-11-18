@@ -166,6 +166,44 @@ export const cancelRequest = async (dispatch, id) => {
     dispatchNotification(dispatch, { type: 'success', message: 'Cancelled successfuly!' });
   }
 }
+
+export const checkCamerav1 = () => {
+  var constraints = {
+    video: true,
+    audio: true
+  }
+  console.log("check v1 : ")
+  navigator.mediaDevices.getUserMedia(constraints)
+  .then(function success(stream) {
+    /* do stuff */
+    console.table(stream)
+
+    console.log("ok")
+  }).catch(function (err) {
+    //log to console first 
+    console.log(err); /* handle the error */
+    if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
+      //required track is missing 
+      console.log('NotFoundError')
+    } else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
+      //webcam or mic are already in use 
+      console.log('NotReadableError')
+    } else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
+      //constraints can not be satisfied by avb. devices 
+      console.log('OverconstrainedError')
+    } else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
+      //permission denied in browser 
+      console.log('NotAllowedError')
+    } else if (err.name == "TypeError" || err.name == "TypeError") {
+      //empty constraints object 
+      console.log('TypeError')
+    } else {
+      console.log('others')
+
+      //other errors 
+    }
+  });
+}
 export const checkCamera = () => {
   return new Promise((resolve, reject) => {
     const defaultError = "Please Allow the app to use the camera";
@@ -174,7 +212,6 @@ export const checkCamera = () => {
       cameraError: defaultError,
     };
     let hasCamera = false;
-
     navigator.mediaDevices
       .enumerateDevices()
       .then((devices) => {
@@ -194,6 +231,8 @@ export const checkCamera = () => {
               result.cameraError = err.name + ": " + err.message;
               //console.log(err);
               if (err.name == "NotAllowedError") {
+                console.log(err)
+                // 
                 result.cameraError = defaultError;
               }
               reject(result);

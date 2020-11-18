@@ -13,7 +13,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { shallowCopy, checkCamera } from "utils/helpers";
+import { shallowCopy, checkCamera, checkCamerav1 } from "utils/helpers";
 import { APP_MESSAGES } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from "utils/actions";
 import { ConfirmDialog, Modal } from "reusable";
@@ -103,7 +103,7 @@ class Login extends Component {
           this.setState({ camera: true });
         })
         .catch((err) => {
-          this.setState({ cameraError: err.cameraError, camera: false });
+          this.setState({ cameraError: "err.cameraError", camera: false });
         });
     }
   }
@@ -120,7 +120,7 @@ class Login extends Component {
           ref={this.dialog}
           {...{
             confirmButton: false,
-            title: this.state.cameraError,
+            title: "",//this.state.cameraError,
             cancelButtonText: "Ok",
           }}
         ></ConfirmDialog>

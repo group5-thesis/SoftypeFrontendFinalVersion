@@ -157,7 +157,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                 isValid = false
             }
         })
-        //debugger
+        //
         if (isValid) {
             dialog.current.toggle()
         }
