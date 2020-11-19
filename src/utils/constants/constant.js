@@ -48,9 +48,10 @@ export const MONTHS = [
 ]
 
 export const YEARS = [
-  2018,
-  2019,
-  2020
+  // 2018,
+  // 2019,
+  2020,
+  2021
 ]
 
 export const TICKET_STATUS = {
@@ -98,8 +99,10 @@ export const PERFORMANCE_REVIEW_STATUS = {
 
 export const COLORS = [
   "gradient-primary",
-  "gradient-info",
+  "gradient-dark",
   "gradient-warning",
+  "gradient-secondary",
+  "gradient-info",
   "gradient-success",
   "gradient-danger"
 ]
@@ -189,3 +192,9 @@ export const ACCOUNT_ROLES = [
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];
 export const CURRENT_YEAR = new Date().getFullYear();
+export const LEAVE_REQUEST_FILTER = queryStatus => ({
+  status: queryStatus ? queryStatus : "All",
+  month: CURRENT_MONTH,
+  year: CURRENT_YEAR,
+  category: 'All'
+})

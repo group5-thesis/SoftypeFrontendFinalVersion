@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import routes from "router";
 import { filterModule, plotArray } from "utils/helpers";
 import Page404 from "modules/placeholder/page404/Page404";
-import api from "utils/api";
+import { LEAVE_REQUEST_FILTER } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from "utils/actions";
 import {
   retrieveLeaveRequests,
@@ -29,12 +29,12 @@ const AppContent = (_props) => {
   const user = useSelector((state) => state.appState.auth.user);
   const isAppLoading = useSelector((state) => state.appState.app.loading);
   const { employeeId, roleId } = user;
-  const payload = { employeeId, roleId };
+  let payload = LEAVE_REQUEST_FILTER('All');
   const accessedRoutes = filterModule(routes, roleId);
   const dispatch = useDispatch();
   const retrieve = async (payload) => {
     dispatch(actionCreator(ActionTypes.LOADING_STARTED));
-    let resp1 = await retrieveLeaveRequests(dispatch, payload);
+    let resp1 = await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
     let resp2 = await fetchTickets(dispatch);
     let resp3 = await retrieveEmployees(dispatch);
     let resp4 = await fetchCompanyFiles(dispatch);
@@ -56,13 +56,14 @@ const AppContent = (_props) => {
     });
 
     if (hasError) {
-
       dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'error', message: "Error in fetching data." }));
     }
   };
 
   useEffect(() => {
-    retrieve(payload);
+    // console.log(isAppLoading)
+    // debugger
+    if (!isAppLoading) retrieve(payload);
   }, []);
 
   return (

@@ -23,7 +23,7 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
 
   const checkIfDeptHead = emp => {
     if (stateDepartments.length < 1) {
-      if (emp.accountType !== 2) {
+      if (emp.accountType !== 2 ) {
         return true
       }
     }
@@ -39,7 +39,7 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
       const _emp_m = stateDepartmentManagers[idx];
       for (let i = 0; i < stateDepartments.length; i++) {
         const _emp_h = stateDepartments[i];
-        if (_emp_m.department_head === emp.name || emp.employeeId == _emp_m.employeeId || emp.accountType !== 2 || _emp_h.department_head_employeeId === emp.employeeId) {
+        if (_emp_m.department_head === emp.name || emp.employeeId === _emp_m.employeeId || emp.accountType !== 2 || _emp_h.department_head_employeeId === emp.employeeId) {
           return true
         }
       }

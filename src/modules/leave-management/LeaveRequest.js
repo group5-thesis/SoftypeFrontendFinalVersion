@@ -1,9 +1,10 @@
-import React, { lazy } from 'react'
+import React, { lazy, useRef, useState } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButtonGroup, CButton } from '@coreui/react'
+import CIcon from "@coreui/icons-react";
 import { useSelector, useDispatch } from 'react-redux';
-import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration } from 'utils/helpers'
-import { NoData } from 'reusable';
-import { ActionTypes, actionCreator } from 'utils/actions';
+import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration, dispatchNotification, respondToRequest, cancelRequest } from 'utils/helpers'
+import { NoData, ConfirmDialog } from 'reusable';
+
 const Calendar = lazy(() => import('modules/calendar/Calendar'));
 const LeaveRequest = ({ match }) => {
   const dispatch = useDispatch();
@@ -12,11 +13,15 @@ const LeaveRequest = ({ match }) => {
       return el.id.toString() === match.params.id.toString()
     })[0]
   })
+  const user = useSelector(state => state.appState.auth.user)
+  const [response, setResponse] = useState();
+  const [isCancel, setIsCancel] = useState(false);
+  const dialog = useRef()
 
-  let request = shallowCopy(_request);
-  if (!Object.keys(request).length) {
+  if (!Object.keys(_request).length) {
     return <NoData />
   }
+  let request = shallowCopy(_request);
   request = insertProperty(request, 'no_of_days', getDuration(request['date from'], request['date to']), 4);
   let event = {
     start: new Date(request['date from']),
@@ -27,8 +32,15 @@ const LeaveRequest = ({ match }) => {
   const leaveDetails = request ? Object.entries(request) : []
 
   const handleClick = (code) => {
-    let response = getAdminResponse(code)
-    dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, { id: request.id, status: response }));
+    setIsCancel(false);
+    let payload = {
+      id: request.id,
+      approver: user.employeeId,
+      status: getAdminResponse(code),
+      statusCode: code,
+    }
+    setResponse(payload);
+    dialog.current.toggle();
   }
 
   const renderCalendar = () => {
@@ -38,18 +50,47 @@ const LeaveRequest = ({ match }) => {
         left: false
       },
       style: { height: 450 },
-      events: [event]
+      events: [event],
+      clickable: false
     }} />
   }
 
   return (
     <CRow>
-      <CCol lg={6} style={{ overflowY: 'auto', height: 450 }}>
-        <CCard>
+      <ConfirmDialog
+        ref={dialog}
+        {...{
+          show: dialog,
+          onConfirm: () => {
+            if (!isCancel) return respondToRequest(dispatch, response);
+            return cancelRequest(dispatch, request.id);
+          },
+          title: !isCancel ? `${response && response.status}` : 'Cancel Request?',
+        }}
+      ></ConfirmDialog>
+      <CCol lg={6} >
+        <CCard style={{ maxHeight: 500 }} >
           <CCardHeader>
             Leave Request ID : {match.params.id}
+            {(request.status === 'pending' && user.roleId !== 3) &&
+              <CButtonGroup style={{ float: "right" }}>
+                <CButton color="primary" onClick={() => {
+                  handleClick(1)
+                }} className="mr-2">Accept</CButton>
+                <CButton onClick={() => {
+                  handleClick(0)
+                }} color="danger">Reject</CButton>
+                {
+                  user.employeeId === request['employee id'] && <CButton onClick={() => {
+                    setIsCancel(true);
+                    dialog.current.toggle();
+                  }} color="danger">   <CIcon name="cil-trash" className="text-danger" />Cancel</CButton>
+                }
+
+              </CButtonGroup>
+            }
           </CCardHeader>
-          <CCardBody>
+          <CCardBody style={{ overflowY: 'auto', }}>
             <table className="table table-hover " style={{ borderBottom: "1px solid grey" }}>
               <tbody>
                 {
@@ -66,20 +107,10 @@ const LeaveRequest = ({ match }) => {
                       </tr>
                     )
                   })
-
                 }
               </tbody>
             </table>
-            {request.status === 'pending' &&
-              <CButtonGroup style={{ float: "right" }}>
-                <CButton color="primary" onClick={() => {
-                  handleClick(1)
-                }} className="mr-2">Accept</CButton>
-                <CButton onClick={() => {
-                  handleClick(0)
-                }} color="danger">Reject</CButton>
-              </CButtonGroup>
-            }
+
           </CCardBody>
 
         </CCard>

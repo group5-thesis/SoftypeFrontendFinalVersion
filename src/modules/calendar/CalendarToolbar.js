@@ -1,6 +1,7 @@
 import React from "react"
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { CFormGroup, CSelect } from "@coreui/react";
+import { MONTHS } from 'utils/constants/constant'
 
 export let navigate = {
     PREVIOUS: 'PREV',
@@ -10,10 +11,29 @@ export let navigate = {
 }
 
 class CustomToolbar extends React.Component {
+    constructor(props) {
+        super(props)
+
+    }
+
+    componentDidUpdate() {
+        if(this.props.clickable){
+            const month = MONTHS[this.props.date.getMonth()];
+            const year = this.props.date.getFullYear()
+            this.props.onMonthChange(month)
+            this.props.onYearChange(year)
+        }
+    }
+
+    navigate = action => {
+        this.props.onNavigate(action);
+    }
+    handleChange = (event) => {
+        this.props.onView(this.props.clickable?event.target.value:'month');
+    };
     render() {
-        console.log(this.props)
         let { label, views, header } = this.props
-        let { right = true, center = true, left = true } = header
+        let { right = true, left = true } = header
         return (
             <div className="rbc-toolbar">
                 {
@@ -40,12 +60,6 @@ class CustomToolbar extends React.Component {
             </div>
         )
     }
-    navigate = action => {
-        this.props.onNavigate(action)
-    }
-    handleChange = (event) => {
-        this.props.onView(event.target.value);
-    };
 
 }
 

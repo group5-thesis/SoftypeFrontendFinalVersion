@@ -128,14 +128,14 @@ const routes = [
     user: [4],
   },
   {
-    path: "/employee/departments/:id",
+    path: "/employee/departments/departmentDetails",
     exact: true,
     name: "Department Details",
     component: Department,
     user: [4],
   },
   {
-    path: "/employee/departments/employees/:id/:dept?",
+    path: "/employee/departments/departmentDetails/employees/:id/:dept?",
     exact: true,
     name: "Department Employees",
     component: DepartmentEmployees,

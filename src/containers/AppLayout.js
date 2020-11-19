@@ -9,9 +9,12 @@ import { Redirect } from 'react-router-dom'
 
 const AppLayout = (props) => {
   const isLoggedIn = useSelector(state => state.appState.auth.already_logged)
+  const user = useSelector(state => state.appState.auth.user)
   if (!isLoggedIn) {
     return <Redirect to="/login" />
-  }
+  } else if (Number(user.is_password_changed) === 0) {
+    return <Redirect to="/change-password" />
+  } 
   return (
     <div className="c-app c-default-layout">
       <AppSidebar {...props} />

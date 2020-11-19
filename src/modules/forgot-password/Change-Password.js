@@ -34,24 +34,29 @@ const ChangePassword = (props) => {
   const dispatch = useDispatch();
   const email = sessionStorage.getItem('email') !== null ? sessionStorage.getItem('email') : '0';
   const _isOTP = sessionStorage.getItem('_isOTP');
-  console.log(email, _isOTP)
-  const [currentPassword, setCurrentPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState(user && user.is_password_changed == 0 ? 'Softype@100' : '');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, toggleLoading] = useState(false);
   const [errors, setErrors] = useState([]);
   const [show, toggleShow] = useState(false);
   const [showPassword, toggleShowPassword] = useState(false);
+
+
+  if (!_isOTP && !user) {
+    history.push("/login")
+  }
+
   const submit = async () => {
     let payload = {
       current_password: currentPassword,
       new_password: newPassword,
-      isOtp: 0
+      isOtp: 0,
+      userId: null
     }
-
+    //
     if (user) {
       payload["userId"] = user.userId;
-
     } else {
       payload['isOtp'] = 1;
       payload["email"] = email;
@@ -68,9 +73,18 @@ const ChangePassword = (props) => {
       sessionStorage.clear();
       if (_isOTP && email) {
         localStorage.clear();
-        return history.push('login');
+        return history.push('/login');
       }
       sessionStorage.clear();
+      if (user?.is_password_changed === 0) {
+        //
+        let res1 = await api.get(`/getProfile?userId=${user.userId}`)
+        let newUser = res1.data[0]
+        //;
+        dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, newUser))
+        return history.push('/dashboard');
+
+      }
       history.push('/my-account');
     }
     setErrors([{ message: res.message }])
@@ -102,6 +116,7 @@ const ChangePassword = (props) => {
     }
     submit();
   }
+
   return (
     <CenteredLayout md={5}>
       <CForm className="mx-2 my-2" onSubmit={(e) => { e.preventDefault(); }}>
@@ -119,9 +134,15 @@ const ChangePassword = (props) => {
             </ul>
           </CAlert>
         }
+        {
+          user && user.is_password_changed === 0 && <CAlert color="warning" className="text-center">
+            You are required to change your password.
+            Please choose a new password.
+          </CAlert>
+        }
         <input id="userName" name="username" hidden autoComplete="username" />
         {
-          (_isOTP === null) && <CInputGroup className="mb-3 mt-3">
+          (_isOTP === null || !user?.is_password_changed === 0) && <CInputGroup className="mb-3 mt-3">
             <CInputGroupPrepend>
               <CInputGroupText>
                 <Icon path={mdiKey} size={0.9} color={colors.$grey_dark} />

@@ -1,7 +1,9 @@
 import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
 import { Promise } from "q";
-import { config } from "utils/config"
+import { config } from "utils/config";
+import { retrieveLeaveRequests } from './fetch'
+import api from 'utils/api';
 export const RULES = {
   required: (value) => !!value || "Required.",
   usernameRules: (v) =>
@@ -29,6 +31,13 @@ export const getAge = (dateString) => {
 };
 
 
+export const dispatchNotification = (dispatch, payload) => {
+  dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, payload))
+  setTimeout(() => {
+    dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: '', message: '' }))
+  }, payload.type === "error" ? 7000 : 5000);
+}
+
 export const splitCamelCase = (text) => {
   return text && text.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
 };
@@ -54,7 +63,7 @@ export const plotArray = (arr) => {
 export const computeDays = (day1, day2) => {
   const date1 = new Date(day1);
   const date2 = new Date(day2);
-  const diffTime = Math.abs(date2 - date1);
+  const diffTime = date2 - date1;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return diffDays;
 };
@@ -118,8 +127,9 @@ export const checkDateRange = (start, end, isFilter = false) => {
       return -1;
     }
   }
-  let gap = moment.duration(end.diff(start)).asDays();
-  return gap;
+  return computeDays(start, end)
+  // let gap = moment.duration(end.diff(start)).asDays();
+  // return gap;
 };
 
 export const getDuration = (start, end) => {
@@ -136,10 +146,64 @@ export const getAdminResponse = (code) => {
 export const toggleDialog = (dispatch) => {
   dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG));
 };
-export const respondToRequest = (dispatch, payload) => {
+export const respondToRequest = async (dispatch, payload) => {
+  dispatchNotification(dispatch, { type: 'info', message: 'Please Wait!' });
+  let res = await api.post("/update_leave_request", payload);
+  if (res.error) {
+    return dispatchNotification(dispatch, { type: 'error', message: res.message })
+  }
   dispatch(actionCreator(ActionTypes.RESPOND_TO_LEAVE_REQUEST, payload));
+  return dispatchNotification(dispatch, { type: 'success', message: "Success!" })
 };
 
+export const cancelRequest = async (dispatch, id) => {
+  dispatchNotification(dispatch, { type: 'info', message: 'Please wait' });
+  let res = await api.post(`/cancel_leave_request`, { id });
+  if (res.error) {
+    dispatchNotification(dispatch, { type: 'error', message: res.message });
+  } else {
+    dispatch(actionCreator(ActionTypes.CANCEL_LEAVE_REQUEST, { id }))
+    dispatchNotification(dispatch, { type: 'success', message: 'Cancelled successfuly!' });
+  }
+}
+
+export const checkCamerav1 = () => {
+  var constraints = {
+    video: true,
+    audio: true
+  }
+  console.log("check v1 : ")
+  navigator.mediaDevices.getUserMedia(constraints)
+  .then(function success(stream) {
+    /* do stuff */
+    console.table(stream)
+
+    console.log("ok")
+  }).catch(function (err) {
+    //log to console first 
+    console.log(err); /* handle the error */
+    if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
+      //required track is missing 
+      console.log('NotFoundError')
+    } else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
+      //webcam or mic are already in use 
+      console.log('NotReadableError')
+    } else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
+      //constraints can not be satisfied by avb. devices 
+      console.log('OverconstrainedError')
+    } else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
+      //permission denied in browser 
+      console.log('NotAllowedError')
+    } else if (err.name == "TypeError" || err.name == "TypeError") {
+      //empty constraints object 
+      console.log('TypeError')
+    } else {
+      console.log('others')
+
+      //other errors 
+    }
+  });
+}
 export const checkCamera = () => {
   return new Promise((resolve, reject) => {
     const defaultError = "Please Allow the app to use the camera";
@@ -148,7 +212,6 @@ export const checkCamera = () => {
       cameraError: defaultError,
     };
     let hasCamera = false;
-
     navigator.mediaDevices
       .enumerateDevices()
       .then((devices) => {
@@ -168,6 +231,8 @@ export const checkCamera = () => {
               result.cameraError = err.name + ": " + err.message;
               //console.log(err);
               if (err.name == "NotAllowedError") {
+                console.log(err)
+                // 
                 result.cameraError = defaultError;
               }
               reject(result);

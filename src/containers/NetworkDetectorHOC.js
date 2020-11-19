@@ -30,30 +30,30 @@ export default function (ComposedComponent) {
             let { notification, notify } = this.props.appState.app
             return (
                 <>
-                    {(notify && !notification) && (
+                    {(notify && notification.message !== "") && (
                         <CToaster
-                            position={"top-right"}
-                            className={`mr-2 alert ${notification.type === "error" ? "alert-danger" : "alert-success"}`}
+                            position={"bottom-center"}
+                            className={`mr-2 alert ${notification.type === "error" ? "alert-danger" : notification.type === "info" ? "alert-info" : "alert-success"}`}
                         >
                             <CToast
                                 onStateChange={(e) => {
                                     if (!e) {
-                                        this.props.dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, null));
+                                        this.props.dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: '', message: '' }));
                                     }
                                 }}
                                 show={true}
-                                autohide={2000}
+                                autohide={5000}
                                 style={{ border: 'none', boxShadow: 'none', backgroundColor: 'transparent' }}
                                 fade={true}
                             >
-                                <CToastHeader
+                                {notification.type === 'error' && <CToastHeader
                                     style={{ backgroundColor: 'transparent' }}
                                     className="text-dark"
                                     closeButton={false}>
                                     <strong>{notification.type}</strong>
-                                </CToastHeader>
+                                </CToastHeader>}
                                 <CToastBody
-                                    className="text-dark"
+                                    className="text-dark text-center"
                                     style={{ backgroundColor: 'transparent' }}
                                 >
                                     {notification.message}

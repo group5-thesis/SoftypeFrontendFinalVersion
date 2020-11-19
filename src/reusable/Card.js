@@ -36,7 +36,8 @@ const Card = forwardRef(
       dept_role,
       textRoleStyle,
       deleteCard = false,
-      deleteButton
+      deleteButton,
+      imgSrc
     },
     ref
   ) => {
@@ -74,7 +75,7 @@ const Card = forwardRef(
                   {
                     setImg ?
                       <div style={{ position: 'absolute', left: '50%', top: '30%', transform: 'translate(-50%, -50%)' }}>
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQEfe4jZpM05qPqzKdz7rlObs3odx45NzOgA&usqp=CAU" className={imgClass} />
+                        <img src={imgSrc} className={imgClass} />
                       </div> : ""
                   }
                   <CCardText

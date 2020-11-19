@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import QrReader from "react-qr-reader";
+import QrReader from "eth-qr-scanner";
 import { useDispatch } from "react-redux";
 import { CButton, CSpinner } from "@coreui/react";
 import { CenteredLayout } from "containers";
@@ -7,6 +7,7 @@ import { ConfirmDialog, Modal } from "reusable";
 import { checkCamera } from "utils/helpers";
 import { actionCreator, ActionTypes } from "utils/actions";
 import api from "utils/api";
+import QrCodeReader from "./QRCodeScannerV1";
 
 const QrCodeScanner = (props) => {
   const dispatch = useDispatch();
@@ -46,13 +47,13 @@ const QrCodeScanner = (props) => {
       dialog.current.toggle();
     }
   };
-  // useEffect(() => {
-  //     checkCamera().then(res => {
-  //         console.log("ready")
-  //     }).catch(err => {
-  //         history.push("/login")
-  //     })
-  // }, [])
+  useEffect(() => {
+      checkCamera().then(res => {
+          console.log("ready")
+      }).catch(err => {
+          history.push("/login")
+      })
+  }, [])
   return (
     <Modal
       ref={modalRef}
@@ -72,6 +73,7 @@ const QrCodeScanner = (props) => {
           confirmButton: false,
         }}
       ></ConfirmDialog>
+      {}
       <QrReader
         style={scannerStyle}
         delay={300}
@@ -79,6 +81,7 @@ const QrCodeScanner = (props) => {
         onError={handleError}
         onScan={handleScan}
       />
+      {/* <QrCodeReader/> */}
       {/* <CButton block
                 disabled={loading}
                 onClick={() => {

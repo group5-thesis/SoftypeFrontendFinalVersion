@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     CButton, CCard, CCardBody,
     CInput,
@@ -6,45 +6,50 @@ import {
     CRow,
     CCol,
     CTextarea,
+    CAlert
 } from "@coreui/react";
 import { Modal, LoadingButton } from 'reusable'
 import Icon from '@mdi/react';
 import { mdiFilePlusOutline, mdiPlus } from '@mdi/js'
 import colors from 'assets/theme/colors'
 import { FILE_TYPES } from 'utils/constants/constant'
-import { getFileExtension } from 'utils/helpers'
+import { getFileExtension, copyArray } from 'utils/helpers'
 import api from 'utils/api';
 import { useSelector } from 'react-redux';
 
 const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
-    let errors = {
-        description: false,
-        file: false
-    }
     const employeeId = useSelector(state => state.appState.auth.user.employeeId)
     let modal = useRef();
     let fileInput = useRef();
-    const [file, setFile] = useState('');
+    const [file, setFile] = useState([]);
     const [description, setDescription] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [type, setType] = useState('')
-    const [error, setError] = useState(errors)
+    const [error, setError] = useState([])
+
 
     const modalOnCloseCallback = () => {
-        _onError(0);
         if (!isLoading) {
             setFile("");
-            setDescription("")
+            setDescription("");
+            setError([]);
         }
     }
+    const _onError = message => {
+        // let currentError = copyArray(error)
+        //
+        if (!error.includes(message)) {
+            return setError([...error, message])
+        }
+        // currentError.push(message)
+        // setError(currentError)
+        // currentError = []
+    }
     const fileInputChangeHandler = (e) => {
-        _onError(0);
+        setError([])
         let { files } = e.target
         if (!files || files.length === 0) {
-            if (!file) {
-                setFile('')
-                _onError(3)
-            }
+            _onError("Please attatch some file.")
             return
         }
         let value = files[0]
@@ -52,9 +57,11 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         let extension = getFileExtension(value.name)
         for (let idx = 0; idx < FILE_TYPES.length; idx++) {
             const file_type = FILE_TYPES[idx];
-            if (file_type.extensions.includes(extension)) {
+            if (file_type.extensions.includes(extension.toLowerCase())) {
                 setType(file_type.name.toLowerCase());
                 break;
+            } else {
+                setType("others")
             }
         }
     }
@@ -67,44 +74,36 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         setIsLoading(true)
         let res = await api.post("/add_file", payload, true);
         if (res.error) {
-            alert(res.message)
+            setError([res.message])
         }
         setIsLoading(false)
         toggleModal()
     }
 
-    const _onError = (err) => {
-        switch (err) {
-            case 1:
-                errors.description = "Description must be up to 50 words."
-                break;
-            case 2:
-                errors.description = "Please add some description"
-                break;
-            case 3:
-                errors.file = "Please add some file.";
-                break;
-            case 0:
-                errors.file = false
-                errors.description = false
-                break;
-        }
-        setError(errors)
+    const renderError = () => {
+        return error.length ? (<CAlert color="danger justify-content-center text-align-center">
+            {
+                <p style={{ whiteSpace: 'pre', margin: '0' }}> {error.join(`\r\n`)}</p>
+
+            }
+        </CAlert>) : null
     }
 
+    // 
     const preUpload = () => {
-        _onError(0);
-        if (!file) {
-            _onError(3)
+        let _errors = []
+        setError([])
+        if (!file || file.length === 0) {
+            _errors.push("File is required.");
         }
         if (!description) {
-            _onError(2)
+            _errors.push("Description is required.");
         }
         if (description.trim().split(" ").length > 50) {
-            return _onError(1)
+            _errors.push("Descrition must not be greater than 50 characters.");
         }
-
-        if (file && description) {
+        setError([...new Set(_errors)])
+        if (file !== [] && description) {
             return uploadFile()
         }
     }
@@ -112,7 +111,9 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         modal.current.toggle()
     }
 
-
+    useEffect(() => {
+        console.log(error);
+    }, [error])
 
     return (
         <>
@@ -137,9 +138,10 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
                 }
                 hideCancelButton
             >
+                {renderError()}
                 <CRow className="justify-content-center">
-                    <CCol sm="8" md="8" lg="8" >
-                        <CCard style={{ cursor: 'pointer' }} accentColor={error.file.length ? 'danger' : file && 'info'} className={`${error.file && 'mb-0'}`} onClick={() => {
+                    <CCol  >
+                        <CCard style={{ cursor: 'pointer' }} accentColor={error.some(v => v.includes('file')) || !file.length ? 'danger' : file.length && 'info'} onClick={() => {
                             fileInput.current.click();
                         }}>
                             <CCardBody style={{ textAlign: "center" }}>
@@ -155,34 +157,23 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
                                 </CRow>
                             </CCardBody>
                         </CCard>
-                        <CInput hidden invalid={!(!error.file.length)} />
-                        {error.file.length &&
-                            <CInvalidFeedback className="help-block mb-2">
-                                {error.file}
-                            </CInvalidFeedback>
-                        }
+                        <CInput hidden />
                     </CCol>
                 </CRow>
                 <CRow className="justify-content-center">
                     <input type="file" ref={fileInput} hidden onChange={fileInputChangeHandler} />
-                    <CCol sm="8" md="8" lg="8" >
+                    <CCol >
                         <CTextarea
                             value={description || ""}
                             placeholder="Description (max is 50 words)"
                             name="description"
                             rows="4"
-                            invalid={description.split(" ").length > 50 || !(!error.description)}
+                            invalid={(error.some(v => v.toLowerCase().includes('description')))}
                             onChange={(e) => {
+                                setError([])
                                 setDescription(e.target.value)
-                                _onError(0)
                             }}
                         />
-
-                        {error.description.length &&
-                            <CInvalidFeedback className="help-block">
-                                {error.description}
-                            </CInvalidFeedback>
-                        }
                     </CCol>
                 </CRow>
             </Modal>

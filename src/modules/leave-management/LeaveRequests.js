@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { mdiAccount } from '@mdi/js'
 import _ from 'lodash';
 import {
   CBadge,
@@ -14,49 +13,48 @@ import {
   CButton,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import moment from 'moment';
 import {
   toCapitalize,
   getAdminResponse,
   respondToRequest,
-  formatDate,
-  getDuration
+  plotArray,
+  getDuration,
+  dispatchNotification,
+  cancelRequest,
+  formatDate
 } from "utils/helpers";
 import { LeaveRequestFilter, LeaveRequestForm } from ".";
 import NoData from "reusable/NoData";
 import { ConfirmDialog } from "reusable";
-import { STATUS, MONTHS, CURRENT_MONTH, CURRENT_YEAR } from "utils/constants/constant";
-
+import { STATUS, LEAVE_REQUEST_FILTER } from "utils/constants/constant";
+import { ActionTypes, actionCreator } from "utils/actions";
+import { retrieveLeaveRequests } from "utils/helpers/fetch";
+import { config } from 'utils/config';
+import moment from 'moment'
 const LeaveRequests = (props) => {
   const dispatch = useDispatch();
   const { history, location } = props;
   const query = new URLSearchParams(location.search);
   const queryPage = location.search.match(/page=([0-9]+)/, "");
   const queryStatus = query.get("status");
-  const default_filter = {
-    status: queryStatus ? queryStatus : "All",
-    employee: "All",
-    date_from: formatDate(Date.now()),
-    date_to: null,
-    month: CURRENT_MONTH,
-    year: CURRENT_YEAR,
-    category: 'All'
-  }
+  const default_filter = LEAVE_REQUEST_FILTER(queryStatus)
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1);
   const [page, setPage] = useState(currentPage);
   const [collapse, setCollapse] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [filter, setFilter] = useState(default_filter)
+  const [isCancel, setIsCancel] = useState(false)
   const [payload, setPayload] = useState({
     id: null,
     status: "",
     statusCode: null,
+    noOfDays: 0
   });
   const dialog = useRef();
   const requestsData = useSelector((state) => {
     return state.appState.leave.leave_requests
   });
-
-  const [filteredLeaveRequest, setFilteredLeaveRequest] = useState(requestsData);
+  const user = useSelector(state => state.appState.auth.user);
   const header = [
     {
       key: "name",
@@ -83,7 +81,6 @@ const LeaveRequests = (props) => {
       filter: false,
     },
     "status",
-    // "approver",
     {
       key: "actions",
       label: "Options",
@@ -110,6 +107,8 @@ const LeaveRequests = (props) => {
     history.push(`/leave/requests/${id}`);
   };
 
+
+
   const toggle = (e) => {
     setCollapse(!collapse);
     e.preventDefault();
@@ -117,50 +116,36 @@ const LeaveRequests = (props) => {
 
   const onClearFilter = () => {
     setFilter(default_filter)
-    setFilteredLeaveRequest(requestsData)
+    onFilterRequests(default_filter)
   }
 
-  const onFilterRequests = _filter => {
+  const onFilterRequests = async (_filter) => {
     setFilter(_filter)
-    setFilteredLeaveRequest(requestsData.filter((el) => {
-      let { status, employee, date_from, date_to, category } = _filter
-      let filter_result = {
-        date: false,
-        status: false,
-        category: false,
-        employee: false
-      }
-
-      let leave_from = moment(el["date from"]);
-      let leave_to = moment(el["date to"]);
-
-      let date_filter = {
-        from: moment(formatDate(date_from)),
-        to: _filter.date_to ? moment(formatDate(date_to)) : ""
-      }
-
-      if (status === "" || status.toLowerCase() === "all" || el.status.toLowerCase() === status.toLowerCase()) {
-        filter_result.status = true;
-      }
-
-      if (category === "" || category.toLowerCase() === "all" || el.category.toLowerCase().includes(category.toLowerCase()) || category.includes(el.category.toLowerCase())) {
-        filter_result.category = true;
-      }
-
-      if (employee === "" || employee.toLowerCase() === "all" || el.name.toLowerCase().includes(employee.toLowerCase())) {
-        filter_result.employee = true;
-      }
-
-      // date range
-      if (date_filter.to === "" || date_filter.to === null) {
-        filter_result.date = leave_from.isAfter(date_filter.from) || leave_from.isSame(date_filter.from)
+    let { status, month, year, category } = _filter
+    let { employeeId, roleId } = user
+    let payload = {
+      month,
+      year,
+      status,
+      category,
+      employeeId,
+      roleId,
+    }
+    if (JSON.stringify(default_filter) !== JSON.stringify(_filter)) {
+      setLoading(true)
+      let filterRes = await retrieveLeaveRequests(dispatch, payload)
+      setLoading(false)
+      if (filterRes.error) {
+        dispatchNotification(dispatch, { type: 'error', message: filterRes.message })
       } else {
-        filter_result.date = (leave_from.isSame(date_filter.from) || leave_from.isAfter(date_filter.from))
-          && (leave_to.isBefore(date_filter.to) || leave_to.isSame(date_filter.to))
+        dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, plotArray(filterRes.data.leave_requests)));
       }
-      return !_.valuesIn(filter_result).includes(false);
-    }));
+    }
   }
+  useEffect(() => {
+
+    return () => { }
+  }, [])
   return (
     <CRow>
       <CCol xl={12}>
@@ -170,9 +155,14 @@ const LeaveRequests = (props) => {
           {...{
             show: dialog,
             onConfirm: () => {
-              respondToRequest(dispatch, payload);
+              if (!isCancel) {
+                return respondToRequest(dispatch, payload);
+              }
+              dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'info', message: "Please wait" }))
+
+              return cancelRequest(dispatch, payload.id)
             },
-            title: `${payload.statusCode ? "Approve" : "Reject"}`,
+            title: isCancel ? "Cancel Request?" : `${payload.statusCode ? "Approve" : "Reject"}`,
           }}
         ></ConfirmDialog>
         <CCard>
@@ -182,9 +172,12 @@ const LeaveRequests = (props) => {
                 <h4 className="card-title mb-0">Leave Request</h4>
               </CCol>
               <CCol sm="7" className=" d-sm-block">
-                <div className="float-right  mr-3">
-                  <LeaveRequestForm />
-                </div>
+                {
+                  (config.IS_DEV || user.roleId > 1) &&
+                  <div className="float-right  mr-3">
+                    <LeaveRequestForm />
+                  </div>
+                }
                 <div className={`float-right mr-3 ${!collapse && "mb-2"}`} >
                   <CButton
                     color={`${collapse ? "secondary" : "primary"}`}
@@ -210,13 +203,14 @@ const LeaveRequests = (props) => {
                     onFilterRequests,
                     onClearFilter,
                     show: collapse,
+                    isLoading
                   }}
                 />
               </CCol>
             </CRow>
             <CDataTable
               className="table-responsive mt-2"
-              items={filteredLeaveRequest}
+              items={requestsData}
               itemsPerPage={10}
               fields={header}
               pagination
@@ -247,6 +241,23 @@ const LeaveRequests = (props) => {
                   let isPending = item.status.toLowerCase() === "pending";
                   return (
                     <td>
+                      {(item['employee id'] === user.employeeId && isPending) &&
+                        <CPopover header={"cancel request"}>
+                          <CLink
+                            onClick={() => {
+                              setPayload({
+                                id: item.id,
+                              });
+
+                              setIsCancel(true);
+                              dialog.current.toggle();
+                            }}
+                            className="card-header-action"
+                          >
+                            <CIcon name="cil-trash" className="text-danger" />
+                          </CLink>
+                        </CPopover>}
+
                       <CPopover header="View Details">
                         <CLink
                           onClick={() => viewRequestInfo(item.id)}
@@ -256,7 +267,7 @@ const LeaveRequests = (props) => {
                           {!isPending && "View Details"}
                         </CLink>
                       </CPopover>
-                      {isPending &&
+                      {(user.roleId < 3 && isPending) &&
                         [
                           {
                             header: "Approve",
@@ -275,10 +286,14 @@ const LeaveRequests = (props) => {
                             <CPopover header={el.header} key={id}>
                               <CLink
                                 onClick={() => {
+                                  let isBefore = moment(item["date from"]).isBefore(moment());
+                                  setIsCancel(false);
                                   setPayload({
+                                    noOfDays: getDuration(isBefore ? formatDate(new Date()) : item['date from'], item["date to"]),
                                     id: item.id,
                                     status: getAdminResponse(el.code),
                                     statusCode: el.code,
+                                    approver:user.employeeId
                                   });
                                   dialog.current.toggle();
                                 }}
