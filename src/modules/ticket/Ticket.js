@@ -19,8 +19,8 @@ const Ticket = (props) => {
   const [status, setStatus] = useState("All");
   const [collapse, setCollapse] = useState(true);
   const [tickets, setTickets] = useState();
-  const [remarks, setRemarks] = useState();
-  const [ticketsDisplay, setTicketsDisplay] = useState();
+  const [clickedRejectBtn, setClickedRejectBtn] = useState(false);
+  const [clickedApproveBtn, setClickedApproveBtn] = useState(false);
   const [now, setNow] = useState(new Date)
   const [loading, setLoading] = useState(false)
 
@@ -48,7 +48,7 @@ const Ticket = (props) => {
     { key: 'item', _style: { width: '15%' } },
     { key: 'price' },
     { key: 'quantity' },
-    { key: 'total' },
+    { key: 'total price', label: 'Total' },
     { key: 'status' },
     { key: 'date needed' }
   ]
@@ -73,28 +73,36 @@ const Ticket = (props) => {
   const toggleModal = (e) => {
     setTickets(e);
     modal.current.toggle();
+
   };
 
-  const resolveTicket = async (msg) => {
-    setRemarks(1)
-    dialog.current.toggle();
+  const rejectRequestBtn = () => {
+    setClickedRejectBtn(true)
     modal.current.toggle();
+    dialog.current.toggle();
+  }
+
+  const approveRequestBtn = () => {
+    setClickedApproveBtn(true)
+    modal.current.toggle();
+    dialog.current.toggle();
   }
 
   const onConfirm = async () => {
     let data = {
-      ticketId: tickets.id,
+      officeRequestId: tickets.id,
       employeeId: user.employeeId,
-      indicator: remarks
+      indicator: clickedApproveBtn ? 1 : clickedRejectBtn ? 0 : 0
     }
     dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
-      dispatch(actionCreator(ActionTypes.CLOSE_TICKET, renameKey(res.data.ticket_information[0])))
-      dispatchNotification(dispatch, { type: 'success', message: "Success" })
+      dispatch(actionCreator(ActionTypes.CLOSE_TICKET, renameKey(res.data.officeRequest_information[0])))
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
+    setClickedApproveBtn(false)
+    setClickedRejectBtn(false)
   }
 
   const onClearFilter = () => {
@@ -102,26 +110,9 @@ const Ticket = (props) => {
     setFilteredTicketRequest(requestsData)
   }
 
-
-  const onFilterRequests = async (criteria) => {
-    let { status, month, year } = criteria
-
-    if (JSON.stringify(default_filter) !== JSON.stringify(criteria)) {
-      setLoading(true)
-      // let filterRes = await retrieveLeaveRequests(dispatch, payload)
-      // setLoading(false)
-      // if (filterRes.error) {
-      //   dispatchNotification(dispatch, { type: 'error', message: filterRes.message })
-      // } else {
-      //   dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, plotArray(filterRes.data.leave_requests)));
-      // }
-    }
-  }
-
   useEffect(() => {
     setFilteredTicketRequest(requestsData)
   }, [requestsData]);
-
 
   return (
     <CRow>
@@ -132,9 +123,11 @@ const Ticket = (props) => {
             show: dialog,
             centered: true,
             onConfirm,
-            title: "Resolve Request?",
+            title: `${clickedApproveBtn ? "Approve" : clickedRejectBtn ? "Reject" : ""} request?`,
             onCloseCallback: () => {
               modal.current.toggle();
+              setClickedApproveBtn(false)
+              setClickedRejectBtn(false)
             }
           }}
         ></ConfirmDialog>
@@ -148,9 +141,12 @@ const Ticket = (props) => {
           footer={
             (tickets && tickets.status === 1) &&
             <>
-              <CButton color="primary" onClick={() => {
-                resolveTicket('resolve')
-              }}>Resolve</CButton>
+              <CButton color="success" onClick={() => {
+                approveRequestBtn()
+              }}>Approve</CButton>
+              <CButton color="danger" onClick={() => {
+                rejectRequestBtn()
+              }}>Reject</CButton>
             </>
           }
           hideCancelButton
@@ -222,7 +218,7 @@ const Ticket = (props) => {
                       {item.status === 1 ? "Open" : "Closed"}
                     </CBadge>
                   </td>
-                ),
+                )
               }}
             />
           </CCardBody>

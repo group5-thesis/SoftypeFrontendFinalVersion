@@ -99,8 +99,10 @@ export const PERFORMANCE_REVIEW_STATUS = {
 
 export const COLORS = [
   "gradient-primary",
-  "gradient-info",
+  "gradient-dark",
   "gradient-warning",
+  "gradient-secondary",
+  "gradient-info",
   "gradient-success",
   "gradient-danger"
 ]
@@ -197,8 +199,3 @@ export const LEAVE_REQUEST_FILTER = queryStatus => ({
   year: CURRENT_YEAR,
   category: 'All'
 })
-export const OFFICE_REQUEST_FILTER = {
-  year: CURRENT_YEAR,
-  month: CURRENT_MONTH,
-  status: 'All'
-}

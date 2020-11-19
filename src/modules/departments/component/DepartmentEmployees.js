@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setWidth, shallowCopy, RULES, copyArray, dispatchNotification} from 'utils/helpers';
-import { fetchDepartmentEmployees, retrieveEmployees ,  } from 'utils/helpers/fetch';
+import { setWidth, shallowCopy, RULES, copyArray, getBaseUrl } from 'utils/helpers';
+import { fetchDepartmentEmployees, retrieveEmployees } from 'utils/helpers/fetch';
 import {
   CRow,
   CCol,
@@ -26,6 +26,7 @@ import api from 'utils/api';
 import { APP_MESSAGES } from 'utils/constants/constant';
 import _ from 'lodash';
 import { actionCreator, ActionTypes } from 'utils/actions';
+import department_icon_default from "../../../assets/img/default_dept_icon.png"
 
 const DepartmentEmployees = ({ match }) => {
 
@@ -123,6 +124,7 @@ const DepartmentEmployees = ({ match }) => {
       dispatchNotification(dispatch, { type: 'success', message: "Success" })
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_EMPLOYEE, res.data.employee_information[0]))
       retrieveEmployees(dispatch)
+      fetchDepartmentEmployees(dispatch)
       toggleModal()
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
@@ -228,6 +230,7 @@ const DepartmentEmployees = ({ match }) => {
                         textClass={"font-weight-bold"}
                         textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
                         imgClass={"img_dept"}
+                        imgSrc={key.profile_img !== null ? `${getBaseUrl()}/file/images/${key.profile_img}` : department_icon_default}
                         textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
                         onClickMethod={() => {
                           if (removeEmployee) {

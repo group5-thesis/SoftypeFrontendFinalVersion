@@ -9,7 +9,7 @@ import {
 import { Card, Modal } from 'reusable'
 import AddDepartment from './component/AddDepartment'
 import DepartmentModel from "models/DepartmentModel"
-import { shallowCopy, RULES  , dispatchNotification} from 'utils/helpers';
+import { shallowCopy, RULES, dispatchNotification } from 'utils/helpers';
 import { useSelector, useDispatch } from 'react-redux'
 import { COLORS } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from 'utils/actions';
@@ -20,7 +20,7 @@ import { useHistory } from "react-router-dom";
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 import colors from "assets/theme/colors"
-import { retrieveEmployees } from 'utils/helpers/fetch';
+import { retrieveEmployees, fetchDepartmentManagers, fetchDepartments } from 'utils/helpers/fetch';
 
 const Departments = (props) => {
 
@@ -50,26 +50,36 @@ const Departments = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
 
-  const handleSubmit = async () => {
-    setIsLoading(true)
-    dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
-    let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
-    if (!res.error) {
-      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
-      dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
-      retrieveEmployees(dispatch)
-      toggleModal()
-    } else {
-      dispatchNotification(dispatch, { type: 'error', message: res.message })
-    }
-    setIsLoading(false)
-  }
-
   const stateDepartments = useSelector((state) => {
     return state.appState.department.departments
   });
 
-  console.log(stateDepartments)
+  // console.log(stateDepartments)
+
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    let isExist = _.filter(stateDepartments, function (key) {
+      return key.department_name.toLowerCase().trim() === data.department_name.toLowerCase().trim();
+    });
+    if (isExist.length === 0) {
+      dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
+      let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
+      if (!res.error) {
+        dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+        dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
+        retrieveEmployees(dispatch)
+        fetchDepartmentManagers(dispatch)
+        fetchDepartments(dispatch)
+        toggleModal()
+      } else {
+        dispatchNotification(dispatch, { type: 'error', message: res.message })
+
+      }
+    } else {
+      dispatchNotification(dispatch, { type: 'error', message: "Department is Existed!" })
+    }
+    setIsLoading(false)
+  }
 
   const validateInfo = (name, value) => {
     const { required } = RULES
@@ -126,7 +136,7 @@ const Departments = (props) => {
 
   const viewDepartmentInfo = (id) => {
     sessionStorage.setItem('deptId', id);
-    history.push(`/employee/departments/${id}`);
+    history.push(`/employee/departments/departmentDetails?id=${id}`);
   };
 
   return (
@@ -137,7 +147,7 @@ const Departments = (props) => {
             return (
               <CCol sm="6" lg="3" key={dept.department_id + "crd"}>
                 <Card
-                  color={COLORS[Math.ceil(index / COLORS.length)]}
+                  color={COLORS[index]}
                   clickable
                   animation
                   centeredText

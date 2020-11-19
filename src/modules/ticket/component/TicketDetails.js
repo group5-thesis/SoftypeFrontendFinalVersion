@@ -37,7 +37,7 @@ const TicketDetails = (props) => {
             <tbody>
               {
                 ticketDetails.map(([key, value], index) => {
-                  return ((value !== null && key !== "id") &&
+                  return ((value !== null && key !== "id" && value !== '') &&
                     <tr key={index.toString()}>
                       <td className="text-capitalize">  {`${splitSnakeCase(splitCamelCase(key))}:`}</td>
                       <td>{

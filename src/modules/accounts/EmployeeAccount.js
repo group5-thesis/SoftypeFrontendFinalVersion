@@ -32,7 +32,9 @@ const Accounts = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const stateAccounts = useSelector((state) => {
-    return state.appState.accounts.accounts
+    return state.appState.accounts.accounts.filter(emp => {
+      return emp.employee_accountType !== 1
+    })
   });
 
   const fields = [
