@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 import {
   CWidgetDropdown,
   CRow,
@@ -9,16 +8,24 @@ import {
   CDropdownItem,
   CDropdownToggle
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 
-const Widgets = ({ totalEmployees, viewLeaveRequests, viewOfficeRequests, viewEmployees, viewLeaveCalendar }) => {
+const Widgets = (
+  { totalEmployees,
+    viewLeaveRequests,
+    viewOfficeRequests,
+    viewEmployees,
+    viewLeaveCalendar,
+    employeesOnLeave,
+    todaysPendingLeaveRequests,
+    todaysPendingOfficeRequests }
+) => {
 
   return (
     <CRow>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-primary"
-          header="9.823"
+          header={`${employeesOnLeave}`}
           text="Employees on Leave"
           footerSlot={
             <div
@@ -67,7 +74,7 @@ const Widgets = ({ totalEmployees, viewLeaveRequests, viewOfficeRequests, viewEm
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-warning"
-          header="9.823"
+          header={`${todaysPendingOfficeRequests}`}
           text="Office Requests"
           footerSlot={
             <div
@@ -91,8 +98,8 @@ const Widgets = ({ totalEmployees, viewLeaveRequests, viewOfficeRequests, viewEm
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-danger"
-          header="9.823"
-          text="Leave Requests"
+          header={`${todaysPendingLeaveRequests}`}
+          text={`Pending Leave Requests`}
           footerSlot={
             <div
               className={'text-center'}
