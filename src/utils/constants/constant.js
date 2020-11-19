@@ -199,3 +199,9 @@ export const LEAVE_REQUEST_FILTER = queryStatus => ({
   year: CURRENT_YEAR,
   category: 'All'
 })
+
+export const OFFICE_REQUEST_FILTER = {
+  status: 'All',
+  month: CURRENT_MONTH,
+  year: CURRENT_YEAR
+}

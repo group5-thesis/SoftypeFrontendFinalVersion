@@ -11,7 +11,7 @@ import {
   CInvalidFeedback,
   CImg
 } from '@coreui/react';
-import { copyArray, setWidth, toCapitalize, shallowCopy, RULES, getBaseUrl } from 'utils/helpers';
+import { copyArray, setWidth, dispatchNotification, shallowCopy, RULES, getBaseUrl } from 'utils/helpers';
 import { NoData, Card, Modal } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
