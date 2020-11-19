@@ -99,8 +99,10 @@ export const PERFORMANCE_REVIEW_STATUS = {
 
 export const COLORS = [
   "gradient-primary",
-  "gradient-info",
+  "gradient-dark",
   "gradient-warning",
+  "gradient-secondary",
+  "gradient-info",
   "gradient-success",
   "gradient-danger"
 ]

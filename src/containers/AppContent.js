@@ -61,7 +61,9 @@ const AppContent = (_props) => {
   };
 
   useEffect(() => {
-    retrieve(payload);
+    // console.log(isAppLoading)
+    // debugger
+    if (!isAppLoading) retrieve(payload);
   }, []);
 
   return (

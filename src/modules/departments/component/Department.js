@@ -11,13 +11,13 @@ import {
   CInvalidFeedback,
   CImg
 } from '@coreui/react';
-import { copyArray, setWidth, toCapitalize, shallowCopy, RULES } from 'utils/helpers';
+import { copyArray, setWidth, toCapitalize, shallowCopy, RULES, getBaseUrl } from 'utils/helpers';
 import { NoData, Card, Modal } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
 import DepartmentManager from "models/DepartmentManagerModel"
 import Icon from '@mdi/react';
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import { APP_MESSAGES } from 'utils/constants/constant';
 import {
   mdiPlus,
@@ -26,8 +26,9 @@ import {
 import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
+import department_icon_default from "../../../assets/img/default_dept_icon.png"
 
-const Department = ({ match }) => {
+const Department = ({ match, location }) => {
 
   const defaultErrors = {
     department_manager: false
@@ -36,15 +37,20 @@ const Department = ({ match }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
   const [data, setData] = useState(DepartmentManager)
-  const [deptId, setDeptId] = useState(match.params.id)
-
-  const modal = useRef();
-
-  // router params pass as department Id
-  if (!match.params.id) {
-    let d = sessionStorage.getItem('deptId');
-    setDeptId(d);
+  const query = new URLSearchParams(location.search);
+  // const [deptId, setDeptId] = useState()
+  const history = useHistory();
+  const dispatch = useDispatch();
+  let deptId = query.get("id");
+  if (deptId === null || deptId === '' || deptId === undefined) {
+    deptId = sessionStorage.getItem('deptId')
+    history.replace({
+      pathname: '/employee/departments/departmentDetails',
+      search: `?id=${deptId.toString()}`
+    })
   }
+  sessionStorage.setItem('deptId', deptId)
+  const modal = useRef();
 
   // use to display only the department name and head
   const _request = useSelector(state => {
@@ -66,8 +72,6 @@ const Department = ({ match }) => {
   });
 
   let request = copyArray(_request);
-  const history = useHistory();
-  const dispatch = useDispatch();
 
   const departmentDetails = request[0]
 
@@ -79,11 +83,10 @@ const Department = ({ match }) => {
 
   const handleSubmit = async () => {
     setIsLoading(true)
-    data.department_id = match.params.id
+    data.department_id = deptId
     let res = await api.post("/add_department_manager", { department_manager: data.department_manager, departmentId: data.department_id })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_MANAGER, res.data.department_manager_information[0]))
-
       toggleModal()
     } else {
       alert("error")
@@ -134,8 +137,27 @@ const Department = ({ match }) => {
 
   const viewEmployees = (e) => {
     sessionStorage.setItem('managerId', e.managerId);
-    history.push(`/employee/departments/employees/${e.managerId}`);
+    history.push(`/employee/departments/departmentDetails/employees/${e.managerId}`);
   }
+
+  const viewDepartmentDetails = async (e) => {
+    let res = await api.get(`/retrieve_limited_department/${e.department_id}`)
+    if (!res.error) {
+      console.log(res)
+    } else {
+      alert("error")
+    }
+  }
+  // useEffect(() => {
+  //   // router params pass as department Id
+  //   console.log(match.params.id, "Params Id")
+  //   if (match.params.id === "employees") {
+  //     // http://localhost:3000/employee/departments/1
+  //     let d = sessionStorage.getItem('deptId');
+  //     setDeptId(d);
+  //   }
+  //   console.log(deptId, "dept Id")
+  // }, [deptId])
 
   return (
     !request.length ? <NoData /> :
@@ -166,10 +188,16 @@ const Department = ({ match }) => {
             <CCardHeader>
               <CRow>
                 <CCol className="d-none d-md-block">
-                  <div className="float-right" >
+                  {/* <div className="float-right" >
                     <CButton color="primary" onClick={() => {
                       modal.current.toggle()
                     }}>Add Department Manager</CButton>
+                  </div> */}
+                  <div className="float-right" >
+                    <CButton color="primary" onClick={() => {
+                      // modal.current.toggle()
+                      viewDepartmentDetails(departmentDetails)
+                    }}>View Department Details</CButton>
                   </div>
                 </CCol>
               </CRow>
@@ -194,6 +222,7 @@ const Department = ({ match }) => {
                     animation
                     setImg
                     imgClass={"img_dept_head"}
+                    imgSrc={departmentDetails.department_head_profileImg !== null ? `${getBaseUrl()}/file/images/${departmentDetails.department_head_profileImg}` : department_icon_default}
                     text={departmentDetails.department_head}
                     textClass={"font-weight-bold"}
                     textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
@@ -213,6 +242,7 @@ const Department = ({ match }) => {
                           text={
                             `${key.manager_firstname}`
                           }
+                          imgSrc={key.profile_img === null ? department_icon_default : `${getBaseUrl()}/file/images/${key.profile_img}`}
                           dept_role={key.role}
                           textClass={"font-weight-bold"}
                           textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}

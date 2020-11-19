@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 import {
   CWidgetDropdown,
   CRow,
@@ -9,31 +8,40 @@ import {
   CDropdownItem,
   CDropdownToggle
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 
-const Widgets = () => {
+const Widgets = (
+  { totalEmployees,
+    viewLeaveRequests,
+    viewOfficeRequests,
+    viewEmployees,
+    viewLeaveCalendar,
+    employeesOnLeave,
+    todaysPendingLeaveRequests,
+    todaysPendingOfficeRequests }
+) => {
 
   return (
     <CRow>
-       <CCol sm="6" lg="3">
+      <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-primary"
-          header="9.823"
+          header={`${employeesOnLeave}`}
           text="Employees on Leave"
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '100px' }}
+              style={{ height: '50px' }}
             >
             </div>
           }
         >
           <CDropdown>
             <CDropdownToggle color="transparent">
-              <CIcon name="cil-settings" />
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">
-              <CDropdownItem>View Leave Calendar</CDropdownItem>
+              <CDropdownItem onClick={() => {
+                viewLeaveCalendar()
+              }}>View Leave Calendar</CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
         </CWidgetDropdown>
@@ -42,70 +50,71 @@ const Widgets = () => {
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-info"
-          header="9.823"
+          header={`${totalEmployees}`}
           text="Total Employees"
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '100px' }}
+              style={{ height: '50px' }}
             >
             </div>
           }
         >
           <CDropdown>
             <CDropdownToggle color="transparent">
-              <CIcon name="cil-settings" />
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">
-              <CDropdownItem>View Employees</CDropdownItem>
+              <CDropdownItem onClick={() => {
+                viewEmployees()
+              }}>View Employees</CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
         </CWidgetDropdown>
       </CCol>
-
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-warning"
-          header="9.823"
+          header={`${todaysPendingOfficeRequests}`}
           text="Office Requests"
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '100px' }}
+              style={{ height: '50px' }}
             >
             </div>
           }
         >
           <CDropdown>
             <CDropdownToggle color="transparent">
-              <CIcon name="cil-settings" />
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">
-              <CDropdownItem>View Office Requests</CDropdownItem>
+              <CDropdownItem onClick={() => {
+                viewOfficeRequests()
+              }}>View Office Requests</CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
         </CWidgetDropdown>
       </CCol>
-
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-danger"
-          header="9.823"
-          text="Leave Requests"
+          header={`${todaysPendingLeaveRequests}`}
+          text={`Pending Leave Requests`}
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '100px' }}
+              style={{ height: '50px' }}
             >
             </div>
           }
         >
           <CDropdown>
             <CDropdownToggle caret className="text-white" color="transparent">
-              <CIcon name="cil-settings" />
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">
-              <CDropdownItem>View Leave Requests</CDropdownItem>
+              <CDropdownItem onClick={() => {
+                viewLeaveRequests()
+              }}>View Leave Requests</CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
         </CWidgetDropdown>

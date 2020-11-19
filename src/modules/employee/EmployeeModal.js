@@ -132,8 +132,6 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         }
         let res = await api.post(`/${path}`, payload)
         if (!res.error) {
-            // retrieveEmployees(dispatch)
-            // console.log(res.data)
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
             fetchEmployeeAccounts(dispatch)
         } else {
