@@ -14,6 +14,7 @@
 
 # production
 /build
+/build*
 /src/coreui-new
 /src/coreui-icons
 /src/coreui-charts

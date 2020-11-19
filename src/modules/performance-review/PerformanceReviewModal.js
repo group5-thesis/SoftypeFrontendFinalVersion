@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actionCreator, ActionTypes } from 'utils/actions';
 import PerformanceReviewModel from 'models/PerformanceReviewModel'
 import api from "utils/api"
+import { dispatchNotification } from 'utils/helpers'
 import { LoadingButton } from 'reusable'
 
 const PerformanceReviewModal = ({ user }) => {
@@ -48,11 +49,13 @@ const PerformanceReviewModal = ({ user }) => {
 
   const submitReview = async () => {
     toggleIsLoading(true)
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     let res = await api.post("/create_performance_review", review)
     if (!res.error) {
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       dispatch(actionCreator(ActionTypes.ADD_PERFORMANCE_REVIEW, res.data.performance_review_information[0]))
     } else {
-      alert("error")
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     toggleModal()
     toggleIsLoading(false)
@@ -61,7 +64,7 @@ const PerformanceReviewModal = ({ user }) => {
     if (!rating.includes(0)) {
       submitReview()
     } else {
-      alert("Please add some review")
+      dispatchNotification(dispatch, { type: 'error', message: "Please add some review" })
     }
 
   }

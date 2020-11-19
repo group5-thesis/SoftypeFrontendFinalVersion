@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setWidth, shallowCopy, RULES, copyArray, } from 'utils/helpers';
-import { fetchDepartmentEmployees, retrieveEmployees } from 'utils/helpers/fetch';
+import { setWidth, shallowCopy, RULES, copyArray, dispatchNotification} from 'utils/helpers';
+import { fetchDepartmentEmployees, retrieveEmployees ,  } from 'utils/helpers/fetch';
 import {
   CRow,
   CCol,
@@ -118,12 +118,14 @@ const DepartmentEmployees = ({ match }) => {
       department_managerId: data.department_managerId,
       department_headId: data.department_headId
     })
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     if (!res.error) {
+      dispatchNotification(dispatch, { type: 'success', message: "Success" })
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_EMPLOYEE, res.data.employee_information[0]))
       retrieveEmployees(dispatch)
       toggleModal()
     } else {
-      alert("error")
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setIsLoading(false)
   }
@@ -138,11 +140,13 @@ const DepartmentEmployees = ({ match }) => {
 
   const handleDeleteEmployee = async (dept_employeeId) => {
     let res = await api.post('/delete_department_employee', { id: dept_employeeId })
+    dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     if (!res.error) {
       retrieveEmployees(dispatch)
       fetchDepartmentEmployees(dispatch);
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
     } else {
-      alert(res);
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     if (_departmentEmployees.length <= 1) {
       setRemoveEmployee(false)

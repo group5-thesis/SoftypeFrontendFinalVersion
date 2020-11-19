@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { toCapitalize, getFileExtension, downloadFile, copyArray, getBaseUrl, formatDate } from 'utils/helpers';
+import { toCapitalize, getFileExtension, dispatchNotification, downloadFile, copyArray, getBaseUrl, formatDate } from 'utils/helpers';
 import { NoData, ConfirmDialog, Loader } from 'reusable';
 import api from "utils/api";
-import { actionCreator, ActionTypes } from 'utils/actions';
 import { CContainer, CRow, CCol, CCard, CLink, CCardHeader, CCardBody, CCardFooter, CPopover } from '@coreui/react';
 import { mdiDownload, mdiProgressDownload, mdiTrashCan, mdiFilePdf, mdiInformationOutline, mdiEye } from '@mdi/js'
 import Icon from '@mdi/react'
@@ -40,10 +39,15 @@ const RepositoryFiles = (props) => {
         setLoading(true)
         let res = await api.post(`/delete_file/${id}`)
         removeFromQueue(pendingDeleteItem.path)
+        dispatchNotification(dispatch, { type: 'info', message: 'Please wait.' })
+
         if (!res.error) {
             await retrieveFiles()
             setLoading(false)
-        } else { alert(res.message) }
+            dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+        } else {
+            dispatchNotification(dispatch, { type: 'error', message: res.message })
+        }
         setPendingDeleteItem("")
     }
 
@@ -154,7 +158,7 @@ const RepositoryFiles = (props) => {
                                                     if (!queued) {
                                                         return download(path, filename)
                                                     }
-                                                    alert("Dowload on progress")
+                                                    dispatchNotification(dispatch, { type: 'info', message: 'Dowload on progress' })
                                                 }}>
                                                     <Icon path={queued ? mdiProgressDownload : mdiDownload} size={0.9} color="black" />
                                                 </CLink>

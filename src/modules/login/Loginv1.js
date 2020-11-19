@@ -57,7 +57,6 @@ class Login extends Component {
         this.state.credentials.username === ""
       ) {
         this.setState({ showError: true, error: APP_MESSAGES.INPUT_REQUIRED });
-        // this.toggleDialog();
         return;
       }
       this.setState({ isLoading: true });

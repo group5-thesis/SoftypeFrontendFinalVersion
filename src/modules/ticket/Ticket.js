@@ -4,8 +4,8 @@ import { CBadge, CCard, CCardBody, CCol, CDataTable, CRow, CButton } from "@core
 import CIcon from "@coreui/icons-react";
 import { Modal, ConfirmDialog, NoData } from "reusable";
 import { ActionTypes, actionCreator } from 'utils/actions';
-import { TICKET_STATUS } from "utils/constants/constant";
-import { renameKey } from 'utils/helpers';
+import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR } from "utils/constants/constant";
+import { renameKey, dispatchNotification } from 'utils/helpers';
 import TicketFilter from "./component/TicketFilter";
 import TicketForm from "./component/TicketForm";
 import TicketDetails from "./component/TicketDetails";
@@ -22,18 +22,16 @@ const Ticket = (props) => {
   const [remarks, setRemarks] = useState();
   const [ticketsDisplay, setTicketsDisplay] = useState();
   const [now, setNow] = useState(new Date)
+  const [loading, setLoading] = useState(false)
 
   const default_filter = {
-    year: now.getFullYear(),
-    month: now.getMonth(),
-    status: status
+    year: CURRENT_YEAR,
+    month: CURRENT_MONTH,
+    status: 'All'
   }
-
   const [filter, setFilter] = useState(default_filter)
-
   const modal = useRef();
   const dialog = useRef();
-
   const user = useSelector(state => {
     let authed = state.appState.auth.user;
     return {
@@ -43,7 +41,6 @@ const Ticket = (props) => {
       userId: authed.userId
     }
   })
-
   const fields = [
     { key: 'transaction no', label: 'request no.' },
     { key: 'date requested', _style: { width: '15%' } },
@@ -55,16 +52,10 @@ const Ticket = (props) => {
     { key: 'status' },
     { key: 'date needed' }
   ]
-
   const requestsData = useSelector((state) => {
     return state.appState.ticket.ticket_requests
   });
-
   const [filteredTicketRequest, setFilteredTicketRequest] = useState();
-
-  useEffect(() => {
-    setFilteredTicketRequest(requestsData)
-  }, [requestsData]);
 
   const toggle = (e) => {
     setCollapse(!collapse);
@@ -96,11 +87,13 @@ const Ticket = (props) => {
       employeeId: user.employeeId,
       indicator: remarks
     }
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.CLOSE_TICKET, renameKey(res.data.ticket_information[0])))
+      dispatchNotification(dispatch, { type: 'success', message: "Success" })
     } else {
-      alert("error")
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
   }
 
@@ -108,6 +101,27 @@ const Ticket = (props) => {
     setFilter(default_filter)
     setFilteredTicketRequest(requestsData)
   }
+
+
+  const onFilterRequests = async (criteria) => {
+    let { status, month, year } = criteria
+
+    if (JSON.stringify(default_filter) !== JSON.stringify(criteria)) {
+      setLoading(true)
+      // let filterRes = await retrieveLeaveRequests(dispatch, payload)
+      // setLoading(false)
+      // if (filterRes.error) {
+      //   dispatchNotification(dispatch, { type: 'error', message: filterRes.message })
+      // } else {
+      //   dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, plotArray(filterRes.data.leave_requests)));
+      // }
+    }
+  }
+
+  useEffect(() => {
+    setFilteredTicketRequest(requestsData)
+  }, [requestsData]);
+
 
   return (
     <CRow>

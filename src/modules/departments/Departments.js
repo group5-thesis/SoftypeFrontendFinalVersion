@@ -9,7 +9,7 @@ import {
 import { Card, Modal } from 'reusable'
 import AddDepartment from './component/AddDepartment'
 import DepartmentModel from "models/DepartmentModel"
-import { shallowCopy, RULES } from 'utils/helpers';
+import { shallowCopy, RULES  , dispatchNotification} from 'utils/helpers';
 import { useSelector, useDispatch } from 'react-redux'
 import { COLORS } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from 'utils/actions';
@@ -52,13 +52,15 @@ const Departments = (props) => {
 
   const handleSubmit = async () => {
     setIsLoading(true)
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
     if (!res.error) {
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))
       retrieveEmployees(dispatch)
       toggleModal()
     } else {
-      alert("error")
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setIsLoading(false)
   }

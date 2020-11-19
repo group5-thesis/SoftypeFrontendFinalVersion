@@ -1,6 +1,7 @@
 import api from 'utils/api';
 import { plotArray } from 'utils/helpers'
 import { ActionTypes, actionCreator } from "utils/actions"
+import { CURRENT_MONTH, CURRENT_YEAR } from 'utils/constants/constant'
 
 const retrieveLeaveRequests = async (dispatch, payload) => {
   // let res = await api.post("/getLeaveRequest", payload);
@@ -26,6 +27,22 @@ const fetchTickets = async dispatch => {
     let payload = response.data.officeRequest_information;
     payload = plotArray(payload)
     dispatch(actionCreator(ActionTypes.FETCH_TICKETS, payload))
+  }
+  return response;
+}
+const filterTickets = async (dispatch, payload = null) => {
+  if (!payload) {
+    payload = {
+      year: CURRENT_MONTH,
+      month: CURRENT_MONTH,
+      status: 'All'
+    }
+  }
+  let response = await api.post('/filter_officeRequests', payload)
+  if (!response.error) {
+    let data = response.data.officeRequest_information;
+    data = plotArray(data)
+    dispatch(actionCreator(ActionTypes.FETCH_TICKETS, data))
   }
   return response;
 }
@@ -124,5 +141,6 @@ export {
   fetchDepartmentManagers,
   fetchDepartmentEmployees,
   fetchPerformanceReviews,
-  fetchEmployeeAccounts
+  fetchEmployeeAccounts,
+  filterTickets
 }

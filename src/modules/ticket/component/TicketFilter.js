@@ -11,15 +11,14 @@ import {
   CSelect,
   CButton
 } from "@coreui/react";
-import { MONTHS, YEARS, TICKET_STATUS } from "utils/constants/constant";
-import { setWidth } from "utils/helpers";
+import { MONTHS, YEARS, TICKET_STATUS, OFFICE_REQUEST_FILTER } from "utils/constants/constant";
+import { setWidth, plotArray } from "utils/helpers";
 
-const TicketFilter = ({ show, onStatusChange, filter, onClearFilter }) => {
+const TicketFilter = ({ show, onStatusChange, filter, onClearFilter, onFilterRequests }) => {
 
-  const [now, setNow] = useState(new Date)
-  const [month, setMonth] = useState(MONTHS[filter.month])
-  const [year, setYear] = useState(filter.year)
-  const [status, setStatus] = useState(filter.status)
+  const [month, setMonth] = useState(OFFICE_REQUEST_FILTER.month)
+  const [year, setYear] = useState(OFFICE_REQUEST_FILTER.year)
+  const [status, setStatus] = useState(OFFICE_REQUEST_FILTER.status)
 
   const yearOnChange = (e) => {
     setYear(e.target.value)
@@ -35,6 +34,7 @@ const TicketFilter = ({ show, onStatusChange, filter, onClearFilter }) => {
     setStatus(filter.status)
     onClearFilter();
   }
+
 
   return (
     <>
@@ -131,15 +131,11 @@ const TicketFilter = ({ show, onStatusChange, filter, onClearFilter }) => {
                         <CFormGroup className="my-0">
                           <CLabel htmlFor="date-input" className="font-weight-bold mb-1"></CLabel>
                           <CButton block size="sm" color="info" className="mt-2"
-                          // onClick={() => {
-                          // onFilterRequests({
-                          //   status: status,
-                          //   employee: employee,
-                          //   date_from: dates.from,
-                          //   date_to: dates.to,
-                          //   category: category
-                          // })
-                          // }}
+                            onClick={() => {
+                              onFilterRequests({
+                                status, month, year
+                              })
+                            }}
                           >Apply</CButton>
                         </CFormGroup>
                       </CCol>

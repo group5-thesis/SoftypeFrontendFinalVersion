@@ -17,6 +17,7 @@ import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline } from '@mdi
 import colors from 'assets/theme/colors';
 import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
 import api from 'utils/api';
+import {dispatchNotification} from 'utils/helpers'
 
 const Accounts = () => {
 
@@ -62,36 +63,42 @@ const Accounts = () => {
 
   const handleDisableAccount = async () => {
     setIsLoading(true)
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/disable_employee_account', { userId: accountDisable.userId })
     setIsLoading(false)
     if (!res.error) {
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       fetchEmployeeAccounts(dispatch)
     } else {
-      alert(res.error);
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setDisableAccount(false)
   }
 
   const handleResetAccount = async () => { // Lacking
     setIsLoading(true)
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/reset_employee_account', { userId: accountReset.userId })
     setIsLoading(false)
     if (!res.error) {
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       fetchEmployeeAccounts(dispatch)
     } else {
-      alert(res);
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setResetAccount(false)
   }
 
   const handleEnableAccount = async () => {
     setIsLoading(true)
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/enable_employee_account', { userId: accountEnable.userId })
     setIsLoading(false)
     if (!res.error) {
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       fetchEmployeeAccounts(dispatch)
     } else {
-      alert(res);
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setEnableAccount(false)
 

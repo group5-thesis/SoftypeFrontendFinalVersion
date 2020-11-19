@@ -10,11 +10,11 @@ import {
   CInvalidFeedback,
   CSpinner,
 } from '@coreui/react'
-import { Modal } from 'reusable'
+import { Modal, ConfirmDialog, LoadingButton } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions';
 import TicketModel from 'models/TicketModel'
 import { useSelector, useDispatch } from 'react-redux'
-import { shallowCopy, hasMissingFieds, toCapitalize, renameKey } from 'utils/helpers';
+import { shallowCopy, dispatchNotification, toCapitalize, renameKey } from 'utils/helpers';
 import api from 'utils/api';
 import _ from 'lodash';
 import moment from 'moment';
@@ -47,6 +47,7 @@ const TicketForm = () => {
   TicketModel.employeeId = user.employeeId
 
   const handleOnChange = (e) => {
+    setErrors(defaultErrors)
     let key = e.target.name
     let value = e.target.value
     let copy = shallowCopy(data)
@@ -79,20 +80,22 @@ const TicketForm = () => {
     if (_.values(_errors).includes(true)) {
       return
     }
-    handleSubmit()
+    // handleSubmit()
+    dialogRef.current.toggle()
   }
 
   const handleSubmit = async () => {
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait" });
     setIsLoading(true)
     let res = await api.post("/create_officeRequest ", data)
+    setIsLoading(false)
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_TICKET, renameKey(res.data.officeRequest_information[0])))
       modalRef.current.toggle()
       modalOnClose()
     } else {
-      alert("error")
+      dispatchNotification(dispatch, { type: 'error', message: res.message });
     }
-    setIsLoading(false)
   }
 
   const renderError = (field) => {
@@ -121,7 +124,8 @@ const TicketForm = () => {
     setErrors(defaultErrors)
     setData(TicketModel)
   }
-  const modalRef = useRef()
+  const modalRef = useRef();
+  const dialogRef = useRef();
 
   const actions = () => (
     <>
@@ -136,10 +140,23 @@ const TicketForm = () => {
   return (
     <Modal ref={modalRef} {...{
       title: "New Request",
-      footer: actions(),
+      footer: <>
+        <LoadingButton  {...{ isLoading, submit: validate, btnText: "Submit" }} />
+      </>,
       modalOnClose,
       cancelBtnTitle: "Close"
     }}>
+      <ConfirmDialog
+        id="cutom_dialog"
+        ref={dialogRef}
+        {...{
+          onConfirm: () => {
+            dialogRef.current.toggle()
+            handleSubmit();
+          },
+          title: "Please confirm.",
+        }}
+      ></ConfirmDialog>
       <CFormGroup >
         <CLabel>Requestor : </CLabel>
         <CInput id="name" value={data.name} disabled />

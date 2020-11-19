@@ -79,12 +79,12 @@ const LeaveRequest = ({ match }) => {
                 }} className="mr-2">Accept</CButton>
                 <CButton onClick={() => {
                   handleClick(0)
-                }} color="danger">Reject</CButton>
+                }} color="danger" className="mr-2">Reject</CButton>
                 {
                   user.employeeId === request['employee id'] && <CButton onClick={() => {
                     setIsCancel(true);
                     dialog.current.toggle();
-                  }} color="danger">   <CIcon name="cil-trash" className="text-danger" />Cancel</CButton>
+                  }} color="warning"> Cancel</CButton>
                 }
 
               </CButtonGroup>

@@ -143,6 +143,7 @@ export const getAdminResponse = (code) => {
   return code ? "approved" : "rejected";
 };
 
+
 export const toggleDialog = (dispatch) => {
   dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG));
 };

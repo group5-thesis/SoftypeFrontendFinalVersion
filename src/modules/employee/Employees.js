@@ -76,7 +76,6 @@ const Users = (props) => {
                             onPageChange={(e) => {
                                 pageChange(e);
                             }}
-                            activePage={page}
                             clickableRows
                             onRowClick={(emp) => {
                                 history.push(`/employees/profile/${emp.employeeId}`)

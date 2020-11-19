@@ -190,9 +190,15 @@ export const ACCOUNT_ROLES = [
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];
 export const CURRENT_YEAR = new Date().getFullYear();
+
 export const LEAVE_REQUEST_FILTER = queryStatus => ({
   status: queryStatus ? queryStatus : "All",
   month: CURRENT_MONTH,
   year: CURRENT_YEAR,
   category: 'All'
 })
+export const OFFICE_REQUEST_FILTER = {
+  year: CURRENT_YEAR,
+  month: CURRENT_MONTH,
+  status: 'All'
+}

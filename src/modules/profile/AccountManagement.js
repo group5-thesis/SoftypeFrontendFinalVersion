@@ -23,7 +23,7 @@ import {
 import { config as cnf } from "utils/config";
 import { useDispatch } from "react-redux";
 import { actionCreator, ActionTypes } from "utils/actions";
-import { checkNull, toCapitalize } from "utils/helpers";
+import { checkNull, toCapitalize , dispatchNotification } from "utils/helpers";
 import api from "utils/api";
 import EmployeeModal from "modules/employee/EmployeeModal";
 import { setWidth } from "utils/helpers";
@@ -96,14 +96,16 @@ const MyAccount = (props) => {
     payload.append("file", selectedFile);
     payload.append("employee_id", +user.employeeId);
     _initProcess("uploading", true);
+    dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     let res = await api.post("/update_profile/img", payload, true);
     _initProcess("uploading", false);
     if (!res.error) {
       _initProcess("pending", false);
       let updated = res.data.employee_information;
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS), updated);
     } else {
-      alert(res.message);
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     return;
   };
@@ -215,7 +217,7 @@ const MyAccount = (props) => {
                               disabled={process.uploading}
                               color="primary"
                             >
-                                Change Profile Image
+                              Change Profile Image
                             </CButton>
                             <CButton
                               onClick={UploadButtonHandler}
@@ -233,15 +235,15 @@ const MyAccount = (props) => {
                                 )}
                             </CButton>
                             <CButton
-                                block
-                                className="mr-1 mt-3"
-                                disabled={process.uploading}
-                                color="primary"
-                                onClick={() => {
-                                  history.push("/change-password")
-                                }}
-                              >
-                                Change Password
+                              block
+                              className="mr-1 mt-3"
+                              disabled={process.uploading}
+                              color="primary"
+                              onClick={() => {
+                                history.push("/change-password")
+                              }}
+                            >
+                              Change Password
                               </CButton>
                           </CCol>
                           <CCol>

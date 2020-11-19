@@ -11,7 +11,7 @@ import {
   CInvalidFeedback,
   CImg
 } from '@coreui/react';
-import { copyArray, setWidth, toCapitalize, shallowCopy, RULES } from 'utils/helpers';
+import { copyArray, setWidth, dispatchNotification, shallowCopy, RULES } from 'utils/helpers';
 import { NoData, Card, Modal } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
@@ -80,13 +80,14 @@ const Department = ({ match }) => {
   const handleSubmit = async () => {
     setIsLoading(true)
     data.department_id = match.params.id
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post("/add_department_manager", { department_manager: data.department_manager, departmentId: data.department_id })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_MANAGER, res.data.department_manager_information[0]))
-
+      dispatchNotification(dispatch, { type: 'success', message: "Success" })
       toggleModal()
     } else {
-      alert("error")
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setIsLoading(false)
   }

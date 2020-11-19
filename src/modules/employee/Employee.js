@@ -15,7 +15,6 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { config as cnf } from "utils/config";
-import CIcon from "@coreui/icons-react";
 import { useDispatch } from "react-redux";
 import { actionCreator, ActionTypes } from "utils/actions";
 import {
@@ -30,7 +29,10 @@ import EmployeeModal from "./EmployeeModal";
 import PerformanceReviewModal from "modules/performance-review/PerformanceReviewModal";
 import { setWidth } from "utils/helpers";
 import { Redirect } from 'react-router-dom'
+import Icon from '@mdi/react'
+import { mdiCircleMedium } from '@mdi/js';
 import res from "assets/img";
+import colors from "assets/theme/colors";
 const EmployeeDetails = (props) => {
   let _process = {
     loading: false,
@@ -54,6 +56,7 @@ const EmployeeDetails = (props) => {
     setProcess(_process);
   };
 
+
   const fields = [
     ["firstname", "middlename", "lastname"],
     ["gender", "birthdate", "mobileno", "email"],
@@ -75,7 +78,7 @@ const EmployeeDetails = (props) => {
       case "mobileno":
         return { key: "Mobile No.", value: val };
       case "status":
-        return { key: toCapitalize(key), value: "Active" };
+        return { key: toCapitalize(key), value: employee['isActive'] === 1 ? "Active" : "Inactive" };
       default:
         if (key.includes("name")) {
           val = toCapitalize(val);
@@ -146,7 +149,11 @@ const EmployeeDetails = (props) => {
           <CCardHeader>
             <CRow className="mb-2">
               <CCol sm="5">
-                <h3>Employee Information</h3>
+                <h3>Employee Information
+                  <sup>
+                    <Icon path={mdiCircleMedium} color={employee.isActive === 1 ? colors.$green : colors.$red} size={1} />
+                  </sup>
+                </h3>
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 <div className="float-right px-2">
@@ -173,13 +180,11 @@ const EmployeeDetails = (props) => {
                 {<div
                   style={{
                     //
+                    opacity: employee.isActive === 1 ? 1 : 0.8,
                     backgroundImage: `url(${
                       preview
                         ? preview
                         : employee.profile_img ?
-                          // ? pic
-                          //   ? url
-                          //   : res.logoSm
                           `${getBaseUrl()}/file/images/${employee.profile_img}`
                           : res.logoSm
                       })`,
@@ -191,43 +196,7 @@ const EmployeeDetails = (props) => {
                     width: "100%",
                     border: "1px solid dark",
                   }}
-                ></div>
-                  /* {(function () {
-                  let pic = false;
-                  let url = `${getBaseUrl()}/file/images/${employee.profile_img}`//`${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
-                 
-                  fetch(url, { method: "GET" }).then((res) => {
-                    if (res.ok) {
-                      pic = true;
-                    }
-                  }).catch(err=>console.log(err));
-                  //
-
-                  return (
-                    <div
-                      style={{
-                        //
-                        backgroundImage: `url(${
-                          preview
-                            ? preview
-                            : employee.profile_img ?
-                              // ? pic
-                              //   ? url
-                              //   : res.logoSm
-                              url
-                              : res.logoSm
-                          })`,
-                        backgroundSize: "contain",
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "center",
-                        maxHeight: "200px",
-                        height: "200px",
-                        width: "100%",
-                        border: "1px solid dark",
-                      }}
-                    ></div>
-                  );
-                })()} */}
+                ></div>}
                 <input
                   type="file"
                   accept="image/*"
@@ -242,7 +211,7 @@ const EmployeeDetails = (props) => {
                   }}
                   className="mr-1 mt-3"
                   block
-                  disabled={process.uploading}
+                  disabled={employee.isActive !== 1 || process.uploading}
                   color="primary"
                 >
                   Change Profile Image
@@ -284,6 +253,7 @@ const EmployeeDetails = (props) => {
                                 </CLabel>
                                 <CInput
                                   id="text-input"
+                                  invalid={field === 'status' && employee.isActive !== 1}
                                   name="text-input"
                                   readOnly
                                   value={val && val}
