@@ -50,6 +50,7 @@ const LeaveFormRequest = ({ request }) => {
     const [errors, setErrors] = useState(_errors);
     const [isLimitError, toggleLimitError] = useState(false)
     const [isRangeError, toggleRangeError] = useState(false)
+    const [placeholder, setPlaceholder] = useState('')
     const validateDate = () => {
         toggleLimitError(false)
         toggleRangeError(false)
@@ -113,8 +114,11 @@ const LeaveFormRequest = ({ request }) => {
         let copy = shallowCopy(data)
         _errors = shallowCopy(errors)
         _errors[key.includes('date_') ? 'dates' : key] = false;
-        setErrors(_errors)
-        copy[key] = value
+        setErrors(_errors);
+        copy[key] = value;
+        if (copy['category']) {
+           setPlaceholder(`I am having my ${copy['category']} ${(_errors.dates && copy['date_from']) && 'from ' + moment(copy['date_from']).format('ll')} ${(!_errors.dates && copy['date_to']) && 'until ' + moment(copy['date_to']).format('ll')}`)
+        }
         validateDate()
         setData(copy)
     }
@@ -264,6 +268,7 @@ const LeaveFormRequest = ({ request }) => {
                 <CTextarea
                     onChange={handleOnChange}
                     name="reason"
+                    placeholder={placeholder && placeholder}
                     value={data.reason}
                     invalid={errors.reason}
                     rows="5"

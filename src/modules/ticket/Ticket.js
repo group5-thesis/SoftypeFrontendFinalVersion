@@ -8,7 +8,7 @@ import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR } from "utils/constants/cons
 import { renameKey, dispatchNotification } from 'utils/helpers';
 import TicketFilter from "./component/TicketFilter";
 import TicketForm from "./component/TicketForm";
-import TicketDetails from "./component/TicketDetails";
+import TicketDetails from "./component/TicketDetailsV1";
 import api from 'utils/api'
 import { config } from 'utils/config'
 
