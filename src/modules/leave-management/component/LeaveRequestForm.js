@@ -98,7 +98,17 @@ const LeaveFormRequest = ({ request }) => {
         }
 
         if (reason === "" || reason === null) {
-            _errors.reason = true
+            debugger
+            if (!placeholder.length) {
+                _errors.reason = true;
+            } else {
+                handleOnChange({
+                    target: {
+                        name: 'reason',
+                        value: placeholder
+                    }
+                })
+            }
         }
         _errors.dates = invalidDate;
         setErrors(_errors);
@@ -116,9 +126,15 @@ const LeaveFormRequest = ({ request }) => {
         _errors[key.includes('date_') ? 'dates' : key] = false;
         setErrors(_errors);
         copy[key] = value;
+        debugger
+        let _placeholder = '';
         if (copy['category']) {
-           setPlaceholder(`I am having my ${copy['category']} ${(_errors.dates && copy['date_from']) && 'from ' + moment(copy['date_from']).format('ll')} ${(!_errors.dates && copy['date_to']) && 'until ' + moment(copy['date_to']).format('ll')}`)
+            _placeholder = `I am having my ${copy['category']} ${(copy['date_from']) ? 'from ' + moment(copy['date_from']).format('ll') : ''} ${(copy['date_to']) ? 'until ' + moment(copy['date_to']).format('ll') : ''}`
         }
+        if (copy['reason'].includes(`I am having my ${copy['category']}`)) {
+            copy['reason'] = _placeholder;
+        }
+        setPlaceholder(_placeholder)
         validateDate()
         setData(copy)
     }

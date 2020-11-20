@@ -39,7 +39,8 @@ const defaultEmployee = {
     country: "",
     sss: "",
     phil_health_no: "",
-    pag_ibig_no: ""
+    pag_ibig_no: "",
+    isActive: 1
 
 }
 

@@ -23,6 +23,8 @@ const AppLayout = (props) => {
       dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, null))
       dispatch(actionCreator(ActionTypes.LOGOUT))
       return <Redirect to="/login" />
+    } else {
+      if (Number(user.is_password_changed) === 0) return <Redirect to="/change-password" />
     }
   }
   if (user) {
@@ -30,8 +32,6 @@ const AppLayout = (props) => {
   }
   if (!isLoggedIn) {
     return <Redirect to="/login" />
-  } else if (Number(user.is_password_changed) === 0) {
-    return <Redirect to="/change-password" />
   }
   return (
     <div className="c-app c-default-layout">
