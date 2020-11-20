@@ -13,11 +13,11 @@ import {
 } from '@coreui/react'
 import { NoData, ConfirmDialog } from 'reusable'
 import Icon from '@mdi/react';
-import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline } from '@mdi/js';
+import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline, mdiInformation } from '@mdi/js';
 import colors from 'assets/theme/colors';
 import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
 import api from 'utils/api';
-import {dispatchNotification} from 'utils/helpers'
+import { dispatchNotification } from 'utils/helpers'
 
 const Accounts = () => {
 
@@ -30,10 +30,9 @@ const Accounts = () => {
   const dialog = useRef();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false)
-
   const stateAccounts = useSelector((state) => {
     return state.appState.accounts.accounts.filter(emp => {
-      return emp.employee_accountType !== 1
+      return emp.employeeId !== state.appState.auth.user.employeeId
     })
   });
 
@@ -46,12 +45,14 @@ const Accounts = () => {
   ]
 
   const clickedDisableBtn = (user) => { // Disable Account Button
+    debugger
     setAccountDisable(user)
     dialog.current.toggle()
     setDisableAccount(true)
   }
 
   const clickedEnableBtn = (user) => { // Enable Account Button
+    debugger
     setAccountEnable(user)
     dialog.current.toggle()
     setEnableAccount(true)
@@ -106,6 +107,18 @@ const Accounts = () => {
 
   }
 
+  const _renderIcon = () => {
+    return (<>
+      {[1,2].map((i) => {
+        return (
+          <h6 key={i} className="card-title mb-0">
+            <Icon path={mdiInformation} size={0.8} />test
+          </h6>
+        )
+      })}
+    </>)
+  }
+
   useEffect(() => {
     return
   }, [accountDisable, accountReset, accountEnable])
@@ -134,7 +147,17 @@ const Accounts = () => {
           <CCardBody>
             <CRow className="mb-3">
               <CCol sm="5">
-                <h4 className="card-title mb-0">Accounts</h4>
+                <h4 className="card-title mb-0">Accounts
+                {/* <CPopover header='Legend' content={
+                    <CCard width={500}>
+                      <CCardBody>
+                        {_renderIcon()}
+                      </CCardBody>
+                    </CCard>
+                  }>
+                    <Icon path={mdiInformation} size={0.8} />
+                  </CPopover> */}
+                </h4>
               </CCol>
               <CCol sm="7">
                 <div className="float-right">
@@ -197,24 +220,25 @@ const Accounts = () => {
                         </CButton>
                       </CPopover>
                       {
-                        item.isDeactivated === 0 ?
-                          <CPopover header="Reset Account">
-                            <CButton
-                              onClick={() => {
+                        item.isDeactivated === 0 &&
+                        <CPopover header={item.isPasswordChanged !== 0 ? "Reset Password" : "Unchanged Password"}>
+                          <CButton
+                            onClick={() => {
+                              if (item.isPasswordChanged !== 0) {
                                 clickedResetBtn(item)
-                              }}
-                              disabled={item.isPasswordChanged === 0}
-                            >
-                              <Icon path={mdiLockReset}
-                                size={1}
-                                horizontal
-                                vertical
-                                rotate={180}
-                                color={colors.$orange}
-                              />
-                            </CButton>
-                          </CPopover>
-                          : ""
+                              }
+                            }}
+                          >
+                            <Icon path={mdiLockReset}
+                              size={1}
+                              horizontal
+                              vertical
+                              rotate={180}
+                              color={item.isPasswordChanged !== 0 ? colors.$orange : colors.$grey}
+                            />
+                          </CButton>
+                        </CPopover>
+
                       }
                     </td>
                   )

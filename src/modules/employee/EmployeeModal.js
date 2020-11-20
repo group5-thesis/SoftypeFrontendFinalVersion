@@ -6,13 +6,12 @@ import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
 import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
 import { RULES, shallowCopy, getAge } from 'utils/helpers'
-import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
+import { fetchEmployeeAccounts, retrieveEmployees } from 'utils/helpers/fetch';
 import _ from 'lodash';
 
 const defaultErrors = {
     firstname: false,
     lastname: false,
-    middlename: false,
     birthdate: false,
     email: false,
     mobileno: false,
@@ -26,7 +25,6 @@ const defaultErrors = {
 const defaultEmployee = {
     role: "",
     accountType: "",
-    // department: "",
     firstname: "",
     lastname: "",
     middlename: "",
@@ -48,19 +46,18 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
     let dispatch = useDispatch();
     const modal = useRef();
     const dialog = useRef();
-    const [employee, createEmployee] = useState(!data ? defaultEmployee : data)
+    const [employee, createEmployee] = useState(!data ? shallowCopy(defaultEmployee) : data)
     const [errors, setError] = useState(defaultErrors)
     const [disabled, setDisabled] = useState(false);
-    const departments = useSelector(state => state.appState.department.departments)
     const [responseError, setResponseError] = useState();
 
     const handleOnChange = (event) => {
         setResponseError('')
+        setError(defaultErrors)
         let _errors = shallowCopy(errors)
         let Employee = shallowCopy(employee)
         let { name, value } = event.target
         _errors[name] = false
-        setError(_errors)
         if (name === "role") {
             let { role, accountType } = JSON.parse(value)
             Employee['role'] = role;
@@ -77,8 +74,14 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             return ageRules(getAge(value))
         }
 
-        if (name.includes("name")) {
+        if (['firstname', 'lastname'].includes(name)) {
             return nameRules(value)
+        }
+
+        if (name === 'middlename' && value !== "") {
+            return nameRules(value)
+        } else {
+            return false
         }
 
         if (name === "mobileno") {
@@ -92,7 +95,6 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         if (['sss', 'phil_health_no', 'pag_ibig_no'].includes(name)) {
             return false
         }
-
         return value !== "" || APP_MESSAGES.INPUT_REQUIRED;
     }
 
@@ -122,6 +124,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             createEmployee(defaultEmployee)
         }
         setError(defaultErrors)
+        setResponseError('');
     }
 
     const onSubmit = async () => {
@@ -133,8 +136,11 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         }
         let res = await api.post(`/${path}`, payload)
         if (!res.error) {
-            dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
-            fetchEmployeeAccounts(dispatch)
+            let fetched = await retrieveEmployees(dispatch);
+            if (fetched.error) {
+                dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, res.data.employee_information[0]))
+            }
+            await fetchEmployeeAccounts(dispatch)
         } else {
             setResponseError(res.message);
         }
@@ -146,11 +152,35 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
 
 
     const validate = () => {
-        let _errors = shallowCopy(errors)
-        Object.entries(employee).map(([key, value]) => {
-            let valid = validateInfo(key, value);
-            _errors[key] = valid === true ? false : valid
-        })
+
+        let _errors = shallowCopy(defaultErrors)
+        let {
+            role,
+            firstname,
+            lastname,
+            middlename,
+            gender,
+            mobileno,
+            birthdate,
+            email,
+            city,
+            country
+        } = employee;
+        debugger;
+        let checkRequired = val => RULES.required(val)
+        _errors['role'] = checkRequired(role);
+        _errors['firstname'] = RULES.nameRules(firstname);
+        _errors['lastname'] = RULES.nameRules(lastname);
+        _errors['gender'] = checkRequired(gender);
+        _errors['mobileno'] = RULES.numberRules(mobileno);
+        _errors['birthdate'] = RULES.ageRules(birthdate);
+        _errors['city'] = checkRequired(city);
+        _errors['country'] = checkRequired(country);
+        _errors['email'] = checkRequired(email);
+        _errors['middlename'] = false;
+        if (middlename !== '' || middlename !== null || middlename.length !== 0) {
+            _errors['middlename'] = RULES.nameRules(middlename);
+        }
         setError(_errors)
         let isValid = true;
         _.values(_errors).map(err => {
@@ -158,7 +188,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                 isValid = false
             }
         })
-        //
+        //valid
         if (isValid) {
             dialog.current.toggle()
         }
@@ -368,6 +398,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CLabel>Status</CLabel>
                                         <CSelect onChange={handleOnChange}
                                             value={employee.isActive}
+                                            disabled={!isUpdate}
                                             name="isActive">
                                             <option value="" hidden>{isUpdate ? employee.isActive === 1 ? 'Active' : 'Inactive' : 'Select Status'}</option>
                                             {
