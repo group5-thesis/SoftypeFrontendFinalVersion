@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { CAlert, CToast, CToaster, CToastHeader, CToastBody } from '@coreui/react'
 import Pusher from 'pusher-js';
 import { actionCreator, ActionTypes } from "utils/actions";
-import colors from 'assets/theme/colors';
+import { config } from 'utils/config';
 export default function (ComposedComponent) {
     class NetworkDetector extends Component {
         state = {
@@ -11,12 +11,9 @@ export default function (ComposedComponent) {
         }
 
         componentDidMount() {
-            const pusher = new Pusher('a76305e0740371c8f208', {
-                cluster: 'ap1',
-                encrypted: true,
-                secret: '79c2513d7d36b3e18c1d'
-            });
-            const channel = pusher.subscribe('softypeChannel');
+            let { PUSHER } = config;
+            const pusher = new Pusher(PUSHER.key, PUSHER.options);
+            const channel = pusher.subscribe(PUSHER.channel);
             channel.bind('message', notif => {
                 this.notificationReceived(notif)
             });

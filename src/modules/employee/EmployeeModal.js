@@ -6,7 +6,7 @@ import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
 import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
 import { RULES, shallowCopy, getAge } from 'utils/helpers'
-import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
+import { fetchEmployeeAccounts, retrieveEmployees } from 'utils/helpers/fetch';
 import _ from 'lodash';
 
 const defaultErrors = {
@@ -26,7 +26,6 @@ const defaultErrors = {
 const defaultEmployee = {
     role: "",
     accountType: "",
-    // department: "",
     firstname: "",
     lastname: "",
     middlename: "",
@@ -39,7 +38,8 @@ const defaultEmployee = {
     country: "",
     sss: "",
     phil_health_no: "",
-    pag_ibig_no: ""
+    pag_ibig_no: "",
+    isActive: 1
 
 }
 
@@ -47,19 +47,18 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
     let dispatch = useDispatch();
     const modal = useRef();
     const dialog = useRef();
-    const [employee, createEmployee] = useState(!data ? defaultEmployee : data)
+    const [employee, createEmployee] = useState(!data ? shallowCopy(defaultEmployee) : data)
     const [errors, setError] = useState(defaultErrors)
     const [disabled, setDisabled] = useState(false);
-    const departments = useSelector(state => state.appState.department.departments)
     const [responseError, setResponseError] = useState();
 
     const handleOnChange = (event) => {
         setResponseError('')
+        setError(defaultErrors)
         let _errors = shallowCopy(errors)
         let Employee = shallowCopy(employee)
         let { name, value } = event.target
         _errors[name] = false
-        setError(_errors)
         if (name === "role") {
             let { role, accountType } = JSON.parse(value)
             Employee['role'] = role;
@@ -76,8 +75,14 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             return ageRules(getAge(value))
         }
 
-        if (name.includes("name")) {
+        if (['firstname', 'lastname'].includes(name)) {
             return nameRules(value)
+        }
+
+        if (name === 'middlename' && value !== "") {
+            return nameRules(value)
+        } else {
+            return false
         }
 
         if (name === "mobileno") {
@@ -91,7 +96,6 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         if (['sss', 'phil_health_no', 'pag_ibig_no'].includes(name)) {
             return false
         }
-
         return value !== "" || APP_MESSAGES.INPUT_REQUIRED;
     }
 
@@ -121,6 +125,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             createEmployee(defaultEmployee)
         }
         setError(defaultErrors)
+        setResponseError('');
     }
 
     const onSubmit = async () => {
@@ -132,8 +137,11 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
         }
         let res = await api.post(`/${path}`, payload)
         if (!res.error) {
-            dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
-            fetchEmployeeAccounts(dispatch)
+            let fetched = await retrieveEmployees(dispatch);
+            if (fetched.error) {
+                dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, res.data.employee_information[0]))
+            }
+            await fetchEmployeeAccounts(dispatch)
         } else {
             setResponseError(res.message);
         }
@@ -145,19 +153,42 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
 
 
     const validate = () => {
-        let _errors = shallowCopy(errors)
-        Object.entries(employee).map(([key, value]) => {
-            let valid = validateInfo(key, value);
-            _errors[key] = valid === true ? false : valid
-        })
+
+        let _errors = shallowCopy(defaultErrors)
+        let {
+            role,
+            firstname,
+            lastname,
+            middlename,
+            gender,
+            mobileno,
+            birthdate,
+            email,
+            city,
+            country
+        } = employee;
+        let checkRequired = val => RULES.required(val)
+        _errors['role'] = checkRequired(role);
+        _errors['firstname'] = RULES.nameRules(firstname);
+        _errors['lastname'] = RULES.nameRules(lastname);
+        _errors['gender'] = checkRequired(gender);
+        _errors['mobileno'] = RULES.numberRules(mobileno);
+        _errors['birthdate'] = RULES.ageRules(getAge(birthdate));
+        _errors['city'] = checkRequired(city);
+        _errors['country'] = checkRequired(country);
+        _errors['email'] = checkRequired(email);
+        _errors['middlename'] = false;
+        if (middlename.length) {
+            _errors['middlename'] = RULES.nameRules(middlename);
+        }
         setError(_errors)
         let isValid = true;
         _.values(_errors).map(err => {
-            if (err !== false) {
+            if (typeof err == 'string') {
                 isValid = false
             }
         })
-        //
+        //valid
         if (isValid) {
             dialog.current.toggle()
         }
@@ -216,8 +247,8 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="firstname"
                                             value={employee.firstname || ""}
                                             placeholder="Enter Firstname"
-                                            invalid={errors.firstname !== false}
-                                        //valid={!errors.firstname}
+                                            invalid={ typeof errors.firstname !== 'boolean'}
+                                        //valid={!errors.firstname} 
                                         />
                                         {renderFeedback(errors.firstname)}
                                     </CFormGroup>
@@ -230,7 +261,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="middlename"
                                             value={employee.middlename || ""}
                                             placeholder="Enter Middlename"
-                                            invalid={errors.middlename !== false}
+                                            invalid={ typeof errors.middlename !== 'boolean'}
                                         />
                                         {renderFeedback(errors.middlename)}
 
@@ -244,7 +275,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="lastname"
                                             value={employee.lastname || ""}
                                             placeholder="Enter Lastname"
-                                            invalid={errors.lastname !== false}
+                                            invalid={ typeof errors.lastname !== 'boolean'}
                                         />
                                         {renderFeedback(errors.lastname)}
 
@@ -257,7 +288,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CLabel>Gender</CLabel>
                                         <CSelect onChange={handleOnChange}
                                             value={employee.gender}
-                                            invalid={errors.gender !== false}
+                                            invalid={ typeof errors.gender !== 'boolean'}
                                             name="gender">
                                             {
                                                 !employee.gender && <option value="" hidden>Select Gender</option>
@@ -276,7 +307,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             //valid={!errors.birthdate}
                                             onChange={handleOnChange}
                                             name="birthdate"
-                                            invalid={errors.birthdate !== false}
+                                            invalid={ typeof errors.birthdate !== 'boolean'}
                                             onChange={handleOnChange}
                                             value={employee.birthdate || ""}
                                             placeholder="Enter Birthdate.."
@@ -292,7 +323,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CSelect
                                             onChange={handleOnChange}
                                             name="role"
-                                            invalid={errors.role !== false}
+                                            invalid={ typeof errors.role !== 'boolean'}
                                         >
                                             {
                                                 !employee.role && <option value="" hidden>Select Role</option>
@@ -318,7 +349,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CLabel>Department</CLabel>
                                         <CSelect onChange={handleOnChange}
                                             value={employee.department}
-                                            invalid={errors.department !== false}
+                                            invalid={ typeof errors.department !== false}
                                             name="department">
                                             <option value="" hidden>Select Department</option>
                                             {
@@ -333,7 +364,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                     <CFormGroup>
                                         <CLabel>Mobile Number</CLabel>
                                         <CInput
-                                            invalid={errors.mobileno !== false}
+                                            invalid={ typeof errors.mobileno !== 'boolean'}
                                             //valid={!errors.mobileno}
                                             onChange={handleOnChange}
                                             name="mobileno"
@@ -355,7 +386,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="email"
                                             //valid={!errors.email}
                                             value={employee.email || ""}
-                                            invalid={errors.email !== false}
+                                            invalid={ typeof errors.email !== 'boolean'}
                                             placeholder="Enter Email.."
 
                                         />
@@ -367,6 +398,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CLabel>Status</CLabel>
                                         <CSelect onChange={handleOnChange}
                                             value={employee.isActive}
+                                            disabled={!isUpdate}
                                             name="isActive">
                                             <option value="" hidden>{isUpdate ? employee.isActive === 1 ? 'Active' : 'Inactive' : 'Select Status'}</option>
                                             {
@@ -386,7 +418,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             name="street"
                                             //valid={!errors.street}
-                                            invalid={errors.street !== false}
+                                            invalid={ typeof errors.street !== 'boolean'}
                                             value={employee.street || ""}
                                             placeholder="Enter Street.."
 
@@ -401,7 +433,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             //valid={!errors.city}
                                             name="city"
-                                            invalid={errors.city !== false}
+                                            invalid={ typeof errors.city !== 'boolean'  }
                                             value={employee.city || ""}
                                             placeholder="Enter City.."
 
@@ -416,7 +448,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             name="country"
                                             //valid={!errors.country}
-                                            invalid={errors.country !== false}
+                                            invalid={ typeof errors.country !== 'boolean'   }
                                             value={employee.country || ""}
                                             placeholder="Enter Country.."
                                         />
@@ -432,7 +464,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             name="sss"
                                             //valid={!errors.street}
-                                            // invalid={errors.sss !== false}
+                                            // invalid={ typeof errors.sss !== false}
                                             value={employee.sss || ""}
                                             placeholder="SSS NO."
 
