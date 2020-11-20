@@ -8,8 +8,7 @@ import {
   CCardHeader,
   CCardBody,
   CSpinner,
-  CInvalidFeedback,
-  CImg
+  CInvalidFeedback
 } from '@coreui/react';
 import { copyArray, setWidth, dispatchNotification, shallowCopy, RULES, getBaseUrl } from 'utils/helpers';
 import { NoData, Card, Modal } from 'reusable';
@@ -17,18 +16,28 @@ import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
 import DepartmentManager from "models/DepartmentManagerModel"
 import Icon from '@mdi/react';
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { APP_MESSAGES } from 'utils/constants/constant';
 import {
-  mdiPlus,
-  mdiTrashCanOutline
+  mdiPlus
 } from '@mdi/js';
 import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
 import department_icon_default from "../../../assets/img/default_dept_icon.png"
 
-const Department = ({ match, location }) => {
+const Department = ({ location }) => {
+
+  const user = useSelector(state => {
+    let authed = state.appState.auth.user;
+    return {
+      firstname: authed.firstname,
+      lastname: authed.lastname,
+      employeeId: authed.employeeId,
+      userId: authed.userId,
+      accountType: authed.accountType
+    }
+  })
 
   const defaultErrors = {
     department_manager: false
@@ -41,14 +50,16 @@ const Department = ({ match, location }) => {
   // const [deptId, setDeptId] = useState()
   const history = useHistory();
   const dispatch = useDispatch();
-  let deptId = query.get("id");
-  if (deptId === null || deptId === '' || deptId === undefined) {
-    deptId = sessionStorage.getItem('deptId')
-    history.replace({
-      pathname: '/employee/departments/departmentDetails',
-      search: `?id=${deptId.toString()}`
-    })
-  }
+  let deptId = query.get("id") || sessionStorage.getItem('deptId');
+  const [searchParams, setSearchParams] = useState(1)
+  // if (deptId === null || deptId === '' || deptId === undefined) {
+  //   deptId = sessionStorage.getItem('deptId')
+  //   // setSearchParams(deptId.toString())
+  //   history.replace({
+  //     pathname: '/employee/departments/department',
+  //     search: `?id=${deptId.toString()}`
+  //   })
+  // }
   sessionStorage.setItem('deptId', deptId)
   const modal = useRef();
 
@@ -139,25 +150,27 @@ const Department = ({ match, location }) => {
 
   const viewEmployees = (e) => {
     sessionStorage.setItem('managerId', e.managerId);
-    history.push(`/employee/departments/departmentDetails/employees/${e.managerId}`);
+    history.push(`/employee/departments/department/employees/${e.managerId}`);
   }
 
-  const viewDepartmentDetails = async (e) => {
-    let res = await api.get(`/retrieve_limited_department/${e.department_id}`)
-    if (res.error) {
-      dispatchNotification(dispatch, { type: 'error', message: res.message })
-    }
+  const viewDepartmentDetails = (e) => {
+    sessionStorage.setItem("dept_detailsId", e.department_id)
+    history.push(`/employee/departments/department/details?id=${searchParams}&aqs=${e.department_id}`);
+    // let res = await api.get(`/retrieve_limited_department/${e.department_id}`)
+    // if (res.error) {
+    //   dispatchNotification(dispatch, { type: 'error', message: res.message })
+    // }
   }
-  // useEffect(() => {
-  //   // router params pass as department Id
-  //   console.log(match.params.id, "Params Id")
-  //   if (match.params.id === "employees") {
-  //     // http://localhost:3000/employee/departments/1
-  //     let d = sessionStorage.getItem('deptId');
-  //     setDeptId(d);
-  //   }
-  //   console.log(deptId, "dept Id")
-  // }, [deptId])
+  useEffect(() => {
+    // if (deptId === null || deptId === '' || deptId === undefined) {
+      // deptId = sessionStorage.getItem('deptId')
+      // setSearchParams(deptId.toString())
+      history.replace({
+        pathname: '/employee/departments/department',
+        search: `?id=${deptId.toString()}`
+      })
+    // }
+  }, [])
 
   return (
     !request.length ? <NoData /> :
@@ -256,25 +269,29 @@ const Department = ({ match, location }) => {
                     )
                   })
                 }
-                <CCol sm="6" lg="3">
-                  <Card
-                    animation
-                    text={
-                      <Icon path={mdiPlus}
-                        size={4}
-                        horizontal
-                        vertical
-                        rotate={180}
-                        color={colors.$grey}
+                {
+                  user.accountType === 1 ?
+                    <CCol sm="6" lg="3">
+                      <Card
+                        animation
+                        text={
+                          <Icon path={mdiPlus}
+                            size={4}
+                            horizontal
+                            vertical
+                            rotate={180}
+                            color={colors.$grey}
+                          />
+                        }
+                        isIcon
+                        clickable
+                        centeredText
+                        height={200}
+                        onClickMethod={toggleModal}
                       />
-                    }
-                    isIcon
-                    clickable
-                    centeredText
-                    height={200}
-                    onClickMethod={toggleModal}
-                  />
-                </CCol>
+                    </CCol>
+                    : ""
+                }
               </CRow>
             </CCardBody>
           </CCard>

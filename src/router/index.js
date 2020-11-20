@@ -28,6 +28,7 @@ const PerformanceReview = React.lazy(() =>
 );
 const Departments = React.lazy(() => import("modules/departments/Departments"));
 const DepartmentEmployees = React.lazy(() => import("modules/departments/component/DepartmentEmployees"));
+const DepartmentDetails = React.lazy(() => import("modules/departments/component/DepartmentDetails"));
 const Department = React.lazy(() =>
   import("modules/departments/component/Department")
 );
@@ -128,14 +129,21 @@ const routes = [
     user: [4],
   },
   {
-    path: "/employee/departments/departmentDetails",
+    path: "/employee/departments/department",
     exact: true,
-    name: "Department Details",
+    name: "Department",
     component: Department,
     user: [4],
   },
   {
-    path: "/employee/departments/departmentDetails/employees/:id/:dept?",
+    path: "/employee/departments/department/details",
+    exact: true,
+    name: "Department Details",
+    component: DepartmentDetails,
+    user: [4],
+  },
+  {
+    path: "/employee/departments/department/employees/:id/:dept?",
     exact: true,
     name: "Department Employees",
     component: DepartmentEmployees,

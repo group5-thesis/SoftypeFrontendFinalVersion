@@ -13,7 +13,6 @@ export let navigate = {
 class CustomToolbar extends React.Component {
     constructor(props) {
         super(props)
-
     }
 
     componentDidUpdate() {
@@ -42,7 +41,6 @@ class CustomToolbar extends React.Component {
                         <button type="button" onClick={this.navigate.bind(null, navigate.NEXT)}>Next</button>
                     </span>
                 }
-
                 <span className="rbc-toolbar-label">{label}</span>
                 {
                     right && <CFormGroup>
