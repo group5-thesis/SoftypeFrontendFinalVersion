@@ -38,6 +38,14 @@ const Dashboard = () => {
     { key: 'status', _style: { width: '5%' } },
   ]
 
+  // for employee dashboard
+  const LeaveRequestFieldsForEmployee = [
+    { key: 'name', _style: { width: '25%' } },
+    { key: 'date from', _style: { width: '20%' } },
+    { key: 'date to', _style: { width: '20%' } },
+    { key: 'reason', _style: { width: '20%' } }
+  ]
+
   const OfficeRequestFields = [
     { key: 'name', _style: { width: '25%' } },
     { key: 'item', _style: { width: '20%' } },
@@ -60,7 +68,8 @@ const Dashboard = () => {
       firstname: authed.firstname,
       lastname: authed.lastname,
       employeeId: authed.employeeId,
-      userId: authed.userId
+      userId: authed.userId,
+      accountType: authed.accountType
     }
   })
 
@@ -117,6 +126,18 @@ const Dashboard = () => {
   const [clickedRejectBtn, setClickedRejectBtn] = useState(false);
   const [clickedApproveBtn, setClickedApproveBtn] = useState(false);
 
+
+  // Employe Dashboard
+
+  const stateTodaysEmployeeOnLeave = useSelector((state) => {
+    return state.appState.leave.leave_requests.filter(req => {
+      return req['status'] === "approve"
+    })
+  });
+
+  const [todaysEmployeeOnLeave, setTodaysEmployeeOnLeave] = useState(stateTodaysEmployeeOnLeave)
+
+  //
   const viewEmployees = () => {
     history.push(`/employees`);
   }
@@ -194,6 +215,7 @@ const Dashboard = () => {
   return (
     <>
       <Widgets {...{
+        user,
         totalEmployees,
         viewLeaveRequests,
         viewOfficeRequests,
@@ -248,26 +270,30 @@ const Dashboard = () => {
               <CRow>
                 <CCol sm="6">
                   <div>
-                    {"Recent Leave Requests"}
+                    {user.accountType === 1 || user.accountType === 2 ? "Recent Leave Requests" : user.accountType === 3 ? "Employees on Leave" : ""}
                   </div>
                 </CCol>
-                <CCol sm="6" className="d-none d-md-block">
-                  <div className="float-right">
-                    <CButton size="sm" color="primary" onClick={() => {
-                      viewLeaveRequests()
-                    }} disabled={false}>
-                      {"View All"}
-                    </CButton>
-                  </div>
-                </CCol>
+                {
+                  user.accountType === 1 || user.accountType === 2 &&
+                  <CCol sm="6" className="d-none d-md-block">
+                    <div className="float-right">
+                      <CButton size="sm" color="primary" onClick={() => {
+                        viewLeaveRequests()
+                      }} disabled={false}>
+                        {"View All"}
+                      </CButton>
+                    </div>
+                  </CCol>
+                }
               </CRow>
             </CCardHeader>
             <CCardBody>
               <CDataTable
-                items={_.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5)}
-                fields={LeaveRequestFields}
+                items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(todaysEmployeeOnLeave, ['created at'], ['desc']) : []}
+                fields={user.accountType === 2 || user.accountType === 1 ? LeaveRequestFields : user.accountType === 3 ? LeaveRequestFieldsForEmployee : []}
                 hover
                 clickableRows
+                itemsPerPage={user.accountType === 3 ? 10 : 5}
                 noItemsViewSlot={<NoData title="No Requests" />}
                 onRowClick={(item) => {
                   viewLeaveRequestDetails(item.id)
@@ -286,49 +312,52 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol>
-          <CCard>
-            <CCardHeader>
-              <CRow>
-                <CCol sm="6">
-                  <div>
-                    {"Recent Office Requests"}
-                  </div>
-                </CCol>
-                <CCol sm="6" className="d-none d-md-block">
-                  <div className="float-right">
-                    <CButton size="sm" color="primary" onClick={() => {
-                      viewOfficeRequests()
-                    }} disabled={false}>
-                      {"View All"}
-                    </CButton>
-                  </div>
-                </CCol>
-              </CRow>
+        {
+          user.accountType === 1 || user.accountType === 2 &&
+          <CCol>
+            <CCard>
+              <CCardHeader>
+                <CRow>
+                  <CCol sm="6">
+                    <div>
+                      {"Recent Office Requests"}
+                    </div>
+                  </CCol>
+                  <CCol sm="6" className="d-none d-md-block">
+                    <div className="float-right">
+                      <CButton size="sm" color="primary" onClick={() => {
+                        viewOfficeRequests()
+                      }} disabled={false}>
+                        {"View All"}
+                      </CButton>
+                    </div>
+                  </CCol>
+                </CRow>
+              </CCardHeader>
+              <CCardBody>
 
-            </CCardHeader>
-            <CCardBody>
-              <CDataTable
-                items={_.orderBy(recentOfficeRequest, ['date requested'], ['desc']).slice(0, 5)}
-                fields={OfficeRequestFields}
-                hover
-                clickableRows
-                noItemsViewSlot={<NoData title="No Requests" />}
-                onRowClick={toggleModal}
-                scopedSlots={{
-                  'status':
-                    (item) => (
-                      <td>
-                        <CBadge color={getBadge(TICKET_STATUS, item.status)}>
-                          {item.status === 1 ? "Open" : "Closed"}
-                        </CBadge>
-                      </td>
-                    )
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
+                <CDataTable
+                  items={_.orderBy(recentOfficeRequest, ['date requested'], ['desc']).slice(0, 5)}
+                  fields={OfficeRequestFields}
+                  hover
+                  clickableRows
+                  noItemsViewSlot={<NoData title="No Requests" />}
+                  onRowClick={toggleModal}
+                  scopedSlots={{
+                    'status':
+                      (item) => (
+                        <td>
+                          <CBadge color={getBadge(TICKET_STATUS, item.status)}>
+                            {item.status === 1 ? "Open" : "Closed"}
+                          </CBadge>
+                        </td>
+                      )
+                  }}
+                />
+              </CCardBody>
+            </CCard>
+          </CCol>
+        }
       </CRow>
     </>
   )

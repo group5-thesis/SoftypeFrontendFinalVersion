@@ -10,7 +10,8 @@ import {
 } from '@coreui/react'
 
 const Widgets = (
-  { totalEmployees,
+  { user,
+    totalEmployees,
     viewLeaveRequests,
     viewOfficeRequests,
     viewEmployees,
@@ -26,7 +27,7 @@ const Widgets = (
         <CWidgetDropdown
           color="gradient-primary"
           header={`${employeesOnLeave}`}
-          text="Employees on Leave"
+          text={user.accountType === 3 ? "Remaining Leave" : user.accountType === 1 || user.accountType === 2 ? "Employees on Leave" : ""}
           footerSlot={
             <div
               className={'text-center'}
