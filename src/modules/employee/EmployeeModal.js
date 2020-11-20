@@ -12,6 +12,7 @@ import _ from 'lodash';
 const defaultErrors = {
     firstname: false,
     lastname: false,
+    middlename: false,
     birthdate: false,
     email: false,
     mobileno: false,
@@ -166,25 +167,24 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
             city,
             country
         } = employee;
-        debugger;
         let checkRequired = val => RULES.required(val)
         _errors['role'] = checkRequired(role);
         _errors['firstname'] = RULES.nameRules(firstname);
         _errors['lastname'] = RULES.nameRules(lastname);
         _errors['gender'] = checkRequired(gender);
         _errors['mobileno'] = RULES.numberRules(mobileno);
-        _errors['birthdate'] = RULES.ageRules(birthdate);
+        _errors['birthdate'] = RULES.ageRules(getAge(birthdate));
         _errors['city'] = checkRequired(city);
         _errors['country'] = checkRequired(country);
         _errors['email'] = checkRequired(email);
         _errors['middlename'] = false;
-        if (middlename !== '' || middlename !== null || middlename.length !== 0) {
+        if (middlename.length) {
             _errors['middlename'] = RULES.nameRules(middlename);
         }
         setError(_errors)
         let isValid = true;
         _.values(_errors).map(err => {
-            if (err !== false) {
+            if (typeof err == 'string') {
                 isValid = false
             }
         })
@@ -247,8 +247,8 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="firstname"
                                             value={employee.firstname || ""}
                                             placeholder="Enter Firstname"
-                                            invalid={errors.firstname !== false}
-                                        //valid={!errors.firstname}
+                                            invalid={ typeof errors.firstname !== 'boolean'}
+                                        //valid={!errors.firstname} 
                                         />
                                         {renderFeedback(errors.firstname)}
                                     </CFormGroup>
@@ -261,7 +261,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="middlename"
                                             value={employee.middlename || ""}
                                             placeholder="Enter Middlename"
-                                            invalid={errors.middlename !== false}
+                                            invalid={ typeof errors.middlename !== 'boolean'}
                                         />
                                         {renderFeedback(errors.middlename)}
 
@@ -275,7 +275,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="lastname"
                                             value={employee.lastname || ""}
                                             placeholder="Enter Lastname"
-                                            invalid={errors.lastname !== false}
+                                            invalid={ typeof errors.lastname !== 'boolean'}
                                         />
                                         {renderFeedback(errors.lastname)}
 
@@ -288,7 +288,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CLabel>Gender</CLabel>
                                         <CSelect onChange={handleOnChange}
                                             value={employee.gender}
-                                            invalid={errors.gender !== false}
+                                            invalid={ typeof errors.gender !== 'boolean'}
                                             name="gender">
                                             {
                                                 !employee.gender && <option value="" hidden>Select Gender</option>
@@ -307,7 +307,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             //valid={!errors.birthdate}
                                             onChange={handleOnChange}
                                             name="birthdate"
-                                            invalid={errors.birthdate !== false}
+                                            invalid={ typeof errors.birthdate !== 'boolean'}
                                             onChange={handleOnChange}
                                             value={employee.birthdate || ""}
                                             placeholder="Enter Birthdate.."
@@ -323,7 +323,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CSelect
                                             onChange={handleOnChange}
                                             name="role"
-                                            invalid={errors.role !== false}
+                                            invalid={ typeof errors.role !== 'boolean'}
                                         >
                                             {
                                                 !employee.role && <option value="" hidden>Select Role</option>
@@ -349,7 +349,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                         <CLabel>Department</CLabel>
                                         <CSelect onChange={handleOnChange}
                                             value={employee.department}
-                                            invalid={errors.department !== false}
+                                            invalid={ typeof errors.department !== false}
                                             name="department">
                                             <option value="" hidden>Select Department</option>
                                             {
@@ -364,7 +364,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                     <CFormGroup>
                                         <CLabel>Mobile Number</CLabel>
                                         <CInput
-                                            invalid={errors.mobileno !== false}
+                                            invalid={ typeof errors.mobileno !== 'boolean'}
                                             //valid={!errors.mobileno}
                                             onChange={handleOnChange}
                                             name="mobileno"
@@ -386,7 +386,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             name="email"
                                             //valid={!errors.email}
                                             value={employee.email || ""}
-                                            invalid={errors.email !== false}
+                                            invalid={ typeof errors.email !== 'boolean'}
                                             placeholder="Enter Email.."
 
                                         />
@@ -418,7 +418,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             name="street"
                                             //valid={!errors.street}
-                                            invalid={errors.street !== false}
+                                            invalid={ typeof errors.street !== 'boolean'}
                                             value={employee.street || ""}
                                             placeholder="Enter Street.."
 
@@ -433,7 +433,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             //valid={!errors.city}
                                             name="city"
-                                            invalid={errors.city !== false}
+                                            invalid={ typeof errors.city !== 'boolean'  }
                                             value={employee.city || ""}
                                             placeholder="Enter City.."
 
@@ -448,7 +448,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             name="country"
                                             //valid={!errors.country}
-                                            invalid={errors.country !== false}
+                                            invalid={ typeof errors.country !== 'boolean'   }
                                             value={employee.country || ""}
                                             placeholder="Enter Country.."
                                         />
@@ -464,7 +464,7 @@ const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null
                                             onChange={handleOnChange}
                                             name="sss"
                                             //valid={!errors.street}
-                                            // invalid={errors.sss !== false}
+                                            // invalid={ typeof errors.sss !== false}
                                             value={employee.sss || ""}
                                             placeholder="SSS NO."
 
