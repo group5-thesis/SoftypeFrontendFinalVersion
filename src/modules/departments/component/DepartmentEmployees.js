@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setWidth, shallowCopy, RULES, copyArray, getBaseUrl,dispatchNotification } from 'utils/helpers';
+import { setWidth, shallowCopy, RULES, copyArray, getBaseUrl, dispatchNotification } from 'utils/helpers';
 import { fetchDepartmentEmployees, retrieveEmployees } from 'utils/helpers/fetch';
 import {
   CRow,
@@ -29,6 +29,17 @@ import { actionCreator, ActionTypes } from 'utils/actions';
 import department_icon_default from "../../../assets/img/default_dept_icon.png"
 
 const DepartmentEmployees = ({ match }) => {
+
+  const user = useSelector(state => {
+    let authed = state.appState.auth.user;
+    return {
+      firstname: authed.firstname,
+      lastname: authed.lastname,
+      employeeId: authed.employeeId,
+      userId: authed.userId,
+      accountType: authed.accountType
+    }
+  })
 
   const defaultErrors = {
     employeeId: false
@@ -201,81 +212,91 @@ const DepartmentEmployees = ({ match }) => {
               <CCol sm="6">
                 <h4 className="card-title mb-0">{`Department Manager: ${_departmentManager[0].manager_firstname} ${_departmentManager[0].manager_lastname}`}</h4>
               </CCol>
-              <CCol sm="6" className="d-none d-md-block">
-                <div className="float-right">
-                  <CButton color={removeEmployee ? "danger" : "primary"} onClick={() => {
-                    removeEmployee ? cancelRemoveDepartmentEmployee() : removeDepartmentEmployee()
-                  }} disabled={_departmentEmployees.length === 0}>
-                    {removeEmployee ? "Cancel Delete" : "Delete Department Employees"}
-                  </CButton>
-                </div>
-              </CCol>
+              {
+                user.accountType === 1 ?
+                  <CCol sm="6" className="d-none d-md-block">
+                    <div className="float-right">
+                      <CButton color={removeEmployee ? "danger" : "primary"} onClick={() => {
+                        removeEmployee ? cancelRemoveDepartmentEmployee() : removeDepartmentEmployee()
+                      }} disabled={_departmentEmployees.length === 0}>
+                        {removeEmployee ? "Cancel Delete" : "Delete Department Employees"}
+                      </CButton>
+                    </div>
+                  </CCol>
+                  : ""
+              }
             </CRow>
           </CCardHeader>
+
           <CCardBody>
-            <CRow>
-              {
-                _departmentEmployees.map((key, index) => {
-                  return (
-                    <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
-                      <Card
-                        clickable={removeEmployee}
-                        height={200}
-                        animation
-                        setImg
-                        text={
-                          `${key.firstname}`
-                        }
-                        dept_role={key.role}
-                        textClass={"font-weight-bold"}
-                        textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
-                        imgClass={"img_dept"}
-                        imgSrc={key.profile_img !== null ? `${getBaseUrl()}/file/images/${key.profile_img}` : department_icon_default}
-                        textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
-                        onClickMethod={() => {
-                          if (removeEmployee) {
-                            dialog.current.toggle()
-                            setDepartmentEmployeeId(key.department_employeeId)
-                          }
-                        }}
-                        deleteCard={removeEmployee}
-                        deleteButton={
-                          <Icon path={mdiTrashCanOutline}
-                            size={4}
-                            horizontal
-                            vertical
-                            rotate={180}
-                            color={colors.$white_bis}
+            {
+              _departmentEmployees.length === 0 && user.accountType !== 1 ? <NoData title="No Employee/s Added Yet" /> :
+                <CRow>
+                  {
+                    _departmentEmployees.map((key, index) => {
+                      return (
+                        <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
+                          <Card
+                            clickable={removeEmployee}
+                            height={200}
+                            animation
+                            setImg
+                            text={
+                              `${key.firstname}`
+                            }
+                            dept_role={key.role}
+                            textClass={"font-weight-bold"}
+                            textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
+                            imgClass={"img_dept"}
+                            imgSrc={key.profile_img !== null ? `${getBaseUrl()}/file/images/${key.profile_img}` : department_icon_default}
+                            textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
+                            onClickMethod={() => {
+                              if (removeEmployee) {
+                                dialog.current.toggle()
+                                setDepartmentEmployeeId(key.department_employeeId)
+                              }
+                            }}
+                            deleteCard={removeEmployee}
+                            deleteButton={
+                              <Icon path={mdiTrashCanOutline}
+                                size={4}
+                                horizontal
+                                vertical
+                                rotate={180}
+                                color={colors.$white_bis}
+                              />
+                            }
                           />
-                        }
-                      />
-                    </CCol>
-                  )
-                })
-              }
-              {
-                removeEmployee ? "" :
-                  <CCol sm="6" lg="3">
-                    <Card
-                      animation
-                      text={
-                        <Icon path={mdiPlus}
-                          size={4}
-                          horizontal
-                          vertical
-                          rotate={180}
-                          color={colors.$grey}
-                        />
-                      }
-                      isIcon
-                      clickable
-                      centeredText
-                      height={200}
-                      onClickMethod={toggleModal}
-                    />
-                  </CCol>
-              }
-            </CRow>
+                        </CCol>
+                      )
+                    })
+                  }
+                  {
+                    user.accountType === 1 ?
+                      removeEmployee ? "" :
+                        <CCol sm="6" lg="3">
+                          <Card
+                            animation
+                            text={
+                              <Icon path={mdiPlus}
+                                size={4}
+                                horizontal
+                                vertical
+                                rotate={180}
+                                color={colors.$grey}
+                              />
+                            }
+                            isIcon
+                            clickable
+                            centeredText
+                            height={200}
+                            onClickMethod={toggleModal}
+                          />
+                        </CCol>
+                      : ""
+                  }
+                </CRow>
+            }
           </CCardBody>
         </CCard>
       </CCol>

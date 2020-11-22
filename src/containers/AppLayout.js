@@ -20,16 +20,19 @@ const AppLayout = (props) => {
     if ((error) || !data.length) {
       localStorage.clear();
       sessionStorage.clear();
-      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, null))
+      // dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, null))
       dispatch(actionCreator(ActionTypes.LOGOUT))
       return <Redirect to="/login" />
     } else {
       if (Number(user.is_password_changed) === 0) return <Redirect to="/change-password" />
     }
+    if (Number(user.is_password_changed) === 0) {
+      return <Redirect to="/change-password" />
+    }
   }
-  if (user) {
-    checkUser()
-  }
+  // if (user) {
+  //   checkUser()
+  // }
   if (!isLoggedIn) {
     return <Redirect to="/login" />
   }

@@ -6,7 +6,7 @@ import {
   CSpinner,
   CInvalidFeedback
 } from '@coreui/react'
-import { Card, Modal } from 'reusable'
+import { Card, Modal, NoData } from 'reusable'
 import AddDepartment from './component/AddDepartment'
 import DepartmentModel from "models/DepartmentModel"
 import { shallowCopy, RULES, dispatchNotification } from 'utils/helpers';
@@ -41,6 +41,17 @@ const Departments = (props) => {
     })
   })
 
+  const user = useSelector(state => {
+    let authed = state.appState.auth.user;
+    return {
+      firstname: authed.firstname,
+      lastname: authed.lastname,
+      employeeId: authed.employeeId,
+      userId: authed.userId,
+      accountType: authed.accountType
+    }
+  })
+
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -53,8 +64,6 @@ const Departments = (props) => {
   const stateDepartments = useSelector((state) => {
     return state.appState.department.departments
   });
-
-  // console.log(stateDepartments)
 
   const handleSubmit = async () => {
     setIsLoading(true)
@@ -136,71 +145,78 @@ const Departments = (props) => {
 
   const viewDepartmentInfo = (id) => {
     sessionStorage.setItem('deptId', id);
-    history.push(`/employee/departments/departmentDetails?id=${id}`);
+    history.push(`/employee/departments/department?id=${id}`);
   };
 
   return (
     <>
-      <CRow>
-        {
-          stateDepartments.map((dept, index) => {
-            return (
-              <CCol sm="6" lg="3" key={dept.department_id + "crd"}>
-                <Card
-                  color={COLORS[index]}
-                  clickable
-                  animation
-                  centeredText
-                  height={200}
-                  text={dept.department_name}
-                  textClass={"text-white font-weight-bold h2"}
-                  onClickMethod={() => {
-                    viewDepartmentInfo(dept.department_id)
-                  }}
-                />
-              </CCol>
-            )
-          })
-        }
-        <CCol sm="6" lg="3">
-          <Modal
-            ref={modal}
-            centered
-            title="Add Department"
-            modalOnClose={toggleModal}
-            hidden
-            closeButton
-            footer={
-              <>
-                <CButton color="primary" disabled={isLoading} onClick={validate}>
-                  {
-                    isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
-                  }
-                </CButton>
-              </>
+      {
+        stateDepartments.length === 0 && user.accountType !== 1 ? <NoData /> :
+          <CRow>
+            {
+              stateDepartments.map((dept, index) => {
+                return (
+                  <CCol sm="6" lg="3" key={dept.department_id + "crd"}>
+                    <Card
+                      color={COLORS[index]}
+                      clickable
+                      animation
+                      centeredText
+                      height={200}
+                      text={dept.department_name}
+                      textClass={"text-white font-weight-bold h2"}
+                      onClickMethod={() => {
+                        viewDepartmentInfo(dept.department_id)
+                      }}
+                    />
+                  </CCol>
+                )
+              })
             }
-          >
-            <AddDepartment {...{ employees, onChange, data, renderFeedback, errors }} />
-          </Modal>
-          <Card
-            text={
-              <Icon path={mdiPlus}
-                size={4}
-                horizontal
-                vertical
-                rotate={180}
-                color={colors.$grey}
-              />
+            {
+              user.accountType === 1 ?
+                <CCol sm="6" lg="3">
+                  <Modal
+                    ref={modal}
+                    centered
+                    title="Add Department"
+                    modalOnClose={toggleModal}
+                    hidden
+                    closeButton
+                    footer={
+                      <>
+                        <CButton color="primary" disabled={isLoading} onClick={validate}>
+                          {
+                            isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
+                          }
+                        </CButton>
+                      </>
+                    }
+                  >
+                    <AddDepartment {...{ employees, onChange, data, renderFeedback, errors }} />
+                  </Modal>
+                  <Card
+                    text={
+                      <Icon path={mdiPlus}
+                        size={4}
+                        horizontal
+                        vertical
+                        rotate={180}
+                        color={colors.$grey}
+                      />
+                    }
+                    animation
+                    isIcon
+                    clickable
+                    centeredText
+                    height={200}
+                    onClickMethod={toggleModal}
+                  />
+                </CCol>
+                : ""
             }
-            animation
-            isIcon
-            clickable
-            centeredText
-            height={200}
-            onClickMethod={toggleModal}
-          />
-        </CCol>
-      </CRow>
+          </CRow>
+      }
     </>
   )
 }
