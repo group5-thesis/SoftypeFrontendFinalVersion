@@ -17,7 +17,7 @@ import { NoData, Modal, ConfirmDialog } from 'reusable';
 import { useHistory } from "react-router-dom";
 import _ from 'lodash';
 import moment from 'moment'
-import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR } from "utils/constants/constant";
+import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR, CURRENT_DATE, CURRENT_MONTH_TEXT } from "utils/constants/constant";
 import TicketDetails from "modules/ticket/component/TicketDetails";
 import api from 'utils/api'
 import { ActionTypes, actionCreator } from 'utils/actions';
@@ -75,6 +75,15 @@ const Dashboard = () => {
     }
   })
 
+  const [monthText, setMonthText] = useState(CURRENT_MONTH_TEXT + 1)
+  const [currentDateMonth, setCurrentDateMonth] = useState(`${monthText}-${CURRENT_DATE.toString()}`)
+
+  const stateBirthdayEmployees = useSelector((state) => {
+    return state.appState.employee.employees.filter(emp => {
+      return emp['birthdate'].substring(5,10) === currentDateMonth
+    })
+  })
+
   const stateActiveEmployees = useSelector((state) => {
     return state.appState.employee.employees.filter(emp => {
       return emp.isActive === 1
@@ -128,9 +137,7 @@ const Dashboard = () => {
   const [clickedRejectBtn, setClickedRejectBtn] = useState(false);
   const [clickedApproveBtn, setClickedApproveBtn] = useState(false);
 
-
   // Employe Dashboard
-
   const stateTodaysEmployeeOnLeave = useSelector((state) => { // need fix
     return state.appState.leave.leave_requests
   });
@@ -141,15 +148,8 @@ const Dashboard = () => {
     })
   });
 
-  const stateDepartments = useSelector((state) => { // not yet
-    return state.appState.department.departments
-  });
-
-  // Remaining Leave Not yet implemented
-
   const [todaysEmployeeOnLeave, setTodaysEmployeeOnLeave] = useState(stateTodaysEmployeeOnLeave) // need fix
   const [employeeDepartment, setEmployeeDepartment] = useState(stateEmployeeDepartment) // not yet
-  const [employeeRemainingLeave, setEmployeeRemainingLeave] = useState(user.remainingLeave) // not yet
   const [month, setMonth] = useState(CURRENT_MONTH)
   const [year, setYear] = useState(CURRENT_YEAR)
 
@@ -233,8 +233,8 @@ const Dashboard = () => {
       todaysEmployeeOnLeave,
       year,
       month,
-      employeeRemainingLeave,
-      employeeDepartment
+      employeeDepartment,
+      stateBirthdayEmployees
     ]
   )
 
@@ -252,7 +252,7 @@ const Dashboard = () => {
         todaysPendingOfficeRequests,
         viewDepartmentInfo,
         employeeDepartment,
-        employeeRemainingLeave
+        stateBirthdayEmployees
       }} />
       <CRow>
         <CCol>

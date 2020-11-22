@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, useState, useEffect, useRef } from 'react'
 import {
   CWidgetDropdown,
   CRow,
@@ -6,8 +6,11 @@ import {
   CDropdown,
   CDropdownMenu,
   CDropdownItem,
-  CDropdownToggle
+  CDropdownToggle,
+  CButton
 } from '@coreui/react'
+import { Modal } from 'reusable';
+import WidgetModalContent from 'modules/dashboard/component/WidgetModalContent'
 
 const Widgets = (
   { user,
@@ -21,12 +24,36 @@ const Widgets = (
     todaysPendingOfficeRequests,
     viewDepartmentInfo,
     employeeDepartment,
-    employeeRemainingLeave
+    stateBirthdayEmployees
   }
 ) => {
 
+  const modal = useRef();
+
+  const toggleModal = (e) => {
+    modal.current.toggle();
+  };
+
   return (
     <CRow>
+      <Modal
+        ref={modal}
+        centered
+        title="Today's Birthday Celebrant/s"
+        modalOnClose={toggleModal}
+        hidden
+        closeButton
+        footer={
+          <>
+            <CButton color="danger" onClick={() => {
+              toggleModal()
+            }}>Close</CButton>
+          </>
+        }
+        hideCancelButton
+      >
+        <WidgetModalContent {... { content: stateBirthdayEmployees }} />
+      </Modal>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-primary"
@@ -35,7 +62,7 @@ const Widgets = (
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '50px' }}
+              style={{ height: '70px' }}
             >
             </div>
           }
@@ -60,7 +87,7 @@ const Widgets = (
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '50px' }}
+              style={{ height: '70px' }}
             >
             </div>
           }
@@ -83,31 +110,30 @@ const Widgets = (
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-warning"
-          header={user.accountType === 3 || user.accountType === 2 ? `${employeeRemainingLeave}` : `${todaysPendingOfficeRequests}`}
-          text={user.accountType === 3 || user.accountType === 2 ? "Remaining Leave" : user.accountType === 1 ? "Office Requests" : ""}
+          header={`${stateBirthdayEmployees.length}`}
+          text={stateBirthdayEmployees.length === 0 ? "No Birthday/s Today" : "Birthday Celebrants"}
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '50px' }}
+              style={{ height: '70px' }}
             >
             </div>
           }
         >
           {
-            user.accountType !== 3 && user.accountType !== 2 ?
+            stateBirthdayEmployees.length !== 0 ?
               <CDropdown>
                 <CDropdownToggle color="transparent">
                 </CDropdownToggle>
                 <CDropdownMenu className="pt-0" placement="bottom-end">
                   <CDropdownItem onClick={() => {
-                    viewOfficeRequests()
-                  }}>View Office Requests</CDropdownItem>
+                    toggleModal()
+                  }}>See who's celebrating</CDropdownItem>
                 </CDropdownMenu>
               </CDropdown>
               : ""
           }
         </CWidgetDropdown>
-
       </CCol>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
@@ -117,7 +143,7 @@ const Widgets = (
           footerSlot={
             <div
               className={'text-center'}
-              style={{ height: '50px' }}
+              style={{ height: '70px' }}
             >
             </div>
           }
