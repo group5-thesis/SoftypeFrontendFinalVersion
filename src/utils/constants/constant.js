@@ -202,6 +202,8 @@ export const NOTIFICATION_TYPES = {
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];
 export const CURRENT_YEAR = new Date().getFullYear();
+export const CURRENT_DATE = new Date().getDate();
+export const CURRENT_MONTH_TEXT = new Date().getMonth();
 
 export const LEAVE_REQUEST_FILTER = queryStatus => ({
   status: queryStatus ? queryStatus : "All",

@@ -1,9 +1,9 @@
 export const config = {
     API_URL_DEV: "http://localhost:8000/api",
-    API_URL_LIVE: "http://13.229.222.150:8000/api",
-    API_URL_BASE_LIVE:  "http://13.229.222.150:8000",
+    API_URL_LIVE: "http://3.0.16.255:8000/api",
+    API_URL_BASE_LIVE:  "http://3.0.16.255:8000",
     API_URL_BASE_DEV: "http://localhost:8000",
-    IS_DEV: true,
+    IS_DEV: false,
     PUSHER: {
         key: 'a76305e0740371c8f208',
         options: {

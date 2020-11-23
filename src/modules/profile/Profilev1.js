@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import api from "utils/api";
-import { CButton, CCol, CRow, CSpinner } from "@coreui/react";
+import { CButton, CCol, CRow, CImg } from "@coreui/react";
 import { toCapitalize, getAge } from "utils/helpers";
 import res from "assets/img";
 import { config } from 'utils/config'
@@ -69,10 +69,12 @@ class ProfilePage extends Component {
           <CCol md={10}>
             <CRow>
               <CCol md={4} className="justify-content-center">
-                <img
-                  alt={user.fo}
+                <CImg
                   src={user.profile_img ? `${baseUrl}/${user.profile_img}` : res.logoSm}
-                  style={{ width: "100%" }}
+                  style={{
+                    width: '100%',
+                  }}
+                  className="mb-2"
                 />
               </CCol>
               <CCol md={7}>

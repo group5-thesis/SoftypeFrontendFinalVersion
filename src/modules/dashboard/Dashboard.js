@@ -17,11 +17,12 @@ import { NoData, Modal, ConfirmDialog } from 'reusable';
 import { useHistory } from "react-router-dom";
 import _ from 'lodash';
 import moment from 'moment'
-import { TICKET_STATUS } from "utils/constants/constant";
+import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR, CURRENT_DATE, CURRENT_MONTH_TEXT } from "utils/constants/constant";
 import TicketDetails from "modules/ticket/component/TicketDetails";
 import api from 'utils/api'
 import { ActionTypes, actionCreator } from 'utils/actions';
 import { fetchTickets } from 'utils/helpers/fetch.js';
+import Calendar from 'modules/calendar/Calendar'
 
 const Widgets = lazy(() => import('../dashboard/component/Widget.js'))
 
@@ -36,6 +37,14 @@ const Dashboard = () => {
     { key: 'date from', _style: { width: '20%' } },
     { key: 'date to', _style: { width: '20%' } },
     { key: 'status', _style: { width: '5%' } },
+  ]
+
+  // for employee dashboard
+  const LeaveRequestFieldsForEmployee = [
+    { key: 'name', _style: { width: '25%' } },
+    { key: 'date from', _style: { width: '20%' } },
+    { key: 'date to', _style: { width: '20%' } },
+    { key: 'reason', _style: { width: '20%' } }
   ]
 
   const OfficeRequestFields = [
@@ -60,8 +69,19 @@ const Dashboard = () => {
       firstname: authed.firstname,
       lastname: authed.lastname,
       employeeId: authed.employeeId,
-      userId: authed.userId
+      userId: authed.userId,
+      accountType: authed.accountType,
+      remainingLeave: authed.remaining_leave
     }
+  })
+
+  const [monthText, setMonthText] = useState(CURRENT_MONTH_TEXT + 1)
+  const [currentDateMonth, setCurrentDateMonth] = useState(`${monthText}-${CURRENT_DATE.toString()}`)
+
+  const stateBirthdayEmployees = useSelector((state) => {
+    return state.appState.employee.employees.filter(emp => {
+      return emp['birthdate'].substring(5,10) === currentDateMonth
+    })
   })
 
   const stateActiveEmployees = useSelector((state) => {
@@ -117,6 +137,28 @@ const Dashboard = () => {
   const [clickedRejectBtn, setClickedRejectBtn] = useState(false);
   const [clickedApproveBtn, setClickedApproveBtn] = useState(false);
 
+  // Employe Dashboard
+  const stateTodaysEmployeeOnLeave = useSelector((state) => { // need fix
+    return state.appState.leave.leave_requests
+  });
+
+  const stateEmployeeDepartment = useSelector((state) => { // not yet
+    return state.appState.department_employee.department_employees.filter(emp => {
+      return emp.employeeId === user.employeeId;
+    })
+  });
+
+  const [todaysEmployeeOnLeave, setTodaysEmployeeOnLeave] = useState(stateTodaysEmployeeOnLeave) // need fix
+  const [employeeDepartment, setEmployeeDepartment] = useState(stateEmployeeDepartment) // not yet
+  const [month, setMonth] = useState(CURRENT_MONTH)
+  const [year, setYear] = useState(CURRENT_YEAR)
+
+  const viewDepartmentInfo = (id) => {
+    sessionStorage.setItem('deptId', id);
+    history.push(`/employee/departments/department?id=${id}`);
+  };
+
+  //
   const viewEmployees = () => {
     history.push(`/employees`);
   }
@@ -187,13 +229,19 @@ const Dashboard = () => {
       recentOfficeRequest,
       employeesOnLeave,
       todaysPendingLeaveRequests,
-      todaysPendingOfficeRequests
+      todaysPendingOfficeRequests,
+      todaysEmployeeOnLeave,
+      year,
+      month,
+      employeeDepartment,
+      stateBirthdayEmployees
     ]
   )
 
   return (
     <>
       <Widgets {...{
+        user,
         totalEmployees,
         viewLeaveRequests,
         viewOfficeRequests,
@@ -201,7 +249,10 @@ const Dashboard = () => {
         viewLeaveCalendar,
         employeesOnLeave,
         todaysPendingLeaveRequests,
-        todaysPendingOfficeRequests
+        todaysPendingOfficeRequests,
+        viewDepartmentInfo,
+        employeeDepartment,
+        stateBirthdayEmployees
       }} />
       <CRow>
         <CCol>
@@ -248,26 +299,32 @@ const Dashboard = () => {
               <CRow>
                 <CCol sm="6">
                   <div>
-                    {"Recent Leave Requests"}
+                    {user.accountType === 1 || user.accountType === 2 ? "Recent Leave Requests" : user.accountType === 3 ? "Employees on Leave" : ""}
                   </div>
                 </CCol>
-                <CCol sm="6" className="d-none d-md-block">
-                  <div className="float-right">
-                    <CButton size="sm" color="primary" onClick={() => {
-                      viewLeaveRequests()
-                    }} disabled={false}>
-                      {"View All"}
-                    </CButton>
-                  </div>
-                </CCol>
+                {
+                  user.accountType === 1 || user.accountType === 2 ?
+                    <CCol sm="6" className="d-none d-md-block">
+                      <div className="float-right">
+                        <CButton size="sm" color="primary" onClick={() => {
+                          viewLeaveRequests()
+                        }} disabled={false}>
+                          {"View All"}
+                        </CButton>
+                      </div>
+                    </CCol>
+                    : ""
+                }
               </CRow>
             </CCardHeader>
             <CCardBody>
               <CDataTable
-                items={_.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5)}
-                fields={LeaveRequestFields}
+                items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(todaysEmployeeOnLeave, ['created at'], ['desc']) : []}
+                fields={user.accountType === 2 || user.accountType === 1 ? LeaveRequestFields : user.accountType === 3 ? LeaveRequestFieldsForEmployee : []}
                 hover
                 clickableRows
+                pagination
+                itemsPerPage={user.accountType === 3 ? 10 : 5}
                 noItemsViewSlot={<NoData title="No Requests" />}
                 onRowClick={(item) => {
                   viewLeaveRequestDetails(item.id)
@@ -286,49 +343,62 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol>
-          <CCard>
-            <CCardHeader>
-              <CRow>
-                <CCol sm="6">
-                  <div>
-                    {"Recent Office Requests"}
-                  </div>
-                </CCol>
-                <CCol sm="6" className="d-none d-md-block">
-                  <div className="float-right">
-                    <CButton size="sm" color="primary" onClick={() => {
-                      viewOfficeRequests()
-                    }} disabled={false}>
-                      {"View All"}
-                    </CButton>
-                  </div>
-                </CCol>
-              </CRow>
-
-            </CCardHeader>
-            <CCardBody>
-              <CDataTable
-                items={_.orderBy(recentOfficeRequest, ['date requested'], ['desc']).slice(0, 5)}
-                fields={OfficeRequestFields}
-                hover
-                clickableRows
-                noItemsViewSlot={<NoData title="No Requests" />}
-                onRowClick={toggleModal}
-                scopedSlots={{
-                  'status':
-                    (item) => (
-                      <td>
-                        <CBadge color={getBadge(TICKET_STATUS, item.status)}>
-                          {item.status === 1 ? "Open" : "Closed"}
-                        </CBadge>
-                      </td>
-                    )
+        {
+          user.accountType === 1 || user.accountType === 2 ?
+            <CCol>
+              <CCard>
+                <CCardHeader>
+                  <CRow>
+                    <CCol sm="6">
+                      <div>
+                        {"Recent Office Requests"}
+                      </div>
+                    </CCol>
+                    <CCol sm="6" className="d-none d-md-block">
+                      <div className="float-right">
+                        <CButton size="sm" color="primary" onClick={() => {
+                          viewOfficeRequests()
+                        }} disabled={false}>
+                          {"View All"}
+                        </CButton>
+                      </div>
+                    </CCol>
+                  </CRow>
+                </CCardHeader>
+                <CCardBody>
+                  <CDataTable
+                    items={_.orderBy(recentOfficeRequest, ['date requested'], ['desc']).slice(0, 5)}
+                    fields={OfficeRequestFields}
+                    hover
+                    clickableRows
+                    noItemsViewSlot={<NoData title="No Requests" />}
+                    onRowClick={toggleModal}
+                    scopedSlots={{
+                      'status':
+                        (item) => (
+                          <td>
+                            <CBadge color={getBadge(TICKET_STATUS, item.status)}>
+                              {item.status === 1 ? "Open" : "Closed"}
+                            </CBadge>
+                          </td>
+                        )
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            : // for employee
+            <CCol>
+              <Calendar
+                {...{
+                  onMonthChange: setMonth,
+                  onYearChange: setYear,
+                  style: { height: 400 },
+                  header: { right: false, left: true },
                 }}
               />
-            </CCardBody>
-          </CCard>
-        </CCol>
+            </CCol>
+        }
       </CRow>
     </>
   )
