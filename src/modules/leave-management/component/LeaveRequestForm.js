@@ -40,8 +40,19 @@ const LeaveFormRequest = ({ request }) => {
             userId: authed.userId
         }
     })
+
+    const departmentEmployees = useSelector(state => {
+      return state.appState.department_employee.department_employees.filter(dept_emp => {
+        return dept_emp.employeeId === user.employeeId
+      })
+    })
+
+    const [deptEmp, setDeptEmp] = useState(departmentEmployees)
+
     LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
     LeaveRequestModel.employeeID = user.employeeId
+    LeaveRequestModel.approverId = deptEmp[0].department_managerEmployeeId // this is for an employee accountType => 3
+
     const modalRef = useRef()
     const [data, setData] = useState(request ? request : LeaveRequestModel)
     const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to))
@@ -126,7 +137,6 @@ const LeaveFormRequest = ({ request }) => {
         _errors[key.includes('date_') ? 'dates' : key] = false;
         setErrors(_errors);
         copy[key] = value;
-        debugger
         let _placeholder = '';
         if (copy['category']) {
             _placeholder = `I am having my ${copy['category']} ${(copy['date_from']) ? 'from ' + moment(copy['date_from']).format('ll') : ''} ${(copy['date_to']) ? 'until ' + moment(copy['date_to']).format('ll') : ''}`
@@ -170,8 +180,8 @@ const LeaveFormRequest = ({ request }) => {
     const handleSubmit = async () => {
         setIsLoading(true)
         let res = await api.post("/create_request_leave", data)
+        debugger
         if (!res.error) {
-            console.log(res.data)
             const { employeeId, roleId } = user;
             let payload = LEAVE_REQUEST_FILTER('All');
             dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))

@@ -1,4 +1,4 @@
-import React, { lazy, useState, useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import {
   CWidgetDropdown,
   CRow,
@@ -138,7 +138,7 @@ const Widgets = (
       <CCol sm="6" lg="3">
         <CWidgetDropdown
           color="gradient-danger"
-          header={user.accountType === 3 && employeeDepartment.length !== 0 ? `${employeeDepartment[0].department_name}` : user.accountType === 3 && employeeDepartment.length == 0 ? "UNSET" : `${todaysPendingLeaveRequests}`}
+          header={user.accountType === 3 && employeeDepartment.length !== 0 ? `${employeeDepartment[0].department_name}` : user.accountType === 3 && employeeDepartment.length === 0 ? "UNSET" : `${todaysPendingLeaveRequests}`}
           text={user.accountType === 3 ? "Department" : user.accountType === 1 || user.accountType === 2 ? "Pending Leave Requests" : ""}
           footerSlot={
             <div
