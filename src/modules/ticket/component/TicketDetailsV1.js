@@ -17,7 +17,6 @@ const TicketDetails = (props) => {
     resolved_date = props['resolve date']
   } = props
   const ticketDetails = Object.entries(props)
-  console.log(ticketDetails)
 
   const formattedValue = (key, value) => {
     if (key.toLowerCase() === "status") {

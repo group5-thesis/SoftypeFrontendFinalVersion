@@ -394,7 +394,7 @@ const Dashboard = () => {
                   onMonthChange: setMonth,
                   onYearChange: setYear,
                   style: { height: 400 },
-                  header: { right: false, left: true },
+                  header: { right: true, left: true },
                 }}
               />
             </CCol>

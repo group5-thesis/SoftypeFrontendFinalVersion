@@ -25,6 +25,7 @@ export const TOGGLE_NOTIFICATION = "TOGGLE_NOTIFICATION";
 export const ADD_TICKET = 'ADD_TICKET'
 export const FETCH_TICKETS = 'FETCH_TICKETS'
 export const CLOSE_TICKET = 'CLOSE_TICKET'
+export const DELETE_TICKET = 'DELETE_TICKET'
 
 // Department Module
 export const ADD_DEPARTMENT = 'ADD_DEPARTMENT'
