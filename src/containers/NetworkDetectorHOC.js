@@ -3,6 +3,9 @@ import { CAlert, CToast, CToaster, CToastHeader, CToastBody } from '@coreui/reac
 import Pusher from 'pusher-js';
 import { actionCreator, ActionTypes } from "utils/actions";
 import { config } from 'utils/config';
+import { NOTIFICATION_TYPES } from 'utils/constants/constant'
+import { connect } from 'react-redux'
+
 export default function (ComposedComponent) {
     class NetworkDetector extends Component {
         state = {
@@ -11,16 +14,46 @@ export default function (ComposedComponent) {
         }
 
         componentDidMount() {
+            console.table(this.props)
             let { PUSHER } = config;
             const pusher = new Pusher(PUSHER.key, PUSHER.options);
             const channel = pusher.subscribe(PUSHER.channel);
             channel.bind('message', notif => {
-                this.notificationReceived(notif)
+                this.notificationReceived(notif.message)
             });
         }
 
         notificationReceived = (notif) => {
-            console.log(notif)
+            let { type, data } = notif;
+            switch (type) {
+                case NOTIFICATION_TYPES.AccountClosedNotification:
+
+                    break;
+                case NOTIFICATION_TYPES.ApprovedLeaveRequestNotification:
+
+                    break;
+                case NOTIFICATION_TYPES.CLosedOfficeRequestNotification:
+
+                    break;
+                case NOTIFICATION_TYPES.ForwardedRequestNotification:
+
+                    break;
+
+                case NOTIFICATION_TYPES.NewLeaveRequestNotification:
+
+                    break;
+
+                case NOTIFICATION_TYPES.RejectedLeaveRequestNotification:
+
+                    break;
+
+                case NOTIFICATION_TYPES.ResetPasswordNotification:
+
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         render() {

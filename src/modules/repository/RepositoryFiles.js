@@ -74,9 +74,9 @@ const RepositoryFiles = (props) => {
         a.click();
     }
     const download = (path, filename) => {
+        let uri = `${getBaseUrl()}/file/${fileType}/${path}`
         addToQueue(path)
-        let route = `${fileType}/${path}`;
-        downloadFile(route, filename, (success, err) => {
+        downloadFile(uri, filename, (success, err) => {
             if (!success) {
                 console.log(err)
             }

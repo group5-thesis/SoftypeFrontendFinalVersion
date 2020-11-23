@@ -20,10 +20,10 @@ import {
   CTabPane,
   CTabs,
 } from "@coreui/react";
-import { config as cnf } from "utils/config";
+import { config } from "utils/config";
 import { useDispatch } from "react-redux";
 import { actionCreator, ActionTypes } from "utils/actions";
-import { checkNull, toCapitalize , dispatchNotification } from "utils/helpers";
+import { checkNull, toCapitalize, dispatchNotification } from "utils/helpers";
 import api from "utils/api";
 import EmployeeModal from "modules/employee/EmployeeModal";
 import { setWidth } from "utils/helpers";
@@ -46,7 +46,10 @@ const MyAccount = (props) => {
   const [process, setProcess] = useState(_process);
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
-
+  let baseUrl = `${!config.IS_DEV ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV}/file/images`
+  let fullname = `${toCapitalize(user.firstname)} ${
+    user.middlename && toCapitalize(user.middlename) + " "
+    }${toCapitalize(user.lastname)}`
   const _initProcess = (key, val) => {
     _process[key] = val;
     setProcess(_process);
@@ -101,9 +104,10 @@ const MyAccount = (props) => {
     _initProcess("uploading", false);
     if (!res.error) {
       _initProcess("pending", false);
-      let updated = res.data.employee_information;
+      let updated = res.data.employee_information[0];
+      debugger
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
-      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS), updated);
+      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS,updated));
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -162,44 +166,14 @@ const MyAccount = (props) => {
                 <CRow className="justify-content-center">
                   <CCol {...setWidth("12")}>
                     <CCard>
-
                       <CCardBody>
                         <CRow gutters={false} className="">
                           <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
-                            {(function () {
-                              let pic = false;
-                              let url = `${cnf.API_URL_DEV}/image/images/${user.profile_img}`;
-                              fetch(url, { method: "HEAD" })
-                                .then((res) => {
-                                  if (res.ok) {
-                                    pic = true;
-                                  }
-                                })
-                                .catch(err => console.log(err));
-                              return (
-                                <div
-                                  style={{
-                                    //
-                                    backgroundImage: `url(${
-                                      preview
-                                        ? preview
-                                        : user.profile_img
-                                          ? pic
-                                            ? url
-                                            : res.logoSm
-                                          : res.logoSm
-                                      })`,
-                                    backgroundSize: "contain",
-                                    backgroundRepeat: "no-repeat",
-                                    backgroundPosition: "center",
-                                    maxHeight: "200px",
-                                    height: "200px",
-                                    width: "100%",
-                                    border: "1px solid dark",
-                                  }}
-                                ></div>
-                              );
-                            })()}
+                            <img
+                              alt={fullname}
+                              src={preview ? preview : user.profile_img ? `${baseUrl}/${user.profile_img}` : res.logoSm}
+                              style={{ width: "100%" ,maxHeight:'200px' }}
+                            />
                             <input
                               type="file"
                               accept="image/*"

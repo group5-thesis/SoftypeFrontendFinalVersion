@@ -43,7 +43,7 @@ const defaultEmployee = {
 
 }
 
-const EmployeeModal = ({ isUpdate = false, data = null, retrieveEmployees = null }) => {
+const EmployeeModal = ({ isUpdate = false, data = null }) => {
     let dispatch = useDispatch();
     const modal = useRef();
     const dialog = useRef();

@@ -37,11 +37,18 @@ const LeaveFormRequest = ({ request }) => {
             firstname: authed.firstname,
             lastname: authed.lastname,
             employeeId: authed.employeeId,
-            userId: authed.userId
+            userId: authed.userId,
+            remaining_leave: authed.remaining_leave,
+            accountType: authed.roleId
         }
     })
+    let departmentDetail = useSelector(state => state.appState.employee.employees.filter(emp => emp.employeeId === user.employeeId)[0])
+
+    let { department_id, department_manager, department_managerId, department_name, } = departmentDetail
     LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
-    LeaveRequestModel.employeeID = user.employeeId
+    LeaveRequestModel.employeeID = user.employeeId;
+    LeaveRequestModel.approverId = user.accountType === 3 ? department_managerId : 1;
+    LeaveRequestModel.approver = department_manager && department_manager;
     const modalRef = useRef()
     const [data, setData] = useState(request ? request : LeaveRequestModel)
     const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to))
@@ -147,11 +154,6 @@ const LeaveFormRequest = ({ request }) => {
         _errors = _.mapValues(_errors, () => false);
         setErrors(_errors)
     }
-
-    // const checkErrors = () => {
-    //     setHasErrors(hasMissingFieds(data))
-
-    // }
     const checkRemainingLeave = async () => {
         try {
             let res = await api.get(`/checkRemainingLeave/${user.employeeId}`);
@@ -171,7 +173,6 @@ const LeaveFormRequest = ({ request }) => {
         setIsLoading(true)
         let res = await api.post("/create_request_leave", data)
         if (!res.error) {
-            console.log(res.data)
             const { employeeId, roleId } = user;
             let payload = LEAVE_REQUEST_FILTER('All');
             dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
@@ -190,7 +191,7 @@ const LeaveFormRequest = ({ request }) => {
 
     const actions = () => (
         <>
-            <CButton color="primary" disabled={isLoading || isLimitError} onClick={validateInfo}>
+            <CButton color="primary" disabled={isLoading || isLimitError || !department_id} onClick={validateInfo}>
                 {
                     isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
                 }
@@ -200,7 +201,7 @@ const LeaveFormRequest = ({ request }) => {
 
     return (
         <Modal ref={modalRef} {...{
-            title: "Request Leave",
+            title: `Request Leave`,
             footer: actions(),
             modalOnClose,
             cancelBtnTitle: "Close",
@@ -221,6 +222,9 @@ const LeaveFormRequest = ({ request }) => {
                     }
                 </>
             </CAlert>}
+            {<CAlert color={!department_id ? "danger" : "info"}>
+                {!department_id ? "Leave requests is available for department employees only." : `You still have ${user.remaining_leave} remaining leave.`}
+            </CAlert>}
             <CFormGroup >
                 <CLabel>Name : </CLabel>
                 <CInput id="company" value={data.name} disabled />
@@ -231,6 +235,7 @@ const LeaveFormRequest = ({ request }) => {
                         <CLabel htmlFor="date-input">Date From : </CLabel>
                         <CInput
                             type="date"
+                            disabled={department_id === null}
                             id="date-from"
                             name="date_from"
                             value={data.date_from}
@@ -245,6 +250,7 @@ const LeaveFormRequest = ({ request }) => {
                         <CInput
                             type="date"
                             id="date-to"
+                            disabled={department_id === null}
                             onChange={handleOnChange}
                             name="date_to"
                             value={data.date_to}
@@ -265,6 +271,7 @@ const LeaveFormRequest = ({ request }) => {
                         <CLabel htmlFor="Category">Category : </CLabel>
                         <CSelect
                             custom name="category"
+                            disabled={department_id === null}
                             invalid={errors.category}
                             value={data.category || ""}
                             onChange={handleOnChange}
@@ -277,13 +284,12 @@ const LeaveFormRequest = ({ request }) => {
                     </CFormGroup>
                 </CCol>
             </CFormGroup>
-
-
             <CFormGroup>
                 <CLabel htmlFor="textarea-input">Reason : </CLabel>
                 <CTextarea
                     onChange={handleOnChange}
                     name="reason"
+                    disabled={department_id === null}
                     placeholder={placeholder && placeholder}
                     value={data.reason}
                     invalid={errors.reason}

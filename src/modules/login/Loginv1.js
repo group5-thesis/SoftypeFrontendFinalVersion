@@ -13,21 +13,22 @@ import {
 import CIcon from "@coreui/icons-react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { shallowCopy, checkCamera, checkCamerav1 } from "utils/helpers";
+import { shallowCopy, checkCamera, checkDevice } from "utils/helpers";
 import { APP_MESSAGES } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from "utils/actions";
 import { ConfirmDialog, Modal } from "reusable";
 import api from "utils/api";
 import { CenteredLayout } from "containers";
 import QrCodeScanner from "./QrCodeScanner";
+import { config } from 'utils/config'
 
 const invalidCredentialsMessage = "Invalid Credentials"
 class Login extends Component {
 
   state = {
     credentials: {
-      username: "ytorres",
-      password: "Softype@100",
+      username: config.IS_DEV ? "ytorres1" : '',
+      password: config.IS_DEV ? "yoltorres24!" : '',
     },
     camera: false,
     changed: false,
@@ -50,6 +51,7 @@ class Login extends Component {
   }
 
   loginAttempt = async () => {
+    this.setState({ showError: false })
     if (!this.props.already_logged) {
       let { dispatch, history } = this.props;
       if (
@@ -75,6 +77,7 @@ class Login extends Component {
           this.setState({ error: invalidCredentialsMessage, showError: true });
           this.setState({ isLoading: false });
         }
+
         localStorage.setItem("token", access_token);
         localStorage.setItem("uId", user.userId);
         dispatch(
@@ -102,7 +105,7 @@ class Login extends Component {
           this.setState({ camera: true });
         })
         .catch((err) => {
-          this.setState({ cameraError: "err.cameraError", camera: false });
+          this.setState({ cameraError: err.cameraError, camera: false });
         });
     }
   }
@@ -119,7 +122,7 @@ class Login extends Component {
           ref={this.dialog}
           {...{
             confirmButton: false,
-            title: "",//this.state.cameraError,
+            title: this.state.cameraError,
             cancelButtonText: "Ok",
           }}
         ></ConfirmDialog>
@@ -142,6 +145,7 @@ class Login extends Component {
               type="text"
               value={this.state.credentials.username || ""}
               placeholder="email/username"
+              disabled={this.state.isLoading}
               name="username"
               autoComplete="email"
               invalid={
@@ -166,6 +170,7 @@ class Login extends Component {
               placeholder="Password"
               name="password"
               autoComplete="current-password"
+              disabled={this.state.isLoading}
               onChange={this.handleChange}
               invalid={this.state.credentials.password === "" && this.changed}
             />
@@ -191,7 +196,7 @@ class Login extends Component {
               )}
           </CButton>
           <hr className="hr-text" data-content="OR" />
-          {!this.state.camera || this.state.isLoading ? (
+          {/* {!this.state.camera || this.state.isLoading ? (
             <CButton
               disabled={this.state.isLoading}
               block
@@ -203,13 +208,17 @@ class Login extends Component {
               Login with QRCode{" "}
             </CButton>
           ) : (
-              <QrCodeScanner />
-            )}
+              <QrCodeScanner
+
+                onLoading={(status) => this.setState({ isLoading: status })}
+              />
+            )} */}
 
           <CButton
             block
             className="float-center"
-            color="link"
+            color="primary"
+            variant="outline"
             disabled={this.state.isLoading}
             onClick={() => {
               this.props.history.push("/account-recovery");

@@ -13,11 +13,19 @@ import Icon from '@mdi/react';
 import { mdiFilePlusOutline, mdiPlus } from '@mdi/js'
 import colors from 'assets/theme/colors'
 import { FILE_TYPES } from 'utils/constants/constant'
-import { getFileExtension, copyArray } from 'utils/helpers'
+import { getFileExtension, dispatchNotification } from 'utils/helpers'
+import {
+    fetchCompanyFiles,
+    fetchCompanyVideos,
+    fetchCompanyImages,
+    fetchCompanyDocuments,
+    fetchDepartments,
+} from 'utils/helpers/fetch';
 import api from 'utils/api';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
+    const dispatch = useDispatch()
     const employeeId = useSelector(state => state.appState.auth.user.employeeId)
     let modal = useRef();
     let fileInput = useRef();
@@ -71,10 +79,27 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         payload.append("description", description)
         payload.append("type", type)
         payload.append("employeeId", +employeeId)
+        dispatchNotification(dispatch, { type: 'info', message: 'Uploading' })
         setIsLoading(true)
         let res = await api.post("/add_file", payload, true);
         if (res.error) {
             setError([res.message])
+            dispatchNotification(dispatch, { type: 'error', message: 'Error in uploading file' })
+        } else {
+            switch (type) {
+                case 'videos':
+                    await fetchCompanyVideos(dispatch)
+                    break;
+                case 'images':
+                    await fetchCompanyImages(dispatch)
+                    break;
+                case 'documents':
+                    await fetchCompanyDocuments(dispatch)
+                    break;
+                default:
+                    await fetchCompanyFiles(dispatch)
+                    break;
+            }
         }
         setIsLoading(false)
         toggleModal()

@@ -12,7 +12,6 @@ export default class QRCodeReader extends Component {
         this.handleScan = this.handleScan.bind(this)
     }
     handleScan(data) {
-        alert("jhjhd")
         this.setState({
             result: data,
         })
