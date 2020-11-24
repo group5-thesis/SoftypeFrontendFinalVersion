@@ -44,7 +44,7 @@ const LeaveFormRequest = ({ request }) => {
     })
     let departmentDetail = useSelector(state => state.appState.employee.employees.filter(emp => emp.employeeId === user.employeeId)[0])
 
-    let { department_id, department_manager, department_managerId, department_name, } = departmentDetail
+    let { department_id, department_manager, department_managerId, } = departmentDetail
     LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
     LeaveRequestModel.employeeID = user.employeeId;
     LeaveRequestModel.approverId = user.accountType === 3 ? department_managerId : 1;
