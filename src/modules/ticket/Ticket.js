@@ -10,7 +10,6 @@ import TicketFilter from "./component/TicketFilter";
 import TicketForm from "./component/TicketForm";
 import TicketDetails from "./component/TicketDetailsV1";
 import api from 'utils/api'
-import { config } from 'utils/config'
 
 const Ticket = (props) => {
   const dispatch = useDispatch();
