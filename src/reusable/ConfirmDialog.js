@@ -9,6 +9,7 @@ const ConfirmDialog = forwardRef(
       centered = false,
       title,
       onCloseCallback,
+      size,
       onConfirm,
       confirmButton = true,
       cancelButtonText = "Cancel",
@@ -37,6 +38,7 @@ const ConfirmDialog = forwardRef(
     return (
       <div className="custom-dialog">
         <CModal
+          size={size && size}
           show={dialog}
           centered={centered}
           closeOnBackdrop={false}
@@ -45,9 +47,8 @@ const ConfirmDialog = forwardRef(
             <blockquote className="blockquote text-center">
               <p className="mb-0">{title}</p>
             </blockquote>
-            {DialogBody && DialogBody}
+            {DialogBody && DialogBody()}
             <CRow className="justify-content-center no-gutters">
-              {children}
               {confirmButton && (
                 <CCol lg="4" className="px-1 mb-2">
                   <CButton

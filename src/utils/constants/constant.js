@@ -148,12 +148,6 @@ export const ACCOUNT_ROLES = [
     "category": "Admin Roles",
     "roles":
       [
-        "Admin",
-        "CEO",
-        "CIO",
-        "CFO",
-        "COO",
-        "CTO",
         "HR Admin/Manager",
       ],
   }, {
@@ -176,6 +170,11 @@ export const ACCOUNT_ROLES = [
     "roles":
       [
         "Associate Technical Consultant",
+        "CEO",
+        "CIO",
+        "CFO",
+        "COO",
+        "CTO",
         "Jr Functional Consultant",
         "Jr Marketing Consultant",
         "Jr Technical Consultant",
@@ -189,6 +188,17 @@ export const ACCOUNT_ROLES = [
       ]
   }
 ]
+
+export const NOTIFICATION_TYPES = {
+  NewLeaveRequestNotification: 'NewLeaveRequestNotification',
+  ApprovedLeaveRequestNotification: 'ApprovedLeaveRequestNotification',
+  RejectedLeaveRequestNotification: 'RejectedLeaveRequestNotification',
+  NewOfficeRequestNotification: 'NewOfficeRequestNotification',
+  CLosedOfficeRequestNotification: 'CLosedOfficeRequestNotification',
+  ForwardedRequestNotification: 'ForwardedRequestNotification',
+  ResetPasswordNotification: 'ResetPasswordNotification',
+  AccountClosedNotification: 'AccountClosedNotification',
+}
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];
 export const CURRENT_YEAR = new Date().getFullYear();

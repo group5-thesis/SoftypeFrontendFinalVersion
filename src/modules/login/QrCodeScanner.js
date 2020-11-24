@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import QrReader from "eth-qr-scanner";
+import QrReader from "react-qr-reader";
 import { useDispatch } from "react-redux";
-import { CButton, CSpinner } from "@coreui/react";
+import { CButton, CSpinner, CFormGroup, CInputCheckbox, CLabel } from "@coreui/react";
 import { CenteredLayout } from "containers";
 import { ConfirmDialog, Modal } from "reusable";
 import { checkCamera } from "utils/helpers";
 import { actionCreator, ActionTypes } from "utils/actions";
 import api from "utils/api";
-import QrCodeReader from "./QRCodeScannerV1";
 
-const QrCodeScanner = (props) => {
+const QrCodeScanner = ({ onLoading }) => {
   const dispatch = useDispatch();
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  let { history } = props;
+  const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [checked, toggleChecked] = useState(false)
   const modalRef = useRef();
   const dialog = useRef();
   const scannerStyle = {
@@ -27,14 +26,19 @@ const QrCodeScanner = (props) => {
   };
   const handleScan = (data) => {
     if (data) {
-      setResult(JSON.parse(data));
+      alert(data)
+      console.log(data)
+      return
+      setResult(data);
+      setError("Confirm Login")
+      dialog.current.toggle();
     }
   };
 
   const loginWithQr = async () => {
-    setLoading(true);
+    onLoading(true);
     let res = await api.post("/loginQr", JSON.parse(result));
-    setLoading(false);
+    onLoading(false);
     if (!res.error) {
       let { access_token, account_information } = res.data;
       localStorage.setItem("token", access_token);
@@ -47,13 +51,9 @@ const QrCodeScanner = (props) => {
       dialog.current.toggle();
     }
   };
-  useEffect(() => {
-      checkCamera().then(res => {
-          console.log("ready")
-      }).catch(err => {
-          history.push("/login")
-      })
-  }, [])
+  // useEffect(() => {
+  //   dialog.current.toggle();
+  // }, [])
   return (
     <Modal
       ref={modalRef}
@@ -67,29 +67,29 @@ const QrCodeScanner = (props) => {
       <ConfirmDialog
         id="cutom_dialog"
         ref={dialog}
+        size="sm"
         {...{
+          size: "sm",
+          DialogBody: () => {
+            return result ? <p className="h4 text-center pb-3">Confirm Login</p> : null
+          }
+          ,
+          onConfirm: () => {
+            loginWithQr()
+          },
           title: error,
-          cancelButtonText: "Ok",
-          confirmButton: false,
+          cancelButtonText: !result ? "Ok" : "Confirm",
+          confirmButton: result ? true : false,
         }}
-      ></ConfirmDialog>
-      {}
+      >
+      </ConfirmDialog>
       <QrReader
         style={scannerStyle}
         delay={300}
-        // showViewFinder={false}
+        resolution={300}
         onError={handleError}
         onScan={handleScan}
       />
-      {/* <QrCodeReader/> */}
-      {/* <CButton block
-                disabled={loading}
-                onClick={() => {
-                    history.push("/login")
-                }} color="primary" className="px-4 mt-2" >
-                {loading ? (<CSpinner color="secondary" size="sm" />) : ("Back")}
-            </CButton> */}
-      {/* </CenteredLayout> */}
     </Modal>
   );
 };

@@ -15,7 +15,7 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { config as cnf } from "utils/config";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { actionCreator, ActionTypes } from "utils/actions";
 import {
   shallowCopy,
@@ -27,6 +27,7 @@ import NoData from "reusable/NoData";
 import api from "utils/api";
 import EmployeeModal from "./EmployeeModal";
 import PerformanceReviewModal from "modules/performance-review/PerformanceReviewModal";
+import PerformanceReview from "modules/profile/PerformanceReview";
 import { setWidth } from "utils/helpers";
 import { Redirect } from 'react-router-dom'
 import Icon from '@mdi/react'
@@ -49,6 +50,11 @@ const EmployeeDetails = (props) => {
   const [employee, setEmployee] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
+  const [tab, setTab] = useState(0)
+  const [reviews, setReviews] = useState([])
+  const stateReviews = useSelector(state => {
+    return state.appState.performance_review.performance_reviews;
+  })
 
   const _initProcess = (key, val) => {
     let _temp_process = shallowCopy(process);
@@ -115,11 +121,18 @@ const EmployeeDetails = (props) => {
     setSelectedFile(e.target.files[0]);
   };
 
+  const getReviews = empId => {
+    let myReviews = stateReviews.filter(review => review.employee_reviewedId.toString() === empId.toString());
+    setReviews(myReviews)
+  }
+
   useEffect(() => {
+
     for (let idx = 0; idx < employees.length; idx++) {
       let el = employees[idx];
       if (el.employeeId.toString() === id.toString()) {
         setEmployee(el);
+        getReviews(el.employeeId)
         break;
       }
     }
@@ -149,13 +162,26 @@ const EmployeeDetails = (props) => {
           <CCardHeader>
             <CRow className="mb-2">
               <CCol sm="5">
-                <h3>Employee Information
+                <h3>Employee {tab == 0 ? 'Information' : 'Reviews'}
                   <sup>
                     <Icon path={mdiCircleMedium} color={employee.isActive === 1 ? colors.$green : colors.$red} size={1} />
                   </sup>
                 </h3>
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
+                <div className="float-right">
+                  {
+                    <CButton
+                      block
+                      onClick={() => {
+                        setTab(tab === 0 ? 1 : 0)
+                      }}
+                      color='primary'
+                    >
+                      View {tab == 1 ? 'Information' : 'Reviews'}
+                    </CButton>
+                  }
+                </div>
                 <div className="float-right px-2">
                   {
                     (user.roleId === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) &&
@@ -166,6 +192,7 @@ const EmployeeDetails = (props) => {
                     />
                   }
                 </div>
+
                 <div className="float-right">
                   {
                     (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} />
@@ -174,115 +201,116 @@ const EmployeeDetails = (props) => {
               </CCol>
             </CRow>
           </CCardHeader>
-          <CCardBody>
-            <CRow gutters={false} className="">
-              <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
-                {(function () {
-                  let pic = false;
-                  let url = `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
-                  fetch(url, { method: "HEAD" })
-                    .then((res) => {
-                      if (res.ok) {
-                        pic = true;
-                      }
-                    })
-                    .catch(err => console.log(err));
-                  return (
-                    <div
-                      style={{
-                        //
-                        backgroundImage: `url(${
-                          preview
-                            ? preview
-                            : employee.profile_img
+          <CCardBody>{
+            tab === 0 ?
+              <CRow gutters={false} className="">
+                <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
+                  {(function () {
+                    let pic = false;
+                    let url = `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
+                    fetch(url, { method: "HEAD" })
+                      .then((res) => {
+                        if (res.ok) {
+                          pic = true;
+                        }
+                      })
+                      .catch(err => console.log(err));
+                    return (
+                      <div
+                        style={{
+                          //
+                          backgroundImage: `url(${
+                            employee.profile_img
                               ? pic
                                 ? url
                                 : res.logoSm
                               : res.logoSm
-                          })`,
-                        backgroundSize: "contain",
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "center",
-                        maxHeight: "200px",
-                        height: "200px",
-                        width: "100%",
-                        border: "1px solid dark",
-                      }}
-                    ></div>
-                  );
-                })()}
-                <input
-                  type="file"
-                  accept="image/*"
-                  value={process.file}
-                  ref={fileInput}
-                  hidden
-                  onChange={FileInputChangeHandler}
-                />
-                <CButton
-                  onClick={() => {
-                    fileInput.current.click();
-                  }}
-                  className="mr-1 mt-3"
-                  block
-                  disabled={employee.isActive !== 1 || process.uploading}
-                  color="primary"
-                >
-                  Change Profile Image
+                            })`,
+                          backgroundSize: "contain",
+                          backgroundRepeat: "no-repeat",
+                          backgroundPosition: "center",
+                          maxHeight: "200px",
+                          height: "200px",
+                          width: "100%",
+                          border: "1px solid dark",
+                        }}
+                      ></div>
+                    );
+                  })()}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    value={process.file}
+                    ref={fileInput}
+                    hidden
+                    onChange={FileInputChangeHandler}
+                  />
+                  <CButton
+                    onClick={() => {
+                      fileInput.current.click();
+                    }}
+                    className="mr-1 mt-3"
+                    block
+                    disabled={employee.isActive !== 1 || process.uploading}
+                    color="primary"
+                  >
+                    Change Profile Image
                 </CButton>
 
-                <CButton
-                  onClick={UploadButtonHandler}
-                  className="mr-1 mt-3"
-                  block
-                  disabled={
-                    (process.uploading && true) || (!process.pending && true)
-                  }
-                  color="primary"
-                >
-                  {process.uploading ? (
-                    <CSpinner color="secondary" size="sm" />
-                  ) : (
-                      "Upload"
-                    )}
-                </CButton>
-              </CCol>
-              <CCol>
-                <CForm>
-                  {fields.map((_field, idx) => {
-                    return (
-                      <CRow key={idx} gutters={false}>
-                        {_field.map((field) => {
-                          let val = renderContent(field).value;
-                          return (
-                            <CCol
-                              className="px-1"
-                              {...setWidth((12 / _field.length).toString())}
-                              key={field}
-                            >
-                              <CFormGroup>
-                                <CLabel htmlFor="name">
-                                  {" "}
-                                  <strong>{renderContent(field).key} </strong>
-                                </CLabel>
-                                <CInput
-                                  id="text-input"
-                                  invalid={field === 'status' && employee.isActive !== 1}
-                                  name="text-input"
-                                  readOnly
-                                  value={val && val}
-                                  placeholder={!val ? "UNSET" : ""}
-                                />
-                              </CFormGroup>
-                            </CCol>
-                          );
-                        })}
-                      </CRow>
-                    );
-                  })}
-                </CForm>
-              </CCol>
-            </CRow>
+                  <CButton
+                    onClick={UploadButtonHandler}
+                    className="mr-1 mt-3"
+                    block
+                    disabled={
+                      (process.uploading && true) || (!process.pending && true)
+                    }
+                    color="primary"
+                  >
+                    {process.uploading ? (
+                      <CSpinner color="secondary" size="sm" />
+                    ) : (
+                        "Upload"
+                      )}
+                  </CButton>
+                </CCol>
+                <CCol>
+                  <CForm>
+                    {fields.map((_field, idx) => {
+                      return (
+                        <CRow key={idx} gutters={false}>
+                          {_field.map((field) => {
+                            let val = renderContent(field).value;
+                            return (
+                              <CCol
+                                className="px-1"
+                                {...setWidth((12 / _field.length).toString())}
+                                key={field}
+                              >
+                                <CFormGroup>
+                                  <CLabel htmlFor="name">
+                                    {" "}
+                                    <strong>{renderContent(field).key} </strong>
+                                  </CLabel>
+                                  <CInput
+                                    id="text-input"
+                                    invalid={field === 'status' && employee.isActive !== 1}
+                                    name="text-input"
+                                    readOnly
+                                    value={val && val}
+                                    placeholder={!val ? "UNSET" : ""}
+                                  />
+                                </CFormGroup>
+                              </CCol>
+                            );
+                          })}
+                        </CRow>
+                      );
+                    })}
+                  </CForm>
+                </CCol>
+              </CRow>
+              : <PerformanceReview {...{ reviews }} />
+          }
           </CCardBody>
         </CCard>
       </CCol>
@@ -294,3 +322,4 @@ const EmployeeDetails = (props) => {
 // }
 
 export default EmployeeDetails;
+

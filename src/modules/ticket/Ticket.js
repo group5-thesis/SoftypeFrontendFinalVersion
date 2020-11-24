@@ -14,9 +14,7 @@ import { config } from 'utils/config'
 import _ from 'lodash';
 
 const Ticket = (props) => {
-
   const dispatch = useDispatch();
-
   const [status, setStatus] = useState("All");
   const [collapse, setCollapse] = useState(true);
   const [tickets, setTickets] = useState();
@@ -194,7 +192,7 @@ const Ticket = (props) => {
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 {
-                  (config.IS_DEV || user.roleId > 1) &&
+                  user.roleId > 1 &&
                   <div className="float-right  mr-3">
                     <TicketForm />
                   </div>

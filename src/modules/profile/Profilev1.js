@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import api from "utils/api";
-import { CButton, CCol, CRow, CSpinner } from "@coreui/react";
+import { CButton, CCol, CRow, CImg } from "@coreui/react";
 import { toCapitalize, getAge } from "utils/helpers";
 import res from "assets/img";
+import { config } from 'utils/config'
 import { svg2png } from "svg-png-converter";
 
 class ProfilePage extends Component {
@@ -58,17 +59,28 @@ class ProfilePage extends Component {
   render() {
     let { user } = this.props.auth;
     let { loading, src, userDetails } = this.state;
+    let baseUrl = `${!config.IS_DEV ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV}/file/images`
+    let fullname = `${toCapitalize(user.firstname)} ${
+      user.middlename && toCapitalize(user.middlename) + " "
+      }${toCapitalize(user.lastname)}`
     return (
       <>
         <CRow className="justify-content-center">
-          <CCol md={9}>
+          <CCol md={10}>
             <CRow>
-              <CCol md={8}>
+              <CCol md={4} className="justify-content-center">
+                <CImg
+                  src={user.profile_img ? `${baseUrl}/${user.profile_img}` : res.logoSm}
+                  style={{
+                    width: '100%',
+                  }}
+                  className="mb-2"
+                />
+              </CCol>
+              <CCol md={7}>
                 <h3>
                   Name:{" "}
-                  {`${toCapitalize(user.firstname)} ${
-                    user.middlename && toCapitalize(user.middlename) + " "
-                    }${toCapitalize(user.lastname)}`}
+                  {fullname}
                 </h3>
                 {Object.entries(userDetails).map(([key, value]) => {
                   return (
@@ -79,7 +91,7 @@ class ProfilePage extends Component {
                 })}
                 <CButton
                   block
-                  className="mr-1 px-4"
+                  className="mr-5 px-4"
                   onClick={() => {
                     this.props.toggleModal()
                     this.props.history.push("/myAccount");
@@ -89,34 +101,7 @@ class ProfilePage extends Component {
                   {"Update"}
                 </CButton>
               </CCol>
-              <CCol md={4} className="justify-content-center">
-                <div className="image-container text-center ">
-                  {/*  src={!loading ? src : res.logoSm} */}
-                  <img
-                    src={!loading ? src : res.logoSm}
-                    style={{ width: "100%" }}
-                  />
 
-                  {loading && (
-                    <div className="image-overlay">
-                      <CSpinner
-                        className="text"
-                        color="warning"
-                        variant="grow"
-                      />
-                    </div>
-                  )}
-                </div>
-                {!loading && user.qr_code && (
-                  <a
-                    download={user.qr_code.split("/")[1].replace("svg", "png")}
-                    href={src}
-                    className="text-center ml-4 mt-3 h6"
-                  >
-                    Download Qr Code
-                  </a>
-                )}
-              </CCol>
             </CRow>
           </CCol>
         </CRow>

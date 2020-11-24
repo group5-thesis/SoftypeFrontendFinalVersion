@@ -6,7 +6,7 @@
   "author": {
     "name": "Anonymous"
   },
-  "homepage": ".",
+  "homepage": "http://localhost:9000",
   "copyright": "Copyright 2017-2020 creativeLabs Łukasz Holeczek",
   "license": "MIT",
   "private": true,
