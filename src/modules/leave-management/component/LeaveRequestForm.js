@@ -56,7 +56,7 @@ const LeaveFormRequest = ({ request }) => {
 
   const [deptEmp, setDeptEmp] = useState(departmentEmployees)
   const [empHr, setEmpHr] = useState(employeesHr)
-  const [empApproverId, setEmpApproverId] = useState(user.accountType === 3 ? deptEmp[0].department_managerEmployeeId : user.accountType === 2 || user.accountType === 1 ? empHr[0].employeeId : 1)
+  const [empApproverId, setEmpApproverId] = useState(user.accountType === 3 ? deptEmp[0]?.department_managerEmployeeId : user.accountType === 2 || user.accountType === 1 ? empHr[0].employeeId : 1)
 
   LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
   LeaveRequestModel.employeeID = user.employeeId

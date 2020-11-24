@@ -148,15 +148,21 @@ const Widgets = (
             </div>
           }
         >
-          <CDropdown>
-            <CDropdownToggle caret className="text-white" color="transparent">
-            </CDropdownToggle>
-            <CDropdownMenu className="pt-0" placement="bottom-end">
-              <CDropdownItem onClick={() => {
-                user.accountType === 3 ? viewDepartmentInfo(employeeDepartment[0].department_id) : viewLeaveRequests()
-              }}>{user.accountType === 3 ? `View Department` : `View Leave Requests`}</CDropdownItem>
-            </CDropdownMenu>
-          </CDropdown>
+          {
+            (user.accountType === 3 && employeeDepartment.length !== 0) ||
+              (user.accountType === 1 && todaysPendingLeaveRequests.length !== 0) ||
+              (user.accountType === 2 && todaysPendingLeaveRequests.length !== 0) ?
+              <CDropdown>
+                <CDropdownToggle caret className="text-white" color="transparent">
+                </CDropdownToggle>
+                <CDropdownMenu className="pt-0" placement="bottom-end">
+                  <CDropdownItem onClick={() => {
+                    user.accountType === 3 ? viewDepartmentInfo(employeeDepartment[0].department_id) : viewLeaveRequests()
+                  }}>{user.accountType === 3 ? `View Department` : `View Leave Requests`}</CDropdownItem>
+                </CDropdownMenu>
+              </CDropdown>
+              : ""
+          }
         </CWidgetDropdown>
       </CCol>
     </CRow >
