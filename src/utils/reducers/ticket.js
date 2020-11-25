@@ -11,6 +11,8 @@ export default function changeState(state = initial_state, action) {
       return { ...state, ticket_requests: [...state.ticket_requests, action.payload] };
     case ActionTypes.FETCH_TICKETS:
       return { ...state, ticket_requests: action.payload }
+    case ActionTypes.DELETE_TICKET:
+      return { ...state, ticket_requests: action.payload }
     case ActionTypes.CLOSE_TICKET:
       let copy = copyArray(state.ticket_requests)
       copy = copy.map(ticket => {

@@ -5,24 +5,25 @@ export default {
     date_to: '',
     category: null,
     reason: '',
-    status: 'pending',
-    approver: 'admin',
+    status: 'Pending',
+    approver: '',
     employeeID: null,
-    approverId:1,
+    approverId: null
 }
 
 
 export class Leave {
-    constructor(id, name, date_from, date_to, category, reason, approver, employeeID) {
+    constructor(id, name, date_from, date_to, category, reason, approver, employeeID, approverId) {
         this.id = id
         this.name = name
         this.date_from = date_from
         this.date_to = date_to
         this.category = category
         this.reason = reason
-        this.status = 'pending'
+        this.status = 'Pending'
         this.approver = approver ? approver : 'admin'
         this.employeeID = employeeID
+        this.approverId = approverId
     }
 
     updateStatus(status) {

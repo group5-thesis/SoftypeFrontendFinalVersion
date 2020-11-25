@@ -10,6 +10,8 @@ import TicketFilter from "./component/TicketFilter";
 import TicketForm from "./component/TicketForm";
 import TicketDetails from "./component/TicketDetailsV1";
 import api from 'utils/api'
+import { config } from 'utils/config'
+import _ from 'lodash';
 
 const Ticket = (props) => {
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const Ticket = (props) => {
   const [tickets, setTickets] = useState();
   const [clickedRejectBtn, setClickedRejectBtn] = useState(false);
   const [clickedApproveBtn, setClickedApproveBtn] = useState(false);
+  const [clickedDeleteBtn, setClickedDeleteBtn] = useState(false);
   const [now, setNow] = useState(new Date)
   const [loading, setLoading] = useState(false)
 
@@ -35,7 +38,8 @@ const Ticket = (props) => {
       firstname: authed.firstname,
       lastname: authed.lastname,
       employeeId: authed.employeeId,
-      userId: authed.userId
+      userId: authed.userId,
+      accountType: authed.accountType
     }
   })
   const fields = [
@@ -52,6 +56,7 @@ const Ticket = (props) => {
   const requestsData = useSelector((state) => {
     return state.appState.ticket.ticket_requests
   });
+
   const [filteredTicketRequest, setFilteredTicketRequest] = useState();
 
   const toggle = (e) => {
@@ -85,6 +90,12 @@ const Ticket = (props) => {
     dialog.current.toggle();
   }
 
+  const deleteRequestBtn = () => {
+    setClickedDeleteBtn(true)
+    modal.current.toggle();
+    dialog.current.toggle();
+  }
+
   const onConfirm = async () => {
     let data = {
       officeRequestId: tickets.id,
@@ -99,6 +110,19 @@ const Ticket = (props) => {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setClickedApproveBtn(false)
+    setClickedDeleteBtn(false)
+    setClickedRejectBtn(false)
+  }
+
+  const onDelete = async () => {
+    let res = await api.post("/delete_officeRequest", { id: tickets.id })
+    if (!res.error) {
+      dispatch(actionCreator(ActionTypes.DELETE_TICKET), tickets.id)
+    } else {
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
+    }
+    setClickedApproveBtn(false)
+    setClickedDeleteBtn(false)
     setClickedRejectBtn(false)
   }
 
@@ -119,12 +143,13 @@ const Ticket = (props) => {
           {...{
             show: dialog,
             centered: true,
-            onConfirm,
-            title: `${clickedApproveBtn ? "Approve" : clickedRejectBtn ? "Reject" : ""} request?`,
+            onConfirm: clickedDeleteBtn ? onDelete : onConfirm,
+            title: `${clickedApproveBtn ? "Approve" : clickedRejectBtn ? "Reject" : clickedDeleteBtn ? "Delete" : ""} request?`,
             onCloseCallback: () => {
               modal.current.toggle();
               setClickedApproveBtn(false)
               setClickedRejectBtn(false)
+              setClickedDeleteBtn(false)
             }
           }}
         ></ConfirmDialog>
@@ -136,15 +161,22 @@ const Ticket = (props) => {
           hidden
           closeButton
           footer={
-            (tickets && tickets.status === 1) &&
-            <>
-              <CButton color="success" onClick={() => {
-                approveRequestBtn()
-              }}>Approve</CButton>
-              <CButton color="danger" onClick={() => {
-                rejectRequestBtn()
-              }}>Reject</CButton>
-            </>
+            (tickets && tickets.status === 1) && user.accountType === 1 ?
+              <>
+                <CButton color="success" onClick={() => {
+                  approveRequestBtn()
+                }}>Approve</CButton>
+                <CButton color="danger" onClick={() => {
+                  rejectRequestBtn()
+                }}>Reject</CButton>
+              </>
+              : user.accountType === 2 || user.accountType === 3 ?
+                <>
+                  <CButton color="danger" onClick={() => {
+                    deleteRequestBtn()
+                  }}>Delete Request</CButton>
+                </>
+                : ""
           }
           hideCancelButton
         >
@@ -194,7 +226,7 @@ const Ticket = (props) => {
               </CCol>
             </CRow>
             <CDataTable
-              items={filteredTicketRequest}
+              items={user.accountType === 1 ? filteredTicketRequest : user.accountType === 2 || user.accountType === 3 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
               fields={fields}
               itemsPerPage={5}
               hover

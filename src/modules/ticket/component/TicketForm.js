@@ -18,7 +18,7 @@ import { shallowCopy, dispatchNotification, toCapitalize, renameKey } from 'util
 import api from 'utils/api';
 import _ from 'lodash';
 import moment from 'moment';
-
+import { fetchTickets } from 'utils/helpers/fetch';
 
 const TicketForm = () => {
   const defaultErrors = {
@@ -91,6 +91,7 @@ const TicketForm = () => {
     setIsLoading(false)
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_TICKET, renameKey(res.data.officeRequest_information[0])))
+      fetchTickets(dispatch)
       modalRef.current.toggle()
       modalOnClose()
     } else {
