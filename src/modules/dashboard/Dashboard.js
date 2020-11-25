@@ -80,7 +80,7 @@ const Dashboard = () => {
 
   const stateBirthdayEmployees = useSelector((state) => {
     return state.appState.employee.employees.filter(emp => {
-      return emp['birthdate'].substring(5,10) === currentDateMonth
+      return emp['birthdate'].substring(5, 10) === currentDateMonth
     })
   })
 
@@ -92,7 +92,8 @@ const Dashboard = () => {
 
   const stateLeaveRequests = useSelector((state) => {
     return state.appState.leave.leave_requests.filter(req => {
-      return req['status'] === "pending"
+      return req['status'] === "pending" && req['approver_id'] === user.employeeId
+      // return req['status'] -> Not sure
     })
   });
 
@@ -125,7 +126,7 @@ const Dashboard = () => {
   const history = useHistory();
   const [totalEmployees, setTotalEmployees] = useState(stateActiveEmployees.length)
   const [employeesOnLeave, setEmployeeOnLeave] = useState(stateEmployeesOnLeave.length)
-  const [todaysPendingLeaveRequests, setTodaysPendingLeaveRequests] = useState(statePendingLeaveRequests.length)
+  const [pendingLeaveRequests, setPendingLeaveRequests] = useState(statePendingLeaveRequests.length)
   const [todaysPendingOfficeRequests, setTodaysPendingOfficeRequests] = useState(statePendingOfficeRequests.length)
   // const [recentLeaveRequest, setRecentLeaveRequest] = useState(_.orderBy(stateLeaveRequests, ['created at'], ['desc']))
   // const [recentOfficeRequest, setRecentOfficeRequest] = useState(_.orderBy(stateOfficeRequests, ['date requested'], ['desc']))
@@ -228,7 +229,7 @@ const Dashboard = () => {
       recentLeaveRequest,
       recentOfficeRequest,
       employeesOnLeave,
-      todaysPendingLeaveRequests,
+      pendingLeaveRequests,
       todaysPendingOfficeRequests,
       todaysEmployeeOnLeave,
       year,
@@ -248,12 +249,54 @@ const Dashboard = () => {
         viewEmployees,
         viewLeaveCalendar,
         employeesOnLeave,
-        todaysPendingLeaveRequests,
+        pendingLeaveRequests,
         todaysPendingOfficeRequests,
         viewDepartmentInfo,
         employeeDepartment,
         stateBirthdayEmployees
       }} />
+      {
+        user.accountType !== 3 ?
+          <CRow>
+            <CCol>
+              <CCard>
+                <CCardHeader>
+                  <CRow>
+                    <CCol sm="6">
+                      <div>
+                        {"Employees on Leave"}
+                      </div>
+                    </CCol>
+                  </CRow>
+                </CCardHeader>
+                <CCardBody>
+                  <CDataTable
+                    items={_.orderBy(todaysEmployeeOnLeave, ['created at'], ['desc'])}
+                    fields={LeaveRequestFieldsForEmployee}
+                    hover
+                    clickableRows
+                    pagination
+                    itemsPerPage={5}
+                    noItemsViewSlot={<NoData title="No Employee/s on Leave" />}
+                    onRowClick={(item) => {
+                      viewLeaveRequestDetails(item.id)
+                    }}
+                    scopedSlots={{
+                      'status':
+                        (item) => (
+                          <td>
+                            <CBadge color={getBadgeLeave(item.status)}>
+                              {toCapitalize(item.status)}
+                            </CBadge>
+                          </td>
+                        ),
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow> : ""
+      }
       <CRow>
         <CCol>
           <ConfirmDialog
@@ -324,8 +367,8 @@ const Dashboard = () => {
                 hover
                 clickableRows
                 pagination
-                itemsPerPage={user.accountType === 3 ? 10 : 5}
-                noItemsViewSlot={<NoData title="No Requests" />}
+                itemsPerPage={5}
+                noItemsViewSlot={<NoData title={user.accountType === 3 ? `No Employee/s on Leave` : `No Requests`} />}
                 onRowClick={(item) => {
                   viewLeaveRequestDetails(item.id)
                 }}
@@ -344,7 +387,7 @@ const Dashboard = () => {
           </CCard>
         </CCol>
         {
-          user.accountType === 1 || user.accountType === 2 ?
+          user.accountType === 1 ?
             <CCol>
               <CCard>
                 <CCardHeader>

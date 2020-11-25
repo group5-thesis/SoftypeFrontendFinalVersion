@@ -151,7 +151,7 @@ const Departments = (props) => {
   return (
     <>
       {
-        stateDepartments.length === 0 && user.accountType !== 1 ? <NoData /> :
+        stateDepartments.length === 0 && user.accountType !== 1 ? <NoData title="No Department/s added yet"/> :
           <CRow>
             {
               stateDepartments.map((dept, index) => {
