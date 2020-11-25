@@ -11,6 +11,7 @@ import {
   CLink,
   CPopover,
   CButton,
+  CSelect,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -31,6 +32,7 @@ import { ActionTypes, actionCreator } from "utils/actions";
 import { retrieveLeaveRequests } from "utils/helpers/fetch";
 import { config } from 'utils/config';
 import moment from 'moment'
+
 const LeaveRequests = (props) => {
   const dispatch = useDispatch();
   const { history, location } = props;
@@ -51,9 +53,13 @@ const LeaveRequests = (props) => {
     noOfDays: 0
   });
   const dialog = useRef();
+
+  const [leaveFilter, setLeaveFilter] = useState("emp_request")
+
   const requestsData = useSelector((state) => {
     return state.appState.leave.leave_requests
   });
+
   const user = useSelector(state => state.appState.auth.user);
   const header = [
     {
@@ -142,10 +148,12 @@ const LeaveRequests = (props) => {
       }
     }
   }
-  useEffect(() => {
 
+
+
+  useEffect(() => {
     return () => { }
-  }, [])
+  }, [leaveFilter])
   return (
     <CRow>
       <CCol xl={12}>
@@ -169,14 +177,37 @@ const LeaveRequests = (props) => {
           <CCardBody>
             <CRow>
               <CCol sm="5">
-                <h4 className="card-title mb-0">Leave Request</h4>
+                {
+                  user.accountType === 3 ?
+                    <h4 className="card-title mb-0">Employee Leave Requests</h4>
+                    :
+                    <CSelect
+                      custom
+                      className="input-md"
+                      size="md"
+                      name="leavefilter"
+                      id="leavefilter"
+                      value={leaveFilter}
+                      onChange={(e) => {
+                        setLeaveFilter(e.target.value)
+                      }}
+                    >
+                      <option value="emp_request">
+                        {"Employee Leave Requests"}
+                      </option>
+                      <option value="my_request">{"My Leave Requests"}</option>
+                      )}
+                </CSelect>
+                }
               </CCol>
               <CCol sm="7" className=" d-sm-block">
                 {
-                  (config.IS_DEV || user.roleId > 1) &&
-                  <div className="float-right  mr-3">
-                    <LeaveRequestForm />
-                  </div>
+                  // (config.IS_DEV || user.roleId > 1 )
+                  (user.accountType === 1 && leaveFilter === "my_request") ||
+                    (user.accountType === 2 && leaveFilter === "my_request") || (user.accountType === 3) ?
+                    <div className="float-right  mr-3">
+                      <LeaveRequestForm />
+                    </div> : ""
                 }
                 <div className={`float-right mr-3 ${!collapse && "mb-2"}`} >
                   <CButton
@@ -210,7 +241,7 @@ const LeaveRequests = (props) => {
             </CRow>
             <CDataTable
               className="table-responsive mt-2"
-              items={requestsData}
+              items={leaveFilter === "emp_request" ? requestsData : leaveFilter === "my_request" ? _.filter(requestsData, ['employee id', user.employeeId]) : []}
               itemsPerPage={10}
               fields={header}
               pagination
