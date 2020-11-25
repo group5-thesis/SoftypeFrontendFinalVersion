@@ -40,7 +40,7 @@ export default [
       _tag: 'CSidebarNavItem',
       name: 'Employee Accounts',
       to: '/accounts',
-      user: [1, 2],
+      user: [1],
       icon: customIcon(mdiAccountCog),
   },
     {
