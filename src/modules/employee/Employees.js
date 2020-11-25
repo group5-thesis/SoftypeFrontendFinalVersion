@@ -84,7 +84,7 @@ const Users = (props) => {
                                 'Name':
                                     (item) => (
                                         <td>
-                                            {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename)[0] + "."}`}
+                                            {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename[0]) + "."}`}
                                         </td>
                                     ),
                                 'department_name':

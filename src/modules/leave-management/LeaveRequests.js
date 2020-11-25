@@ -293,7 +293,8 @@ const LeaveRequests = (props) => {
                                     id: item.id,
                                     status: getAdminResponse(el.code),
                                     statusCode: el.code,
-                                    approver:user.employeeId
+                                    approver:user.employeeId,
+                                    employeeId:item['employee id']
                                   });
                                   dialog.current.toggle();
                                 }}

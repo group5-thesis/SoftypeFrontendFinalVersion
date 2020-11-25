@@ -38,6 +38,7 @@ const LeaveRequest = ({ match }) => {
       approver: user.employeeId,
       status: getAdminResponse(code),
       statusCode: code,
+      employeeId:request['employee id']
     }
     setResponse(payload);
     dialog.current.toggle();
