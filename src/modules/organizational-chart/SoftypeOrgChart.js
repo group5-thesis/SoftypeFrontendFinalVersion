@@ -1,38 +1,49 @@
-import React from "react";
+import React, { lazy, useState, useEffect, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 import OrganizationChart from "@dabeng/react-orgchart";
 import MyNode from "./chartfunction";
 
 const CustomNodeChart = () => {
+
+  const stateActiveEmployees = useSelector((state) => {
+    return state.appState.employee.employees
+  });
+
+  const [employees, setEmployees] = useState(stateActiveEmployees)
+
   const ds = {
     id: "n1",
     name: "Arvind K",
-    title: "HEAD MANAGER",
+    title: "Chief Executive Officer, Softype Global",
     children: [
-      { id: "n2", name: "Nana L", title: "DEPARTMENT MANAGER" },
+      { id: "n2", name: "Nana L", title: "Chief Executive Officer, Softype PH" },
       {
         id: "n3",
         name: "Nikunj S",
-        title: "DEPARTMENT MANAGER",
+        title: "Chief Operation Officer",
         children: [
           {
-            id: "n4", name: "Kel Custodio", title: "SENIOR ENGINEER",
-            children: [
+            id: "n4", name: "Sachin Salve", title: "Director Technical Services", children: [
               {
-                id: "n5", name: "Sachin Savale", title: "ENGINEER",
-                children: [
-                  { id: "n4.1", name: "Shahbudin Kaji", title: "ENGINEER" },
-                  { id: "n4.2", name: "Jaydas Sakhare", title: "ENGINEER" },
-                  { id: "n4.3", name: "Visahl Pitale", title: "ENGINEER" },
-                  { id: "n4.4", name: "Madhu Rai", title: "ENGINEER" }
-                ]
+                id: "n4a", name: "Nitesh", title: "Technical Associate"
               },
-              { id: "n6", name: "Nitesh Devadiga", title: "ENGINEER" },
-              { id: "n7", name: "Amol Jagkar", title: "ENGINEER" }
-            ],
+              {
+                id: "n4b", name: "Farhan", title: "Technical Associate"
+              },
+              {
+                id: "n4c", name: "Amol", title: "Technical Associate"
+              },
+            ]
           },
-          { id: "n8", name: "Manashi H", title: "SENIOR ENGINEER" },
-          { id: "n9", name: "Moses R", title: "SENIOR ENGINEER" },
-          { id: "n10", name: "Prachi S", title: "SENIOR ENGINEER" }
+          {
+            id: "n5", name: "Manisha", title: "Director Technical Services"
+          },
+          {
+            id: "n6", name: "Moses", title: "Director Technical Services"
+          },
+          {
+            id: "n7", name: "Prachi", title: "Director Technical Services"
+          }
         ]
       }
     ]
@@ -43,8 +54,8 @@ const CustomNodeChart = () => {
       datasource={ds}
       chartClass="myChart"
       NodeTemplate={MyNode}
-      pan={true}
-      zoom={true}
+    // pan={true}
+    // zoom={true}
     />
   );
 };

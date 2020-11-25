@@ -7,12 +7,13 @@ import {
   CDropdownMenu,
   CDropdownItem,
   CDropdownToggle,
-  CButton
+  CButton,
+  CTooltip
 } from '@coreui/react'
 import { Modal } from 'reusable';
 import WidgetModalContent from 'modules/dashboard/component/WidgetModalContent'
 import Icon from '@mdi/react';
-import { mdiAccountArrowRightOutline, mdiAccountGroupOutline, mdiCake, mdiAccountClockOutline, mdiOfficeBuildingOutline  } from '@mdi/js';
+import { mdiAccountArrowRightOutline, mdiAccountGroupOutline, mdiCake, mdiAccountClockOutline, mdiOfficeBuildingOutline } from '@mdi/js';
 
 const Widgets = (
   { user,
@@ -58,7 +59,7 @@ const Widgets = (
       </Modal>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{minHeight : '150px'}}
+          style={{ minHeight: '150px' }}
           color="gradient-primary"
           header={<h2>{`${employeesOnLeave}`}</h2>}
           text={"Employees on Leave"}
@@ -93,7 +94,7 @@ const Widgets = (
       </CCol>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{minHeight : '150px'}}
+          style={{ minHeight: '150px' }}
           color="gradient-info"
           header={<h2>{`${totalEmployees}`}</h2>}
           text="Total Employees"
@@ -128,7 +129,7 @@ const Widgets = (
       </CCol>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{minHeight : '150px'}}
+          style={{ minHeight: '150px' }}
           color="gradient-warning"
           header={<h2>{`${stateBirthdayEmployees.length}`}</h2>}
           text={stateBirthdayEmployees.length === 0 ? "No Birthday/s Today" : "Birthday Celebrants"}
@@ -153,19 +154,26 @@ const Widgets = (
               </CDropdown>
               : ""
           } */}
-          <Icon path={mdiCake}
-            size={1.8}
-            horizontal
-            vertical
-            rotate={180}
-          />
+          <CTooltip content={stateBirthdayEmployees.length !== 0 ? "See who's celebrating" : "Nobody's celebrating now"}>
+            <Icon path={mdiCake}
+              size={1.8}
+              horizontal
+              style={{ cursor: 'pointer' }}
+              vertical
+              onClick={() => {
+                toggleModal()
+              }}
+              rotate={180}
+            />
+          </CTooltip>
+
         </CWidgetDropdown>
       </CCol>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{minHeight : '150px'}}
+          style={{ minHeight: '150px' }}
           color="gradient-danger"
-          header={user.accountType === 3 && employeeDepartment.length !== 0 ? <h2 className="blockquote">{employeeDepartment[0].department_name}</h2> : user.accountType === 3 && employeeDepartment.length === 0 ? <h2><i>{"UNSET"}</i></h2> : <h2>{pendingLeaveRequests}</h2>}
+          header={user.accountType === 3 && employeeDepartment.length !== 0 ? <h2 className="blockquote">{`${employeeDepartment[0].department_name}`}</h2> : user.accountType === 3 && employeeDepartment.length === 0 ? <h2><i>{"UNSET"}</i></h2> : <h2>{pendingLeaveRequests}</h2>}
           text={user.accountType === 3 ? "Department" : user.accountType === 1 || user.accountType === 2 ? "Pending Leave Requests" : ""}
           footerSlot={
             <div
