@@ -156,7 +156,6 @@ export const ACCOUNT_ROLES = [
       ],
   },
   {
-  {
     "accountType": 1,
     "category": "Admin Roles",
     "roles":
