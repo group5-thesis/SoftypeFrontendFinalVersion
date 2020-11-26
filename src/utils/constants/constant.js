@@ -144,20 +144,32 @@ export const FILE_TYPES = [
 
 export const ACCOUNT_ROLES = [
   {
+    "accountType": 3,
+    "category": "Officials",
+    "roles":
+      [
+        "CEO",
+        "CIO",
+        "CFO",
+        "COO",
+        "CTO",
+      ],
+  },
+  {
+  {
     "accountType": 1,
     "category": "Admin Roles",
     "roles":
       [
         "HR Admin/Manager",
       ],
-  }, {
+  },
+  {
     "accountType": 2,
     "category": "Managerial Roles",
     "roles":
       [
         "Associate Technical Lead",
-        "IT Admin",
-        "Program Manager",
         "Project Manager",
         "Team Leader",
         "Technical Lead",
@@ -170,14 +182,10 @@ export const ACCOUNT_ROLES = [
     "roles":
       [
         "Associate Technical Consultant",
-        "CEO",
-        "CIO",
-        "CFO",
-        "COO",
-        "CTO",
         "Jr Functional Consultant",
         "Jr Marketing Consultant",
         "Jr Technical Consultant",
+        "IT Admin",
         "Sales Associate",
         "Sr Functional Consultant",
         "Sr Marketing Consultant",

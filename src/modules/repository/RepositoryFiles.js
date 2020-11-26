@@ -154,14 +154,14 @@ const RepositoryFiles = (props) => {
                                                 }}>
                                                     <Icon path={mdiEye} size={0.9} color="black" />
                                                 </CLink>
-                                                <CLink className="card-header-action" onClick={() => {
+                                                {/* <CLink className="card-header-action" onClick={() => {
                                                     if (!queued) {
                                                         return download(path, filename)
                                                     }
                                                     dispatchNotification(dispatch, { type: 'info', message: 'Dowload on progress' })
                                                 }}>
                                                     <Icon path={queued ? mdiProgressDownload : mdiDownload} size={0.9} color="black" />
-                                                </CLink>
+                                                </CLink> */}
 
                                                 <CLink className="card-header-action" onClick={() => {
                                                     beforeDelete(file)

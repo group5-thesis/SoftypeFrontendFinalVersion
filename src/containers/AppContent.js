@@ -33,7 +33,9 @@ const AppContent = (_props) => {
   const accessedRoutes = filterModule(routes, roleId);
   const dispatch = useDispatch();
   const retrieve = async (payload) => {
-    dispatch(actionCreator(ActionTypes.LOADING_STARTED));
+    if (isAppLoading) {
+      dispatch(actionCreator(ActionTypes.LOADING_STARTED));
+    }
     let resp1 = await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
     let resp2 = await fetchTickets(dispatch);
     let resp3 = await retrieveEmployees(dispatch);

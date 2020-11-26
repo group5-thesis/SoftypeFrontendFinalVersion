@@ -3,7 +3,7 @@ import { ActionTypes } from "utils/actions";
 const initial_state = {
   sidebarShow: "responsive",
   sideMenu: [],
-  loading: false,
+  loading: true,
   notify: false,
   notification: { type: '', message: '' },
 };

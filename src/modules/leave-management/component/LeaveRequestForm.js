@@ -52,7 +52,7 @@ const LeaveFormRequest = ({ request }) => {
   let { department_id, department_manager, department_managerId, } = departmentDetail
   LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
   LeaveRequestModel.employeeID = user.employeeId;
-  LeaveRequestModel.approverId = user.accountType === 3 ? department_managerId : employeesHr[0].employeeId;
+  LeaveRequestModel.approverId = user.accountType === 3 ? department_managerId : user.accountType === 1 ? user.employeeId : employeesHr[0].employeeId;
   LeaveRequestModel.approver = department_manager && department_manager;
   const modalRef = useRef()
   const [data, setData] = useState(request ? request : LeaveRequestModel)
@@ -226,7 +226,7 @@ const LeaveFormRequest = ({ request }) => {
           }
         </>
       </CAlert>}
-      {<CAlert color={!department_id ? "danger" : "info"}>
+      {<CAlert color={(!department_id && user.accountType !== 1) ? "danger" : "info"}>
         {!department_id ? "Leave requests is available for department employees only." : `You still have ${user.remaining_leave} remaining leave.`}
       </CAlert>}
       <CFormGroup >

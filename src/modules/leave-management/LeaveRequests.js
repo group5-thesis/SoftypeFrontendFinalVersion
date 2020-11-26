@@ -152,6 +152,9 @@ const LeaveRequests = (props) => {
 
 
   useEffect(() => {
+    if (requestsData.length === 0) {
+      setCollapse(false)
+    }
     return () => { }
   }, [leaveFilter])
   return (
@@ -324,8 +327,8 @@ const LeaveRequests = (props) => {
                                     id: item.id,
                                     status: getAdminResponse(el.code),
                                     statusCode: el.code,
-                                    approver:user.employeeId,
-                                    employeeId:item['employee id']
+                                    approver: user.employeeId,
+                                    employeeId: item['employee id']
                                   });
                                   dialog.current.toggle();
                                 }}
