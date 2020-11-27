@@ -59,11 +59,15 @@ const Users = (props) => {
                             <CCol sm="5">
                                 <h4 className="card-title mb-0">Employees</h4>
                             </CCol>
-                            <CCol sm="7" className="d-none d-md-block">
+                            {
+                              user.accountType === 1 ?
+                              <CCol sm="7" className="d-none d-md-block">
                                 <div className="float-right" >
                                     <EmployeeModal retrieveEmployees={props.retrieveEmployees} />
                                 </div>
                             </CCol>
+                             : ""
+                            }
                         </CRow>
                         <CDataTable
                             items={usersData}
@@ -91,8 +95,7 @@ const Users = (props) => {
                                     (item) => {
                                         return (
                                             <td>
-
-                                                {item.department_name ? item.department_name : <em>UNSET</em>}
+                                                {item.department_name ? item.department_name : item.department_nameM ?  item.department_nameM : item.department_nameH ?  item.department_nameH : <em>UNSET</em>}
                                             </td>
                                         )
                                     },
