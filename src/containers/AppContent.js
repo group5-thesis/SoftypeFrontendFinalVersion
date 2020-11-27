@@ -33,9 +33,9 @@ const AppContent = (_props) => {
   const accessedRoutes = filterModule(routes, roleId);
   const dispatch = useDispatch();
   const retrieve = async (payload) => {
-//    if (isAppLoading) {
+    if (isAppLoading) {
       dispatch(actionCreator(ActionTypes.LOADING_STARTED));
-  //git add  }
+    }
     let resp1 = await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
     let resp2 = await fetchTickets(dispatch);
     let resp3 = await retrieveEmployees(dispatch);
@@ -64,8 +64,7 @@ const AppContent = (_props) => {
 
   useEffect(() => {
     // console.log(isAppLoading)
-    // debugger
-    if (!isAppLoading) retrieve(payload);
+    retrieve(payload);
   }, []);
 
   return (
