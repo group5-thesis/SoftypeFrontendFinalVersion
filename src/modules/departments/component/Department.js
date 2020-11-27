@@ -163,12 +163,12 @@ const Department = ({ location }) => {
   }
   useEffect(() => {
     // if (deptId === null || deptId === '' || deptId === undefined) {
-      // deptId = sessionStorage.getItem('deptId')
-      // setSearchParams(deptId.toString())
-      history.replace({
-        pathname: '/employee/departments/department',
-        search: `?id=${deptId.toString()}`
-      })
+    // deptId = sessionStorage.getItem('deptId')
+    // setSearchParams(deptId.toString())
+    history.replace({
+      pathname: '/employee/departments/department',
+      search: `?id=${deptId.toString()}`
+    })
     // }
   }, [])
 
@@ -201,16 +201,11 @@ const Department = ({ location }) => {
             <CCardHeader>
               <CRow>
                 <CCol className="d-none d-md-block">
-                  {/* <div className="float-right" >
-                    <CButton color="primary" onClick={() => {
-                      modal.current.toggle()
-                    }}>Add Department Manager</CButton>
-                  </div> */}
                   <div className="float-right" >
                     <CButton color="primary" onClick={() => {
                       // modal.current.toggle()
-                      viewDepartmentDetails(departmentDetails)
-                    }}>View Department Details</CButton>
+                      // viewDepartmentDetails(departmentDetails)
+                    }}>Update Deparment</CButton>
                   </div>
                 </CCol>
               </CRow>
@@ -237,8 +232,8 @@ const Department = ({ location }) => {
                     imgClass={"img_dept_head"}
                     imgSrc={departmentDetails.department_head_profileImg !== null ? `${getBaseUrl()}/file/images/${departmentDetails.department_head_profileImg}` : department_icon_default}
                     text={departmentDetails.department_head}
-                    textClass={"font-weight-bold"}
-                    textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
+                    textClass={"blockquote font-weight-bold text-center"}
+                    textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%' }}
                   />
                 </CCol>
               </CRow>
@@ -257,10 +252,10 @@ const Department = ({ location }) => {
                           }
                           imgSrc={key.profile_img === null ? department_icon_default : `${getBaseUrl()}/file/images/${key.profile_img}`}
                           dept_role={key.role}
-                          textClass={"font-weight-bold"}
+                          textClass={"blockquote font-weight-bold  text-center"}
                           textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
                           imgClass={"img_dept"}
-                          textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
+                          textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%' }}
                           onClickMethod={() => {
                             viewEmployees(key)
                           }}

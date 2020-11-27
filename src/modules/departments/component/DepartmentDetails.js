@@ -75,7 +75,7 @@ const DepartmentDetails = ({ location }) => {
           <DepartmentDetailsModal {...{ deptEmp, firstElementDept }} />
         </Modal>
 
-        <CCol sm="2" lg="2" >
+        <CCol sm="2" lg="3" >
 
         </CCol>
         <CCol>
@@ -104,7 +104,7 @@ const DepartmentDetails = ({ location }) => {
               </CRow>
             </CCardHeader>
             <CCardBody>
-              <div className="px-1 py-1">
+              <div className="px-1 py-1 text-justify">
                 <h5>
                   {`Department Head: ${firstElementDept.department_head}`}
                 </h5>

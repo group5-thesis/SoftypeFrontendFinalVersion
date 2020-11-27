@@ -245,11 +245,11 @@ const DepartmentEmployees = ({ match }) => {
                               `${key.firstname}`
                             }
                             dept_role={key.role}
-                            textClass={"font-weight-bold"}
+                            textClass={"blockquote font-weight-bold text-center"}
                             textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
                             imgClass={"img_dept"}
                             imgSrc={key.profile_img !== null ? `${getBaseUrl()}/file/images/${key.profile_img}` : department_icon_default}
-                            textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)' }}
+                            textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%'}}
                             onClickMethod={() => {
                               if (removeEmployee) {
                                 dialog.current.toggle()

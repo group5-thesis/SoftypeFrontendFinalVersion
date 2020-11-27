@@ -192,12 +192,16 @@ const EmployeeDetails = (props) => {
                     />
                   }
                 </div>
+                {
+                  user.accountType === 2 ?
+                    <div className="float-right mr-2">
+                      {
+                        (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} />
+                      }
+                    </div>
+                    : ""
+                }
 
-                <div className="float-right">
-                  {
-                    (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} />
-                  }
-                </div>
               </CCol>
             </CRow>
           </CCardHeader>
