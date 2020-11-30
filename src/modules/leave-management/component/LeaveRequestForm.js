@@ -39,7 +39,7 @@ const LeaveFormRequest = ({ request }) => {
       employeeId: authed.employeeId,
       userId: authed.userId,
       remaining_leave: authed.remaining_leave,
-      accountType: authed.roleId
+      accountType: authed.accountType
     }
   })
   let departmentDetail = useSelector(state => state.appState.employee.employees.filter(emp => emp.employeeId === user.employeeId)[0])
@@ -195,7 +195,7 @@ const LeaveFormRequest = ({ request }) => {
 
   const actions = () => (
     <>
-      <CButton color="primary" disabled={isLoading || isLimitError || !department_id} onClick={validateInfo}>
+      <CButton color="primary" disabled={isLoading || isLimitError || (department_id === null && user.accountType === 3)} onClick={validateInfo}>
         {
           isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
         }
@@ -226,8 +226,8 @@ const LeaveFormRequest = ({ request }) => {
           }
         </>
       </CAlert>}
-      {<CAlert color={(!department_id && user.accountType !== 1) ? "danger" : "info"}>
-        {!department_id ? "Leave requests is available for department employees only." : `You still have ${user.remaining_leave} remaining leave.`}
+      {<CAlert color={(!department_id && user.accountType === 3) ? "danger" : "info"}>
+        {(department_id === null && user.accountType === 3) ? "Leave requests is available for department employees only." : `You still have ${user.remaining_leave} remaining leave.`}
       </CAlert>}
       <CFormGroup >
         <CLabel>Name : </CLabel>
@@ -239,7 +239,7 @@ const LeaveFormRequest = ({ request }) => {
             <CLabel htmlFor="date-input">Date From : </CLabel>
             <CInput
               type="date"
-              disabled={department_id === null}
+              disabled={(department_id === null && user.accountType === 3)}
               id="date-from"
               name="date_from"
               value={data.date_from}
@@ -254,7 +254,7 @@ const LeaveFormRequest = ({ request }) => {
             <CInput
               type="date"
               id="date-to"
-              disabled={department_id === null}
+              disabled={(department_id === null && user.accountType === 3)}
               onChange={handleOnChange}
               name="date_to"
               value={data.date_to}
@@ -275,7 +275,7 @@ const LeaveFormRequest = ({ request }) => {
             <CLabel htmlFor="Category">Category : </CLabel>
             <CSelect
               custom name="category"
-              disabled={department_id === null}
+              disabled={(department_id === null && user.accountType === 3)}
               invalid={errors.category}
               value={data.category || ""}
               onChange={handleOnChange}
@@ -293,7 +293,7 @@ const LeaveFormRequest = ({ request }) => {
         <CTextarea
           onChange={handleOnChange}
           name="reason"
-          disabled={department_id === null}
+          disabled={(department_id === null && user.accountType === 3)}
           placeholder={placeholder && placeholder}
           value={data.reason}
           invalid={errors.reason}

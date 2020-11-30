@@ -38,7 +38,8 @@ import {
   DISABLE_EMPLOYEE_ACCOUNT,
   RESET_EMPLOYEE_ACCOUNT,
   CANCEL_LEAVE_REQUEST,
-  DELETE_TICKET
+  DELETE_TICKET,
+  FETCH_CHART_DATA
 } from "utils/constants/action-types";
 
 const ActionTypes = {
@@ -81,7 +82,8 @@ const ActionTypes = {
   DISABLE_EMPLOYEE_ACCOUNT,
   RESET_EMPLOYEE_ACCOUNT,
   CANCEL_LEAVE_REQUEST,
-  DELETE_TICKET
+  DELETE_TICKET,
+  FETCH_CHART_DATA
 };
 
 const actionCreator = (type, payload = null) => ({ type, payload });

@@ -31,9 +31,10 @@ const Accounts = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false)
   const stateAccounts = useSelector((state) => {
-    return state.appState.accounts.accounts.filter(emp => {
-      return emp.employeeId !== state.appState.auth.user.employeeId
-    })
+    return state.appState.accounts.accounts
+    // .filter(emp => {
+    //   return emp.employeeId !== state.appState.auth.user.employeeId
+    // })
   });
 
   const fields = [
