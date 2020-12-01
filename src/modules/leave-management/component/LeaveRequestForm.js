@@ -137,7 +137,6 @@ const LeaveFormRequest = ({ request }) => {
     _errors[key.includes('date_') ? 'dates' : key] = false;
     setErrors(_errors);
     copy[key] = value;
-    debugger
     let _placeholder = '';
     if (copy['category']) {
       _placeholder = `I am having my ${copy['category']} ${(copy['date_from']) ? 'from ' + moment(copy['date_from']).format('ll') : ''} ${(copy['date_to']) ? 'until ' + moment(copy['date_to']).format('ll') : ''}`

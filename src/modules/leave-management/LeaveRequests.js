@@ -244,7 +244,7 @@ const LeaveRequests = (props) => {
             </CRow>
             <CDataTable
               className="table-responsive mt-2"
-              items={leaveFilter === "emp_request" ? requestsData : leaveFilter === "my_request" ? _.filter(requestsData, ['employee id', user.employeeId]) : []}
+              items={leaveFilter === "emp_request" ? _.filter(requestsData, ['approver id', user.employeeId]) : leaveFilter === "my_request" ? _.filter(requestsData, ['employee id', user.employeeId]) : []}
               itemsPerPage={10}
               fields={header}
               pagination

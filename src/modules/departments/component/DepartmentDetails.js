@@ -95,6 +95,7 @@ const DepartmentDetails = ({ location }) => {
                       <div className="float-right">
                         <CButton color="primary" onClick={() => {
                           toggleModal()
+                          console.log("Test update")
                         }}>
                           {"Update Department"}
                         </CButton>

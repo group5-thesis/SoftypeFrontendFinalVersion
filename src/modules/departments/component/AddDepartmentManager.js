@@ -61,15 +61,19 @@ const AddDepartmentManager = ({ employees, onChange, data, renderFeedback, error
             onChange={onChange}
             value={Number(data.department_manager)}
             invalid={errors.department_manager !== false}
+            disabled={_employee.length === 0}
           >
             <option key={"default"} value="" hidden>
-              Select Employee
+              {
+                _employee.length === 0 ? `No Employee can be added` :
+                  `Select Employee`
+              }
             </option>
             {
               _employee.map((e, index) => {
                 return (
                   <option key={"_emps" + index} value={e.employeeId}>
-                    {e.firstname} {e.lastname}
+                    {e.firstname} {e.lastname} : {e.role}
                   </option>
                 )
               })

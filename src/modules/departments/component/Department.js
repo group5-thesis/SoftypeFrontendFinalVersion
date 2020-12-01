@@ -14,17 +14,21 @@ import { copyArray, setWidth, dispatchNotification, shallowCopy, RULES, getBaseU
 import { NoData, Card, Modal } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
+import UpdateDepartmentDetails from './UpdateDepartmentDetails'
+import DepartmentModel from "models/DepartmentModel"
 import DepartmentManager from "models/DepartmentManagerModel"
 import Icon from '@mdi/react';
 import { useHistory } from "react-router-dom";
 import { APP_MESSAGES } from 'utils/constants/constant';
 import {
-  mdiPlus
+  mdiPlus,
+  mdiPencilCircleOutline
 } from '@mdi/js';
 import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
 import department_icon_default from "../../../assets/img/default_dept_icon.png"
+import { fetchDepartments } from 'utils/helpers/fetch';
 
 const Department = ({ location }) => {
 
@@ -43,23 +47,22 @@ const Department = ({ location }) => {
     department_manager: false
   }
 
+  // const defaultEdit = {
+  //   dept_id: null
+  // }
+
+  const [dataToEdit, setDataToEdit] = useState(DepartmentModel)
+  const [isChange, setIsChange] = useState(false)
+  const [editDepartment, setEditDepartment] = useState(false)
+  const [onHover, setOnHover] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
   const [data, setData] = useState(DepartmentManager)
   const query = new URLSearchParams(location.search);
-  // const [deptId, setDeptId] = useState()
   const history = useHistory();
   const dispatch = useDispatch();
   let deptId = query.get("id") || sessionStorage.getItem('deptId');
   const [searchParams, setSearchParams] = useState(1)
-  // if (deptId === null || deptId === '' || deptId === undefined) {
-  //   deptId = sessionStorage.getItem('deptId')
-  //   // setSearchParams(deptId.toString())
-  //   history.replace({
-  //     pathname: '/employee/departments/department',
-  //     search: `?id=${deptId.toString()}`
-  //   })
-  // }
   sessionStorage.setItem('deptId', deptId)
   const modal = useRef();
 
@@ -87,9 +90,12 @@ const Department = ({ location }) => {
   const departmentDetails = request[0]
 
   const toggleModal = () => {
+    modal.current.toggle();
     setData(DepartmentManager)
     setError(defaultErrors)
-    modal.current.toggle();
+    setEditDepartment(false)
+    setDataToEdit(DepartmentModel)
+    setIsChange(false)
   };
 
   const handleSubmit = async () => {
@@ -156,15 +162,67 @@ const Department = ({ location }) => {
   const viewDepartmentDetails = (e) => {
     sessionStorage.setItem("dept_detailsId", e.department_id)
     history.push(`/employee/departments/department/details?id=${searchParams}&aqs=${e.department_id}`);
-    // let res = await api.get(`/retrieve_limited_department/${e.department_id}`)
-    // if (res.error) {
-    //   dispatchNotification(dispatch, { type: 'error', message: res.message })
-    // }
   }
+
+  const editDepartmentDetails = () => {
+    modal.current.toggle();
+    setEditDepartment(true)
+  }
+
+  const validateUpdate = async () => {
+    setIsLoading(true)
+    if (dataToEdit.department_name === null || dataToEdit.department_name === "") {
+      dataToEdit.department_name = departmentDetails.department_name
+    }
+    if (dataToEdit.department_head === null || dataToEdit.department_head === "") {
+      dataToEdit.department_head = departmentDetails.department_head_employeeId
+    }
+    let data = {
+      departmentId: departmentDetails.department_id,
+      name: dataToEdit.department_name,
+      department_head_pk_id: departmentDetails.department_headId,
+      departmentHeadId: +dataToEdit.department_head
+    }
+    console.log(data)
+    let res = await api.post('/update_department', data)
+    if (!res.error) {
+      console.log(res)
+    }
+    setDataToEdit(DepartmentModel)
+    fetchDepartments(dispatch)
+    setIsChange(false)
+    modal.current.toggle();
+    setIsLoading(false)
+  }
+
+  const handleChange = (e) => { // value is employee ID
+    let key = e.target.name
+    let value = e.target.value
+    let copy = shallowCopy(dataToEdit)
+    copy[key] = value
+    if (value === "") {
+      setIsChange(false)
+    } else {
+      setIsChange(true)
+    }
+    if (key === "department_head") {
+      if (value === departmentDetails.department_head_employeeId) {
+        setIsChange(false)
+      }
+      else {
+        setIsChange(true)
+      }
+    } else {
+      if (value.toLowerCase() === departmentDetails.department_name.toLowerCase()) {
+        setIsChange(false)
+      } else {
+        setIsChange(true)
+      }
+    }
+    setDataToEdit(copy)
+  }
+
   useEffect(() => {
-    // if (deptId === null || deptId === '' || deptId === undefined) {
-    // deptId = sessionStorage.getItem('deptId')
-    // setSearchParams(deptId.toString())
     history.replace({
       pathname: '/employee/departments/department',
       search: `?id=${deptId.toString()}`
@@ -179,15 +237,15 @@ const Department = ({ location }) => {
           <Modal
             ref={modal}
             centered
-            title="Add Department Manager"
+            title={editDepartment ? "Update Department Details" : "Add Department Manager"}
             hidden
             modalOnClose={toggleModal}
             closeButton
             footer={
               <>
-                <CButton color="primary" disabled={isLoading} onClick={validate}>
+                <CButton color="primary" disabled={isLoading || editDepartment && !isChange} onClick={editDepartment ? validateUpdate : validate}>
                   {
-                    isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
+                    isLoading ? <CSpinner color="secondary" size="sm" /> : editDepartment ? 'Update' : 'Submit'
                   }
                 </CButton>
                 <CButton color="danger" onClick={toggleModal}>Cancel</CButton>
@@ -195,32 +253,66 @@ const Department = ({ location }) => {
             }
             hideCancelButton
           >
-            <AddDepartmentManager {...{ employees, onChange, data, renderFeedback, errors, departmentDetails }} />
+            {
+              editDepartment ? <UpdateDepartmentDetails {...{ dataToEdit, handleChange, renderFeedback, errors, departmentDetails }} /> :
+                <AddDepartmentManager {...{ employees, onChange, data, renderFeedback, errors, departmentDetails }} />
+            }
           </Modal>
           <CCard>
             <CCardHeader>
               <CRow>
-                <CCol className="d-none d-md-block">
-                  <div className="float-right" >
-                    <CButton color="primary" onClick={() => {
-                      // modal.current.toggle()
-                      // viewDepartmentDetails(departmentDetails)
-                    }}>Update Deparment</CButton>
-                  </div>
-                </CCol>
+                {
+                  user.accountType === 1 ?
+                    <CCol className="d-none d-md-block">
+                      <div className="float-right">
+                        <CButton color={"primary"} onClick={() => {
+                          editDepartmentDetails()
+                          // viewDepartmentDetails(departmentDetails)
+                        }}>
+                          {"Update Department"}
+                        </CButton>
+                      </div>
+                    </CCol>
+                    : ""
+                }
               </CRow>
             </CCardHeader>
             <CCardBody>
               <CRow>
                 <CCol className="px-1 py-1">
                   <Card
-                    clickable
+                    // clickable={onHover}
                     centeredText
                     height={200}
                     animation
-                    text={departmentDetails.department_name}
+                    // onMouseEnterMethod={() => {
+                    //   if (editDepartment) {
+                    //     console.log("On hover")
+                    //     setOnHover(true)
+                    //   }
+                    // }}
+                    // onMouseLeaveMethod={() => {
+                    //   if (editDepartment) {
+                    //     setOnHover(false)
+                    //     console.log("On Leave")
+                    //   }
+                    // }}
+                    // onClickMethod={() => {
+                    //   if (onHover) {
+                    //     toggleModal()
+                    //     // modal.current.toggle();
+                    //     console.log("On Click")
+                    //   }
+                    // }}
+                    text={onHover ? <Icon path={mdiPencilCircleOutline}
+                      size={4}
+                      horizontal
+                      vertical
+                      rotate={180}
+                      color={colors.$grey}
+                    /> : departmentDetails.department_name}
                     textClass={"text-dark font-weight-bold h1"}
-                    isIcon={false}
+                    isIcon={editDepartment}
                   />
                 </CCol>
                 <CCol sm="6" lg="3" className="px-1 py-1">
@@ -250,6 +342,7 @@ const Department = ({ location }) => {
                           text={
                             `${key.manager_firstname}`
                           }
+                          // `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
                           imgSrc={key.profile_img === null ? department_icon_default : `${getBaseUrl()}/file/images/${key.profile_img}`}
                           dept_role={key.role}
                           textClass={"blockquote font-weight-bold  text-center"}
@@ -265,7 +358,7 @@ const Department = ({ location }) => {
                   })
                 }
                 {
-                  user.accountType === 1 ?
+                  user.accountType === 1 && !editDepartment ?
                     <CCol sm="6" lg="3">
                       <Card
                         animation
