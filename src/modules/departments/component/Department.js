@@ -28,7 +28,7 @@ import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
 import department_icon_default from "../../../assets/img/default_dept_icon.png"
-import { fetchDepartments } from 'utils/helpers/fetch';
+import { fetchDepartments, retrieveEmployees, fetchDepartmentEmployees, fetchDepartmentManagers } from 'utils/helpers/fetch';
 
 const Department = ({ location }) => {
 
@@ -106,6 +106,9 @@ const Department = ({ location }) => {
     if (!res.error) {
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_MANAGER, res.data.department_manager_information[0]))
+      retrieveEmployees(dispatch)
+      fetchDepartmentEmployees(dispatch)
+      fetchDepartmentManagers(dispatch)
       toggleModal()
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })

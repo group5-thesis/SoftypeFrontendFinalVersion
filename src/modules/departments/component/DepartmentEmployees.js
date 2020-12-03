@@ -142,8 +142,9 @@ const DepartmentEmployees = ({ match }) => {
     if (!res.error) {
       dispatchNotification(dispatch, { type: 'success', message: "Success" })
       dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT_EMPLOYEE, res.data.employee_information[0]))
+      fetchDepartmentEmployees(dispatch);
       retrieveEmployees(dispatch)
-      fetchDepartmentEmployees(dispatch)
+      fetchDepartmentManagers(dispatch)
       toggleModal()
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
@@ -163,8 +164,9 @@ const DepartmentEmployees = ({ match }) => {
     let res = await api.post('/delete_department_employee', { id: dept_employeeId })
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     if (!res.error) {
-      retrieveEmployees(dispatch)
       fetchDepartmentEmployees(dispatch);
+      retrieveEmployees(dispatch)
+      fetchDepartmentManagers(dispatch)
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
@@ -255,7 +257,7 @@ const DepartmentEmployees = ({ match }) => {
           <CCardHeader>
             <CRow>
               <CCol sm="6">
-                <h4 className="card-title mb-0 blockqoute">{`Project Manager: ${_departmentManager[0].manager_firstname} ${_departmentManager[0].manager_lastname}`}</h4>
+                <h4 className="card-title mb-0 blockqoute">{`Team Leader: ${_departmentManager[0].manager_firstname} ${_departmentManager[0].manager_lastname}`}</h4>
               </CCol>
               {
                 <CCol sm="6" className="d-none d-md-block">

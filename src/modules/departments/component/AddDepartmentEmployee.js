@@ -18,7 +18,7 @@ const AddDepartmentEmployee = ({ _departmentManager, onChange, data, renderFeedb
   });
 
   const checkIfAdded = (employee) => {
-    if (employee.accountType !== 3 || employee.department_managerId === dept.managerId || employee.department_managerId) {
+    if (employee.accountType !== 3 || employee.department_managerId === dept.managerId || employee.department_managerId || employee.isManager) {
       return true
     }
     return false;

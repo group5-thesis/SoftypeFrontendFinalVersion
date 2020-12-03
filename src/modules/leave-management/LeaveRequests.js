@@ -60,7 +60,9 @@ const LeaveRequests = (props) => {
     return state.appState.leave.leave_requests
   });
 
+
   const user = useSelector(state => state.appState.auth.user);
+
   const header = [
     {
       key: "name",
@@ -149,8 +151,6 @@ const LeaveRequests = (props) => {
     }
   }
 
-
-
   useEffect(() => {
     if (requestsData.length === 0) {
       setCollapse(false)
@@ -182,7 +182,7 @@ const LeaveRequests = (props) => {
               <CCol sm="5">
                 {
                   user.accountType === 3 ?
-                    <h4 className="card-title mb-0">Employee Leave Requests</h4>
+                    <h4 className="card-title mb-0">My Leave Requests</h4>
                     :
                     <CSelect
                       custom
@@ -203,7 +203,7 @@ const LeaveRequests = (props) => {
                 </CSelect>
                 }
               </CCol>
-              <CCol sm="7" className=" d-sm-block">
+              <CCol sm="7" className="d-sm-block">
                 {
                   // (config.IS_DEV || user.roleId > 1 )
                   (user.accountType === 1 && leaveFilter === "my_request") ||
@@ -244,8 +244,7 @@ const LeaveRequests = (props) => {
             </CRow>
             <CDataTable
               className="table-responsive mt-2"
-              items={leaveFilter === "emp_request" ? _.filter(requestsData, ['approver id', user.employeeId]) : leaveFilter === "my_request" ? _.filter(requestsData, ['employee id', user.employeeId]) : []}
-              itemsPerPage={10}
+              items={user.accountType !== 3 ? _.filter(requestsData, [`${leaveFilter === "my_request" ? "employee id" : "approver id"}`, user.employeeId]) : requestsData}
               fields={header}
               pagination
               sorter

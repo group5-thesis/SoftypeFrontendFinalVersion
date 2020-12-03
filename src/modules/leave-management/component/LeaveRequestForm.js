@@ -49,11 +49,11 @@ const LeaveFormRequest = ({ request }) => {
     })
   })
 
-  let { department_id, department_manager, department_managerId, } = departmentDetail
+  let { department_id, department_head, department_headId } = departmentDetail
   LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
   LeaveRequestModel.employeeID = user.employeeId;
-  LeaveRequestModel.approverId = user.accountType === 3 ? department_managerId : user.accountType === 1 ? user.employeeId : employeesHr[0].employeeId;
-  LeaveRequestModel.approver = department_manager && department_manager;
+  LeaveRequestModel.approverId = user.accountType === 3 ? department_headId : user.accountType === 1 ? user.employeeId : employeesHr[0].employeeId;
+  LeaveRequestModel.approver = department_head && department_head;
   const modalRef = useRef()
   const [data, setData] = useState(request ? request : LeaveRequestModel)
   const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to))
@@ -179,6 +179,7 @@ const LeaveFormRequest = ({ request }) => {
       const { employeeId, roleId } = user;
       let payload = LEAVE_REQUEST_FILTER('All');
       dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
+      retrieveLeaveRequests(dispatch)
       modalRef.current.toggle()
       modalOnClose()
     } else {

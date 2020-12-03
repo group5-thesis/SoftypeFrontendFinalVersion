@@ -111,7 +111,7 @@ const Dashboard = () => {
   const statePendingLeaveRequests = useSelector((state) => {
     return state.appState.leave.leave_requests.filter(req => {
       // return formatDate(req['created at']) === formatDate(moment()) && req['status'] === "pending"
-      return req['status'].toLowerCase() === "pending".toLowerCase()
+      return req['status'].toLowerCase() === "pending".toLowerCase() && req['approver id'] === user.employeeId
     })
   });
 
