@@ -230,7 +230,7 @@ const Ticket = (props) => {
               </CCol>
             </CRow>
             <CDataTable
-              items={user.accountType === 1 ? filteredTicketRequest : user.accountType === 2 || user.accountType === 3 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
+              items={user.accountType === 1 ? filteredTicketRequest : user.accountType === 3 || user.accountType === 2 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
               fields={fields}
               itemsPerPage={5}
               hover

@@ -18,7 +18,7 @@ const AddDepartmentEmployee = ({ _departmentManager, onChange, data, renderFeedb
   });
 
   const checkIfAdded = (employee) => {
-    if (employee.accountType !== 3 || employee.department_managerId === dept.managerId || employee.department_managerId) {
+    if (employee.accountType !== 3 || employee.department_managerId === dept.managerId || employee.department_managerId || employee.isManager) {
       return true
     }
     return false;
@@ -50,15 +50,19 @@ const AddDepartmentEmployee = ({ _departmentManager, onChange, data, renderFeedb
             onChange={onChange}
             value={Number(data.employeeId)}
             invalid={errors.employeeId !== false}
+            disabled={_employee.length === 0}
           >
             <option key={"default"} value="" hidden>
-              Select Employee
+              {
+                _employee.length === 0 ? `No Employee can be added` :
+                  `Select Employee`
+              }
             </option>
             {
               _employee.map((e, index) => {
                 return (
                   <option key={"emp" + index} value={e.employeeId}>
-                    {e.firstname} {e.lastname}
+                    {e.firstname} {e.lastname} : {e.role}
                   </option>
                 )
               })

@@ -1,6 +1,6 @@
 export default {
   department_manager: null,
-  department_id: null,
+  department_id: null
 }
 
 export class DepartmentManager {

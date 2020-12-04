@@ -92,8 +92,7 @@ const Dashboard = () => {
 
   const stateLeaveRequests = useSelector((state) => {
     return state.appState.leave.leave_requests.filter(req => {
-      return req['status'] === "pending" && req['approver_id'] === user.employeeId
-      // return req['status'] -> Not sure
+      return req['status'] === "pending" && req['approver id'] === user.employeeId
     })
   });
 
@@ -103,16 +102,16 @@ const Dashboard = () => {
     })
   });
 
-  const stateEmployeesOnLeave = useSelector((state) => {
-    return state.appState.leave.leave_requests.filter(emp => {
-      return moment().isBetween(emp['date from'], emp['date to'])
+  const stateEmployeesOnLeave = useSelector((state) => { // employee on leave
+    return state.appState.leave.leave_requests.filter(req => {
+      return moment().isBetween(req['date from'], req['date to']) && req['status'].toLowerCase() === "approved".toLowerCase()
     })
   });
 
   const statePendingLeaveRequests = useSelector((state) => {
     return state.appState.leave.leave_requests.filter(req => {
       // return formatDate(req['created at']) === formatDate(moment()) && req['status'] === "pending"
-      return req['status'] === "pending"
+      return req['status'].toLowerCase() === "pending".toLowerCase() && req['approver id'] === user.employeeId
     })
   });
 
@@ -207,9 +206,9 @@ const Dashboard = () => {
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
-      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       dispatch(actionCreator(ActionTypes.CLOSE_TICKET, renameKey(res.data.officeRequest_information[0])))
       fetchTickets(dispatch);
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -271,7 +270,7 @@ const Dashboard = () => {
                 </CCardHeader>
                 <CCardBody>
                   <CDataTable
-                    items={_.orderBy(todaysEmployeeOnLeave, ['created at'], ['desc'])}
+                    items={_.orderBy(stateEmployeesOnLeave, ['created at'], ['desc'])}
                     fields={LeaveRequestFieldsForEmployee}
                     hover
                     clickableRows
@@ -362,7 +361,7 @@ const Dashboard = () => {
             </CCardHeader>
             <CCardBody>
               <CDataTable
-                items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(todaysEmployeeOnLeave, ['created at'], ['desc']) : []}
+                items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(stateEmployeesOnLeave, ['created at'], ['desc']) : []}
                 fields={user.accountType === 2 || user.accountType === 1 ? LeaveRequestFields : user.accountType === 3 ? LeaveRequestFieldsForEmployee : []}
                 hover
                 clickableRows

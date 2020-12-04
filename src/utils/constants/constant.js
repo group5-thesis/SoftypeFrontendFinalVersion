@@ -169,8 +169,10 @@ export const ACCOUNT_ROLES = [
     "roles":
       [
         "Associate Technical Lead",
-        "Project Manager",
-        "Team Leader",
+        "Director",
+        "Program Manager",
+        // "Project Manager",
+        // "Team Leader",
         "Technical Lead",
         "VP - Sales & Marketing",
       ],
@@ -186,12 +188,13 @@ export const ACCOUNT_ROLES = [
         "Jr Technical Consultant",
         "IT Admin",
         "Sales Associate",
+        "Account Specialist",
+        "Support Consultant",
         "Sr Functional Consultant",
         "Sr Marketing Consultant",
         "Sr Sales Consultant",
-        "Sr Tecnical Consultant",
-        "Support & Documentation",
-        "Trainee",
+        "Sr Technical Consultant",
+        "Trainee"
       ]
   }
 ]
