@@ -23,7 +23,7 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
 
   const checkIfDeptHead = emp => {
     if (stateDepartments.length < 1) {
-      if (emp.accountType !== 2 ) {
+      if (emp.accountType !== 2) {
         return true
       }
     }
@@ -74,15 +74,19 @@ const AddDepartment = ({ employees, onChange, data, renderFeedback, errors }) =>
             onChange={onChange}
             value={Number(data.department_head)}
             invalid={errors.department_head !== false}
+            disabled={managers.length === 0}
           >
             <option key={"default"} value="" hidden>
-              Select Employee
+              {
+                managers.length === 0 ? `No Employee can be added` :
+                  `Select Employee`
+              }
             </option>
             {
               managers.map((e, index) => {
                 return (
                   <option key={"emp_" + index} value={e.employeeId}>
-                    {e.name}
+                    {e.name} : {e.role}
                   </option>
                 )
               })

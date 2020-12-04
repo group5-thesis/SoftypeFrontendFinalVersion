@@ -25,7 +25,7 @@ const AddDepartmentManager = ({ employees, onChange, data, renderFeedback, error
     if (stateDepartmentManagers.length < 1) {
       for (let i = 0; i < stateDepartments.length; i++) {
         const _emp_h = stateDepartments[i];
-        if (employee.accountType !== 2 || _emp_h.department_head_employeeId === employee.employeeId) {
+        if (employee.accountType !== 3 || _emp_h.department_head_employeeId === employee.employeeId || employee.department_id) {
           return true
         }
       }
@@ -34,7 +34,7 @@ const AddDepartmentManager = ({ employees, onChange, data, renderFeedback, error
       const _emp_m = stateDepartmentManagers[idx];
       for (let i = 0; i < stateDepartments.length; i++) {
         const _emp_h = stateDepartments[i];
-        if (_emp_m.department_head === employee.name || employee.employeeId == _emp_m.employeeId || employee.accountType !== 2 || _emp_h.department_head_employeeId === employee.employeeId) {
+        if (_emp_m.department_head === employee.name || employee.employeeId == _emp_m.employeeId || employee.accountType !== 3 || _emp_h.department_head_employeeId === employee.employeeId || employee.department_id) {
           return true
         }
       }
@@ -54,22 +54,26 @@ const AddDepartmentManager = ({ employees, onChange, data, renderFeedback, error
           <CInput id="name" value={departmentDetails.department_head} disabled />
         </CFormGroup>
         <CFormGroup >
-          <CLabel>Department Manager: </CLabel>
+          <CLabel>Team Leader: </CLabel>
           <CSelect
             name="department_manager"
             id="department_manager"
             onChange={onChange}
             value={Number(data.department_manager)}
             invalid={errors.department_manager !== false}
+            disabled={_employee.length === 0}
           >
             <option key={"default"} value="" hidden>
-              Select Employee
+              {
+                _employee.length === 0 ? `No Employee can be added` :
+                  `Select Employee`
+              }
             </option>
             {
               _employee.map((e, index) => {
                 return (
                   <option key={"_emps" + index} value={e.employeeId}>
-                    {e.firstname} {e.lastname}
+                    {e.firstname} {e.lastname} : {e.role}
                   </option>
                 )
               })

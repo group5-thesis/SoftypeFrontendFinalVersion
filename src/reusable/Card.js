@@ -37,7 +37,9 @@ const Card = forwardRef(
       textRoleStyle,
       deleteCard = false,
       deleteButton,
-      imgSrc
+      imgSrc,
+      onMouseEnterMethod,
+      onMouseLeaveMethod
     },
     ref
   ) => {
@@ -57,7 +59,7 @@ const Card = forwardRef(
         <div className={deleteCard === true ? "flip-card" : ""} style={deleteCard === true ? { cursor: clickable && "pointer" } : {}}>
           <div className={deleteCard === true ? "flip-card-inner" : ""}>
             <div className={deleteCard === true ? "flip-card-front" : ""}>
-              <CCard style={setHeight(height)} color={color} onClick={onClickMethod}>
+              <CCard style={setHeight(height)} color={color} onClick={onClickMethod} onMouseEnter={onMouseEnterMethod} onMouseLeave={onMouseLeaveMethod}>
                 {
                   !showHeader ? "" : (
                     <CCardHeader >
