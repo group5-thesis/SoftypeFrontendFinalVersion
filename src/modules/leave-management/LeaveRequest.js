@@ -38,6 +38,7 @@ const LeaveRequest = ({ match }) => {
       approver: user.employeeId,
       status: getAdminResponse(code),
       statusCode: code,
+      noOfDays:request['no of days'],
       employeeId: request['employee id']
     }
     setResponse(payload);

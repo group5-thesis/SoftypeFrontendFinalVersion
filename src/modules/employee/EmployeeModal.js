@@ -339,7 +339,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                     <CSelect
                       onChange={handleOnChange}
                       name="role"
-                      value={employee.role || ""}
+                      // value={employee.role || ""}
                       invalid={typeof errors.role !== 'boolean'}
                     >
                       {
@@ -473,7 +473,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                   </CFormGroup>
                 </CCol>
               </CFormGroup>
-              <CFormGroup row className="my-0">
+              <CFormGroup row className="my-0 d-none">
                 <CCol xs="4">
                   <CFormGroup>
                     <CLabel>SSS NO.</CLabel>

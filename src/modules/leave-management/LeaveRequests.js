@@ -256,7 +256,7 @@ const LeaveRequests = (props) => {
               clickableRows
               scopedSlots={{
                 "no of days": (item) => (
-                  < td > {getDuration(item["date from"], item["date to"])}</td>
+                  <td> {getDuration(item["date from"], item["date to"])}</td>
                 ),
                 reason: (item) => (
                   <td>

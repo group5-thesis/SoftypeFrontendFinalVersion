@@ -68,7 +68,7 @@ const EmployeeDetails = (props) => {
     ["gender", "birthdate", "mobileno", "email"],
     ["street", "city", "coutry"],
     ["department", "role", "status"],
-    ["SSS", "PHIL HEALTH", "PAG-IBIG"],
+    // ["SSS", "PHIL HEALTH", "PAG-IBIG"],
   ];
 
   const renderContent = (key) => {
