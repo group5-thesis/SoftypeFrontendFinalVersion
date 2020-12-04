@@ -190,6 +190,8 @@ const Department = ({ location }) => {
     let res = await api.post('/update_department', data)
     if (!res.error) {
       console.log(res)
+      // let payload = res.data.department;
+      // dispatch(actionCreator(ActionTypes.FETCH_DEPARTMENTS, payload))
     }
     setDataToEdit(DepartmentModel)
     fetchDepartments(dispatch)
@@ -326,7 +328,7 @@ const Department = ({ location }) => {
                     setImg
                     imgClass={"img_dept_head"}
                     imgSrc={departmentDetails.department_head_profileImg !== null ? `${getBaseUrl()}/file/images/${departmentDetails.department_head_profileImg}` : department_icon_default}
-                    text={departmentDetails.department_head}
+                    text={`H: ${departmentDetails.department_head}`}
                     textClass={"blockquote font-weight-bold text-center"}
                     textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%' }}
                   />

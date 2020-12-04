@@ -208,7 +208,7 @@ const LeaveRequests = (props) => {
                   // (config.IS_DEV || user.roleId > 1 )
                   (user.accountType === 1 && leaveFilter === "my_request") ||
                     (user.accountType === 2 && leaveFilter === "my_request") || (user.accountType === 3) ?
-                    <div className="float-right  mr-3">
+                    <div className="float-right mr-3">
                       <LeaveRequestForm />
                     </div> : ""
                 }
@@ -300,7 +300,7 @@ const LeaveRequests = (props) => {
                           {!isPending && "View Details"}
                         </CLink>
                       </CPopover>
-                      {(user.roleId < 3 && isPending) &&
+                      {(user.roleId < 3 && isPending && leaveFilter === "emp_request") &&
                         [
                           {
                             header: "Approve",

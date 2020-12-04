@@ -6,9 +6,7 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CProgress,
   CRow,
-  CCallout,
   CDataTable
 } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux';
@@ -144,7 +142,7 @@ const Dashboard = () => {
 
   const stateEmployeeDepartment = useSelector((state) => { // not yet
     return state.appState.department_employee.department_employees.filter(emp => {
-      return emp.employeeId === user.employeeId;
+      return emp.employeeId === user.employeeId || emp.department_managerEmployeeId === user.employeeId
     })
   });
 
