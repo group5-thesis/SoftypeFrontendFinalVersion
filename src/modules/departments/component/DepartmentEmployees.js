@@ -262,7 +262,7 @@ const DepartmentEmployees = ({ match }) => {
               {
                 <CCol sm="6" className="d-none d-md-block">
                   <div className="float-right">
-                    <CButton color={removeEmployee ? "danger" : "primary"} onClick={() => {
+                    <CButton color={"danger"} onClick={() => {
                       removeEmployee ? cancelRemoveDepartmentEmployee() : removeDepartmentEmployee()
                     }} disabled={_departmentEmployees.length === 0}>
                       {removeEmployee ? "Cancel" : "Remove Employees"}

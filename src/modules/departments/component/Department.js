@@ -8,13 +8,18 @@ import {
   CCardHeader,
   CCardBody,
   CSpinner,
-  CInvalidFeedback
+  CInvalidFeedback,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem
 } from '@coreui/react';
 import { copyArray, setWidth, dispatchNotification, shallowCopy, RULES, getBaseUrl } from 'utils/helpers';
-import { NoData, Card, Modal } from 'reusable';
+import { NoData, Card, Modal, ConfirmDialog, Loader } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
 import UpdateDepartmentDetails from './UpdateDepartmentDetails'
+import DeleteDepartment from './DeleteDepartment'
 import DepartmentModel from "models/DepartmentModel"
 import DepartmentManager from "models/DepartmentManagerModel"
 import Icon from '@mdi/react';
@@ -22,13 +27,15 @@ import { useHistory } from "react-router-dom";
 import { APP_MESSAGES } from 'utils/constants/constant';
 import {
   mdiPlus,
-  mdiPencilCircleOutline
+  mdiPencilCircleOutline,
+  mdiTrashCanOutline
 } from '@mdi/js';
 import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
 import department_icon_default from "../../../assets/img/default_dept_icon.png"
 import { fetchDepartments, retrieveEmployees, fetchDepartmentEmployees, fetchDepartmentManagers } from 'utils/helpers/fetch';
+import { CIcon } from '@coreui/icons-react';
 
 const Department = ({ location }) => {
 
@@ -47,17 +54,22 @@ const Department = ({ location }) => {
     department_manager: false
   }
 
-  // const defaultEdit = {
-  //   dept_id: null
-  // }
+  const defaultName = {
+    department_name: ''
+  }
 
+  const [dname, setDname] = useState(defaultName)
   const [dataToEdit, setDataToEdit] = useState(DepartmentModel)
   const [isChange, setIsChange] = useState(false)
   const [editDepartment, setEditDepartment] = useState(false)
+  const [removeTeam, setRemoveTeam] = useState(false)
   const [onHover, setOnHover] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState(defaultErrors)
   const [data, setData] = useState(DepartmentManager)
+  const [departmentManagerId, setDepartmentManagerId] = useState()
+  const [deleteDepartment, setDeleteDepartment] = useState(false)
   const query = new URLSearchParams(location.search);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -65,6 +77,7 @@ const Department = ({ location }) => {
   const [searchParams, setSearchParams] = useState(1)
   sessionStorage.setItem('deptId', deptId)
   const modal = useRef();
+  const dialog = useRef();
 
   // use to display only the department name and head
   const _request = useSelector(state => {
@@ -96,6 +109,7 @@ const Department = ({ location }) => {
     setEditDepartment(false)
     setDataToEdit(DepartmentModel)
     setIsChange(false)
+    setDeleteDepartment(false)
   };
 
   const handleSubmit = async () => {
@@ -196,6 +210,7 @@ const Department = ({ location }) => {
     setDataToEdit(DepartmentModel)
     fetchDepartments(dispatch)
     setIsChange(false)
+    setDeleteDepartment(false)
     modal.current.toggle();
     setIsLoading(false)
   }
@@ -203,6 +218,9 @@ const Department = ({ location }) => {
   const handleChange = (e) => { // value is employee ID
     let key = e.target.name
     let value = e.target.value
+    if (key === "department_name_delete") {
+      setDname(value)
+    }
     let copy = shallowCopy(dataToEdit)
     copy[key] = value
     if (value === "") {
@@ -227,49 +245,138 @@ const Department = ({ location }) => {
     setDataToEdit(copy)
   }
 
+  const removeDepartmentTeam = () => {
+    setRemoveTeam(true)
+  }
+
+  const cancelRemoveDepartmentTeam = () => {
+    setRemoveTeam(false)
+  }
+
+  const handleDeleteTeam = async (dept_employeeId) => {
+    let res = await api.post('/delete_department_manager', { id: dept_employeeId })
+    dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
+    if (!res.error) {
+      fetchDepartmentEmployees(dispatch);
+      retrieveEmployees(dispatch)
+      fetchDepartmentManagers(dispatch)
+      fetchDepartments(dispatch)
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+    } else {
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
+    }
+    if (_departmentManagers.length <= 1) {
+      setRemoveTeam(false)
+    }
+  }
+
+  const handleDeleteDepartment = async () => {
+    setLoading(true)
+    let res = await api.post('/delete_department', { id: departmentDetails.department_id })
+    dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
+    if (!res.error) {
+      fetchDepartmentEmployees(dispatch);
+      retrieveEmployees(dispatch)
+      fetchDepartmentManagers(dispatch)
+      fetchDepartments(dispatch)
+      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+    } else {
+      dispatchNotification(dispatch, { type: 'error', message: res.message })
+    }
+    setLoading(false)
+    history.push(`/employee/departments`);
+  }
+
+  const clickProceedToDeleteDept = () => {
+    dialog.current.toggle()
+    modal.current.toggle();
+  }
+
   useEffect(() => {
     history.replace({
       pathname: '/employee/departments/department',
       search: `?id=${deptId.toString()}`
     })
+    return () => {
+
+    }
     // }
   }, [])
 
   return (
-    !request.length ? <NoData /> :
-      <CRow className="justify-content-center">
-        <CCol {...setWidth("12")}>
-          <Modal
-            ref={modal}
-            centered
-            title={editDepartment ? "Update Department Details" : "Add Department Manager"}
-            hidden
-            modalOnClose={toggleModal}
-            closeButton
-            footer={
-              <>
-                <CButton color="primary" disabled={isLoading || editDepartment && !isChange} onClick={editDepartment ? validateUpdate : validate}>
+    loading ? <Loader bg="rgba(255,255,255,0.5)" /> :
+      !request.length ? <NoData /> :
+        <CRow className="justify-content-center">
+          <CCol {...setWidth("12")}>
+            <ConfirmDialog
+              ref={dialog}
+              id="custom_dialog1"
+              {...{
+                show: dialog,
+                onConfirm: () => {
+                  deleteDepartment ? handleDeleteDepartment() : handleDeleteTeam(departmentManagerId)
+                },
+                title: "Are you sure you want to do this?",
+              }}
+            >
+            </ConfirmDialog>
+            <Modal
+              ref={modal}
+              centered
+              title={editDepartment ? "Update Department Details" : deleteDepartment ? "Delete Department" : "Add Department Manager"}
+              hidden
+              modalOnClose={toggleModal}
+              closeButton
+              footer={
+                <>
+                  <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name}
+                    onClick={editDepartment ? validateUpdate : deleteDepartment ? clickProceedToDeleteDept : validate}>
+                    {
+                      isLoading ? <CSpinner color="secondary" size="sm" /> : editDepartment ? 'Update' : deleteDepartment ? "Proceed" : 'Submit'
+                    }
+                  </CButton>
+                  <CButton color="danger" onClick={toggleModal}>Cancel</CButton>
+                </>
+              }
+              hideCancelButton
+            >
+              {
+                editDepartment ? <UpdateDepartmentDetails {...{ dataToEdit, handleChange, renderFeedback, errors, departmentDetails }} /> :
+                  deleteDepartment ? <DeleteDepartment {...{ departmentDetails, handleChange }} /> :
+                    <AddDepartmentManager {...{ employees, onChange, data, renderFeedback, errors, departmentDetails }} />
+              }
+            </Modal>
+            <CCard>
+              <CCardHeader>
+                <CRow>
                   {
-                    isLoading ? <CSpinner color="secondary" size="sm" /> : editDepartment ? 'Update' : 'Submit'
-                  }
-                </CButton>
-                <CButton color="danger" onClick={toggleModal}>Cancel</CButton>
-              </>
-            }
-            hideCancelButton
-          >
-            {
-              editDepartment ? <UpdateDepartmentDetails {...{ dataToEdit, handleChange, renderFeedback, errors, departmentDetails }} /> :
-                <AddDepartmentManager {...{ employees, onChange, data, renderFeedback, errors, departmentDetails }} />
-            }
-          </Modal>
-          <CCard>
-            <CCardHeader>
-              <CRow>
-                {
-                  user.accountType === 1 ?
-                    <CCol className="d-none d-md-block">
-                      <div className="float-right">
+                    user.accountType === 1 ?
+                      <CCol className="d-none d-md-block">
+                        <div className="float-right">
+                          <CDropdown color={"primary"}>
+                            <CDropdownToggle>
+                              <CIcon name="cil-options" />
+                            </CDropdownToggle>
+                            <CDropdownMenu className="pt-0" placement="bottom-end">
+                              <CDropdownItem onClick={() => {
+                                setDeleteDepartment(true)
+                                setRemoveTeam(false)
+                                modal.current.toggle()
+                              }}>Delete This Department
+                            </CDropdownItem>
+                              <CDropdownItem onClick={() => {
+                                editDepartmentDetails()
+                                setRemoveTeam(false)
+                              }}>Update Department
+                            </CDropdownItem>
+                              <CDropdownItem disabled={_departmentManagers.length === 0} onClick={() => {
+                                removeTeam ? cancelRemoveDepartmentTeam() : removeDepartmentTeam()
+                              }}>{removeTeam ? "Cancel Deletetion" : "Delete Department Team"}
+                              </CDropdownItem>
+                            </CDropdownMenu>
+                          </CDropdown>
+                        </div>
+                        {/* <div className="float-right">
                         <CButton color={"primary"} onClick={() => {
                           editDepartmentDetails()
                           // viewDepartmentDetails(departmentDetails)
@@ -277,119 +384,120 @@ const Department = ({ location }) => {
                           {"Update Department"}
                         </CButton>
                       </div>
-                    </CCol>
-                    : ""
-                }
-              </CRow>
-            </CCardHeader>
-            <CCardBody>
-              <CRow>
-                <CCol className="px-1 py-1">
-                  <Card
-                    // clickable={onHover}
-                    centeredText
-                    height={200}
-                    animation
-                    // onMouseEnterMethod={() => {
-                    //   if (editDepartment) {
-                    //     console.log("On hover")
-                    //     setOnHover(true)
-                    //   }
-                    // }}
-                    // onMouseLeaveMethod={() => {
-                    //   if (editDepartment) {
-                    //     setOnHover(false)
-                    //     console.log("On Leave")
-                    //   }
-                    // }}
-                    // onClickMethod={() => {
-                    //   if (onHover) {
-                    //     toggleModal()
-                    //     // modal.current.toggle();
-                    //     console.log("On Click")
-                    //   }
-                    // }}
-                    text={onHover ? <Icon path={mdiPencilCircleOutline}
-                      size={4}
-                      horizontal
-                      vertical
-                      rotate={180}
-                      color={colors.$grey}
-                    /> : departmentDetails.department_name}
-                    textClass={"text-dark font-weight-bold h1"}
-                    isIcon={editDepartment}
-                  />
-                </CCol>
-                <CCol sm="6" lg="3" className="px-1 py-1">
-                  <Card
-                    clickable
-                    height={200}
-                    animation
-                    setImg
-                    imgClass={"img_dept_head"}
-                    imgSrc={departmentDetails.department_head_profileImg !== null ? `${getBaseUrl()}/file/images/${departmentDetails.department_head_profileImg}` : department_icon_default}
-                    text={`H: ${departmentDetails.department_head}`}
-                    textClass={"blockquote font-weight-bold text-center"}
-                    textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%' }}
-                  />
-                </CCol>
-              </CRow>
-              <CRow>
-                {
-                  _departmentManagers.map((key, index) => {
-                    return (
-                      <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
+                      <div className="float-right mr-2">
+                        <CButton
+                          color={"danger"}
+                          disabled={_departmentManagers.length === 0}
+                          onClick={() => {
+                            removeTeam ? cancelRemoveDepartmentTeam() : removeDepartmentTeam()
+                          }}>
+                          {removeTeam ? "Cancel" : "Remove Team"}
+                        </CButton>
+                      </div> */}
+                      </CCol>
+                      : ""
+                  }
+                </CRow>
+              </CCardHeader>
+              <CCardBody>
+                <CRow>
+                  <CCol className="px-1 py-1">
+                    <Card
+                      centeredText
+                      height={200}
+                      animation
+                      text={onHover ? <Icon path={mdiPencilCircleOutline}
+                        size={4}
+                        horizontal
+                        vertical
+                        rotate={180}
+                        color={colors.$grey}
+                      /> : departmentDetails.department_name}
+                      textClass={"text-dark font-weight-bold h1"}
+                      isIcon={editDepartment}
+                    />
+                  </CCol>
+                  <CCol sm="6" lg="3" className="px-1 py-1">
+                    <Card
+                      clickable
+                      height={200}
+                      animation
+                      setImg
+                      imgClass={"img_dept_head"}
+                      imgSrc={departmentDetails.department_head_profileImg !== null ? `${getBaseUrl()}/file/images/${departmentDetails.department_head_profileImg}` : department_icon_default}
+                      text={`H: ${departmentDetails.department_head}`}
+                      textClass={"blockquote font-weight-bold text-center"}
+                      textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%' }}
+                    />
+                  </CCol>
+                </CRow>
+                <CRow>
+                  {
+                    _departmentManagers.map((key, index) => {
+                      return (
+                        <CCol sm="6" lg="3" className="px-1 py-1" key={index}>
+                          <Card
+                            clickable
+                            height={200}
+                            animation
+                            setImg
+                            text={
+                              `${key.manager_firstname}`
+                            }
+                            // `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
+                            imgSrc={key.profile_img === null ? department_icon_default : `${getBaseUrl()}/file/images/${key.profile_img}`}
+                            dept_role={key.role}
+                            textClass={"blockquote font-weight-bold  text-center"}
+                            textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
+                            imgClass={"img_dept"}
+                            textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%' }}
+                            onClickMethod={() => {
+                              removeTeam ? dialog.current.toggle() : viewEmployees(key)
+                              removeTeam && setDepartmentManagerId(key.managerId)
+                            }}
+                            deleteCard={removeTeam}
+                            deleteButton={
+                              <Icon path={mdiTrashCanOutline}
+                                size={4}
+                                horizontal
+                                vertical
+                                rotate={180}
+                                color={colors.$white_bis}
+                              />
+                            }
+                          />
+                        </CCol>
+                      )
+                    })
+                  }
+                  {
+                    user.accountType === 1 && !editDepartment && !removeTeam ?
+                      <CCol sm="6" lg="3">
                         <Card
-                          clickable
-                          height={200}
                           animation
-                          setImg
                           text={
-                            `${key.manager_firstname}`
+                            <Icon path={mdiPlus}
+                              size={4}
+                              horizontal
+                              vertical
+                              rotate={180}
+                              color={colors.$grey}
+                            />
                           }
-                          // `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
-                          imgSrc={key.profile_img === null ? department_icon_default : `${getBaseUrl()}/file/images/${key.profile_img}`}
-                          dept_role={key.role}
-                          textClass={"blockquote font-weight-bold  text-center"}
-                          textRoleStyle={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)' }}
-                          imgClass={"img_dept"}
-                          textStyle={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: '100%' }}
-                          onClickMethod={() => {
-                            viewEmployees(key)
-                          }}
+                          isIcon
+                          clickable
+                          centeredText
+                          height={200}
+                          onClickMethod={toggleModal}
                         />
                       </CCol>
-                    )
-                  })
-                }
-                {
-                  user.accountType === 1 && !editDepartment ?
-                    <CCol sm="6" lg="3">
-                      <Card
-                        animation
-                        text={
-                          <Icon path={mdiPlus}
-                            size={4}
-                            horizontal
-                            vertical
-                            rotate={180}
-                            color={colors.$grey}
-                          />
-                        }
-                        isIcon
-                        clickable
-                        centeredText
-                        height={200}
-                        onClickMethod={toggleModal}
-                      />
-                    </CCol>
-                    : ""
-                }
-              </CRow>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow >
+                      : ""
+                  }
+                </CRow>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow >
   )
 }
 
