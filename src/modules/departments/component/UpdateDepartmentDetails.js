@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react';
+import { useSelector } from 'react-redux'
 import {
   CCol,
   CRow,
@@ -13,11 +13,9 @@ const UpdateDepartmentDetails = ({ dataToEdit, handleChange, renderFeedback, err
 
   const employees = useSelector((state) => {
     return state.appState.employee.employees.filter(emp => {
-      return emp.department_id === departmentDetails.department_id || emp.department_idM === departmentDetails.department_id || emp.department_idH === departmentDetails.department_id || emp.accountType === 2
+      return emp.department_id === departmentDetails.department_id || emp.deparment_IdM === departmentDetails.department_id || emp.deparment_IdH === departmentDetails.department_id;
     })
   });
-
-  console.log(employees)
 
   return (
     <CRow>
