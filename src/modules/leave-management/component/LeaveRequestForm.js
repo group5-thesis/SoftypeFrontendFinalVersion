@@ -49,11 +49,21 @@ const LeaveFormRequest = ({ request }) => {
     })
   })
 
-  let { department_id, department_head, department_headId } = departmentDetail
+  let { department_id, department_head, department_headId, isHead, isManager, deparment_IdM } = departmentDetail
+  const dept_head = useSelector(state => {
+    return state.appState.department.departments.filter(dep => {
+      return dep['department_id'] === department_id ? department_id : deparment_IdM
+    })
+  })
+
+  // console.log(dept_head[0].department_head_employeeId)
+
   LeaveRequestModel.name = `${toCapitalize(user.firstname)} ${toCapitalize(user.lastname)}`
   LeaveRequestModel.employeeID = user.employeeId;
+  // LeaveRequestModel.approverId = user.accountType === 3 ? department_headId : user.accountType === 1 ? user.employeeId : employeesHr[0].employeeId;
   LeaveRequestModel.approverId = user.accountType === 3 ? department_headId : user.accountType === 1 ? user.employeeId : employeesHr[0].employeeId;
-  LeaveRequestModel.approver = department_head && department_head;
+  LeaveRequestModel.approver = user.accountType === 3 ? department_head : (user.accountType === 3 && isManager !== null) ? dept_head[0].department_head : user.accountType === 2 ? `${employeesHr[0].firstname} ${employeesHr[0].lastname}` : `${user.firstname} ${user.lastname}`;
+  // LeaveRequestModel.approver = department_head && department_head;
   const modalRef = useRef()
   const [data, setData] = useState(request ? request : LeaveRequestModel)
   const [noOfDays, setNoOfDays] = useState(checkDateRange(data.date_from, data.date_to))
@@ -174,6 +184,10 @@ const LeaveFormRequest = ({ request }) => {
 
   const handleSubmit = async () => {
     setIsLoading(true)
+    if (user.accountType === 3 && isManager) {
+      data.approverId = dept_head[0].department_head_employeeId
+      data.approver = dept_head[0].department_head
+    }
     let res = await api.post("/create_request_leave", data)
     if (!res.error) {
       const { employeeId, roleId } = user;
@@ -195,7 +209,7 @@ const LeaveFormRequest = ({ request }) => {
 
   const actions = () => (
     <>
-      <CButton color="primary" disabled={isLoading || isLimitError || (department_id === null && user.accountType === 3)} onClick={validateInfo}>
+      <CButton color="primary" disabled={isLoading || isLimitError || (department_id === null && isManager === null && user.accountType === 3) || (isHead === null && user.accountType === 2)} onClick={validateInfo}>
         {
           isLoading ? <CSpinner color="secondary" size="sm" /> : 'Submit'
         }
@@ -226,8 +240,8 @@ const LeaveFormRequest = ({ request }) => {
           }
         </>
       </CAlert>}
-      {<CAlert color={(!department_id && user.accountType === 3) ? "danger" : "info"}>
-        {(department_id === null && user.accountType === 3) ? "Leave requests is available for department employees only." : `You still have ${user.remaining_leave} remaining leave.`}
+      {<CAlert color={(!department_id && isManager === null && user.accountType === 3) || (isHead === null && user.accountType === 2) ? "danger" : "info"}>
+        {(department_id === null && isManager === null && user.accountType === 3) || (isHead === null && user.accountType === 2) ? "Leave requests is available for department employees only." : `You still have ${user.remaining_leave} remaining leave.`}
       </CAlert>}
       <CFormGroup >
         <CLabel>Name : </CLabel>
@@ -239,7 +253,7 @@ const LeaveFormRequest = ({ request }) => {
             <CLabel htmlFor="date-input">Date From : </CLabel>
             <CInput
               type="date"
-              disabled={(department_id === null && user.accountType === 3)}
+              disabled={(department_id === null && isManager === null && user.accountType === 3) || (isHead === null && user.accountType === 2)}
               id="date-from"
               name="date_from"
               value={data.date_from}
@@ -254,7 +268,7 @@ const LeaveFormRequest = ({ request }) => {
             <CInput
               type="date"
               id="date-to"
-              disabled={(department_id === null && user.accountType === 3)}
+              disabled={(department_id === null && isManager === null && user.accountType === 3) || (isHead === null && user.accountType === 2)}
               onChange={handleOnChange}
               name="date_to"
               value={data.date_to}
@@ -275,7 +289,7 @@ const LeaveFormRequest = ({ request }) => {
             <CLabel htmlFor="Category">Category : </CLabel>
             <CSelect
               custom name="category"
-              disabled={(department_id === null && user.accountType === 3)}
+              disabled={(department_id === null && isManager === null && user.accountType === 3) || (isHead === null && user.accountType === 2)}
               invalid={errors.category}
               value={data.category || ""}
               onChange={handleOnChange}
@@ -293,7 +307,7 @@ const LeaveFormRequest = ({ request }) => {
         <CTextarea
           onChange={handleOnChange}
           name="reason"
-          disabled={(department_id === null && user.accountType === 3)}
+          disabled={(department_id === null && isManager === null && user.accountType === 3) || (isHead === null && user.accountType === 2)}
           placeholder={placeholder && placeholder}
           value={data.reason}
           invalid={errors.reason}
