@@ -1,5 +1,6 @@
 import axios from "axios";
 import { config as cnf } from "utils/config";
+import https from 'https';
 
 const callAPI = async (method, url, data = null, isFormData, onUploadProgress = null) => {
   let headers = {
@@ -26,7 +27,10 @@ const callAPI = async (method, url, data = null, isFormData, onUploadProgress = 
     method,
     url,
     headers,
-    onUploadProgress
+    onUploadProgress,
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: false
+    })
   };
   if (data) {
     config.data = data;
