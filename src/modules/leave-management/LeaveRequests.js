@@ -60,9 +60,7 @@ const LeaveRequests = (props) => {
     return state.appState.leave.leave_requests
   });
 
-
   const user = useSelector(state => state.appState.auth.user);
-
   const header = [
     {
       key: "name",
@@ -151,6 +149,8 @@ const LeaveRequests = (props) => {
     }
   }
 
+
+
   useEffect(() => {
     if (requestsData.length === 0) {
       setCollapse(false)
@@ -182,7 +182,7 @@ const LeaveRequests = (props) => {
               <CCol sm="5">
                 {
                   user.accountType === 3 ?
-                    <h4 className="card-title mb-0">My Leave Requests</h4>
+                    <h4 className="card-title mb-0">Employee Leave Requests</h4>
                     :
                     <CSelect
                       custom
@@ -203,12 +203,12 @@ const LeaveRequests = (props) => {
                 </CSelect>
                 }
               </CCol>
-              <CCol sm="7" className="d-sm-block">
+              <CCol sm="7" className=" d-sm-block">
                 {
                   // (config.IS_DEV || user.roleId > 1 )
                   (user.accountType === 1 && leaveFilter === "my_request") ||
                     (user.accountType === 2 && leaveFilter === "my_request") || (user.accountType === 3) ?
-                    <div className="float-right mr-3">
+                    <div className="float-right  mr-3">
                       <LeaveRequestForm />
                     </div> : ""
                 }
@@ -244,7 +244,8 @@ const LeaveRequests = (props) => {
             </CRow>
             <CDataTable
               className="table-responsive mt-2"
-              items={user.accountType !== 3 ? _.filter(requestsData, [`${leaveFilter === "my_request" ? "employee id" : "approver id"}`, user.employeeId]) : requestsData}
+              items={leaveFilter === "emp_request" ? requestsData : leaveFilter === "my_request" ? _.filter(requestsData, ['employee id', user.employeeId]) : []}
+              itemsPerPage={10}
               fields={header}
               pagination
               sorter
@@ -256,7 +257,7 @@ const LeaveRequests = (props) => {
               clickableRows
               scopedSlots={{
                 "no of days": (item) => (
-                  <td> {getDuration(item["date from"], item["date to"])}</td>
+                  < td > {getDuration(item["date from"], item["date to"])}</td>
                 ),
                 reason: (item) => (
                   <td>
@@ -300,7 +301,7 @@ const LeaveRequests = (props) => {
                           {!isPending && "View Details"}
                         </CLink>
                       </CPopover>
-                      {(user.roleId < 3 && isPending && leaveFilter === "emp_request") &&
+                      {(user.roleId < 3 && isPending) &&
                         [
                           {
                             header: "Approve",

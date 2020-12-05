@@ -164,7 +164,7 @@ const Departments = (props) => {
                       centeredText
                       height={200}
                       text={dept.department_name}
-                      textClass={"blockqoute text-white font-weight-bold h2 text-center"}
+                      textClass={"text-white font-weight-bold h2"}
                       onClickMethod={() => {
                         viewDepartmentInfo(dept.department_id)
                       }}

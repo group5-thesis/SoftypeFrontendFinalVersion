@@ -38,8 +38,7 @@ const LeaveRequest = ({ match }) => {
       approver: user.employeeId,
       status: getAdminResponse(code),
       statusCode: code,
-      noOfDays:request['no of days'],
-      employeeId: request['employee id']
+      employeeId:request['employee id']
     }
     setResponse(payload);
     dialog.current.toggle();
@@ -56,12 +55,6 @@ const LeaveRequest = ({ match }) => {
       clickable: false
     }} />
   }
-  const onConfirm = () => {
-    if (!isCancel) {
-      return respondToRequest(dispatch, response)
-    };
-    return cancelRequest(dispatch, request.id);
-  }
 
   return (
     <CRow>
@@ -69,7 +62,10 @@ const LeaveRequest = ({ match }) => {
         ref={dialog}
         {...{
           show: dialog,
-          onConfirm,
+          onConfirm: () => {
+            if (!isCancel) return respondToRequest(dispatch, response);
+            return cancelRequest(dispatch, request.id);
+          },
           title: !isCancel ? `${response && response.status}` : 'Cancel Request?',
         }}
       ></ConfirmDialog>

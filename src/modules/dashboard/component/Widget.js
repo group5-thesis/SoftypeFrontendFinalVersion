@@ -3,6 +3,10 @@ import {
   CWidgetDropdown,
   CRow,
   CCol,
+  CDropdown,
+  CDropdownMenu,
+  CDropdownItem,
+  CDropdownToggle,
   CButton,
   CTooltip
 } from '@coreui/react'

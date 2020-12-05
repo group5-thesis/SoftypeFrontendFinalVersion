@@ -3,7 +3,7 @@ import { ActionTypes } from "utils/actions";
 const initial_state = {
   auth_checked: false,
   already_logged: false,
-  user: null,
+  user: null
 };
 
 export default function AppReducer(state = initial_state, action) {

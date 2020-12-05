@@ -15,7 +15,7 @@ import { NoData, ConfirmDialog } from 'reusable'
 import Icon from '@mdi/react';
 import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline, mdiInformation } from '@mdi/js';
 import colors from 'assets/theme/colors';
-import { fetchEmployeeAccounts, retrieveEmployees } from 'utils/helpers/fetch';
+import { fetchEmployeeAccounts } from 'utils/helpers/fetch';
 import api from 'utils/api';
 import { dispatchNotification } from 'utils/helpers'
 
@@ -31,10 +31,9 @@ const Accounts = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false)
   const stateAccounts = useSelector((state) => {
-    return state.appState.accounts.accounts
-    // .filter(emp => {
-    //   return emp.employeeId !== state.appState.auth.user.employeeId
-    // })
+    return state.appState.accounts.accounts.filter(emp => {
+      return emp.employeeId !== state.appState.auth.user.employeeId
+    })
   });
 
   const fields = [
@@ -46,12 +45,14 @@ const Accounts = () => {
   ]
 
   const clickedDisableBtn = (user) => { // Disable Account Button
+    debugger
     setAccountDisable(user)
     dialog.current.toggle()
     setDisableAccount(true)
   }
 
   const clickedEnableBtn = (user) => { // Enable Account Button
+    debugger
     setAccountEnable(user)
     dialog.current.toggle()
     setEnableAccount(true)
@@ -66,12 +67,11 @@ const Accounts = () => {
   const handleDisableAccount = async () => {
     setIsLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
-    let res = await api.post('/disable_employee_account', { userId: accountDisable.userId, employeeId: accountDisable.employeeId })
+    let res = await api.post('/disable_employee_account', { userId: accountDisable.userId })
     setIsLoading(false)
     if (!res.error) {
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       fetchEmployeeAccounts(dispatch)
-      retrieveEmployees(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -86,7 +86,6 @@ const Accounts = () => {
     if (!res.error) {
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       fetchEmployeeAccounts(dispatch)
-      retrieveEmployees(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -96,12 +95,11 @@ const Accounts = () => {
   const handleEnableAccount = async () => {
     setIsLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
-    let res = await api.post('/enable_employee_account', { userId: accountEnable.userId, employeeId: accountEnable.employeeId})
+    let res = await api.post('/enable_employee_account', { userId: accountEnable.userId })
     setIsLoading(false)
     if (!res.error) {
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       fetchEmployeeAccounts(dispatch)
-      retrieveEmployees(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -150,6 +148,15 @@ const Accounts = () => {
             <CRow className="mb-3">
               <CCol sm="5">
                 <h4 className="card-title mb-0">Accounts
+                {/* <CPopover header='Legend' content={
+                    <CCard width={500}>
+                      <CCardBody>
+                        {_renderIcon()}
+                      </CCardBody>
+                    </CCard>
+                  }>
+                    <Icon path={mdiInformation} size={0.8} />
+                  </CPopover> */}
                 </h4>
               </CCol>
               <CCol sm="7">

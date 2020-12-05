@@ -16,7 +16,7 @@ const LeaveCalendar = () => {
     let payload = {
       month,
       year,
-      status: 'approved',
+      status: 'All',
       category: 'All',
       roleId: 1,
     }

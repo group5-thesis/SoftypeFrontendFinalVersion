@@ -129,15 +129,6 @@ const fetchEmployeeAccounts = async dispatch => {
   return response;
 }
 
-const fetchChartData = async dispatch => {
-  let response = await api.get('/fetchChartData')
-  if (!response.error) {
-    let payload = response.data.chartData;
-    dispatch(actionCreator(ActionTypes.FETCH_CHART_DATA, payload))
-  }
-  return response;
-}
-
 export {
   retrieveLeaveRequests,
   retrieveEmployees,
@@ -151,6 +142,5 @@ export {
   fetchDepartmentEmployees,
   fetchPerformanceReviews,
   fetchEmployeeAccounts,
-  filterTickets,
-  fetchChartData
+  filterTickets
 }

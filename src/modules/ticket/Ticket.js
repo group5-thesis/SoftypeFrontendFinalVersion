@@ -12,8 +12,6 @@ import TicketDetails from "./component/TicketDetailsV1";
 import api from 'utils/api'
 import { config } from 'utils/config'
 import _ from 'lodash';
-import { fetchTickets } from 'utils/helpers/fetch';
-
 
 const Ticket = (props) => {
   const dispatch = useDispatch();
@@ -108,7 +106,6 @@ const Ticket = (props) => {
     let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.CLOSE_TICKET, renameKey(res.data.officeRequest_information[0])))
-      fetchTickets(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -121,7 +118,6 @@ const Ticket = (props) => {
     let res = await api.post("/delete_officeRequest", { id: tickets.id })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.DELETE_TICKET), tickets.id)
-      fetchTickets(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -196,7 +192,7 @@ const Ticket = (props) => {
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 {
-                  // user.roleId > 1 &&
+                  user.roleId > 1 &&
                   <div className="float-right  mr-3">
                     <TicketForm />
                   </div>
@@ -230,7 +226,7 @@ const Ticket = (props) => {
               </CCol>
             </CRow>
             <CDataTable
-              items={user.accountType === 1 ? filteredTicketRequest : user.accountType === 3 || user.accountType === 2 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
+              items={user.accountType === 1 ? filteredTicketRequest : user.accountType === 2 || user.accountType === 3 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
               fields={fields}
               itemsPerPage={5}
               hover

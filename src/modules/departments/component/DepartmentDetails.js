@@ -75,7 +75,7 @@ const DepartmentDetails = ({ location }) => {
           <DepartmentDetailsModal {...{ deptEmp, firstElementDept }} />
         </Modal>
 
-        <CCol sm="2" lg="3" >
+        <CCol sm="2" lg="2" >
 
         </CCol>
         <CCol>
@@ -95,7 +95,6 @@ const DepartmentDetails = ({ location }) => {
                       <div className="float-right">
                         <CButton color="primary" onClick={() => {
                           toggleModal()
-                          console.log("Test update")
                         }}>
                           {"Update Department"}
                         </CButton>
@@ -105,7 +104,7 @@ const DepartmentDetails = ({ location }) => {
               </CRow>
             </CCardHeader>
             <CCardBody>
-              <div className="px-1 py-1 text-justify">
+              <div className="px-1 py-1">
                 <h5>
                   {`Department Head: ${firstElementDept.department_head}`}
                 </h5>

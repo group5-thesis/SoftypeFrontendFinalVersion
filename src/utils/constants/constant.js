@@ -169,10 +169,8 @@ export const ACCOUNT_ROLES = [
     "roles":
       [
         "Associate Technical Lead",
-        "Director",
-        "Program Manager",
-        // "Project Manager",
-        // "Team Leader",
+        "Project Manager",
+        "Team Leader",
         "Technical Lead",
         "VP - Sales & Marketing",
       ],
@@ -188,29 +186,25 @@ export const ACCOUNT_ROLES = [
         "Jr Technical Consultant",
         "IT Admin",
         "Sales Associate",
-        "Account Specialist",
-        "Support Consultant",
         "Sr Functional Consultant",
         "Sr Marketing Consultant",
         "Sr Sales Consultant",
-        "Sr Technical Consultant",
-        "Trainee"
+        "Sr Tecnical Consultant",
+        "Support & Documentation",
+        "Trainee",
       ]
   }
 ]
 
 export const NOTIFICATION_TYPES = {
-  // Leave request -for testing
   NewLeaveRequestNotification: 'NewLeaveRequestNotification',
-  UpdateLeaveRequestNotification: 'UpdateLeaveRequestNotification',
-  CancelledLeaveRequestNotification: 'CancelledLeaveRequestNotification',
-  // Office Request - for testing
+  ApprovedLeaveRequestNotification: 'ApprovedLeaveRequestNotification',
+  RejectedLeaveRequestNotification: 'RejectedLeaveRequestNotification',
   NewOfficeRequestNotification: 'NewOfficeRequestNotification',
   CLosedOfficeRequestNotification: 'CLosedOfficeRequestNotification',
-  //ect
+  ForwardedRequestNotification: 'ForwardedRequestNotification',
   ResetPasswordNotification: 'ResetPasswordNotification',
   AccountClosedNotification: 'AccountClosedNotification',
-  EmployeeUpdateNotification: 'EmployeeUpdateNotification'
 }
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];

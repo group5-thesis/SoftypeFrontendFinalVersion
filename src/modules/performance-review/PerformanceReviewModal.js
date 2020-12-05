@@ -42,7 +42,6 @@ const PerformanceReviewModal = ({ user }) => {
 
   const toggleModal = () => {
     modal.current.toggle();
-    
     setRating([0, 0, 0, 0, 0])
     setReview(PerformanceReviewModel)
     setActiveIndex(0)
