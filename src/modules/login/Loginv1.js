@@ -99,15 +99,15 @@ class Login extends Component {
 
   componentDidMount() {
     sessionStorage.clear();
-    if (!this.props.already_logged) {
-      checkCamera()
-        .then(() => {
-          this.setState({ camera: true });
-        })
-        .catch((err) => {
-          this.setState({ cameraError: err.cameraError, camera: false });
-        });
-    }
+    // if (!this.props.already_logged) {
+    //   checkCamera()
+    //     .then(() => {
+    //       this.setState({ camera: true });
+    //     })
+    //     .catch((err) => {
+    //       this.setState({ cameraError: err.cameraError, camera: false });
+    //     });
+    // }
   }
   render() {
     let { showError, error } = this.state
