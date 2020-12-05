@@ -13,48 +13,42 @@ export default function (ComposedComponent) {
             notify: false
         }
 
-        componentDidMount() {
-            console.table(this.props)
-            let { PUSHER } = config;
-            const pusher = new Pusher(PUSHER.key, PUSHER.options);
-            const channel = pusher.subscribe(PUSHER.channel);
-            channel.bind('message', notif => {
-                this.notificationReceived(notif.message)
-            });
-        }
+       
 
-        notificationReceived = (notif) => {
-            let { type, data } = notif;
-            switch (type) {
-                case NOTIFICATION_TYPES.AccountClosedNotification:
+        // notificationReceived = (notif) => {
+        //     let { type, data } = notif;
+        //     switch (type) {
+        //         case NOTIFICATION_TYPES.AccountClosedNotification:
+        //             if (condition) {
+                        
+        //             }
+        //             break;
+        //         case NOTIFICATION_TYPES.ApprovedLeaveRequestNotification:
 
-                    break;
-                case NOTIFICATION_TYPES.ApprovedLeaveRequestNotification:
+        //             break;
+        //         case NOTIFICATION_TYPES.CLosedOfficeRequestNotification:
 
-                    break;
-                case NOTIFICATION_TYPES.CLosedOfficeRequestNotification:
+        //             break;
+        //         case NOTIFICATION_TYPES.ForwardedRequestNotification:
 
-                    break;
-                case NOTIFICATION_TYPES.ForwardedRequestNotification:
+        //             break;
 
-                    break;
+        //         case NOTIFICATION_TYPES.NewLeaveRequestNotification:
 
-                case NOTIFICATION_TYPES.NewLeaveRequestNotification:
+        //             break;
 
-                    break;
+        //         case NOTIFICATION_TYPES.RejectedLeaveRequestNotification:
 
-                case NOTIFICATION_TYPES.RejectedLeaveRequestNotification:
+        //             break;
 
-                    break;
+        //         case NOTIFICATION_TYPES.ResetPasswordNotification:
 
-                case NOTIFICATION_TYPES.ResetPasswordNotification:
+        //             break;
 
-                    break;
-
-                default:
-                    break;
-            }
-        }
+        //         default:
+        //             break;
+        //     }
+        // }
 
         render() {
             let { notification, notify } = this.props.appState.app

@@ -200,14 +200,17 @@ export const ACCOUNT_ROLES = [
 ]
 
 export const NOTIFICATION_TYPES = {
+  // Leave request -for testing
   NewLeaveRequestNotification: 'NewLeaveRequestNotification',
-  ApprovedLeaveRequestNotification: 'ApprovedLeaveRequestNotification',
-  RejectedLeaveRequestNotification: 'RejectedLeaveRequestNotification',
+  UpdateLeaveRequestNotification: 'UpdateLeaveRequestNotification',
+  CancelledLeaveRequestNotification: 'CancelledLeaveRequestNotification',
+  // Office Request - for testing
   NewOfficeRequestNotification: 'NewOfficeRequestNotification',
   CLosedOfficeRequestNotification: 'CLosedOfficeRequestNotification',
-  ForwardedRequestNotification: 'ForwardedRequestNotification',
+  //ect
   ResetPasswordNotification: 'ResetPasswordNotification',
   AccountClosedNotification: 'AccountClosedNotification',
+  EmployeeUpdateNotification: 'EmployeeUpdateNotification'
 }
 
 export const CURRENT_MONTH = MONTHS[new Date().getMonth()];

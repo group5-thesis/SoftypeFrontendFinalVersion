@@ -3,12 +3,17 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { CContainer } from "@coreui/react";
 import { Loader } from "reusable";
 import { useSelector, useDispatch } from "react-redux";
+import { config } from 'utils/config';
+import Pusher from 'pusher-js';
+import { NOTIFICATION_TYPES } from 'utils/constants/constant'
 // routes config
 import routes from "router";
 import { filterModule, plotArray } from "utils/helpers";
 import Page404 from "modules/placeholder/page404/Page404";
 import { LEAVE_REQUEST_FILTER } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from "utils/actions";
+
+
 import {
   retrieveLeaveRequests,
   retrieveEmployees,
@@ -64,7 +69,48 @@ const AppContent = (_props) => {
     }
   };
 
+  const notificationReceived = async (notif) => {
+    let { type, data } = notif;
+    //for Leave Request
+    if (type === NOTIFICATION_TYPES.NewLeaveRequestNotification || type === NOTIFICATION_TYPES.UpdateLeaveRequestNotification) {
+      if ((user.accountType !== 3 && data.approver === data.employeeId) || data.employeeId === employeeId) {
+        await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
+        return
+      }
+    }
+
+    if (type === NOTIFICATION_TYPES.NewOfficeRequestNotification || type === NOTIFICATION_TYPES.CLosedOfficeRequestNotification) {
+      if (user.accountType === 1 || user.employeeId === data.employeeId) {
+        await fetchTickets(dispatch);
+        return
+      }
+    }
+
+    switch (type) {
+      case NOTIFICATION_TYPES.AccountClosedNotification:
+        retrieve(payload);
+        break;
+
+      case NOTIFICATION_TYPES.ResetPasswordNotification:
+        if (user.userId === data.userId) {
+          dispatch(actionCreator(ActionTypes.LOGOUT));
+        }
+        break;
+      case NOTIFICATION_TYPES.EmployeeUpdateNotification:
+        retrieve(payload);
+        break;
+      default:
+        break;
+    }
+  }
+
   useEffect(() => {
+    let { PUSHER } = config;
+    const pusher = new Pusher(PUSHER.key, PUSHER.options);
+    const channel = pusher.subscribe(PUSHER.channel);
+    channel.bind('message', notif => {
+      notificationReceived(notif.message)
+    });
     // console.log(isAppLoading)
     retrieve(payload);
   }, []);
