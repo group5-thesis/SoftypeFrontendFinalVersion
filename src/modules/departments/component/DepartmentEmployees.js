@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setWidth, shallowCopy, RULES, copyArray, getBaseUrl, dispatchNotification } from 'utils/helpers';
-import { fetchDepartmentEmployees, retrieveEmployees, fetchDepartmentManagers } from 'utils/helpers/fetch';
+import { fetchDepartmentEmployees, retrieveEmployees, fetchDepartmentManagers, fetchDepartments } from 'utils/helpers/fetch';
 import {
   CRow,
   CCol,
@@ -10,7 +10,6 @@ import {
   CCardHeader,
   CCardBody,
   CSpinner,
-  CImg,
   CInvalidFeedback
 } from '@coreui/react';
 import { NoData, Card, Modal, ConfirmDialog } from 'reusable';
@@ -187,7 +186,6 @@ const DepartmentEmployees = ({ match }) => {
     }
     setIsChange(true)
     setManagerToEdit(copy)
-    // console.log(managerToEdit)
   }
 
   const validateUpdate = async () => {
@@ -197,14 +195,14 @@ const DepartmentEmployees = ({ match }) => {
       departmentId: _departmentManager[0].department_id,
       employeeId: managerToEdit.department_manager
     }
-    console.log(data)
     let res = await api.post('/update_department_manager', data)
     if (!res.error) {
-      console.log(res)
+      fetchDepartments(dispatch)
+      retrieveEmployees(dispatch)
+      fetchDepartmentManagers(dispatch)
+      fetchDepartmentEmployees(dispatch)
     }
     setManagerToEdit(DepartmentManager)
-    fetchDepartmentManagers(dispatch)
-    fetchDepartmentEmployees(dispatch)
     setIsChange(false)
     modal.current.toggle();
     setIsLoading(false)
