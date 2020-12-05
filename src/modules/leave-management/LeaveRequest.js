@@ -2,9 +2,10 @@ import React, { lazy, useRef, useState } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButtonGroup, CButton } from '@coreui/react'
 import CIcon from "@coreui/icons-react";
 import { useSelector, useDispatch } from 'react-redux';
-import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration, dispatchNotification, respondToRequest, cancelRequest } from 'utils/helpers'
+import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration, dispatchNotification, respondToRequest, cancelRequest , 
+  formatDate } from 'utils/helpers'
 import { NoData, ConfirmDialog } from 'reusable';
-
+import moment from 'moment';
 const Calendar = lazy(() => import('modules/calendar/Calendar'));
 const LeaveRequest = ({ match }) => {
   const dispatch = useDispatch();
@@ -33,12 +34,13 @@ const LeaveRequest = ({ match }) => {
 
   const handleClick = (code) => {
     setIsCancel(false);
+    let isBefore = moment(request["date from"]).isBefore(moment());
     let payload = {
       id: request.id,
       approver: user.employeeId,
       status: getAdminResponse(code),
       statusCode: code,
-      noOfDays:request['no of days'],
+      noOfDays: getDuration(isBefore ? formatDate(new Date()) : request['date from'], request["date to"]),
       employeeId: request['employee id']
     }
     setResponse(payload);

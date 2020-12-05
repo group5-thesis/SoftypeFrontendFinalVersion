@@ -34,12 +34,13 @@ const loading = <Loader bg="transparent" app={false} />;
 const AppContent = (_props) => {
   const user = useSelector((state) => state.appState.auth.user);
   const isAppLoading = useSelector((state) => state.appState.app.loading);
+  const isInit = useSelector((state) => state.appState.app.isInit);
   const { employeeId, roleId } = user;
   let payload = LEAVE_REQUEST_FILTER('All');
   const accessedRoutes = filterModule(routes, roleId);
   const dispatch = useDispatch();
   const retrieve = async (payload) => {
-    if (isAppLoading) {
+    if (!isInit) {
       dispatch(actionCreator(ActionTypes.LOADING_STARTED));
     }
     let resp1 = await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });

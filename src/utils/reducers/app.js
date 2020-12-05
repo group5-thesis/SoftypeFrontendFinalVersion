@@ -5,6 +5,7 @@ const initial_state = {
   sideMenu: [],
   loading: true,
   notify: false,
+  isInit: false,
   notification: { type: '', message: '' },
 };
 
@@ -18,11 +19,10 @@ export default function changeState(state = initial_state, action) {
         ...state,
         ...{ notify: !notify, notification: action.payload },
       };
-
     case ActionTypes.LOADING_STARTED:
       return { ...state, loading: true };
     case ActionTypes.LOADING_DONE:
-      return { ...state, loading: false };
+      return { ...state, loading: false, isInit: true };
     default:
       return state;
   }
