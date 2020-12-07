@@ -56,7 +56,7 @@ export const YEARS = [
 
 export const TICKET_STATUS = {
   1: "primary",
-  0: "success"
+  0: "info"
 }
 
 export const QUESTIONS = [

@@ -10,7 +10,7 @@ import {
   CDataTable
 } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux';
-import { toCapitalize, formatDate, renameKey, dispatchNotification } from 'utils/helpers';
+import { toCapitalize, formatDate, renameKey, dispatchNotification, getDuration } from 'utils/helpers';
 import { NoData, Modal, ConfirmDialog } from 'reusable';
 import { useHistory } from "react-router-dom";
 import _ from 'lodash';
@@ -39,10 +39,38 @@ const Dashboard = () => {
 
   // for employee dashboard
   const LeaveRequestFieldsForEmployee = [
-    { key: 'name', _style: { width: '25%' } },
-    { key: 'date from', _style: { width: '20%' } },
-    { key: 'date to', _style: { width: '20%' } },
-    { key: 'reason', _style: { width: '20%' } }
+    {
+      key: 'name', _style: { width: '20%' },
+      sorter: false,
+      filter: false,
+    },
+    {
+      key: 'date from', _style: { width: '15%' },
+      sorter: false,
+      filter: false,
+    },
+    {
+      key: 'date to', _style: { width: '15%' },
+      sorter: false,
+      filter: false,
+    },
+    {
+      key: "no of days",
+      label: "Days",
+      _style: { width: "5%" },
+      sorter: false,
+      filter: false,
+    },
+    {
+      key: 'category', label: "Leave Type", _style: { width: '20%' },
+      sorter: false,
+      filter: false,
+    },
+    {
+      key: 'reason', _style: { width: '20%' },
+      sorter: false,
+      filter: false,
+    }
   ]
 
   const OfficeRequestFields = [
@@ -106,16 +134,16 @@ const Dashboard = () => {
     })
   });
 
+  console.log(stateEmployeesOnLeave, user.accountType)
+
   const statePendingLeaveRequests = useSelector((state) => {
     return state.appState.leave.leave_requests.filter(req => {
-      // return formatDate(req['created at']) === formatDate(moment()) && req['status'] === "pending"
       return req['status'].toLowerCase() === "pending".toLowerCase() && req['approver id'] === user.employeeId
     })
   });
 
   const statePendingOfficeRequests = useSelector((state) => {
     return state.appState.ticket.ticket_requests.filter(req => {
-      // return formatDate(req['date requested']) === formatDate(moment()) && req['status'] === 1
       return req['status'] === 1
     })
   });
@@ -125,8 +153,6 @@ const Dashboard = () => {
   const [employeesOnLeave, setEmployeeOnLeave] = useState(stateEmployeesOnLeave.length)
   const [pendingLeaveRequests, setPendingLeaveRequests] = useState(statePendingLeaveRequests.length)
   const [todaysPendingOfficeRequests, setTodaysPendingOfficeRequests] = useState(statePendingOfficeRequests.length)
-  // const [recentLeaveRequest, setRecentLeaveRequest] = useState(_.orderBy(stateLeaveRequests, ['created at'], ['desc']))
-  // const [recentOfficeRequest, setRecentOfficeRequest] = useState(_.orderBy(stateOfficeRequests, ['date requested'], ['desc']))
   const [recentLeaveRequest, setRecentLeaveRequest] = useState(stateLeaveRequests)
   const [recentOfficeRequest, setRecentOfficeRequest] = useState(stateOfficeRequests)
 
@@ -279,6 +305,9 @@ const Dashboard = () => {
                       viewLeaveRequestDetails(item.id)
                     }}
                     scopedSlots={{
+                      "no of days": (item) => (
+                        <td> {getDuration(item["date from"], item["date to"])}</td>
+                      ),
                       'status':
                         (item) => (
                           <td>

@@ -239,7 +239,7 @@ const Department = ({ location }) => {
         setIsChange(true)
       }
     } else {
-      if (value.toLowerCase() === departmentDetails.department_name.toLowerCase()) {
+      if (value.replace(" ", "").toLowerCase() === departmentDetails.department_name.replace(" ", "").toLowerCase()) {
         setIsChange(false)
       } else {
         setIsChange(true)

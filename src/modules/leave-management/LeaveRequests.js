@@ -266,7 +266,7 @@ const LeaveRequests = (props) => {
                 status: (item) => (
                   <td>
                     <CBadge color={getBadge(STATUS, item.status)}>
-                      {item.status}
+                      {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                     </CBadge>
                   </td>
                 ),

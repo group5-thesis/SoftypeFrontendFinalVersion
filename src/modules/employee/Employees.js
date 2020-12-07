@@ -24,7 +24,7 @@ const getBadge = status => {
 let headers = [
     { key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" }, },
     {
-        key: 'mobileno', label: "Mobile No.", _style: { width: "10%" }, 
+        key: 'mobileno', label: "Mobile No.", _style: { width: "10%" },
         sorter: false,
         filter: false,
     },
@@ -125,7 +125,7 @@ const Users = (props) => {
                                     (item) => (
                                         <td>
                                             <CBadge color={getBadge(item.isActive)}>
-                                                {item.isActive === 1 ? 'active' : 'inactive'}
+                                                {item.isActive === 1 ? 'Active' : 'Inactive'}
                                             </CBadge>
                                         </td>
                                     )
