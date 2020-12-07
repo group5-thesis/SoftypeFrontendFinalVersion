@@ -52,6 +52,7 @@ const Users = (props) => {
         currentPage !== newPage && history.push(`/employees?page=${newPage}`)
     }
     useEffect(() => {
+
         console.log("v1.0")
         currentPage !== page && setPage(currentPage)
     }, [currentPage, page])
