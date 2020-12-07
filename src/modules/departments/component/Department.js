@@ -200,17 +200,20 @@ const Department = ({ location }) => {
       department_head_pk_id: departmentDetails.department_headId,
       departmentHeadId: +dataToEdit.department_head
     }
-    console.log(data)
     let res = await api.post('/update_department', data)
     if (!res.error) {
-      console.log(res)
-      // let payload = res.data.department;
-      // dispatch(actionCreator(ActionTypes.FETCH_DEPARTMENTS, payload))
+      let payload = res.data.department;
+      dispatch(actionCreator(ActionTypes.FETCH_DEPARTMENTS, payload))
+      fetchDepartmentEmployees(dispatch)
+      fetchDepartmentManagers(dispatch)
+      fetchDepartments(dispatch)
+      retrieveEmployees(dispatch)
     }
     setDataToEdit(DepartmentModel)
     fetchDepartments(dispatch)
     setIsChange(false)
     setDeleteDepartment(false)
+    setEditDepartment(false)
     modal.current.toggle();
     setIsLoading(false)
   }
@@ -300,7 +303,6 @@ const Department = ({ location }) => {
     return () => {
 
     }
-    // }
   }, [])
 
   return (
@@ -323,7 +325,7 @@ const Department = ({ location }) => {
             <Modal
               ref={modal}
               centered
-              title={editDepartment ? "Update Department Details" : deleteDepartment ? "Delete Department" : "Add Department Manager"}
+              title={editDepartment ? "Update Department" : deleteDepartment ? "Delete Department" : "Add Department Manager"}
               hidden
               modalOnClose={toggleModal}
               closeButton
@@ -351,7 +353,7 @@ const Department = ({ location }) => {
                 <CRow>
                   {
                     user.accountType === 1 ?
-                      <CCol className="d-none d-md-block">
+                      <CCol className="d-md-block">
                         <div className="float-right">
                           <CDropdown color={"primary"}>
                             <CDropdownToggle>
@@ -376,24 +378,6 @@ const Department = ({ location }) => {
                             </CDropdownMenu>
                           </CDropdown>
                         </div>
-                        {/* <div className="float-right">
-                        <CButton color={"primary"} onClick={() => {
-                          editDepartmentDetails()
-                          // viewDepartmentDetails(departmentDetails)
-                        }}>
-                          {"Update Department"}
-                        </CButton>
-                      </div>
-                      <div className="float-right mr-2">
-                        <CButton
-                          color={"danger"}
-                          disabled={_departmentManagers.length === 0}
-                          onClick={() => {
-                            removeTeam ? cancelRemoveDepartmentTeam() : removeDepartmentTeam()
-                          }}>
-                          {removeTeam ? "Cancel" : "Remove Team"}
-                        </CButton>
-                      </div> */}
                       </CCol>
                       : ""
                   }
@@ -442,9 +426,8 @@ const Department = ({ location }) => {
                             animation
                             setImg
                             text={
-                              `${key.manager_firstname}`
+                              `M: ${key.manager_firstname}`
                             }
-                            // `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
                             imgSrc={key.profile_img === null ? department_icon_default : `${getBaseUrl()}/file/images/${key.profile_img}`}
                             dept_role={key.role}
                             textClass={"blockquote font-weight-bold  text-center"}
