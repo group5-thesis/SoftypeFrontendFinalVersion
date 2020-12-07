@@ -22,13 +22,14 @@ const getBadge = status => {
     }
 }
 let headers = [
-    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" }, },
+    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" },  sorter: true,
+    filter: false,},
     {
         key: 'mobileno', label: "Mobile No.", _style: { width: "10%" },
         sorter: false,
         filter: false,
     },
-    // { key: 'email', _style: { width: "10%" } },
+    { key: 'email', _style: { width: "10%" } },
     {
         key: "role",
         label: "Position",
