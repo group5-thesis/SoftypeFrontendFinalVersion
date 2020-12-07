@@ -31,7 +31,7 @@ let headers = [
         sorter: false,
         filter: false,
     },
-    { key: 'email', _style: { width: '150px', maxWidth: "150px" } },
+    // { key: 'email', _style: { width: '150px', maxWidth: "150px" } },
     {
         key: "role",
         label: "Position",
