@@ -138,7 +138,7 @@ const Users = (props) => {
                                     (item) => (
                                         <td>
                                             <CBadge color={getBadge(item.isActive)}>
-                                                {item.isActive === 1 ? 'active' : 'inactive'}
+                                                {item.isActive === 1 ? 'Active' : 'Inactive'}
                                             </CBadge>
                                         </td>
                                     )

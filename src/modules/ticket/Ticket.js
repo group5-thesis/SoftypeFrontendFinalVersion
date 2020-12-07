@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { CBadge, CCard, CCardBody, CCol, CDataTable, CRow, CButton } from "@coreui/react";
+import { CBadge, CCard, CCardBody, CCol, CDataTable, CRow, CButton, CSelect } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { Modal, ConfirmDialog, NoData } from "reusable";
 import { ActionTypes, actionCreator } from 'utils/actions';
@@ -25,6 +25,7 @@ const Ticket = (props) => {
   const [clickedDeleteBtn, setClickedDeleteBtn] = useState(false);
   const [now, setNow] = useState(new Date)
   const [loading, setLoading] = useState(false)
+  const [ticketFilter, setTicketFilter] = useState("emp_request")
 
   const default_filter = {
     year: CURRENT_YEAR,
@@ -46,13 +47,14 @@ const Ticket = (props) => {
   })
   const fields = [
     { key: 'date requested', _style: { width: '15%' } },
-    { key: 'transaction no', label: 'request no.' },
+    { key: 'transaction no', label: 'Request No.' },
     { key: 'name', label: 'Requestor', _style: { width: '15%' } },
     { key: 'item', _style: { width: '15%' } },
-    { key: 'price' },
-    { key: 'quantity' },
-    { key: 'total price', label: 'Total' },
+    // { key: 'price' },
+    // { key: 'quantity' },
+    // { key: 'total price', label: 'Total' },
     { key: 'status' },
+    { key: 'remarks' },
     { key: 'date needed' }
   ]
   const requestsData = useSelector((state) => {
@@ -120,7 +122,7 @@ const Ticket = (props) => {
   const onDelete = async () => {
     let res = await api.post("/delete_officeRequest", { id: tickets.id })
     if (!res.error) {
-      dispatch(actionCreator(ActionTypes.DELETE_TICKET), tickets.id)
+      dispatch(actionCreator(ActionTypes.DELETE_TICKET, tickets.id))
       fetchTickets(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
@@ -165,7 +167,7 @@ const Ticket = (props) => {
           hidden
           closeButton
           footer={
-            (tickets && tickets.status === 1) && user.accountType === 1 ?
+            (tickets && tickets.status === 1) && user.accountType === 1 && ticketFilter === "emp_request" ?
               <>
                 <CButton color="success" onClick={() => {
                   approveRequestBtn()
@@ -174,13 +176,23 @@ const Ticket = (props) => {
                   rejectRequestBtn()
                 }}>Reject</CButton>
               </>
-              : user.accountType === 2 || user.accountType === 3 ?
+              : (tickets && tickets.status === 1) && user.accountType === 2 ||
+                (tickets && tickets.status === 1) && user.accountType === 3 ||
+                (tickets && tickets.status === 1) && user.accountType === 1 && ticketFilter === "my_request" ?
                 <>
                   <CButton color="danger" onClick={() => {
                     deleteRequestBtn()
                   }}>Delete Request</CButton>
+                  <CButton color="primary" onClick={() => {
+                    console.log("TEST")
+                  }}>Edit Request</CButton>
                 </>
-                : ""
+                : (tickets && tickets.status === 0) ?
+                  <>
+                    <CButton color="danger" onClick={() => {
+                      modal.current.toggle()
+                    }}>Close</CButton>
+                  </> : ""
           }
           hideCancelButton
         >
@@ -192,14 +204,35 @@ const Ticket = (props) => {
           <CCardBody>
             <CRow>
               <CCol sm="5">
-                <h4 className="card-title mb-0">{Number(status) === 1 ? 'Open' : status === 'All' ? status : 'Closed'} Requests</h4>
+                {
+                  user.accountType !== 1 ?
+                    <h4 className="card-title mb-0">{Number(status) === 1 ? 'Open' : status === 'All' ? status : 'Closed'} Requests</h4> :
+                    <CSelect
+                      custom
+                      className="input-md"
+                      size="md"
+                      name="ticketfilter"
+                      id="ticketfilter"
+                      value={ticketFilter}
+                      onChange={(e) => {
+                        setTicketFilter(e.target.value)
+                      }}
+                    >
+                      <option value="emp_request">
+                        {"Employee Office Requests"}
+                      </option>
+                      <option value="my_request">{"My Office Requests"}</option>
+                      )}
+                </CSelect>
+                }
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 {
-                  // user.roleId > 1 &&
-                  <div className="float-right  mr-3">
-                    <TicketForm />
-                  </div>
+                  user.accountType === 2 || user.accountType === 3 || user.accountType === 1 && ticketFilter === "my_request" ?
+                    <div className="float-right  mr-3">
+                      <TicketForm />
+                    </div>
+                    : ""
                 }
                 <div className={`float-right mr-3 ${!collapse && "mb-2"}`} >
                   <CButton
@@ -230,7 +263,7 @@ const Ticket = (props) => {
               </CCol>
             </CRow>
             <CDataTable
-              items={user.accountType === 1 ? filteredTicketRequest : user.accountType === 3 || user.accountType === 2 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
+              items={user.accountType === 1 && ticketFilter === "emp_request" ? filteredTicketRequest : user.accountType === 3 || user.accountType === 2 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : user.accountType === 1 && ticketFilter === "my_request" ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
               fields={fields}
               itemsPerPage={5}
               hover
@@ -257,13 +290,20 @@ const Ticket = (props) => {
                       {item.status === 1 ? "Open" : "Closed"}
                     </CBadge>
                   </td>
+                ),
+                'remarks': (item) => (
+                  <td>
+                    <CBadge color={item.remarks === "Request Approved" ? "success" : item.remarks === "Request Rejected" ? "danger" : "secondary"}>
+                      {item.remarks === "Request Approved" ? "Approved" : item.remarks === "Request Rejected" ? "Rejected" : "UNSET"}
+                    </CBadge>
+                  </td>
                 )
               }}
             />
           </CCardBody>
         </CCard>
       </CCol>
-    </CRow>
+    </CRow >
   )
 }
 
