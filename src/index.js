@@ -13,7 +13,7 @@ import { disableLogger } from 'utils/helpers/disableLogger';
 let store = configureStore()
 React.icons = icons
 
-disableLogger();
+// disableLogger();
 
 ReactDOM.render(
     <Root store={store} />

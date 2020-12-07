@@ -6,7 +6,8 @@ import {
     CCol,
     CDataTable,
     CRow,
-    CPagination
+    CPagination,
+    CSelect
 } from '@coreui/react'
 import EmployeeModal from './EmployeeModal';
 import { toCapitalize } from 'utils/helpers';
@@ -22,13 +23,17 @@ const getBadge = status => {
     }
 }
 let headers = [
-    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" }, },
+    {
+        key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" },
+        sorter: true,
+        filter: true,
+    },
     {
         key: 'mobileno', label: "Mobile No.", _style: { width: "10%" },
         sorter: false,
         filter: false,
     },
-    { key: 'email' },
+    // { key: 'email', _style: { width: '150px', maxWidth: "150px" } },
     {
         key: "role",
         label: "Position",
@@ -44,10 +49,11 @@ let headers = [
 const Users = (props) => {
     const { history, location } = props
     const user = props.appState.auth.user
-    const usersData = props.appState.employee.employees.filter(emp => emp.employeeId !== user.employeeId)
+    const [status, setStatus] = useState('All');
+    const usersData = props.appState.employee.employees.filter(emp => (emp.employeeId !== user.employeeId))
     const queryPage = location.search.match(/page=([0-9]+)/, '')
     const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
-    const [page, setPage] = useState(currentPage)
+    const [page, setPage] = useState(currentPage);
     const pageChange = newPage => {
         currentPage !== newPage && history.push(`/employees?page=${newPage}`)
     }
@@ -62,18 +68,20 @@ const Users = (props) => {
                     <CCardBody>
                         <CRow className="mb-2">
                             <CCol sm="5">
-                                <h4 className="card-title mb-0">Employees</h4>
+                                <h4 className="card-title mb-0">{toCapitalize(status)} {" "}Employees</h4>
                             </CCol>
                             {
-                                user.accountType === 1 ?
-                                    <CCol sm="7" className="d-none d-md-block">
-                                        <div className="float-right" >
-                                            <EmployeeModal retrieveEmployees={props.retrieveEmployees} />
-                                        </div>
-                                    </CCol>
-                                    : ""
+                                <CCol sm="7" className="d-none d-md-block">
+                                    {user.accountType === 1 && <div className="float-right" >
+                                        <EmployeeModal retrieveEmployees={props.retrieveEmployees} />
+                                    </div> }
+
+                                </CCol>
+
                             }
+
                         </CRow>
+                        {/* .filter(item => ) */}
                         <CDataTable
                             items={_.orderBy(usersData, ['lastname'], ['asc'])}
                             fields={headers}
@@ -97,6 +105,11 @@ const Users = (props) => {
                                             {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename[0]) + "."}`}
                                         </td>
                                     ),
+                                'email': item => (
+                                    <td>
+                                        <p className="wrap-content-text"> {item.email}</p>
+                                    </td>
+                                ),
                                 'department_name':
                                     (item) => {
                                         return (
