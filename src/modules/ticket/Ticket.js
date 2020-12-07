@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { CBadge, CCard, CCardBody, CCol, CDataTable, CRow, CButton } from "@coreui/react";
+import { CBadge, CCard, CCardBody, CCol, CDataTable, CRow, CButton, CSelect } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { Modal, ConfirmDialog, NoData } from "reusable";
 import { ActionTypes, actionCreator } from 'utils/actions';
@@ -25,6 +25,7 @@ const Ticket = (props) => {
   const [clickedDeleteBtn, setClickedDeleteBtn] = useState(false);
   const [now, setNow] = useState(new Date)
   const [loading, setLoading] = useState(false)
+  const [ticketFilter, setTicketFilter] = useState("emp_request")
 
   const default_filter = {
     year: CURRENT_YEAR,
@@ -179,6 +180,9 @@ const Ticket = (props) => {
                   <CButton color="danger" onClick={() => {
                     deleteRequestBtn()
                   }}>Delete Request</CButton>
+                  <CButton color="primary" onClick={() => {
+                    // deleteRequestBtn()
+                  }}>Edit Request</CButton>
                 </>
                 : ""
           }
@@ -192,7 +196,27 @@ const Ticket = (props) => {
           <CCardBody>
             <CRow>
               <CCol sm="5">
-                <h4 className="card-title mb-0">{Number(status) === 1 ? 'Open' : status === 'All' ? status : 'Closed'} Requests</h4>
+                {
+                  user.accountType !== 1 ?
+                    <h4 className="card-title mb-0">{Number(status) === 1 ? 'Open' : status === 'All' ? status : 'Closed'} Requests</h4> :
+                    <CSelect
+                      custom
+                      className="input-md"
+                      size="md"
+                      name="ticketfilter"
+                      id="ticketfilter"
+                      value={ticketFilter}
+                      onChange={(e) => {
+                        setTicketFilter(e.target.value)
+                      }}
+                    >
+                      <option value="emp_request">
+                        {"Employee Office Requests"}
+                      </option>
+                      <option value="my_request">{"My Office Requests"}</option>
+                      )}
+                </CSelect>
+                }
               </CCol>
               <CCol sm="7" className="d-none d-md-block">
                 {
