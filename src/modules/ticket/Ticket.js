@@ -5,7 +5,7 @@ import CIcon from "@coreui/icons-react";
 import { Modal, ConfirmDialog, NoData } from "reusable";
 import { ActionTypes, actionCreator } from 'utils/actions';
 import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR } from "utils/constants/constant";
-import { renameKey, dispatchNotification } from 'utils/helpers';
+import { renameKey, dispatchNotification, toCapitalize } from 'utils/helpers';
 import TicketFilter from "./component/TicketFilter";
 import TicketForm from "./component/TicketForm";
 import TicketDetails from "./component/TicketDetailsV1";
@@ -46,8 +46,8 @@ const Ticket = (props) => {
     }
   })
   const fields = [
-    { key: 'transaction no', label: 'request no.' },
     { key: 'date requested', _style: { width: '15%' } },
+    { key: 'transaction no', label: 'request no.' },
     { key: 'name', label: 'Requestor', _style: { width: '15%' } },
     { key: 'item', _style: { width: '15%' } },
     { key: 'price' },
@@ -263,6 +263,12 @@ const Ticket = (props) => {
               clickableRows
               noItemsViewSlot={<NoData />}
               scopedSlots={{
+                'requestor':
+                  (item) => (
+                    <td>
+                      {toCapitalize(item['requestor'])}
+                    </td>
+                  ),
                 'date requested':
                   (item) => (
                     <td>

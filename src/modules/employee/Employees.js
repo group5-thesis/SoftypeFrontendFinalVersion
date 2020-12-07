@@ -11,6 +11,8 @@ import {
 import EmployeeModal from './EmployeeModal';
 import { toCapitalize } from 'utils/helpers';
 import { NoData } from 'reusable'
+import moment from 'moment';
+import _ from 'lodash';
 
 
 const getBadge = status => {
@@ -20,10 +22,13 @@ const getBadge = status => {
     }
 }
 let headers = [
-
-    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "15%" }, },
-    { key: 'mobileno', label: "Mobile No.", _style: { width: "10%" } },
-    { key: 'email', _style: { width: "15%" } },
+    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" }, },
+    {
+        key: 'mobileno', label: "Mobile No.", _style: { width: "10%" }, 
+        sorter: false,
+        filter: false,
+    },
+    { key: 'email' },
     {
         key: "role",
         label: "Position",
@@ -60,19 +65,20 @@ const Users = (props) => {
                                 <h4 className="card-title mb-0">Employees</h4>
                             </CCol>
                             {
-                              user.accountType === 1 ?
-                              <CCol sm="7" className="d-none d-md-block">
-                                <div className="float-right" >
-                                    <EmployeeModal retrieveEmployees={props.retrieveEmployees} />
-                                </div>
-                            </CCol>
-                             : ""
+                                user.accountType === 1 ?
+                                    <CCol sm="7" className="d-none d-md-block">
+                                        <div className="float-right" >
+                                            <EmployeeModal retrieveEmployees={props.retrieveEmployees} />
+                                        </div>
+                                    </CCol>
+                                    : ""
                             }
                         </CRow>
                         <CDataTable
-                            items={usersData}
+                            items={_.orderBy(usersData, ['lastname'], ['asc'])}
                             fields={headers}
                             hover
+                            sorter
                             itemsPerPage={10}
                             activePage={page}
                             pagination
@@ -95,7 +101,23 @@ const Users = (props) => {
                                     (item) => {
                                         return (
                                             <td>
-                                                {item.department_name ? item.department_name : item.department_nameM ?  item.department_nameM : item.department_nameH ?  item.department_nameH : <em>UNSET</em>}
+                                                {item.department_name ? item.department_name : item.department_nameM ? item.department_nameM : item.department_nameH ? item.department_nameH : <em>UNSET</em>}
+                                            </td>
+                                        )
+                                    },
+                                'gender':
+                                    (item) => {
+                                        return (
+                                            <td>
+                                                {item['gender'][0].toUpperCase()}
+                                            </td>
+                                        )
+                                    },
+                                'birthdate':
+                                    (item) => {
+                                        return (
+                                            <td>
+                                                {moment(item['birthdate']).format("MM-DD-YY")}
                                             </td>
                                         )
                                     },
