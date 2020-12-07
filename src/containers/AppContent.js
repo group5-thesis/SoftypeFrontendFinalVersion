@@ -64,12 +64,10 @@ const AppContent = (_props) => {
         hasError = true;
       }
     });
-
     if (hasError) {
       dispatch(actionCreator(ActionTypes.TOGGLE_NOTIFICATION, { type: 'error', message: "Error in fetching data." }));
     }
   };
-
   const notificationReceived = async (notif) => {
     let { type, data } = notif;
     //for Leave Request
