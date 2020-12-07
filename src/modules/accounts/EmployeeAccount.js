@@ -17,7 +17,8 @@ import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline, mdiInformat
 import colors from 'assets/theme/colors';
 import { fetchEmployeeAccounts, retrieveEmployees } from 'utils/helpers/fetch';
 import api from 'utils/api';
-import { dispatchNotification } from 'utils/helpers'
+import { dispatchNotification, toCapitalize } from 'utils/helpers';
+import _ from 'lodash'
 
 const Accounts = () => {
 
@@ -161,7 +162,7 @@ const Accounts = () => {
               </CCol>
             </CRow>
             <CDataTable
-              items={stateAccounts}
+              items={ _.sortBy(stateAccounts, ['employee_name'], ['asc'])}
               fields={fields}
               hover
               striped
@@ -173,7 +174,7 @@ const Accounts = () => {
                 'name':
                   (item) => (
                     <td>
-                      {`${item.employee_name}`}
+                      {`${toCapitalize(item.employee_name)}`}
                     </td>
                   ),
                 'username':

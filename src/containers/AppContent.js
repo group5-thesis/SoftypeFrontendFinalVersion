@@ -75,7 +75,8 @@ const AppContent = (_props) => {
     //for Leave Request
     if (type === NOTIFICATION_TYPES.NewLeaveRequestNotification || type === NOTIFICATION_TYPES.UpdateLeaveRequestNotification) {
       if ((user.accountType !== 3 && data.approver === data.employeeId) || data.employeeId === employeeId) {
-        await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
+         retrieve(payload);
+        // await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
         return
       }
     }
