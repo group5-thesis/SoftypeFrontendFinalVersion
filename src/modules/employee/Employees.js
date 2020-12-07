@@ -22,9 +22,13 @@ const getBadge = status => {
     }
 }
 let headers = [
-    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "15%" }, },
-    { key: 'mobileno', label: "Mobile No.", _style: { width: "10%" } },
-    { key: 'email', _style: { width: "10%" } },
+    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" }, },
+    {
+        key: 'mobileno', label: "Mobile No.", _style: { width: "10%" }, 
+        sorter: false,
+        filter: false,
+    },
+    { key: 'email' },
     {
         key: "role",
         label: "Position",
@@ -74,6 +78,7 @@ const Users = (props) => {
                             items={_.orderBy(usersData, ['lastname'], ['asc'])}
                             fields={headers}
                             hover
+                            sorter
                             itemsPerPage={10}
                             activePage={page}
                             pagination
@@ -104,7 +109,7 @@ const Users = (props) => {
                                     (item) => {
                                         return (
                                             <td>
-                                                {item['gender'][0]}
+                                                {item['gender'][0].toUpperCase()}
                                             </td>
                                         )
                                     },

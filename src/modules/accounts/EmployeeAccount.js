@@ -42,8 +42,16 @@ const Accounts = () => {
     { key: 'name', _style: { width: '25%' } },
     { key: 'username', _style: { width: '20%' } },
     { key: 'account type', _style: { width: '20%' } },
-    { key: 'status', _style: { width: '20%' } },
-    { key: 'action', _style: { width: '20%' } },
+    {
+      key: 'status', _style: { width: '20%' },
+      sorter: true,
+      filter: true,
+    },
+    {
+      key: 'action', _style: { width: '20%' }, 
+      sorter: false,
+      filter: false,
+    },
   ]
 
   const clickedDisableBtn = (user) => { // Disable Account Button
@@ -97,7 +105,7 @@ const Accounts = () => {
   const handleEnableAccount = async () => {
     setIsLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
-    let res = await api.post('/enable_employee_account', { userId: accountEnable.userId, employeeId: accountEnable.employeeId})
+    let res = await api.post('/enable_employee_account', { userId: accountEnable.userId, employeeId: accountEnable.employeeId })
     setIsLoading(false)
     if (!res.error) {
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
@@ -112,7 +120,7 @@ const Accounts = () => {
 
   const _renderIcon = () => {
     return (<>
-      {[1,2].map((i) => {
+      {[1, 2].map((i) => {
         return (
           <h6 key={i} className="card-title mb-0">
             <Icon path={mdiInformation} size={0.8} />test
@@ -162,10 +170,11 @@ const Accounts = () => {
               </CCol>
             </CRow>
             <CDataTable
-              items={ _.sortBy(stateAccounts, ['employee_name'], ['asc'])}
+              items={_.sortBy(stateAccounts, ['employee_name'], ['asc'])}
               fields={fields}
               hover
               striped
+              sorter
               itemsPerPage={10}
               pagination
               noItemsViewSlot={<NoData />}
