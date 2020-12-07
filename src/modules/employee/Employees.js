@@ -22,14 +22,16 @@ const getBadge = status => {
     }
 }
 let headers = [
-    { key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" },  sorter: true,
-    filter: false,},
+    {
+        key: 'Name', _classes: 'font-weight-bold', _style: { width: "20%" }, sorter: true,
+        filter: false,
+    },
     {
         key: 'mobileno', label: "Mobile No.", _style: { width: "10%" },
         sorter: false,
         filter: false,
     },
-    { key: 'email', _style: { width: "10%" } },
+    { key: 'email', _style: { width: '10%', maxWidth: "10%" } },
     {
         key: "role",
         label: "Position",
@@ -100,6 +102,11 @@ const Users = (props) => {
                                             {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename[0]) + "."}`}
                                         </td>
                                     ),
+                                'email': item => (
+                                    <td>
+                                    <p className="wrap-content-text"> {item.email}</p>
+                                  </td>
+                                ),
                                 'department_name':
                                     (item) => {
                                         return (
