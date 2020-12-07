@@ -31,7 +31,7 @@ let headers = [
         sorter: false,
         filter: false,
     },
-    { key: 'email', _style: { width: '10%', maxWidth: "10%" } },
+    { key: 'email', _style: { width: '150px', maxWidth: "150px" } },
     {
         key: "role",
         label: "Position",
@@ -104,8 +104,8 @@ const Users = (props) => {
                                     ),
                                 'email': item => (
                                     <td>
-                                    <p className="wrap-content-text"> {item.email}</p>
-                                  </td>
+                                        <p className="wrap-content-text"> {item.email}</p>
+                                    </td>
                                 ),
                                 'department_name':
                                     (item) => {
