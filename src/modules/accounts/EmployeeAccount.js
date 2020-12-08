@@ -48,7 +48,7 @@ const Accounts = () => {
       filter: true,
     },
     {
-      key: 'action', _style: { width: '20%' }, 
+      key: 'action', _style: { width: '20%' },
       sorter: false,
       filter: false,
     },
@@ -77,10 +77,11 @@ const Accounts = () => {
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/disable_employee_account', { userId: accountDisable.userId, employeeId: accountDisable.employeeId })
     setIsLoading(false)
+    console.log("disable account --> ", res.error)
     if (!res.error) {
-      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
-      fetchEmployeeAccounts(dispatch)
-      retrieveEmployees(dispatch)
+     await dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+     await fetchEmployeeAccounts(dispatch)
+     await retrieveEmployees(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -93,11 +94,11 @@ const Accounts = () => {
     let res = await api.post('/reset_employee_account', { userId: accountReset.userId })
     setIsLoading(false)
     if (!res.error) {
-      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
-      fetchEmployeeAccounts(dispatch)
-      retrieveEmployees(dispatch)
+      await dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+      await fetchEmployeeAccounts(dispatch)
+      await retrieveEmployees(dispatch)
     } else {
-      dispatchNotification(dispatch, { type: 'error', message: res.message })
+      await dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setResetAccount(false)
   }
@@ -108,11 +109,11 @@ const Accounts = () => {
     let res = await api.post('/enable_employee_account', { userId: accountEnable.userId, employeeId: accountEnable.employeeId })
     setIsLoading(false)
     if (!res.error) {
-      dispatchNotification(dispatch, { type: 'success', message: 'Success' })
-      fetchEmployeeAccounts(dispatch)
-      retrieveEmployees(dispatch)
+      await dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+      await fetchEmployeeAccounts(dispatch)
+      await retrieveEmployees(dispatch)
     } else {
-      dispatchNotification(dispatch, { type: 'error', message: res.message })
+      await dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
     setEnableAccount(false)
 
@@ -174,6 +175,7 @@ const Accounts = () => {
               fields={fields}
               hover
               striped
+              outlined
               sorter
               itemsPerPage={10}
               pagination

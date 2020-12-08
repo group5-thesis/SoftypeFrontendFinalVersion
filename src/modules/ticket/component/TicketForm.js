@@ -91,7 +91,7 @@ const TicketForm = () => {
     setIsLoading(false)
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_TICKET, renameKey(res.data.officeRequest_information[0])))
-      fetchTickets(dispatch)
+      await fetchTickets(dispatch)
       modalRef.current.toggle()
       modalOnClose()
     } else {

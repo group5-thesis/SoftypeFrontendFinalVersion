@@ -193,7 +193,7 @@ const LeaveFormRequest = ({ request }) => {
       const { employeeId, roleId } = user;
       let payload = LEAVE_REQUEST_FILTER('All');
       dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
-      retrieveLeaveRequests(dispatch)
+      retrieveLeaveRequests(dispatch , { ...payload, ...{ employeeId, roleId } })
       modalRef.current.toggle()
       modalOnClose()
     } else {

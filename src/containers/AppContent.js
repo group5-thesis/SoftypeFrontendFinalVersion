@@ -73,8 +73,8 @@ const AppContent = (_props) => {
     //for Leave Request
     if (type === NOTIFICATION_TYPES.NewLeaveRequestNotification || type === NOTIFICATION_TYPES.UpdateLeaveRequestNotification) {
       if ((user.accountType !== 3 && data.approver === data.employeeId) || data.employeeId === employeeId) {
-         retrieve(payload);
-        // await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
+        // retrieve(payload);
+        await retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId } });
         return
       }
     }
@@ -88,16 +88,21 @@ const AppContent = (_props) => {
 
     switch (type) {
       case NOTIFICATION_TYPES.AccountClosedNotification:
-        retrieve(payload);
+        await retrieveEmployees(dispatch)
+        await fetchEmployeeAccounts(dispatch)
         break;
 
       case NOTIFICATION_TYPES.ResetPasswordNotification:
         if (user.userId === data.userId) {
           dispatch(actionCreator(ActionTypes.LOGOUT));
         }
+        await retrieveEmployees(dispatch);
+        await fetchEmployeeAccounts(dispatch);
         break;
       case NOTIFICATION_TYPES.EmployeeUpdateNotification:
-        retrieve(payload);
+        await retrieveEmployees(dispatch)
+        await fetchEmployeeAccounts(dispatch)
+        await fetchChartData(dispatch)
         break;
       default:
         break;
