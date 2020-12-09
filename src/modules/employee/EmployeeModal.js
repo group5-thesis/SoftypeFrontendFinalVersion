@@ -185,18 +185,18 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
     _errors['country'] = checkRequired(country);
     _errors['email'] = checkRequired(email);
     _errors['middlename'] = false;
-    if (middlename.length) {
+    if (middlename && middlename.length) {
       _errors['middlename'] = RULES.nameRules(middlename);
     }
-    if (sss.length) {
-      _errors['sss'] = RULES.numberRules(sss);
-    }
-    if (phil_health_no.length) {
-      _errors['phil_health_no'] = RULES.numberRules(phil_health_no);
-    }
-    if (pag_ibig_no.length) {
-      _errors['pag_ibig_no'] = RULES.numberRules(pag_ibig_no);
-    }
+    // if (sss.length) {
+    //   _errors['sss'] = RULES.numberRules(sss);
+    // }
+    // if (phil_health_no.length) {
+    //   _errors['phil_health_no'] = RULES.numberRules(phil_health_no);
+    // }
+    // if (pag_ibig_no.length) {
+    //   _errors['pag_ibig_no'] = RULES.numberRules(pag_ibig_no);
+    // }
     setError(_errors)
     let isValid = true;
     _.values(_errors).map(err => {
