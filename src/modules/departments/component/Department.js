@@ -196,7 +196,7 @@ const Department = ({ location }) => {
     }
     let data = {
       departmentId: departmentDetails.department_id,
-      name: dataToEdit.department_name,
+      name: dataToEdit.department_name.charAt(0).toUpperCase() + dataToEdit.department_name.slice(1),
       department_head_pk_id: departmentDetails.department_headId,
       departmentHeadId: +dataToEdit.department_head
     }
