@@ -84,7 +84,7 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         let res = await api.post("/add_file", payload, true);
         if (res.error) {
             setError([res.message])
-            dispatchNotification(dispatch, { type: 'error', message: 'Error in uploading file' })
+            dispatchNotification(dispatch, { type: 'error', message: 'Error in uploading file' });
         } else {
             switch (type) {
                 case 'videos':
@@ -102,6 +102,9 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
             }
         }
         setIsLoading(false)
+        setFile("");
+        setDescription("");
+        setError([]);
         toggleModal()
     }
 
@@ -109,7 +112,6 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         return error.length ? (<CAlert color="danger justify-content-center text-align-center">
             {
                 <p style={{ whiteSpace: 'pre', margin: '0' }}> {error.join(`\r\n`)}</p>
-
             }
         </CAlert>) : null
     }
