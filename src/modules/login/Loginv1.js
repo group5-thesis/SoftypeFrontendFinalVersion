@@ -144,10 +144,10 @@ class Login extends Component {
             <CInput
               type="text"
               value={this.state.credentials.username || ""}
-              placeholder="email/username"
+              placeholder="username"
               disabled={this.state.isLoading}
               name="username"
-              autoComplete="email"
+              autoComplete="username"
               invalid={
                 this.state.credentials.username === "" &&
                 this.state.changed

@@ -130,25 +130,25 @@ const LeaveRequests = (props) => {
   const onFilterRequests = async (_filter) => {
     setFilter(_filter)
     let { status, month, year, category } = _filter
-    let { employeeId, roleId } = user
+    let { employeeId, accountType } = user
     let payload = {
       month,
       year,
       status,
       category,
       employeeId,
-      roleId,
+      roleId:accountType,
     }
-    if (JSON.stringify(default_filter) !== JSON.stringify(_filter)) {
-      setLoading(true)
-      let filterRes = await retrieveLeaveRequests(dispatch, payload)
-      setLoading(false)
-      if (filterRes.error) {
-        dispatchNotification(dispatch, { type: 'error', message: filterRes.message })
-      } else {
-        dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, plotArray(filterRes.data.leave_requests)));
-      }
+    // if (JSON.stringify(default_filter) !== JSON.stringify(_filter)) {
+    setLoading(true)
+    let filterRes = await retrieveLeaveRequests(dispatch, payload)
+    setLoading(false)
+    if (filterRes.error) {
+      dispatchNotification(dispatch, { type: 'error', message: filterRes.message })
+    } else {
+      dispatch(actionCreator(ActionTypes.FETCH_LEAVE_REQUEST, plotArray(filterRes.data.leave_requests)));
     }
+    // }
   }
 
   useEffect(() => {

@@ -188,12 +188,13 @@ const LeaveFormRequest = ({ request }) => {
       data.approverId = dept_head[0].department_head_employeeId
       data.approver = dept_head[0].department_head
     }
+    setData({ ...data, reason: data.reason || placeholder });
     let res = await api.post("/create_request_leave", data)
     if (!res.error) {
       const { employeeId, roleId } = user;
       let payload = LEAVE_REQUEST_FILTER('All');
       dispatch(actionCreator(ActionTypes.ADD_LEAVE_REQUEST, renameKey(res.data[0])))
-      retrieveLeaveRequests(dispatch , { ...payload, ...{ employeeId, roleId } })
+      retrieveLeaveRequests(dispatch, { ...payload, ...{ employeeId, roleId: user.accountType } })
       modalRef.current.toggle()
       modalOnClose()
     } else {
