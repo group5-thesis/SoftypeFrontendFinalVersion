@@ -11,9 +11,15 @@ import {
 
 const UpdateDepartmentDetails = ({ dataToEdit, handleChange, renderFeedback, errors, departmentDetails }) => {
 
+  // const employees = useSelector((state) => {
+  //   return state.appState.employee.employees.filter(emp => {
+  //     return emp.department_id === departmentDetails.department_id || emp.deparment_IdM === departmentDetails.department_id || emp.deparment_IdH === departmentDetails.department_id;
+  //   })
+  // });
+
   const employees = useSelector((state) => {
     return state.appState.employee.employees.filter(emp => {
-      return emp.department_id === departmentDetails.department_id || emp.deparment_IdM === departmentDetails.department_id || emp.deparment_IdH === departmentDetails.department_id;
+      return emp.accountType !== 1 && emp.department_id === null && emp.deparment_IdM === null && emp.deparment_IdH === null || emp.department_id === departmentDetails.department_id || emp.deparment_IdM === departmentDetails.department_id
     })
   });
 
@@ -47,7 +53,7 @@ const UpdateDepartmentDetails = ({ dataToEdit, handleChange, renderFeedback, err
               employees.map((emp, index) => {
                 return (
                   <option key={"_emps" + index} value={emp.employeeId}>
-                    {emp.firstname} {emp.lastname}
+                    {emp.firstname} {emp.lastname} : {emp.role}
                   </option>
                 )
               })

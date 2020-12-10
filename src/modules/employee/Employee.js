@@ -56,6 +56,12 @@ const EmployeeDetails = (props) => {
     return state.appState.performance_review.performance_reviews;
   })
 
+  const dept_head_employee = useSelector(state => {
+    return state.appState.employee.employees.filter(emp => {
+      return emp.employeeId === user.employeeId
+    })
+  })
+
   const _initProcess = (key, val) => {
     let _temp_process = shallowCopy(process);
     _process[key] = val;
@@ -153,6 +159,8 @@ const EmployeeDetails = (props) => {
     return <Redirect to="/myAccount" />
   }
 
+  console.log(employee, "selected employee")
+  console.log(dept_head_employee[0], " head")
   // let url = `${getBaseUrl()}/file/images/${employee.profile_img}`
 
   return employee ? (
@@ -184,7 +192,8 @@ const EmployeeDetails = (props) => {
                 </div>
                 <div className="float-right px-2">
                   {
-                    (user.roleId === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) &&
+                    // (user.accountType === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) &&
+                    user.accountType === 1 &&
                     <EmployeeModal
                       isUpdate
                       data={employee}
@@ -192,16 +201,15 @@ const EmployeeDetails = (props) => {
                     />
                   }
                 </div>
-                {
-                  user.accountType === 2 ?
-                    <div className="float-right mr-2">
-                      {
-                        (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} />
-                      }
-                    </div>
-                    : ""
-                }
-
+                  < div className="float-right mr-2">
+                    {
+                      (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.department_id && employee.isActive === 1 ) ||
+                        (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.deparment_IdM && employee.isActive === 1 ) ?
+                        <PerformanceReviewModal {...{ user: employee }} />
+                        : ""
+                    }
+                    {/* // (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} /> */}
+                  </div>
               </CCol>
             </CRow>
           </CCardHeader>
@@ -318,7 +326,7 @@ const EmployeeDetails = (props) => {
           </CCardBody>
         </CCard>
       </CCol>
-    </CRow>
+    </CRow >
   ) : (
       <NoData />
     );
