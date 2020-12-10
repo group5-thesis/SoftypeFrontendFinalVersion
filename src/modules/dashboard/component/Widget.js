@@ -67,19 +67,6 @@ const Widgets = (
             </div>
           }
         >
-          {/* {
-            employeesOnLeave.length === 0 ?
-              <CDropdown>
-                <CDropdownToggle color="transparent">
-                </CDropdownToggle>
-                <CDropdownMenu className="pt-0" placement="bottom-end">
-                  <CDropdownItem onClick={() => {
-                    viewLeaveCalendar()
-                  }}>View Leave Calendar</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-              : ""
-          } */}
           <Icon path={mdiAccountArrowRightOutline}
             size={1.8}
             horizontal
@@ -102,19 +89,6 @@ const Widgets = (
             </div>
           }
         >
-          {/* {
-            user.accountType !== 3 ?
-              <CDropdown>
-                <CDropdownToggle color="transparent">
-                </CDropdownToggle>
-                <CDropdownMenu className="pt-0" placement="bottom-end">
-                  <CDropdownItem onClick={() => {
-                    viewEmployees()
-                  }}>View Employees</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-              : ""
-          } */}
           <Icon path={mdiAccountGroupOutline}
             size={1.8}
             horizontal
@@ -137,19 +111,6 @@ const Widgets = (
             </div>
           }
         >
-          {/* {
-            stateBirthdayEmployees.length !== 0 ?
-              <CDropdown>
-                <CDropdownToggle color="transparent">
-                </CDropdownToggle>
-                <CDropdownMenu className="pt-0" placement="bottom-end">
-                  <CDropdownItem onClick={() => {
-                    toggleModal()
-                  }}>See who's celebrating</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-              : ""
-          } */}
           <CTooltip content={stateBirthdayEmployees.length !== 0 ? "See who's celebrating" : "Nobody's celebrating now"}>
             <Icon path={mdiCake}
               size={1.8}
@@ -179,21 +140,6 @@ const Widgets = (
             </div>
           }
         >
-          {/* {
-            (user.accountType === 3 && employeeDepartment.length !== 0) ||
-              (user.accountType === 1 && todaysPendingLeaveRequests.length !== 0) ||
-              (user.accountType === 2 && todaysPendingLeaveRequests.length !== 0) ?
-              <CDropdown>
-                <CDropdownToggle caret className="text-white" color="transparent">
-                </CDropdownToggle>
-                <CDropdownMenu className="pt-0" placement="bottom-end">
-                  <CDropdownItem onClick={() => {
-                    user.accountType === 3 ? viewDepartmentInfo(employeeDepartment[0].department_id) : viewLeaveRequests()
-                  }}>{user.accountType === 3 ? `View Department` : `View Leave Requests`}</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-              : ""
-          } */}
           <Icon path={user.accountType !== 3 ? mdiAccountClockOutline : mdiOfficeBuildingOutline}
             size={1.8}
             horizontal

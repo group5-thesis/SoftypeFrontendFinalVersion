@@ -34,7 +34,7 @@ import _ from 'lodash';
 import api from 'utils/api';
 import { actionCreator, ActionTypes } from 'utils/actions';
 import department_icon_default from "../../../assets/img/default_dept_icon.png"
-import { fetchDepartments, retrieveEmployees, fetchDepartmentEmployees, fetchDepartmentManagers } from 'utils/helpers/fetch';
+import { fetchDepartments, retrieveEmployees, fetchDepartmentEmployees, fetchDepartmentManagers, retrieveLeaveRequests } from 'utils/helpers/fetch';
 import { CIcon } from '@coreui/icons-react';
 
 const Department = ({ location }) => {
@@ -196,7 +196,7 @@ const Department = ({ location }) => {
     }
     let data = {
       departmentId: departmentDetails.department_id,
-      name: dataToEdit.department_name.charAt(0).toUpperCase() + dataToEdit.department_name.slice(1),
+      name: dataToEdit.department_name ? dataToEdit.department_name.charAt(0).toUpperCase() + dataToEdit.department_name.slice(1) : departmentDetails.department_name,
       department_head_pk_id: departmentDetails.department_headId,
       departmentHeadId: +dataToEdit.department_head
     }
@@ -208,6 +208,7 @@ const Department = ({ location }) => {
       fetchDepartmentManagers(dispatch)
       fetchDepartments(dispatch)
       retrieveEmployees(dispatch)
+      retrieveLeaveRequests(dispatch)
     }
     setDataToEdit(DepartmentModel)
     fetchDepartments(dispatch)
@@ -275,13 +276,14 @@ const Department = ({ location }) => {
 
   const handleDeleteDepartment = async () => {
     setLoading(true)
-    let res = await api.post('/delete_department', { id: departmentDetails.department_id })
+    let res = await api.post('/delete_department', { id: departmentDetails.department_id, headId: departmentDetails.department_headId })
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     if (!res.error) {
       fetchDepartmentEmployees(dispatch);
       retrieveEmployees(dispatch)
       fetchDepartmentManagers(dispatch)
       fetchDepartments(dispatch)
+      retrieveLeaveRequests(dispatch)
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
@@ -331,7 +333,8 @@ const Department = ({ location }) => {
               closeButton
               footer={
                 <>
-                  <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name}
+                  {/* <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name} */}
+                  <CButton color="primary" disabled={isLoading || !isChange || deleteDepartment && dname !== departmentDetails.department_name}
                     onClick={editDepartment ? validateUpdate : deleteDepartment ? clickProceedToDeleteDept : validate}>
                     {
                       isLoading ? <CSpinner color="secondary" size="sm" /> : editDepartment ? 'Update' : deleteDepartment ? "Proceed" : 'Submit'

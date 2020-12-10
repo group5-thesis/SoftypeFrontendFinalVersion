@@ -134,7 +134,7 @@ const Dashboard = () => {
     })
   });
 
-  console.log(stateEmployeesOnLeave, user.accountType)
+  // console.log(stateEmployeesOnLeave, user.accountType)
 
   const statePendingLeaveRequests = useSelector((state) => {
     return state.appState.leave.leave_requests.filter(req => {
@@ -279,49 +279,50 @@ const Dashboard = () => {
         stateBirthdayEmployees
       }} />
       {
-        user.accountType !== 3 ?
-          <CRow>
-            <CCol>
-              <CCard>
-                <CCardHeader>
-                  <CRow>
-                    <CCol sm="6">
-                      <div>
-                        {"Employees on Leave"}
-                      </div>
-                    </CCol>
-                  </CRow>
-                </CCardHeader>
-                <CCardBody>
-                  <CDataTable
-                    items={_.orderBy(stateEmployeesOnLeave, ['created at'], ['desc'])}
-                    fields={LeaveRequestFieldsForEmployee}
-                    hover
-                    clickableRows
-                    pagination
-                    itemsPerPage={5}
-                    noItemsViewSlot={<NoData title="No Employee/s on Leave" />}
-                    onRowClick={(item) => {
-                      viewLeaveRequestDetails(item.id)
-                    }}
-                    scopedSlots={{
-                      "no of days": (item) => (
-                        <td> {getDuration(item["date from"], item["date to"])}</td>
+        // user.accountType !== 3 ?
+        <CRow>
+          <CCol>
+            <CCard>
+              <CCardHeader>
+                <CRow>
+                  <CCol sm="6">
+                    <div>
+                      {"Employees on Leave"}
+                    </div>
+                  </CCol>
+                </CRow>
+              </CCardHeader>
+              <CCardBody>
+                <CDataTable
+                  items={_.orderBy(stateEmployeesOnLeave, ['created at'], ['desc'])}
+                  fields={LeaveRequestFieldsForEmployee}
+                  hover
+                  clickableRows
+                  pagination
+                  itemsPerPage={5}
+                  noItemsViewSlot={<NoData title="No Employee/s on Leave" />}
+                  onRowClick={(item) => {
+                    viewLeaveRequestDetails(item.id)
+                  }}
+                  scopedSlots={{
+                    "no of days": (item) => (
+                      <td> {getDuration(item["date from"], item["date to"])}</td>
+                    ),
+                    'status':
+                      (item) => (
+                        <td>
+                          <CBadge color={getBadgeLeave(item.status)}>
+                            {toCapitalize(item.status)}
+                          </CBadge>
+                        </td>
                       ),
-                      'status':
-                        (item) => (
-                          <td>
-                            <CBadge color={getBadgeLeave(item.status)}>
-                              {toCapitalize(item.status)}
-                            </CBadge>
-                          </td>
-                        ),
-                    }}
-                  />
-                </CCardBody>
-              </CCard>
-            </CCol>
-          </CRow> : ""
+                  }}
+                />
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+        // : ""
       }
       <CRow>
         <CCol>
@@ -363,54 +364,58 @@ const Dashboard = () => {
               {...tickets}
             />
           </Modal>
-          <CCard>
-            <CCardHeader>
-              <CRow>
-                <CCol sm="6">
-                  <div>
-                    {user.accountType === 1 || user.accountType === 2 ? "Recent Leave Requests" : user.accountType === 3 ? "Employees on Leave" : ""}
-                  </div>
-                </CCol>
-                {
-                  user.accountType === 1 || user.accountType === 2 ?
-                    <CCol sm="6" className="d-none d-md-block">
-                      <div className="float-right">
-                        <CButton size="sm" color="primary" onClick={() => {
-                          viewLeaveRequests()
-                        }} disabled={false}>
-                          {"View All"}
-                        </CButton>
-                      </div>
-                    </CCol>
-                    : ""
-                }
-              </CRow>
-            </CCardHeader>
-            <CCardBody>
-              <CDataTable
-                items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(stateEmployeesOnLeave, ['created at'], ['desc']) : []}
-                fields={user.accountType === 2 || user.accountType === 1 ? LeaveRequestFields : user.accountType === 3 ? LeaveRequestFieldsForEmployee : []}
-                hover
-                clickableRows
-                pagination
-                itemsPerPage={5}
-                noItemsViewSlot={<NoData title={user.accountType === 3 ? `No Employee/s on Leave` : `No Requests`} />}
-                onRowClick={(item) => {
-                  viewLeaveRequestDetails(item.id)
-                }}
-                scopedSlots={{
-                  'status':
-                    (item) => (
-                      <td>
-                        <CBadge color={getBadgeLeave(item.status)}>
-                          {toCapitalize(item.status)}
-                        </CBadge>
-                      </td>
-                    ),
-                }}
-              />
-            </CCardBody>
-          </CCard>
+          {
+            user.accountType === 1 || user.accountType === 2 ?
+            <CCard>
+              <CCardHeader>
+                <CRow>
+                  <CCol sm="6">
+                    <div>
+                      {user.accountType === 1 || user.accountType === 2 ? "Recent Leave Requests" : user.accountType === 3 ? "Employees on Leave" : ""}
+                    </div>
+                  </CCol>
+                  {
+                    user.accountType === 1 || user.accountType === 2 ?
+                      <CCol sm="6" className="d-none d-md-block">
+                        <div className="float-right">
+                          <CButton size="sm" color="primary" onClick={() => {
+                            viewLeaveRequests()
+                          }} disabled={false}>
+                            {"View All"}
+                          </CButton>
+                        </div>
+                      </CCol>
+                      : ""
+                  }
+                </CRow>
+              </CCardHeader>
+              <CCardBody>
+                <CDataTable
+                  items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(stateEmployeesOnLeave, ['created at'], ['desc']) : []}
+                  fields={user.accountType === 2 || user.accountType === 1 ? LeaveRequestFields : user.accountType === 3 ? LeaveRequestFieldsForEmployee : []}
+                  hover
+                  clickableRows
+                  pagination
+                  itemsPerPage={5}
+                  noItemsViewSlot={<NoData title={user.accountType === 3 ? `No Employee/s on Leave` : `No Requests`} />}
+                  onRowClick={(item) => {
+                    viewLeaveRequestDetails(item.id)
+                  }}
+                  scopedSlots={{
+                    'status':
+                      (item) => (
+                        <td>
+                          <CBadge color={getBadgeLeave(item.status)}>
+                            {toCapitalize(item.status)}
+                          </CBadge>
+                        </td>
+                      ),
+                  }}
+                />
+              </CCardBody>
+            </CCard>
+            : ""
+          }
         </CCol>
         {
           user.accountType === 1 ?
@@ -457,7 +462,7 @@ const Dashboard = () => {
               </CCard>
             </CCol>
             : // for employee
-            <CCol>
+            <CCol sm={user.accountType !== 3 ? "6" : "12"}>
               <Calendar
                 {...{
                   onMonthChange: setMonth,
