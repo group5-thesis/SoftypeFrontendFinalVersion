@@ -98,7 +98,7 @@ const MyAccount = (props) => {
     let payload = new FormData();
     payload.append("file", selectedFile);
     payload.append("employee_id", +user.employeeId);
-    payload.append("user_id", +user.userId);
+    payload.append("userId", +user.userId);
     _initProcess("uploading", true);
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     let res = await api.post("/update_profile/img", payload, true);

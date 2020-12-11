@@ -105,6 +105,7 @@ const EmployeeDetails = (props) => {
     let payload = new FormData();
     payload.append("file", selectedFile);
     payload.append("employee_id", +employee.employeeId);
+    payload.append("userId", +employee.userId);
     _initProcess("uploading", true);
     let res = await api.post("/update_profile/img", payload, true);
     _initProcess("uploading", false);
