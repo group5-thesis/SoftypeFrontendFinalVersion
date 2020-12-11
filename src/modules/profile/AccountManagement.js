@@ -98,6 +98,7 @@ const MyAccount = (props) => {
     let payload = new FormData();
     payload.append("file", selectedFile);
     payload.append("employee_id", +user.employeeId);
+    payload.append("user_id", +user.userId);
     _initProcess("uploading", true);
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     let res = await api.post("/update_profile/img", payload, true);
@@ -105,7 +106,7 @@ const MyAccount = (props) => {
     if (!res.error) {
       _initProcess("pending", false);
       let updated = res.data.employee_information[0];
-      debugger
+      // debugger
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS,updated));
     } else {
