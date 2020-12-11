@@ -55,7 +55,7 @@ const Widgets = (
       </Modal>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{ minHeight: '150px' }}
+          style={{ minHeight: '175px' }}
           color="gradient-primary"
           header={<h2>{`${employeesOnLeave}`}</h2>}
           text={"Employees on Leave"}
@@ -77,7 +77,7 @@ const Widgets = (
       </CCol>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{ minHeight: '150px' }}
+          style={{ minHeight: '175px' }}
           color="gradient-info"
           header={<h2>{`${totalEmployees}`}</h2>}
           text="Total Employees"
@@ -99,7 +99,7 @@ const Widgets = (
       </CCol>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{ minHeight: '150px' }}
+          style={{ minHeight: '175px' }}
           color="gradient-warning"
           header={<h2>{`${stateBirthdayEmployees.length}`}</h2>}
           text={stateBirthdayEmployees.length === 0 ? "No Birthday/s Today" : "Birthday Celebrants"}
@@ -128,7 +128,7 @@ const Widgets = (
       </CCol>
       <CCol sm="6" lg="3">
         <CWidgetDropdown
-          style={{ minHeight: '150px' }}
+          style={{ minHeight: '175px' }}
           color="gradient-danger"
           header={user.accountType === 3 && employeeDepartment.length !== 0 ? <h2 className="blockquote">{`${employeeDepartment[0].department_name}`}</h2> : user.accountType === 3 && employeeDepartment.length === 0 ? <h2><i>{"UNSET"}</i></h2> : <h2>{pendingLeaveRequests}</h2>}
           text={user.accountType === 3 ? "Department" : user.accountType === 1 || user.accountType === 2 ? "Pending Leave Requests" : ""}
