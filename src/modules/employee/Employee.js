@@ -14,7 +14,7 @@ import {
   CButton,
   CSpinner,
 } from "@coreui/react";
-import { config as cnf } from "utils/config";
+import { config } from "utils/config";
 import { useDispatch, useSelector } from "react-redux";
 import { actionCreator, ActionTypes } from "utils/actions";
 import {
@@ -52,10 +52,11 @@ const EmployeeDetails = (props) => {
   const [preview, setPreview] = useState();
   const [tab, setTab] = useState(0)
   const [reviews, setReviews] = useState([])
+  const [fullname, setFullname] = useState("F")
   const stateReviews = useSelector(state => {
     return state.appState.performance_review.performance_reviews;
   })
-
+  let baseUrl = `${!config.IS_DEV ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV}/file/images`
   const dept_head_employee = useSelector(state => {
     return state.appState.employee.employees.filter(emp => {
       return emp.employeeId === user.employeeId
@@ -139,6 +140,9 @@ const EmployeeDetails = (props) => {
       if (el.employeeId.toString() === id.toString()) {
         setEmployee(el);
         getReviews(el.employeeId)
+        setFullname(`${toCapitalize(el.firstname)} ${
+          el.middlename && toCapitalize(el.middlename) + " "
+          }${toCapitalize(el.lastname)}`);
         break;
       }
     }
@@ -149,6 +153,7 @@ const EmployeeDetails = (props) => {
     }
     const objectUrl = URL.createObjectURL(selectedFile);
     setPreview(objectUrl);
+    debugger
 
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl);
@@ -159,8 +164,6 @@ const EmployeeDetails = (props) => {
     return <Redirect to="/myAccount" />
   }
 
-  console.log(employee, "selected employee")
-  console.log(dept_head_employee[0], " head")
   // let url = `${getBaseUrl()}/file/images/${employee.profile_img}`
 
   return employee ? (
@@ -201,15 +204,15 @@ const EmployeeDetails = (props) => {
                     />
                   }
                 </div>
-                  < div className="float-right mr-2">
-                    {
-                      (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.department_id && employee.isActive === 1 ) ||
-                        (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.deparment_IdM && employee.isActive === 1 ) ?
-                        <PerformanceReviewModal {...{ user: employee }} />
-                        : ""
-                    }
-                    {/* // (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} /> */}
-                  </div>
+                < div className="float-right mr-2">
+                  {
+                    (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.department_id && employee.isActive === 1) ||
+                      (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.deparment_IdM && employee.isActive === 1) ?
+                      <PerformanceReviewModal {...{ user: employee }} />
+                      : ""
+                  }
+                  {/* // (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} /> */}
+                </div>
               </CCol>
             </CRow>
           </CCardHeader>
@@ -217,7 +220,7 @@ const EmployeeDetails = (props) => {
             tab === 0 ?
               <CRow gutters={false} className="">
                 <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
-                  {(function () {
+                  {/* {(function () {
                     let pic = false;
                     let url = `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
                     fetch(url, { method: "HEAD" })
@@ -248,7 +251,12 @@ const EmployeeDetails = (props) => {
                         }}
                       ></div>
                     );
-                  })()}
+                  })()} */}
+                  <img
+                    alt={fullname}
+                    src={preview ? preview : employee.profile_img ? `${baseUrl}/${employee.profile_img}` : res.logoSm}
+                    style={{ width: "100%", maxHeight: '200px' }}
+                  />
                   <input
                     type="file"
                     accept="image/*"
