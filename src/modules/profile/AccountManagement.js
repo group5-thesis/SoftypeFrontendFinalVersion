@@ -105,7 +105,7 @@ const MyAccount = (props) => {
     _initProcess("uploading", false);
     if (!res.error) {
       _initProcess("pending", false);
-      let updated = res.data.employee_information[0];
+      let updated = res.data[0];
       // debugger
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
       dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS,updated));
