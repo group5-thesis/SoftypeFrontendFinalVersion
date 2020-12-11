@@ -92,11 +92,11 @@ const TicketForm = () => {
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.ADD_TICKET, renameKey(res.data.officeRequest_information[0])))
       await fetchTickets(dispatch)
-      modalRef.current.toggle()
       modalOnClose()
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message });
     }
+    modalRef.current.toggle()
   }
 
   const renderError = (field) => {

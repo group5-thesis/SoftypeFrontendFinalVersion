@@ -179,7 +179,7 @@ const LeaveRequests = (props) => {
         <CCard>
           <CCardBody>
             <CRow>
-              <CCol sm="5">
+              <CCol sm="3">
                 {
                   user.accountType === 3 ?
                     <h4 className="card-title mb-0">My Leave Requests</h4>
@@ -203,7 +203,7 @@ const LeaveRequests = (props) => {
                 </CSelect>
                 }
               </CCol>
-              <CCol sm="7" className="d-sm-block">
+              <CCol sm="9" className="d-sm-block">
                 {
                   // (config.IS_DEV || user.roleId > 1 )
                   (user.accountType === 1 && leaveFilter === "my_request") ||
@@ -248,6 +248,7 @@ const LeaveRequests = (props) => {
               fields={header}
               pagination
               sorter
+              itemsPerPage={10}
               onPageChange={(e) => {
                 pageChange(e);
               }}

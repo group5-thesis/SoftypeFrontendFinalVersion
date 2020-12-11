@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { CBadge, CCard, CCardBody, CCol, CDataTable, CRow, CButton, CSelect } from "@coreui/react";
+import { CBadge, CCard, CCardBody, CCol, CDataTable, CRow, CButton, CSelect, CSpinner } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { Modal, ConfirmDialog, NoData } from "reusable";
 import { ActionTypes, actionCreator } from 'utils/actions';
@@ -25,6 +25,7 @@ const Ticket = (props) => {
   const [clickedDeleteBtn, setClickedDeleteBtn] = useState(false);
   const [now, setNow] = useState(new Date)
   const [loading, setLoading] = useState(false)
+  const [loadingApprove, setLoadingApprove] = useState(false)
   const [ticketFilter, setTicketFilter] = useState("emp_request")
 
   const default_filter = {
@@ -101,11 +102,13 @@ const Ticket = (props) => {
   }
 
   const onConfirm = async () => {
+    modal.current.toggle()
     let data = {
       officeRequestId: tickets.id,
       employeeId: user.employeeId,
       indicator: clickedApproveBtn ? 1 : clickedRejectBtn ? 0 : 0
     }
+    data.indicator === 1 ? setLoadingApprove(true) : setLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
@@ -117,10 +120,16 @@ const Ticket = (props) => {
     setClickedApproveBtn(false)
     setClickedDeleteBtn(false)
     setClickedRejectBtn(false)
+    modal.current.toggle()
+    setLoading(false)
+    setLoadingApprove(false)
   }
 
   const onDelete = async () => {
+    setLoading(true)
+    modal.current.toggle()
     let res = await api.post("/delete_officeRequest", { id: tickets.id })
+    dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.DELETE_TICKET, tickets.id))
       fetchTickets(dispatch)
@@ -130,6 +139,8 @@ const Ticket = (props) => {
     setClickedApproveBtn(false)
     setClickedDeleteBtn(false)
     setClickedRejectBtn(false)
+    modal.current.toggle()
+    setLoading(false)
   }
 
   const onClearFilter = () => {
@@ -169,27 +180,42 @@ const Ticket = (props) => {
           footer={
             (tickets && tickets.status === 1) && user.accountType === 1 && ticketFilter === "emp_request" ?
               <>
-                <CButton color="success" onClick={() => {
+                <CButton color="success" disabled={loadingApprove || loading}  onClick={() => {
                   approveRequestBtn()
-                }}>Approve</CButton>
-                <CButton color="danger" onClick={() => {
+                }}>
+                {loadingApprove ? (
+                      <CSpinner color="secondary" size="sm" />
+                    ) : (
+                        "Approve"
+                      )}
+                </CButton>
+                <CButton color="danger" disabled={loading || loadingApprove}  onClick={() => {
                   rejectRequestBtn()
-                }}>Reject</CButton>
+                }}>
+                 {loading ? (
+                      <CSpinner color="secondary" size="sm" />
+                    ) : (
+                        "Reject"
+                      )}
+                </CButton>
               </>
               : (tickets && tickets.status === 1) && user.accountType === 2 ||
                 (tickets && tickets.status === 1) && user.accountType === 3 ||
                 (tickets && tickets.status === 1) && user.accountType === 1 && ticketFilter === "my_request" ?
                 <>
-                  <CButton color="danger" onClick={() => {
+                  <CButton color="danger" disabled={loading} onClick={() => {
                     deleteRequestBtn()
-                  }}>Delete Request</CButton>
-                  <CButton color="primary" onClick={() => {
-                    console.log("TEST")
-                  }}>Edit Request</CButton>
+                  }}>
+                    {loading ? (
+                      <CSpinner color="secondary" size="sm" />
+                    ) : (
+                        "Delete Request"
+                      )}
+                  </CButton>
                 </>
                 : (tickets && tickets.status === 0) ?
                   <>
-                    <CButton color="danger" onClick={() => {
+                    <CButton color="danger" disabled={loading} onClick={() => {
                       modal.current.toggle()
                     }}>Close</CButton>
                   </> : ""
@@ -203,7 +229,7 @@ const Ticket = (props) => {
         <CCard>
           <CCardBody>
             <CRow>
-              <CCol sm="5">
+              <CCol sm="3">
                 {
                   user.accountType !== 1 ?
                     <h4 className="card-title mb-0">{Number(status) === 1 ? 'Open' : status === 'All' ? status : 'Closed'} Requests</h4> :
@@ -226,7 +252,7 @@ const Ticket = (props) => {
                 </CSelect>
                 }
               </CCol>
-              <CCol sm="7" className="d-none d-md-block">
+              <CCol sm="9" className="d-none d-md-block">
                 {
                   user.accountType === 2 || user.accountType === 3 || user.accountType === 1 && ticketFilter === "my_request" ?
                     <div className="float-right  mr-3">
@@ -265,7 +291,7 @@ const Ticket = (props) => {
             <CDataTable
               items={user.accountType === 1 && ticketFilter === "emp_request" ? filteredTicketRequest : user.accountType === 3 || user.accountType === 2 ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : user.accountType === 1 && ticketFilter === "my_request" ? _.filter(filteredTicketRequest, ['requestor', user.employeeId]) : []}
               fields={fields}
-              itemsPerPage={5}
+              itemsPerPage={10}
               hover
               pagination
               onRowClick={toggleModal}
