@@ -70,9 +70,10 @@ const Departments = (props) => {
     let isExist = _.filter(stateDepartments, function (key) {
       return key.department_name.toLowerCase().trim() === data.department_name.toLowerCase().trim();
     });
+
     if (isExist.length === 0) {
       dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
-      let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
+      let res = await api.post("/add_department", { name: data.department_name.charAt(0).toUpperCase() + data.department_name.slice(1), department_head: +data.department_head }) // data [department_head, department_name as name]
       if (!res.error) {
         dispatchNotification(dispatch, { type: 'success', message: 'Success' })
         dispatch(actionCreator(ActionTypes.ADD_DEPARTMENT, res.data.department[0]))

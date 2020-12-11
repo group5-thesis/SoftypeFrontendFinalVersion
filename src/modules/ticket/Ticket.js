@@ -294,7 +294,7 @@ const Ticket = (props) => {
                 'remarks': (item) => (
                   <td>
                     <CBadge color={item.remarks === "Request Approved" ? "success" : item.remarks === "Request Rejected" ? "danger" : "secondary"}>
-                      {item.remarks === "Request Approved" ? "Approved" : item.remarks === "Request Rejected" ? "Rejected" : "UNSET"}
+                      {item.remarks === "Request Approved" ? "Approved" : item.remarks === "Request Rejected" ? "Rejected" : "None"}
                     </CBadge>
                   </td>
                 )

@@ -22,9 +22,9 @@ const defaultErrors = {
   street: false,
   city: false,
   country: false,
-  sss: false,
-  phil_health_no: false,
-  pag_ibig_no: false,
+  // sss: false,
+  // phil_health_no: false,
+  // pag_ibig_no: false,
 
 }
 const defaultEmployee = {
@@ -40,9 +40,9 @@ const defaultEmployee = {
   street: "",
   city: "",
   country: "",
-  sss: "",
-  phil_health_no: "",
-  pag_ibig_no: "",
+  // sss: "",
+  // phil_health_no: "",
+  // pag_ibig_no: "",
   isActive: 1
 
 }
@@ -97,9 +97,9 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
       return emailRules(value)
     }
 
-    if (['sss', 'phil_health_no', 'pag_ibig_no'].includes(name)) {
-      return false
-    }
+    // if (['sss', 'phil_health_no', 'pag_ibig_no'].includes(name)) {
+    //   return false
+    // }
     return value !== "" || APP_MESSAGES.INPUT_REQUIRED;
   }
 
@@ -170,9 +170,9 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
       email,
       city,
       country,
-      pag_ibig_no,
-      phil_health_no,
-      sss
+      // pag_ibig_no,
+      // phil_health_no,
+      // sss
     } = employee;
     let checkRequired = val => RULES.required(val)
     _errors['role'] = checkRequired(role);
@@ -264,7 +264,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                       value={employee.firstname || ""}
                       placeholder="Enter Firstname"
                       invalid={typeof errors.firstname !== 'boolean'}
-                    //valid={!errors.firstname} 
+                    //valid={!errors.firstname}
                     />
                     {renderFeedback(errors.firstname)}
                   </CFormGroup>
@@ -351,7 +351,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                           <optgroup label={role.category} key={role.category}>
                             {
                               role.roles.map((_role, idx) => {
-                                return (<option value={JSON.stringify({ role: _role, accountType: role.accountType })} key={idx} >{_role}</option>)
+                                return (<option value={JSON.stringify({ role: _role, accountType: role.accountType })} key={idx+"EMP_role"} >{_role}</option>)
                               })
                             }
                           </optgroup>)
@@ -473,7 +473,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                   </CFormGroup>
                 </CCol>
               </CFormGroup>
-              <CFormGroup row className="my-0 d-none">
+              {/* <CFormGroup row className="my-0 d-none">
                 <CCol xs="4">
                   <CFormGroup>
                     <CLabel>SSS NO.</CLabel>
@@ -512,7 +512,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                     />
                   </CFormGroup>
                 </CCol>
-              </CFormGroup>
+              </CFormGroup> */}
             </CForm>
           </CCol>
         </CRow>
