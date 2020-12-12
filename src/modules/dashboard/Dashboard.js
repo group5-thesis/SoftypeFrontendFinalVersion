@@ -259,7 +259,7 @@ const Dashboard = () => {
         })
 
         setEmployeeOnLeaveData(stateData)
-        employeesOnLeave(stateData.length)
+        setEmployeeOnLeave(stateData.length)
       }
     }
   }
