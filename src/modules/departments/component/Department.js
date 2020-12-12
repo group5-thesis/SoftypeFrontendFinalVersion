@@ -103,13 +103,13 @@ const Department = ({ location }) => {
   const departmentDetails = request[0]
 
   const toggleModal = () => {
-    modal.current.toggle();
     setData(DepartmentManager)
     setError(defaultErrors)
     setEditDepartment(false)
     setDataToEdit(DepartmentModel)
-    setIsChange(false)
+    setIsChange(true)
     setDeleteDepartment(false)
+    modal.current.toggle();
   };
 
   const handleSubmit = async () => {
@@ -334,7 +334,7 @@ const Department = ({ location }) => {
               footer={
                 <>
                   {/* <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name} */}
-                  <CButton color="primary" disabled={isLoading || !isChange || deleteDepartment && dname !== departmentDetails.department_name}
+                  <CButton color="primary" disabled={isLoading || isChange || deleteDepartment && dname !== departmentDetails.department_name}
                     onClick={editDepartment ? validateUpdate : deleteDepartment ? clickProceedToDeleteDept : validate}>
                     {
                       isLoading ? <CSpinner color="secondary" size="sm" /> : editDepartment ? 'Update' : deleteDepartment ? "Proceed" : 'Submit'
