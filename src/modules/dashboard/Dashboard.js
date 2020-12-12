@@ -10,7 +10,7 @@ import {
   CDataTable
 } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux';
-import { toCapitalize, formatDate, renameKey, dispatchNotification, getDuration , plotArray } from 'utils/helpers';
+import { toCapitalize, formatDate, renameKey, dispatchNotification, getDuration, plotArray } from 'utils/helpers';
 import { NoData, Modal, ConfirmDialog } from 'reusable';
 import { useHistory } from "react-router-dom";
 import _ from 'lodash';
@@ -257,7 +257,9 @@ const Dashboard = () => {
         stateData = stateData.filter(req => {
           return moment().isBetween(req['date from'], req['date to']) && req['status'].toLowerCase() === "approved".toLowerCase()
         })
+
         setEmployeeOnLeaveData(stateData)
+        employeesOnLeave(stateData.length)
       }
     }
   }
@@ -289,7 +291,7 @@ const Dashboard = () => {
         viewOfficeRequests,
         viewEmployees,
         viewLeaveCalendar,
-        employeesOnLeave:stateEmployeesOnLeave.length,
+        employeesOnLeave: stateEmployeesOnLeave.length,
         pendingLeaveRequests,
         todaysPendingOfficeRequests,
         viewDepartmentInfo,
