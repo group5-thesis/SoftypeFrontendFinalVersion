@@ -10,12 +10,12 @@ import {
   CDataTable
 } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux';
-import { toCapitalize, formatDate, renameKey, dispatchNotification, getDuration } from 'utils/helpers';
+import { toCapitalize, formatDate, renameKey, dispatchNotification, getDuration , plotArray } from 'utils/helpers';
 import { NoData, Modal, ConfirmDialog } from 'reusable';
 import { useHistory } from "react-router-dom";
 import _ from 'lodash';
 import moment from 'moment'
-import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR, CURRENT_DATE, CURRENT_MONTH_TEXT } from "utils/constants/constant";
+import { TICKET_STATUS, CURRENT_MONTH, CURRENT_YEAR, CURRENT_DATE, CURRENT_MONTH_TEXT, LEAVE_REQUEST_FILTER } from "utils/constants/constant";
 import TicketDetails from "modules/ticket/component/TicketDetails";
 import api from 'utils/api'
 import { ActionTypes, actionCreator } from 'utils/actions';
@@ -128,11 +128,11 @@ const Dashboard = () => {
     })
   });
 
-  const stateEmployeesOnLeave = useSelector((state) => { // employee on leave
-    return state.appState.leave.leave_requests.filter(req => {
-      return moment().isBetween(req['date from'], req['date to']) && req['status'].toLowerCase() === "approved".toLowerCase()
-    })
-  });
+  // const stateEmployeesOnLeave = useSelector((state) => { // employee on leave
+  //   return state.appState.leave.leave_requests.filter(req => {
+  //     return moment().isBetween(req['date from'], req['date to']) && req['status'].toLowerCase() === "approved".toLowerCase()
+  //   })
+  // });
 
   // console.log(stateEmployeesOnLeave, user.accountType)
 
@@ -149,6 +149,7 @@ const Dashboard = () => {
   });
 
   const history = useHistory();
+  const [stateEmployeesOnLeave, setEmployeeOnLeaveData] = useState([]);
   const [totalEmployees, setTotalEmployees] = useState(stateActiveEmployees.length)
   const [employeesOnLeave, setEmployeeOnLeave] = useState(stateEmployeesOnLeave.length)
   const [pendingLeaveRequests, setPendingLeaveRequests] = useState(statePendingLeaveRequests.length)
@@ -157,7 +158,7 @@ const Dashboard = () => {
   const [recentOfficeRequest, setRecentOfficeRequest] = useState(stateOfficeRequests)
 
   // Office Request
-  const [tickets, setTickets] = useState();
+  const [tickets, setTickets] = useState()
   const [clickedRejectBtn, setClickedRejectBtn] = useState(false);
   const [clickedApproveBtn, setClickedApproveBtn] = useState(false);
 
@@ -245,7 +246,24 @@ const Dashboard = () => {
     modal.current.toggle();
   };
 
+  const retrieveLeaveApproved = async () => {
+    let payload = LEAVE_REQUEST_FILTER('approved');
+    let res = await api.post("/filterLeaveRequest", { ...payload, roleId: 1 });
+    if (!res.error) {
+      let { leave_requests } = res.data;
+      let stateData = [];
+      if (leave_requests.length) {
+        stateData = plotArray(leave_requests);
+        stateData = stateData.filter(req => {
+          return moment().isBetween(req['date from'], req['date to']) && req['status'].toLowerCase() === "approved".toLowerCase()
+        })
+        setEmployeeOnLeaveData(stateData)
+      }
+    }
+  }
+
   useEffect(() => {
+    retrieveLeaveApproved()
     return
   }, [
       totalEmployees,
@@ -271,7 +289,7 @@ const Dashboard = () => {
         viewOfficeRequests,
         viewEmployees,
         viewLeaveCalendar,
-        employeesOnLeave,
+        employeesOnLeave:stateEmployeesOnLeave.length,
         pendingLeaveRequests,
         todaysPendingOfficeRequests,
         viewDepartmentInfo,
@@ -366,55 +384,55 @@ const Dashboard = () => {
           </Modal>
           {
             user.accountType === 1 || user.accountType === 2 ?
-            <CCard>
-              <CCardHeader>
-                <CRow>
-                  <CCol sm="6">
-                    <div>
-                      {user.accountType === 1 || user.accountType === 2 ? "Recent Leave Requests" : user.accountType === 3 ? "Employees on Leave" : ""}
-                    </div>
-                  </CCol>
-                  {
-                    user.accountType === 1 || user.accountType === 2 ?
-                      <CCol sm="6" className="d-none d-md-block">
-                        <div className="float-right">
-                          <CButton size="sm" color="primary" onClick={() => {
-                            viewLeaveRequests()
-                          }} disabled={false}>
-                            {"View All"}
-                          </CButton>
-                        </div>
-                      </CCol>
-                      : ""
-                  }
-                </CRow>
-              </CCardHeader>
-              <CCardBody>
-                <CDataTable
-                  items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(stateEmployeesOnLeave, ['created at'], ['desc']) : []}
-                  fields={user.accountType === 2 || user.accountType === 1 ? LeaveRequestFields : user.accountType === 3 ? LeaveRequestFieldsForEmployee : []}
-                  hover
-                  clickableRows
-                  pagination
-                  itemsPerPage={5}
-                  noItemsViewSlot={<NoData title={user.accountType === 3 ? `No Employee/s on Leave` : `No Requests`} />}
-                  onRowClick={(item) => {
-                    viewLeaveRequestDetails(item.id)
-                  }}
-                  scopedSlots={{
-                    'status':
-                      (item) => (
-                        <td>
-                          <CBadge color={getBadgeLeave(item.status)}>
-                            {toCapitalize(item.status)}
-                          </CBadge>
-                        </td>
-                      ),
-                  }}
-                />
-              </CCardBody>
-            </CCard>
-            : ""
+              <CCard>
+                <CCardHeader>
+                  <CRow>
+                    <CCol sm="6">
+                      <div>
+                        {user.accountType === 1 || user.accountType === 2 ? "Recent Leave Requests" : user.accountType === 3 ? "Employees on Leave" : ""}
+                      </div>
+                    </CCol>
+                    {
+                      user.accountType === 1 || user.accountType === 2 ?
+                        <CCol sm="6" className="d-none d-md-block">
+                          <div className="float-right">
+                            <CButton size="sm" color="primary" onClick={() => {
+                              viewLeaveRequests()
+                            }} disabled={false}>
+                              {"View All"}
+                            </CButton>
+                          </div>
+                        </CCol>
+                        : ""
+                    }
+                  </CRow>
+                </CCardHeader>
+                <CCardBody>
+                  <CDataTable
+                    items={user.accountType === 2 || user.accountType === 1 ? _.orderBy(recentLeaveRequest, ['created at'], ['desc']).slice(0, 5) : user.accountType === 3 ? _.orderBy(stateEmployeesOnLeave, ['created at'], ['desc']) : []}
+                    fields={user.accountType === 2 || user.accountType === 1 ? LeaveRequestFields : user.accountType === 3 ? LeaveRequestFieldsForEmployee : []}
+                    hover
+                    clickableRows
+                    pagination
+                    itemsPerPage={5}
+                    noItemsViewSlot={<NoData title={user.accountType === 3 ? `No Employee/s on Leave` : `No Requests`} />}
+                    onRowClick={(item) => {
+                      viewLeaveRequestDetails(item.id)
+                    }}
+                    scopedSlots={{
+                      'status':
+                        (item) => (
+                          <td>
+                            <CBadge color={getBadgeLeave(item.status)}>
+                              {toCapitalize(item.status)}
+                            </CBadge>
+                          </td>
+                        ),
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+              : ""
           }
         </CCol>
         {

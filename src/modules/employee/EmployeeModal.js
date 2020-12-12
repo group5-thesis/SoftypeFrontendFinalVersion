@@ -17,15 +17,10 @@ const defaultErrors = {
   email: false,
   mobileno: false,
   role: false,
-  // department: false,
   gender: false,
   street: false,
   city: false,
-  country: false,
-  // sss: false,
-  // phil_health_no: false,
-  // pag_ibig_no: false,
-
+  country: false
 }
 const defaultEmployee = {
   role: null,
@@ -40,9 +35,6 @@ const defaultEmployee = {
   street: "",
   city: "",
   country: "",
-  // sss: "",
-  // phil_health_no: "",
-  // pag_ibig_no: "",
   isActive: 1
 
 }
@@ -339,19 +331,17 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                     <CSelect
                       onChange={handleOnChange}
                       name="role"
-                      // value={employee.role || ""}
                       invalid={typeof errors.role !== 'boolean'}
                     >
-                      {
-                        !employee.role && <option value="" hidden>Select Role</option>
-                      }
-
+                      <option value="" hidden>{
+                        !employee.role ? 'Select Role' : employee.role
+                      }</option>
                       {ACCOUNT_ROLES.map(role => {
                         return (
                           <optgroup label={role.category} key={role.category}>
                             {
                               role.roles.map((_role, idx) => {
-                                return (<option value={JSON.stringify({ role: _role, accountType: role.accountType })} key={idx+"EMP_role"} >{_role}</option>)
+                                return (<option value={JSON.stringify({ role: _role, accountType: role.accountType })} key={idx + "EMP_role"} >{_role}</option>)
                               })
                             }
                           </optgroup>)
@@ -361,22 +351,6 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                     {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
                   </CFormGroup>
                 </CCol>
-                {/* <CCol xs="6">
-                                    <CFormGroup>
-                                        <CLabel>Department</CLabel>
-                                        <CSelect onChange={handleOnChange}
-                                            value={employee.department}
-                                            invalid={ typeof errors.department !== false}
-                                            name="department">
-                                            <option value="" hidden>Select Department</option>
-                                            {
-                                                departments.map(dept => <option key={dept.department_id} value={dept.department_id}>{dept.department_name}</option>)
-                                            }
-
-                                        </CSelect>
-                                        {renderFeedback(APP_MESSAGES.INPUT_REQUIRED)}
-                                    </CFormGroup>
-                                </CCol> */}
                 <CCol xs="6">
                   <CFormGroup>
                     <CLabel>Mobile Number</CLabel>
