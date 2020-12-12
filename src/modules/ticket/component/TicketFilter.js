@@ -14,10 +14,11 @@ import {
 import { useDispatch } from 'react-redux'
 import { MONTHS, YEARS, TICKET_STATUS, OFFICE_REQUEST_FILTER } from "utils/constants/constant";
 import { setWidth, plotArray, shallowCopy, dispatchNotification } from "utils/helpers";
-import { filterTickets } from "utils/helpers/fetch";
+import { filterTickets, fetchTickets } from "utils/helpers/fetch";
+import { actionCreator, ActionTypes } from "utils/actions";
 
 
-const TicketFilter = ({ show,  onClearFilter }) => {
+const TicketFilter = ({ show, onClearFilter }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false)
   const [state, setstate] = useState(OFFICE_REQUEST_FILTER)
@@ -33,22 +34,35 @@ const TicketFilter = ({ show,  onClearFilter }) => {
 
   const clearFilter = () => {
     setstate(OFFICE_REQUEST_FILTER)
-    onFilterRequests()
+    onFilterRequests(true)
   }
 
   const sendNotification = (type, message) => {
     dispatchNotification(dispatch, { type: type, message: message })
   }
 
-  const onFilterRequests = async () => {
+  const onFilterRequests = async (reset = false) => {
     // if (JSON.stringify(state) === JSON.stringify(prevFilter)) return;
-    // alert("test")
+    let filter = state;
+    if (reset === true) {
+      filter = OFFICE_REQUEST_FILTER;
+    }
     setLoading(true)
     sendNotification('info', 'Please wait')
     setPrevFilter(state)
-    let res = await filterTickets(dispatch, state)
+    let res = await fetchTickets(dispatch)
     setLoading(false)
     if (!res.error) {
+      let payload = res.data.officeRequest_information;
+      payload = plotArray(payload)
+      dispatch(actionCreator(ActionTypes.FETCH_TICKETS, payload.filter(tkt => {
+        let date_requested = tkt['date requested'];
+        let date = new Date(date_requested);
+        const year = date.getFullYear();
+        const month = MONTHS[date.getMonth() + 1]
+        return year == filter.year && month == filter.month && (+tkt.status === +filter.status || filter.status === 'All')
+      })))
+      // debugger
       sendNotification('success', 'Success');
     } else {
       sendNotification('error', res.message)
