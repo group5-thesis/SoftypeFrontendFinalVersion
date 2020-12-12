@@ -179,7 +179,9 @@
   .nav-link:not(.active){
     color: $grey-dark;
   }
-
 }
 
 
+.rbc-overlay{
+  z-index: 2000;
+}
