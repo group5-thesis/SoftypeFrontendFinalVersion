@@ -225,6 +225,7 @@ const Department = ({ location }) => {
     if (key === "department_name_delete") {
       setDname(value.trim())
     }
+    
     let copy = shallowCopy(dataToEdit)
     copy[key] = value
     if (value === "") {
