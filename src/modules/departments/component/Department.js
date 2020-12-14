@@ -334,8 +334,9 @@ const Department = ({ location }) => {
               closeButton
               footer={
                 <>
-                  {/* <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name} */}
-                  <CButton color="primary" disabled={isLoading || isChange || deleteDepartment && dname !== departmentDetails.department_name}
+                <CButton color="primary" disabled={isLoading || isChange && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name}
+//                   <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name}
+                  {/* <CButton color="primary" disabled={isLoading || isChange || deleteDepartment && dname !== departmentDetails.department_name}*/}
                     onClick={editDepartment ? validateUpdate : deleteDepartment ? clickProceedToDeleteDept : validate}>
                     {
                       isLoading ? <CSpinner color="secondary" size="sm" /> : editDepartment ? 'Update' : deleteDepartment ? "Proceed" : 'Submit'
