@@ -7,7 +7,7 @@ import {
   CInput
 } from "@coreui/react";
 
-const DeleteDepartment = ({ departmentDetails, handleChange }) => {
+const DeleteDepartment = ({ departmentDetails, handleChange}) => {
 
   return (
     <CRow>
