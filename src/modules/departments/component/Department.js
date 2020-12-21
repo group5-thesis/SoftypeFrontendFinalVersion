@@ -70,6 +70,7 @@ const Department = ({ location }) => {
   const [data, setData] = useState(DepartmentManager)
   const [departmentManagerId, setDepartmentManagerId] = useState()
   const [deleteDepartment, setDeleteDepartment] = useState(false)
+  const [test, setTest] = useState(false)
   const query = new URLSearchParams(location.search);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -217,6 +218,7 @@ const Department = ({ location }) => {
     setEditDepartment(false)
     modal.current.toggle();
     setIsLoading(false)
+    setTest(false)
   }
 
   const handleChange = (e) => { // value is employee ID
@@ -225,26 +227,13 @@ const Department = ({ location }) => {
     if (key === "department_name_delete") {
       setDname(value.trim())
     }
-    
     let copy = shallowCopy(dataToEdit)
     copy[key] = value
-    if (value === "") {
-      setIsChange(false)
-    } else {
-      setIsChange(true)
-    }
-    if (key === "department_head") {
-      if (value === departmentDetails.department_head_employeeId) {
-        setIsChange(false)
-      }
-      else {
-        setIsChange(true)
-      }
-    } else {
-      if (value.replace(" ", "").toLowerCase() === departmentDetails.department_name.replace(" ", "").toLowerCase()) {
-        setIsChange(false)
+    if (key === "department_name") {
+      if (value.replace(" ", "") === departmentDetails.department_name && value.indexOf(' ') >= 0) {
+        setTest(true)
       } else {
-        setIsChange(true)
+        setTest(false)
       }
     }
     setDataToEdit(copy)
@@ -334,9 +323,11 @@ const Department = ({ location }) => {
               closeButton
               footer={
                 <>
-                <CButton color="primary" disabled={isLoading || isChange && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name}
-//                   <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name}
-                  {/* <CButton color="primary" disabled={isLoading || isChange || deleteDepartment && dname !== departmentDetails.department_name}*/}
+                  {/* // <CButton color="primary" disabled={isLoading || editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name} */}
+                  {/* <CButton color="primary" disabled={isLoading || !editDepartment && !dataToEdit.department_name || dataToEdit.department_name === departmentDetails.department_name || deleteDepartment && dname !== departmentDetails.department_name} */}
+                  <CButton
+                    color="primary"
+                    disabled={isLoading || test || deleteDepartment && dname !== departmentDetails.department_name || editDepartment && dataToEdit.department_name === departmentDetails.department_name || editDepartment && dataToEdit.department_head === null}
                     onClick={editDepartment ? validateUpdate : deleteDepartment ? clickProceedToDeleteDept : validate}>
                     {
                       isLoading ? <CSpinner color="secondary" size="sm" /> : editDepartment ? 'Update' : deleteDepartment ? "Proceed" : 'Submit'
@@ -349,7 +340,7 @@ const Department = ({ location }) => {
             >
               {
                 editDepartment ? <UpdateDepartmentDetails {...{ dataToEdit, handleChange, renderFeedback, errors, departmentDetails }} /> :
-                  deleteDepartment ? <DeleteDepartment {...{ departmentDetails, handleChange }} /> :
+                  deleteDepartment ? <DeleteDepartment {...{ departmentDetails, handleChange, errors, renderFeedback }} /> :
                     <AddDepartmentManager {...{ employees, onChange, data, renderFeedback, errors, departmentDetails }} />
               }
             </Modal>

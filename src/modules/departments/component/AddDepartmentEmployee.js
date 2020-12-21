@@ -68,7 +68,7 @@ const AddDepartmentEmployee = ({ _departmentManager, onChange, data, renderFeedb
               })
             }
           </CSelect>
-          {renderFeedback(errors.department_head)}
+          {renderFeedback("Employee Required")}
         </CFormGroup>
       </CCol>
     </CRow >

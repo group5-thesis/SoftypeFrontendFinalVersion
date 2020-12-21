@@ -79,7 +79,7 @@ const AddDepartmentManager = ({ employees, onChange, data, renderFeedback, error
               })
             }
           </CSelect>
-          {renderFeedback(errors.department_head)}
+          {renderFeedback(`Employee ${errors.department_manager}`)}
         </CFormGroup>
       </CCol>
     </CRow >

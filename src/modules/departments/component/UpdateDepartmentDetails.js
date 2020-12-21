@@ -35,7 +35,6 @@ const UpdateDepartmentDetails = ({ dataToEdit, handleChange, renderFeedback, err
             value={dataToEdit.department_name}
             placeholder={departmentDetails.department_name}
           />
-          {/* {renderFeedback(errors.department_name)} */}
         </CFormGroup>
         <CFormGroup >
           <CLabel>Department Head: </CLabel>
@@ -59,7 +58,6 @@ const UpdateDepartmentDetails = ({ dataToEdit, handleChange, renderFeedback, err
               })
             }
           </CSelect>
-          {/* {renderFeedback(errors.department_head)} */}
         </CFormGroup>
       </CCol>
     </CRow >
