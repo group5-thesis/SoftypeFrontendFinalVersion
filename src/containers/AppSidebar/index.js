@@ -13,7 +13,7 @@ import {
 import { useHistory } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
-import navigation from './SideMenu'
+import navigation from './_nav'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import { filterModule } from 'utils/helpers'
 
@@ -22,7 +22,7 @@ const AppSidebar = (props) => {
   const { history } = props
   const show = useSelector(state => state.appState.app.sidebarShow)
   const user = useSelector(state => state.appState.auth.user)
-  let sideMenu = filterModule(navigation, user.roleId)
+  let sideMenu = navigation//filterModule(navigation, user.roleId)
   sideMenu = sideMenu.concat([{
     _tag: 'CSidebarNavDivider',
     className: 'm-2'
@@ -48,15 +48,17 @@ const AppSidebar = (props) => {
       className="bg-dark"
       onShowChange={(val) => dispatch(actionCreator(ActionTypes.TOGGLE_SIDEBAR, { sidebarShow: val }))}
     >
-      <CSidebarBrand className="d-md-down-none" to="/">
-        <CIcon
+      <CSidebarBrand className="d-md-down-none justify-content-center" to="/">
+        {/* <CIcon
           className="c-sidebar-brand-full"
           name="logo-negative"
           src={res.logo}
           height={25}
-        />
+        /> */}
+       
+        <strong><p className="text-primary mt-3">CMS BETA</p></strong>
       </CSidebarBrand>
-      
+
       <CSidebarNav>
         <CCreateElement
           items={sideMenu}

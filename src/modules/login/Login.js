@@ -11,13 +11,12 @@ import {
 } from "@coreui/react"
 import CIcon from "@coreui/icons-react"
 import { useDispatch, useSelector } from "react-redux"
-import { shallowCopy, toggleDialog, checkCamera } from "utils/helpers"
+import { shallowCopy, toggleDialog } from "utils/helpers"
 import { APP_MESSAGES } from "utils/constants/constant"
 import { actionCreator, ActionTypes } from "utils/actions"
-import { ConfirmDialog, Modal } from "reusable"
+import { ConfirmDialog } from "reusable"
 import api from "utils/api"
 import { CenteredLayout } from "containers"
-import QrCodeScanner from './QrCodeScanner'
 import { Redirect } from 'react-router-dom'
 
 const Login = (props) => {
@@ -29,7 +28,6 @@ const Login = (props) => {
     password: "Softype@100",
   })
 
-  const [camera, setCamera] = useState(false)
   const [changed, setChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -38,14 +36,7 @@ const Login = (props) => {
   if (isLoggedIn) {
     return <Redirect to="/" />
   }
-  else {
-    checkCamera().then(() => {
-      setCamera(true)
-    }).catch(err => {
-      setCamera(false)
-      setError(err.cameraError)
-    })
-  }
+
 
   // methods
   const handleChange = (e) => {
@@ -56,6 +47,8 @@ const Login = (props) => {
   }
 
   const loginAttempt = async () => {
+
+    return history.push("/")
     if (credentials.password === "" || credentials.username_email === "") {
       setError(APP_MESSAGES.INPUT_REQUIRED)
       toggleDialog(dispatch)
@@ -80,7 +73,7 @@ const Login = (props) => {
   }
 
   return (
-    <CenteredLayout>
+    <CenteredLayout cardClass='card-transparent'>
       <ConfirmDialog
         {...{
           title: error,
@@ -89,7 +82,7 @@ const Login = (props) => {
         }}
       >
       </ConfirmDialog>
-      <CForm>
+      <CForm >
         <h1>Welcome Back!!</h1>
         <p className="text-muted">Sign In to your account</p>
         <CInputGroup className="mb-3">
@@ -146,17 +139,10 @@ const Login = (props) => {
           {isLoading ? (
             <CSpinner color="secondary" size="sm" />
           ) : (
-              "Login"
-            )}
+            "Login"
+          )}
         </CButton>
-        <hr className="hr-text" data-content="OR" />
-        {
-          !camera ? <CButton block onClick={() => {
-            toggleDialog(dispatch)
-          }} color="primary" className="px-4" > Login with QRCode  </CButton> : <QrCodeScanner />
-        }
-
-        <CButton block className="float-center" color="link" onClick={() => {
+        <CButton block className="float-center" onClick={() => {
           history.push("/account-recovery")
         }}>Forgot password</CButton>
       </CForm>

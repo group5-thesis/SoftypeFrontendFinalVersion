@@ -4,7 +4,6 @@ import { CButton, CCol, CRow, CImg } from "@coreui/react";
 import { toCapitalize, getAge } from "utils/helpers";
 import res from "assets/img";
 import { config } from 'utils/config'
-import { svg2png } from "svg-png-converter";
 
 class ProfilePage extends Component {
   state = {
@@ -12,26 +11,8 @@ class ProfilePage extends Component {
     src: res.logoSm,
     userDetails: {},
   };
-  SvgToPng = async (svgString) => {
-    let converted = await svg2png({
-      input: svgString.trim(),
-      encoding: "dataURL",
-      format: "png",
-      multiplier: 1,
-      quality: 1,
-    });
-    this.setState({ src: converted });
-  };
-  getQrCode = async (user) => {
-    try {
-      let _res = await api.get(`/image/${user.qr_code}`);
-      if (!_res.error) {
-        this.SvgToPng(_res.toString());
-      }
-    } catch (error) {
-      return "error";
-    }
-  };
+
+
   componentDidMount() {
     let { user } = this.props.auth;
     let qr = this.getQrCode(user);
@@ -60,8 +41,7 @@ class ProfilePage extends Component {
     let { user } = this.props.auth;
     let { loading, src, userDetails } = this.state;
     let baseUrl = `${!config.IS_DEV ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV}/file/images`
-    let fullname = `${toCapitalize(user.firstname)} ${
-      user.middlename && toCapitalize(user.middlename) + " "
+    let fullname = `${toCapitalize(user.firstname)} ${user.middlename && toCapitalize(user.middlename) + " "
       }${toCapitalize(user.lastname)}`
     return (
       <>

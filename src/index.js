@@ -7,16 +7,13 @@ import * as serviceWorker from './serviceWorker'
 import { icons } from 'assets/icons'
 import configureStore from 'utils/store/configureStore'
 import Root from 'app/Root'
-import { disableLogger } from 'utils/helpers/disableLogger';
 
 // import
 let store = configureStore()
 React.icons = icons
 
-// disableLogger();
-
 ReactDOM.render(
-    <Root store={store} />
+  <Root store={store} />
   , document.getElementById('root')
 )
 serviceWorker.register()

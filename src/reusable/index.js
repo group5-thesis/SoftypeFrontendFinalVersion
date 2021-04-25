@@ -5,9 +5,11 @@ import ConfirmDialog from './ConfirmDialog'
 import NoData from './NoData'
 import Card from './Card'
 import LoadingButton from './LoadingButton'
+import DropZone from './DropZone'
 
 export {
   DocsLink,
+  DropZone,
   Loader,
   Modal,
   ConfirmDialog,

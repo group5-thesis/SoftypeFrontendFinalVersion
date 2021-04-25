@@ -19,7 +19,7 @@
   .c-sidebar-nav-link.c-active,
   .c-sidebar-nav-link.c-active:hover {
     color: $white;
-    background: rgba($color: $orange, $alpha: 0.6);
+    background: rgba($color: $green, $alpha: 0.6);
   }
 }
 
@@ -51,8 +51,8 @@
 }
 
 .login-page {
-  background: linear-gradient(rgba(129, 80, 80, 0.4), rgba(255, 255, 255, 0.4)),
-    url("../assets/img/softype-inc.jpg");
+  background: linear-gradient(rgba(76, 128, 52, 0.294), rgba(116, 218, 85, 0.301)),
+    url("../assets/img/bg.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -174,7 +174,7 @@
      color:$orange;
     font-weight: bold;
     background-color: white;
-    border-bottom: 4px $orange solid;
+    border-bottom: 4px $green solid;
   }
   .nav-link:not(.active){
     color: $grey-dark;
@@ -184,4 +184,19 @@
 .rbc-overlay{
   z-index: 2000!important;
   transition:opacity 1s linear;
+}
+.card-transparent{
+  background-color:transparent!important;
+  .card-body{
+    background-color:rgba(255,255,255 ,0.8)!important;
+  }
+}
+
+.dzoneDropArea:hover{
+  cursor: pointer!important;
+}
+select.form-control {
+  -moz-appearance: none;
+   -webkit-appearance: none;
+   appearance: none;
 }

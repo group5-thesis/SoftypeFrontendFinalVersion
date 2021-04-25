@@ -2,7 +2,6 @@ import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
 import { Promise } from "q";
 import { config } from "utils/config";
-import { retrieveLeaveRequests } from './fetch'
 import api from 'utils/api';
 export const RULES = {
   required: (value) => !!value || "Required.",
@@ -168,90 +167,6 @@ export const cancelRequest = async (dispatch, id) => {
   }
 }
 
-export const checkCamerav1 = () => {
-  var constraints = {
-    video: true,
-    audio: true
-  }
-  console.log("check v1 : ")
-  navigator.mediaDevices.getUserMedia(constraints)
-    .then(function success(stream) {
-      /* do stuff */
-      console.table(stream)
-
-      console.log("ok")
-    }).catch(function (err) {
-      //log to console first 
-      console.log(err); /* handle the error */
-      if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
-        //required track is missing 
-        console.log('NotFoundError')
-      } else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
-        //webcam or mic are already in use 
-        console.log('NotReadableError')
-      } else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
-        //constraints can not be satisfied by avb. devices 
-        console.log('OverconstrainedError')
-      } else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
-        //permission denied in browser 
-        console.log('NotAllowedError')
-      } else if (err.name == "TypeError" || err.name == "TypeError") {
-        //empty constraints object 
-        console.log('TypeError')
-      } else {
-        console.log('others')
-
-        //other errors 
-      }
-    });
-}
-export const checkCamera = () => {
-  return new Promise((resolve, reject) => {
-    const defaultError = "Please Allow the app to use the camera";
-    let result = {
-      camera: false,
-      cameraError: defaultError,
-    };
-    let hasCamera = false;
-    navigator.mediaDevices
-      .enumerateDevices()
-      .then((devices) => {
-        devices.forEach((device) => {
-          if (device.kind === "videoinput") {
-            hasCamera = true;
-          }
-        });
-        if (hasCamera) {
-          navigator.mediaDevices
-            .getUserMedia({
-              video: true,
-              audio: true
-            })
-            .then((stream) => {
-              result.camera = true;
-              resolve(result);
-            })
-            .catch((err) => {
-              result.cameraError = err.name + ": " + err.message;
-              //console.log(err);
-              if (err.name == "NotAllowedError") {
-                result.cameraError = defaultError;
-              }
-              reject(result);
-            });
-        } else {
-          result.cameraError = "Camera not supported";
-          reject(result);
-        }
-      })
-      .catch(function (err) {
-        result.camera = false;
-        result.cameraError = err.name + ": " + err.message;
-        reject(result);
-      });
-  });
-};
-
 export const filterModule = (modules, roleId) => {
   let availableModule = modules.filter(({ user }) => {
     return user.includes(Number(roleId)) || user.includes(4);
@@ -266,7 +181,7 @@ export const setWidth = (width) => {
       // sm: width,
       md: width,
       lg: width,
-      xl: width,
+      xl: width,  
     })
 }
 

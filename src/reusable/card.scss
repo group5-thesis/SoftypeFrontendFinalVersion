@@ -51,10 +51,6 @@ $blue:    #22659c;
   // background:#fff;
   min-width:130px;
   border-radius:6px;
-  //display:flex;
-  //align-items:center;
-  //justify-content:center;
-  //flex-direction:column;
   @include shadow(1);
   &:hover,&:hover + ul li .user {
     //background: lighten(#22659c,30%);

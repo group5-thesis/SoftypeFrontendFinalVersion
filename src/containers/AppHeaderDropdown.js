@@ -46,7 +46,7 @@ const AppHeaderDropdown = (props) => {
           }} />
         </Modal>
       )}
-      <CDropdownToggle className="c-header-nav-link" caret={false}>
+      {/* <CDropdownToggle className="c-header-nav-link" caret={false}>
         <div className="c-avatar">
           <Avatar
             {...{
@@ -58,13 +58,8 @@ const AppHeaderDropdown = (props) => {
             }}
           />
 
-          {/* <CImg
-            src={res.avatar}
-            className="c-avatar-img"
-            alt="userlogo"
-          /> */}
         </div>
-      </CDropdownToggle>
+      </CDropdownToggle> */}
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownItem
           onClick={() => {

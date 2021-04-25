@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CBadge, CCard, CCardBody, CCol, CDataTable, CCollapse, CRow, CButton } from "@coreui/react";
-import { Modal } from 'reusable'
 import { PERFORMANCE_REVIEW_STATUS } from "utils/constants/constant";
-import PerformanceReviewModal from 'modules/performance-review/PerformanceReviewModal';
 
 const PerformanceReview = () => {
-   // Performance details lacking
+  // Performance details lacking
 
   const usersData = [
     { employeeId: 0, name: 'John Doe', date_reviewed: '2018/01/01', status: 'Pending' },

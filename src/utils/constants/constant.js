@@ -230,3 +230,8 @@ export const OFFICE_REQUEST_FILTER = {
   month: CURRENT_MONTH,
   year: CURRENT_YEAR
 }
+
+
+export const SheetJSFT = [
+  "xlsx", "xlsb", "xlsm", "xls", "xml", "csv",
+].map(function (x) { return "." + x; }).join(",");

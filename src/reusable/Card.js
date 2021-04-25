@@ -43,15 +43,8 @@ const Card = forwardRef(
     },
     ref
   ) => {
-    // const [modal, setModal] = useState(false);
 
-    // const toggle = () => {
-    //   setModal(!modal);
-    // };
     useImperativeHandle(ref, () => ({
-      // toggle() {
-      //   toggle();
-      // },
     }));
 
     return (

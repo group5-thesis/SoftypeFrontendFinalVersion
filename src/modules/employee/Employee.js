@@ -26,8 +26,7 @@ import {
 import NoData from "reusable/NoData";
 import api from "utils/api";
 import EmployeeModal from "./EmployeeModal";
-import PerformanceReviewModal from "modules/performance-review/PerformanceReviewModal";
-import PerformanceReview from "modules/profile/PerformanceReview";
+
 import { setWidth } from "utils/helpers";
 import { Redirect } from 'react-router-dom'
 import Icon from '@mdi/react'
@@ -141,8 +140,7 @@ const EmployeeDetails = (props) => {
       if (el.employeeId.toString() === id.toString()) {
         setEmployee(el);
         getReviews(el.employeeId)
-        setFullname(`${toCapitalize(el.firstname)} ${
-          el.middlename && toCapitalize(el.middlename) + " "
+        setFullname(`${toCapitalize(el.firstname)} ${el.middlename && toCapitalize(el.middlename) + " "
           }${toCapitalize(el.lastname)}`);
         break;
       }
@@ -205,142 +203,99 @@ const EmployeeDetails = (props) => {
                     />
                   }
                 </div>
-                < div className="float-right mr-2">
-                  {
-                    (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.department_id && employee.isActive === 1) ||
-                      (user.accountType === 2 && dept_head_employee[0].isHead !== null && dept_head_employee[0].deparment_IdH === employee.deparment_IdM && employee.isActive === 1) ?
-                      <PerformanceReviewModal {...{ user: employee }} />
-                      : ""
-                  }
-                  {/* // (employee.isActive === 1 || employee.department_managerId === user.employeeId || employee.department_headId === user.employeeId) && <PerformanceReviewModal {...{ user: employee }} /> */}
-                </div>
+
               </CCol>
             </CRow>
           </CCardHeader>
-          <CCardBody>{
-            tab === 0 ?
-              <CRow gutters={false} className="">
-                <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
-                  {/* {(function () {
-                    let pic = false;
-                    let url = `${cnf.API_URL_DEV}/image/images/${employee.profile_img}`;
-                    fetch(url, { method: "HEAD" })
-                      .then((res) => {
-                        if (res.ok) {
-                          pic = true;
-                        }
-                      })
-                      .catch(err => console.log(err));
-                    return (
-                      <div
-                        style={{
-                          //
-                          backgroundImage: `url(${
-                            employee.profile_img
-                              ? pic
-                                ? url
-                                : res.logoSm
-                              : res.logoSm
-                            })`,
-                          backgroundSize: "contain",
-                          backgroundRepeat: "no-repeat",
-                          backgroundPosition: "center",
-                          maxHeight: "200px",
-                          height: "200px",
-                          width: "100%",
-                          border: "1px solid dark",
-                        }}
-                      ></div>
-                    );
-                  })()} */}
-                  <img
-                    alt={fullname}
-                    src={preview ? preview : employee.profile_img ? `${baseUrl}/${employee.profile_img}` : res.logoSm}
-                    style={{ width: "100%", maxHeight: '200px' }}
-                  />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    value={process.file}
-                    ref={fileInput}
-                    hidden
-                    onChange={FileInputChangeHandler}
-                  />
-                  <CButton
-                    onClick={() => {
-                      fileInput.current.click();
-                    }}
-                    className="mr-1 mt-3"
-                    block
-                    disabled={employee.isActive !== 1 || process.uploading}
-                    color="primary"
-                  >
-                    Change Profile Image
+          <CCardBody>
+            <CRow gutters={false} className="">
+              <CCol {...setWidth("3")} className="px-1 py-1 mr-3">
+
+                <img
+                  alt={fullname}
+                  src={preview ? preview : employee.profile_img ? `${baseUrl}/${employee.profile_img}` : res.logoSm}
+                  style={{ width: "100%", maxHeight: '200px' }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  value={process.file}
+                  ref={fileInput}
+                  hidden
+                  onChange={FileInputChangeHandler}
+                />
+                <CButton
+                  onClick={() => {
+                    fileInput.current.click();
+                  }}
+                  className="mr-1 mt-3"
+                  block
+                  disabled={employee.isActive !== 1 || process.uploading}
+                  color="primary"
+                >
+                  Change Profile Image
                 </CButton>
 
-                  <CButton
-                    onClick={UploadButtonHandler}
-                    className="mr-1 mt-3"
-                    block
-                    disabled={
-                      (process.uploading && true) || (!process.pending && true)
-                    }
-                    color="primary"
-                  >
-                    {process.uploading ? (
-                      <CSpinner color="secondary" size="sm" />
-                    ) : (
-                        "Upload"
-                      )}
-                  </CButton>
-                </CCol>
-                <CCol>
-                  <CForm>
-                    {fields.map((_field, idx) => {
-                      return (
-                        <CRow key={idx} gutters={false}>
-                          {_field.map((field) => {
-                            let val = renderContent(field).value;
-                            return (
-                              <CCol
-                                className="px-1"
-                                {...setWidth((12 / _field.length).toString())}
-                                key={field}
-                              >
-                                <CFormGroup>
-                                  <CLabel htmlFor="name">
-                                    {" "}
-                                    <strong>{renderContent(field).key} </strong>
-                                  </CLabel>
-                                  <CInput
-                                    id="text-input"
-                                    invalid={field === 'status' && employee.isActive !== 1}
-                                    name="text-input"
-                                    readOnly
-                                    value={val && val}
-                                    placeholder={!val ? "UNSET" : ""}
-                                  />
-                                </CFormGroup>
-                              </CCol>
-                            );
-                          })}
-                        </CRow>
-                      );
-                    })}
-                  </CForm>
-                </CCol>
-              </CRow>
-              : <PerformanceReview {...{ reviews }} />
-          }
+                <CButton
+                  onClick={UploadButtonHandler}
+                  className="mr-1 mt-3"
+                  block
+                  disabled={
+                    (process.uploading && true) || (!process.pending && true)
+                  }
+                  color="primary"
+                >
+                  {process.uploading ? (
+                    <CSpinner color="secondary" size="sm" />
+                  ) : (
+                    "Upload"
+                  )}
+                </CButton>
+              </CCol>
+              <CCol>
+                <CForm>
+                  {fields.map((_field, idx) => {
+                    return (
+                      <CRow key={idx} gutters={false}>
+                        {_field.map((field) => {
+                          let val = renderContent(field).value;
+                          return (
+                            <CCol
+                              className="px-1"
+                              {...setWidth((12 / _field.length).toString())}
+                              key={field}
+                            >
+                              <CFormGroup>
+                                <CLabel htmlFor="name">
+                                  {" "}
+                                  <strong>{renderContent(field).key} </strong>
+                                </CLabel>
+                                <CInput
+                                  id="text-input"
+                                  invalid={field === 'status' && employee.isActive !== 1}
+                                  name="text-input"
+                                  readOnly
+                                  value={val && val}
+                                  placeholder={!val ? "UNSET" : ""}
+                                />
+                              </CFormGroup>
+                            </CCol>
+                          );
+                        })}
+                      </CRow>
+                    );
+                  })}
+                </CForm>
+              </CCol>
+            </CRow>
+
           </CCardBody>
         </CCard>
       </CCol>
     </CRow >
   ) : (
-      <NoData />
-    );
+    <NoData />
+  );
 };
-// }
-
 export default EmployeeDetails;
 
