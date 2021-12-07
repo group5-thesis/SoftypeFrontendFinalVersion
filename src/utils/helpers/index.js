@@ -1,6 +1,5 @@
 import moment from "moment";
 import { ActionTypes, actionCreator } from "../actions";
-import { Promise } from "q";
 import { config } from "utils/config";
 import api from 'utils/api';
 export const RULES = {
@@ -181,7 +180,7 @@ export const setWidth = (width) => {
       // sm: width,
       md: width,
       lg: width,
-      xl: width,  
+      xl: width,
     })
 }
 

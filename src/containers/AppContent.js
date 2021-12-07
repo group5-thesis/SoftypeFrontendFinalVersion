@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { config } from 'utils/config';
 import Pusher from 'pusher-js';
 // routes config
-import routes from "router/routerv1";
+import routes from "router";
 import Page404 from "modules/placeholder/page404/Page404";
 
 const loading = <Loader bg="transparent" app={false} />;

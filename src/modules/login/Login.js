@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useRef } from "react"
 import {
   CButton,
   CForm,
@@ -27,6 +27,7 @@ const Login = (props) => {
     username_email: "ytorres",
     password: "Softype@100",
   })
+  const dialogRef = useRef(null);
 
   const [changed, setChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -48,7 +49,6 @@ const Login = (props) => {
 
   const loginAttempt = async () => {
 
-    return history.push("/")
     if (credentials.password === "" || credentials.username_email === "") {
       setError(APP_MESSAGES.INPUT_REQUIRED)
       toggleDialog(dispatch)
@@ -61,13 +61,14 @@ const Login = (props) => {
     if (!res.error) {
       let { access_token, account_information } = res.data
       localStorage.setItem("token", access_token)
-      localStorage.setItem("uId", account_information[0].userId)
+      localStorage.setuseEffectItem("uId", account_information[0].userId)
       dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, account_information[0]))
       dispatch(actionCreator(ActionTypes.LOGIN))
       history.push("/")
     } else {
       setError(res.message)
       toggleDialog(dispatch)
+      dialogRef.current.toggle()
     }
 
   }
@@ -75,6 +76,7 @@ const Login = (props) => {
   return (
     <CenteredLayout cardClass='card-transparent'>
       <ConfirmDialog
+        ref={dialogRef}
         {...{
           title: error,
           cancelButtonText: "Ok",

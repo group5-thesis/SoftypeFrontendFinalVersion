@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from "react-redux"
-import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CInvalidFeedback, CAlert, CSpinner } from '@coreui/react'
+import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CInput, CInvalidFeedback, CAlert, CSpinner, CInputGroupText, CInputGroup } from '@coreui/react'
 import { Modal, LoadingButton, ConfirmDialog } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
@@ -180,15 +180,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
     if (middlename && middlename.length) {
       _errors['middlename'] = RULES.nameRules(middlename);
     }
-    // if (sss.length) {
-    //   _errors['sss'] = RULES.numberRules(sss);
-    // }
-    // if (phil_health_no.length) {
-    //   _errors['phil_health_no'] = RULES.numberRules(phil_health_no);
-    // }
-    // if (pag_ibig_no.length) {
-    //   _errors['pag_ibig_no'] = RULES.numberRules(pag_ibig_no);
-    // }
+
     setError(_errors)
     let isValid = true;
     _.values(_errors).map(err => {
@@ -353,16 +345,22 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
                 </CCol>
                 <CCol xs="6">
                   <CFormGroup>
-                    <CLabel>Mobile Number</CLabel>
-                    <CInput
-                      invalid={typeof errors.mobileno !== 'boolean'}
-                      //valid={!errors.mobileno}
-                      onChange={handleOnChange}
-                      name="mobileno"
-                      value={employee.mobileno}
-                      placeholder="Enter Mobile Number.."
 
-                    />
+                    <CLabel>Mobile Number</CLabel>
+
+                    <CInputGroup>
+                      <CInputGroupText id="basic-addon1">+63</CInputGroupText>
+
+                      <CInput
+                        invalid={typeof errors.mobileno !== 'boolean'}
+                        //valid={!errors.mobileno}
+                        onChange={handleOnChange}
+                        maxLength={10}
+                        name="mobileno"
+                        value={employee.mobileno}
+                        placeholder="Enter Mobile Number.."
+                      />
+                    </CInputGroup>
                     {renderFeedback(errors.mobileno)}
                   </CFormGroup>
                 </CCol>

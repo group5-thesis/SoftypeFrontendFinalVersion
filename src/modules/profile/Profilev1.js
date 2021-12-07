@@ -14,8 +14,19 @@ class ProfilePage extends Component {
 
 
   componentDidMount() {
+    let getQrCode = async (user) => {
+      let _res = await api.get(`/image/${user.qr_code}`)
+      if (!_res.error) {
+        var svg64 = btoa(_res)
+        var b64start = 'data:image/svg+xmlbase64,'
+        var image64 = b64start + svg64
+        return image64
+      } else {
+        return res.logoSm
+      }
+    }
     let { user } = this.props.auth;
-    let qr = this.getQrCode(user);
+    let qr = getQrCode(user);
     this.setState({ loading: false });
     if (qr !== "error") {
       this.setState({

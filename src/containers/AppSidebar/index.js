@@ -13,7 +13,7 @@ import {
 import { useHistory } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
 import res from 'assets/img'
-import navigation from './_nav'
+import navigation from './SideMenu'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import { filterModule } from 'utils/helpers'
 
@@ -55,7 +55,7 @@ const AppSidebar = (props) => {
           src={res.logo}
           height={25}
         /> */}
-       
+
         <strong><p className="text-primary mt-3">CMS BETA</p></strong>
       </CSidebarBrand>
 

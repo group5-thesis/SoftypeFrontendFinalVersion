@@ -36,6 +36,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.3",
     "localizer": "^0.2.4",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
@@ -62,6 +63,7 @@
     "redux-devtools-log-monitor": "^2.0.1"
   },
   "scripts": {
+    "prepare": "npm install --legacy-peer-deps",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

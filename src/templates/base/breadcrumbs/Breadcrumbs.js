@@ -11,7 +11,7 @@ import {
   CRow
 } from '@coreui/react'
 import { DocsLink } from 'reusable'
-import routes from 'router/routerv1'
+import routes from 'router'
 
 const Breadcrumbs = () => {
   return (

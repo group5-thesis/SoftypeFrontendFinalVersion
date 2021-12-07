@@ -90,14 +90,14 @@ const Dashboard = () => {
   }
 
   const user = useSelector(state => {
-    let authed = state.appState.auth.user;
+    let authed = state.appState?.auth?.user;
     return {
-      firstname: authed.firstname,
-      lastname: authed.lastname,
-      employeeId: authed.employeeId,
-      userId: authed.userId,
-      accountType: authed.accountType,
-      remainingLeave: authed.remaining_leave
+      firstname: authed?.firstname,
+      lastname: authed?.lastname,
+      employeeId: authed?.employeeId,
+      userId: authed?.userId,
+      accountType: authed?.accountType,
+      remainingLeave: authed?.remaining_leave
     }
   })
 
@@ -268,18 +268,18 @@ const Dashboard = () => {
     retrieveLeaveApproved()
     return
   }, [
-      totalEmployees,
-      recentLeaveRequest,
-      recentOfficeRequest,
-      employeesOnLeave,
-      pendingLeaveRequests,
-      todaysPendingOfficeRequests,
-      todaysEmployeeOnLeave,
-      year,
-      month,
-      employeeDepartment,
-      stateBirthdayEmployees
-    ]
+    totalEmployees,
+    recentLeaveRequest,
+    recentOfficeRequest,
+    employeesOnLeave,
+    pendingLeaveRequests,
+    todaysPendingOfficeRequests,
+    todaysEmployeeOnLeave,
+    year,
+    month,
+    employeeDepartment,
+    stateBirthdayEmployees
+  ]
   )
 
   return (
