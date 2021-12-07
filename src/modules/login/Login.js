@@ -61,7 +61,7 @@ const Login = (props) => {
     if (!res.error) {
       let { access_token, account_information } = res.data
       localStorage.setItem("token", access_token)
-      localStorage.setuseEffectItem("uId", account_information[0].userId)
+      localStorage.setItem("uId", account_information[0].userId)
       dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, account_information[0]))
       dispatch(actionCreator(ActionTypes.LOGIN))
       history.push("/")
