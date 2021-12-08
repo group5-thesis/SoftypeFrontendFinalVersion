@@ -104,6 +104,8 @@ const Dashboard = () => {
   const [monthText, setMonthText] = useState(CURRENT_MONTH_TEXT + 1)
   const [currentDateMonth, setCurrentDateMonth] = useState(`${monthText}-${CURRENT_DATE.toString()}`)
 
+  const _state = useSelector(state => state.appState)
+
   const stateBirthdayEmployees = useSelector((state) => {
     return state.appState.employee.employees.filter(emp => {
       return emp['birthdate'].substring(5, 10) === currentDateMonth
@@ -128,13 +130,6 @@ const Dashboard = () => {
     })
   });
 
-  // const stateEmployeesOnLeave = useSelector((state) => { // employee on leave
-  //   return state.appState.leave.leave_requests.filter(req => {
-  //     return moment().isBetween(req['date from'], req['date to']) && req['status'].toLowerCase() === "approved".toLowerCase()
-  //   })
-  // });
-
-  // console.log(stateEmployeesOnLeave, user.accountType)
 
   const statePendingLeaveRequests = useSelector((state) => {
     return state.appState.leave.leave_requests.filter(req => {
@@ -266,6 +261,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     retrieveLeaveApproved()
+    console.log(JSON.stringify(_state));
     return
   }, [
     totalEmployees,

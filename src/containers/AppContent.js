@@ -3,8 +3,6 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { CContainer } from "@coreui/react";
 import { Loader } from "reusable";
 import { useSelector, useDispatch } from "react-redux";
-import { config } from 'utils/config';
-import Pusher from 'pusher-js';
 // routes config
 import routes from "router";
 import Page404 from "modules/placeholder/page404/Page404";
@@ -18,13 +16,6 @@ const AppContent = (_props) => {
 
 
   useEffect(() => {
-    // let { PUSHER } = config;
-    // const pusher = new Pusher(PUSHER.key, PUSHER.options);
-    // const channel = pusher.subscribe(PUSHER.channel);
-    // channel.bind('message', notif => {
-    //   notificationReceived(notif.message)
-    // });
-    // console.log(isAppLoading)
   }, []);
 
   return (
