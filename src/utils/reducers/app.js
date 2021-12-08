@@ -1,11 +1,14 @@
 import { ActionTypes } from "utils/actions";
 
 const initial_state = {
-  sidebarShow: "responsive",
-  sideMenu: [],
-  loading: true,
-  notify: false,
-  notification: { type: '', message: '' },
+  "sidebarShow": "responsive",
+  "sideMenu": [],
+  "loading": false,
+  "notify": false,
+  "notification": {
+    "type": "",
+    "message": ""
+  }
 };
 
 export default function changeState(state = initial_state, action) {

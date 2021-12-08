@@ -95,6 +95,7 @@ const EmployeeDetails = (props) => {
 
   const UploadButtonHandler = async () => {
     //  call api upload
+    return
     let payload = new FormData();
     payload.append("file", selectedFile);
     payload.append("employee_id", +employee.employeeId);
@@ -219,12 +220,11 @@ const EmployeeDetails = (props) => {
                       <div
                         style={{
                           //
-                          backgroundImage: `url(${
-                            employee.profile_img
-                              ? pic
-                                ? url
-                                : res.logoSm
+                          backgroundImage: `url(${employee.profile_img
+                            ? pic
+                              ? url
                               : res.logoSm
+                            : res.logoSm
                             })`,
                           backgroundSize: "contain",
                           backgroundRepeat: "no-repeat",
@@ -255,7 +255,7 @@ const EmployeeDetails = (props) => {
                     color="primary"
                   >
                     Change Profile Image
-                </CButton>
+                  </CButton>
 
                   <CButton
                     onClick={UploadButtonHandler}
@@ -269,8 +269,8 @@ const EmployeeDetails = (props) => {
                     {process.uploading ? (
                       <CSpinner color="secondary" size="sm" />
                     ) : (
-                        "Upload"
-                      )}
+                      "Upload"
+                    )}
                   </CButton>
                 </CCol>
                 <CCol>
@@ -316,8 +316,8 @@ const EmployeeDetails = (props) => {
       </CCol>
     </CRow>
   ) : (
-      <NoData />
-    );
+    <NoData />
+  );
 };
 // }
 

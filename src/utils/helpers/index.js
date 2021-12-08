@@ -148,6 +148,7 @@ export const toggleDialog = (dispatch) => {
   dispatch(actionCreator(ActionTypes.TOGGLE_DIALOG));
 };
 export const respondToRequest = async (dispatch, payload) => {
+  return
   dispatchNotification(dispatch, { type: 'info', message: 'Please Wait!' });
   let res = await api.post("/update_leave_request", payload);
   if (res.error) {
@@ -158,6 +159,7 @@ export const respondToRequest = async (dispatch, payload) => {
 };
 
 export const cancelRequest = async (dispatch, id) => {
+  return
   dispatchNotification(dispatch, { type: 'info', message: 'Please wait' });
   let res = await api.post(`/cancel_leave_request`, { id });
   if (res.error) {

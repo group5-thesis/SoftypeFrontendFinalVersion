@@ -47,8 +47,7 @@ const MyAccount = (props) => {
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
   let baseUrl = `${!config.IS_DEV ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV}/file/images`
-  let fullname = `${toCapitalize(user.firstname)} ${
-    user.middlename && toCapitalize(user.middlename) + " "
+  let fullname = `${toCapitalize(user.firstname)} ${user.middlename && toCapitalize(user.middlename) + " "
     }${toCapitalize(user.lastname)}`
   const _initProcess = (key, val) => {
     _process[key] = val;
@@ -95,6 +94,7 @@ const MyAccount = (props) => {
 
   const UploadButtonHandler = async () => {
     //  call api upload
+    return
     let payload = new FormData();
     payload.append("file", selectedFile);
     payload.append("employee_id", +user.employeeId);
@@ -107,7 +107,7 @@ const MyAccount = (props) => {
       let updated = res.data.employee_information[0];
       debugger
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
-      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS,updated));
+      dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, updated));
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -157,7 +157,7 @@ const MyAccount = (props) => {
                 <CNavItem >
                   <CNavLink>
                     <Icon path={mdiAccountStar} size={1} />My Ratings
-                </CNavLink>
+                  </CNavLink>
                 </CNavItem>
               }
             </CNav>
@@ -172,7 +172,7 @@ const MyAccount = (props) => {
                             <img
                               alt={fullname}
                               src={preview ? preview : user.profile_img ? `${baseUrl}/${user.profile_img}` : res.logoSm}
-                              style={{ width: "100%" ,maxHeight:'200px' }}
+                              style={{ width: "100%", maxHeight: '200px' }}
                             />
                             <input
                               type="file"
@@ -205,8 +205,8 @@ const MyAccount = (props) => {
                               {process.uploading ? (
                                 <CSpinner color="secondary" size="sm" />
                               ) : (
-                                  "Upload"
-                                )}
+                                "Upload"
+                              )}
                             </CButton>
                             <CButton
                               block
@@ -218,7 +218,7 @@ const MyAccount = (props) => {
                               }}
                             >
                               Change Password
-                              </CButton>
+                            </CButton>
                           </CCol>
                           <CCol>
                             <CForm>

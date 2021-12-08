@@ -4,6 +4,7 @@ import { CCol, CRow, CSpinner } from '@coreui/react'
 import { toCapitalize, getAge } from 'utils/helpers'
 import res from 'assets/img'
 const getQrCode = async (user) => {
+    return
     let _res = await api.get(`/image/${user.qr_code}`)
     if (!_res.error) {
         var svg64 = btoa(_res)
@@ -47,12 +48,12 @@ const ProfilePage = (props) => {
                         <CCol md={4} className="justify-content-center">
                             <div className="image-container text-center ">
                                 {/*  src={!loading ? src : res.logoSm} */}
-                                <img src={!loading ? src : res.logoSm} style={{ width: "100%" }} className="image" />
+                                <img src={res.logoSm} style={{ width: "100%" }} className="image" />
                                 {loading && <div className="image-overlay">
                                     <CSpinner className="text" color="warning" variant="grow" />
                                 </div>}
                             </div>
-                            {!loading && <a download={user.qr_code.split("/")[1]} href={src} className="text-center ml-4 mt-3 h6">Download Qr Code</a>}
+                            {/* {!loading && <a download={user.qr_code.split("/")[1]} href={src} className="text-center ml-4 mt-3 h6">Download Qr Code</a>} */}
                         </CCol>
                     </CRow>
                 </CCol>

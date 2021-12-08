@@ -122,6 +122,7 @@ const DepartmentEmployees = ({ match }) => {
   }
 
   const handleSubmit = async () => {
+    return
     setIsLoading(true)
     data.department_managerId = _departmentManager[0].managerId
     data.department_headId = _departmentManager[0].department_headId
@@ -152,6 +153,7 @@ const DepartmentEmployees = ({ match }) => {
   }
 
   const handleDeleteEmployee = async (dept_employeeId) => {
+    return
     let res = await api.post('/delete_department_employee', { id: dept_employeeId })
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
     if (!res.error) {

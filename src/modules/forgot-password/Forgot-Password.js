@@ -32,6 +32,7 @@ const ForgotPassword = (props) => {
   const [isLoading, setLoading] = useState(false)
   sessionStorage.clear()
   const validate = async () => {
+    return
     if (!email) {
       setError(requiredMessage)
       return toggleShow(true)
@@ -76,11 +77,11 @@ const ForgotPassword = (props) => {
             <CInputGroupText>@</CInputGroupText>
           </CInputGroupPrepend>
           <CInput type="email"
-           disabled={isLoading} 
+            disabled={isLoading}
             onChange={(e) => {
-            setEmail(e.target.value);
-            toggleShow(false)
-          }} placeholder="Input registered email" value={email || ""} autoComplete="email" />
+              setEmail(e.target.value);
+              toggleShow(false)
+            }} placeholder="Input registered email" value={email || ""} autoComplete="email" />
         </CInputGroup>
         <LoadingButton   {...{ block: true, isLoading, submit: validate, btnText: 'Submit' }} />
         <CRow>

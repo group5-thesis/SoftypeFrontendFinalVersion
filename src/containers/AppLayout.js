@@ -21,7 +21,7 @@ const AppLayout = (props) => {
       localStorage.clear();
       sessionStorage.clear();
       // dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, null))
-      dispatch(actionCreator(ActionTypes.LOGOUT))
+      // dispatch(actionCreator(ActionTypes.LOGOUT))
       return <Redirect to="/login" />
     }
     if (Number(user.is_password_changed) === 0) {

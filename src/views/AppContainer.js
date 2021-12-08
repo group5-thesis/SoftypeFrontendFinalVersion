@@ -18,22 +18,22 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, _) => ({
   checkLogin: async () => {
-    let authStateResult = localStorage.getItem("token")
-    let userId = localStorage.getItem("uId")
-    dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
-    if (authStateResult !== null && userId !== null) {
-      userId = +userId
-      let res = await api.get(`/getProfile?userId=${userId}`)
-      let { error, data } = res
-      if ((!error) && data.length) {
-        let user = data[0]
-        dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user))
-        dispatch(actionCreator(ActionTypes.LOGIN))
-      }
-      // else {
-      //   logout(dispatch);
-      // }
-    }
+    // let authStateResult = localStorage.getItem("token")
+    // let userId = localStorage.getItem("uId")
+    // dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
+    // if (authStateResult !== null && userId !== null) {
+    //   userId = +userId
+    //   let res = await api.get(`/getProfile?userId=${userId}`)
+    //   let { error, data } = res
+    //   if ((!error) && data.length) {
+    //     let user = data[0]
+    //     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_SUCCESS, user))
+    //     dispatch(actionCreator(ActionTypes.LOGIN))
+    //   }
+    //   // else {
+    //   //   logout(dispatch);
+    //   // }
+    // }
     dispatch(actionCreator(ActionTypes.AUTH_CHECKED))
   },
   logout: () => {

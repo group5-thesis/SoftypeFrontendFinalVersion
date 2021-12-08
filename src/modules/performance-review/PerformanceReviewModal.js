@@ -48,6 +48,7 @@ const PerformanceReviewModal = ({ user }) => {
   };
 
   const submitReview = async () => {
+    return
     toggleIsLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     let res = await api.post("/create_performance_review", review)

@@ -36,6 +36,7 @@ const QrCodeScanner = ({ onLoading }) => {
   };
 
   const loginWithQr = async () => {
+    return
     onLoading(true);
     let res = await api.post("/loginQr", JSON.parse(result));
     onLoading(false);

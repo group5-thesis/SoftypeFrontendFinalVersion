@@ -123,6 +123,8 @@ const Dashboard = () => {
     })
   });
 
+  const _state = useSelector(state => state)
+
   const history = useHistory();
   const [totalEmployees, setTotalEmployees] = useState(stateActiveEmployees.length)
   const [employeesOnLeave, setEmployeeOnLeave] = useState(stateEmployeesOnLeave.length)
@@ -205,6 +207,7 @@ const Dashboard = () => {
       indicator: clickedApproveBtn ? 1 : clickedRejectBtn ? 0 : 0
     }
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
+    return
     let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
       dispatchNotification(dispatch, { type: 'success', message: 'Success' })
@@ -225,18 +228,18 @@ const Dashboard = () => {
   useEffect(() => {
     return
   }, [
-      totalEmployees,
-      recentLeaveRequest,
-      recentOfficeRequest,
-      employeesOnLeave,
-      pendingLeaveRequests,
-      todaysPendingOfficeRequests,
-      todaysEmployeeOnLeave,
-      year,
-      month,
-      employeeDepartment,
-      stateBirthdayEmployees
-    ]
+    totalEmployees,
+    recentLeaveRequest,
+    recentOfficeRequest,
+    employeesOnLeave,
+    pendingLeaveRequests,
+    todaysPendingOfficeRequests,
+    todaysEmployeeOnLeave,
+    year,
+    month,
+    employeeDepartment,
+    stateBirthdayEmployees
+  ]
   )
 
   return (

@@ -45,14 +45,15 @@ const FileUpload = () => {
     const printValues = e => {
         e.preventDefault();
         console.log(file, description);
-      };
+    };
 
     const handleSubmit = async (e) => {
+        return
         e.preventDefault();
         console.log(file.name, description)
         let formdata = new FormData();
-        formdata.append("file", file ,file.name);
-        formdata.append("description",description)
+        formdata.append("file", file, file.name);
+        formdata.append("description", description)
         console.log(formdata);
         let res = await api.post("add_file", formdata, true);
         // console.log(res);
@@ -105,9 +106,9 @@ const FileUpload = () => {
                             Images Upload
                         </CCardHeader>
                         <CCardBody>
-                        <CRow>
+                            <CRow>
 
-                        </CRow>
+                            </CRow>
                         </CCardBody>
                     </CCard>
                 </CCol>

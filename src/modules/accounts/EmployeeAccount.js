@@ -65,6 +65,7 @@ const Accounts = () => {
   }
 
   const handleDisableAccount = async () => {
+    return
     setIsLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/disable_employee_account', { userId: accountDisable.userId })
@@ -79,6 +80,7 @@ const Accounts = () => {
   }
 
   const handleResetAccount = async () => { // Lacking
+    return
     setIsLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/reset_employee_account', { userId: accountReset.userId })
@@ -93,6 +95,7 @@ const Accounts = () => {
   }
 
   const handleEnableAccount = async () => {
+    return
     setIsLoading(true)
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/enable_employee_account', { userId: accountEnable.userId })
@@ -109,7 +112,7 @@ const Accounts = () => {
 
   const _renderIcon = () => {
     return (<>
-      {[1,2].map((i) => {
+      {[1, 2].map((i) => {
         return (
           <h6 key={i} className="card-title mb-0">
             <Icon path={mdiInformation} size={0.8} />test
@@ -148,7 +151,7 @@ const Accounts = () => {
             <CRow className="mb-3">
               <CCol sm="5">
                 <h4 className="card-title mb-0">Accounts
-                {/* <CPopover header='Legend' content={
+                  {/* <CPopover header='Legend' content={
                     <CCard width={500}>
                       <CCardBody>
                         {_renderIcon()}

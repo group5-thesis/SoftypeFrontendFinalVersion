@@ -160,6 +160,7 @@ const LeaveFormRequest = ({ request }) => {
   }
   const checkRemainingLeave = async () => {
     try {
+      return
       let res = await api.get(`/checkRemainingLeave/${user.employeeId}`);
       if (res.error) return dispatchNotification(dispatch, { type: 'error', message: res.message });
       setRemainingLeave(res.data.remaining_leave);
@@ -174,6 +175,7 @@ const LeaveFormRequest = ({ request }) => {
   }
 
   const handleSubmit = async () => {
+    return
     setIsLoading(true)
     let res = await api.post("/create_request_leave", data)
     if (!res.error) {
@@ -301,7 +303,7 @@ const LeaveFormRequest = ({ request }) => {
         />
         <CInvalidFeedback className="help-block">
           Please provide a valid information
-                  </CInvalidFeedback>
+        </CInvalidFeedback>
       </CFormGroup>
     </Modal>
   )

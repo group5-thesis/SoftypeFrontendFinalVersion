@@ -56,6 +56,9 @@ const Login = (props) => {
   }
 
   const loginAttempt = async () => {
+    dispatch(actionCreator(ActionTypes.LOGIN))
+    debugger
+    return history.push("/")
     if (credentials.password === "" || credentials.username_email === "") {
       setError(APP_MESSAGES.INPUT_REQUIRED)
       toggleDialog(dispatch)
@@ -90,7 +93,7 @@ const Login = (props) => {
       >
       </ConfirmDialog>
       <CForm>
-        <h1>Welcome Back!!</h1>
+        <h1>Welcome Back!!*</h1>
         <p className="text-muted">Sign In to your account</p>
         <CInputGroup className="mb-3">
           <CInputGroupPrepend>
@@ -146,8 +149,8 @@ const Login = (props) => {
           {isLoading ? (
             <CSpinner color="secondary" size="sm" />
           ) : (
-              "Login"
-            )}
+            "Login"
+          )}
         </CButton>
         <hr className="hr-text" data-content="OR" />
         {

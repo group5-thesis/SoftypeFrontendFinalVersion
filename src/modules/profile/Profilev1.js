@@ -23,6 +23,7 @@ class ProfilePage extends Component {
     this.setState({ src: converted });
   };
   getQrCode = async (user) => {
+    return
     try {
       let _res = await api.get(`/image/${user.qr_code}`);
       if (!_res.error) {
@@ -60,8 +61,7 @@ class ProfilePage extends Component {
     let { user } = this.props.auth;
     let { loading, src, userDetails } = this.state;
     let baseUrl = `${!config.IS_DEV ? config.API_URL_BASE_LIVE : config.API_URL_BASE_DEV}/file/images`
-    let fullname = `${toCapitalize(user.firstname)} ${
-      user.middlename && toCapitalize(user.middlename) + " "
+    let fullname = `${toCapitalize(user.firstname)} ${user.middlename && toCapitalize(user.middlename) + " "
       }${toCapitalize(user.lastname)}`
     return (
       <>

@@ -93,6 +93,7 @@ const Department = ({ location }) => {
   };
 
   const handleSubmit = async () => {
+    return
     setIsLoading(true)
     data.department_id = deptId
     dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
@@ -163,12 +164,12 @@ const Department = ({ location }) => {
   }
   useEffect(() => {
     // if (deptId === null || deptId === '' || deptId === undefined) {
-      // deptId = sessionStorage.getItem('deptId')
-      // setSearchParams(deptId.toString())
-      history.replace({
-        pathname: '/employee/departments/department',
-        search: `?id=${deptId.toString()}`
-      })
+    // deptId = sessionStorage.getItem('deptId')
+    // setSearchParams(deptId.toString())
+    history.replace({
+      pathname: '/employee/departments/department',
+      search: `?id=${deptId.toString()}`
+    })
     // }
   }, [])
 

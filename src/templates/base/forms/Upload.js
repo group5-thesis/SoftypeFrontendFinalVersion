@@ -26,9 +26,10 @@ const BasicForms = () => {
 
   const handleSubmit = async () => {
     let formdata = new FormData();
-    formdata.append("file", file , file.name);
-    formdata.append("description" , description)
-    let res = await api.post("/upload",formdata , true);
+    formdata.append("file", file, file.name);
+    formdata.append("description", description)
+    return
+    await api.post("/upload", formdata, true);
   };
   return (
     <>

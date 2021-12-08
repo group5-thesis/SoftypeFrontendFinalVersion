@@ -35,6 +35,7 @@ const RepositoryFiles = (props) => {
     ]
     const [theme, setTheme] = useState(0)
     const deleteFile = async () => {
+        return
         let id = pendingDeleteItem['file id']
         setLoading(true)
         let res = await api.post(`/delete_file/${id}`)
@@ -150,7 +151,7 @@ const RepositoryFiles = (props) => {
                                         <CCardFooter>
                                             <div className="card-header-actions">
                                                 <CLink className="card-header-action" onClick={() => {
-                                                    redirect(`${getBaseUrl()}/file/${fileType}/${path}`)
+                                                    // redirect(`${getBaseUrl()}/file/${fileType}/${path}`)
                                                 }}>
                                                     <Icon path={mdiEye} size={0.9} color="black" />
                                                 </CLink>

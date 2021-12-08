@@ -44,6 +44,7 @@ class Login extends Component {
     }
 
     loginAttempt = async () => {
+        return
         if (!this.props.already_logged) {
             let { dispatch, history } = this.props
             if (this.state.credentials.password === "" || this.state.credentials.username_email === "") {
@@ -151,12 +152,12 @@ class Login extends Component {
                         {this.state.isLoading ? (
                             <CSpinner color="secondary" size="sm" />
                         ) : (
-                                "Login"
-                            )}
+                            "Login"
+                        )}
                     </CButton>
                     <hr className="hr-text" data-content="OR" />
                     {
-                        !this.state.camera || this.state.isLoading ? <CButton disabled={ this.state.isLoading } block onClick={() => {
+                        !this.state.camera || this.state.isLoading ? <CButton disabled={this.state.isLoading} block onClick={() => {
                             toggleDialog(this.props.dispatch)
                         }} color="primary" className="px-4" > Login with QRCode  </CButton> : <QrCodeScanner />
                     }

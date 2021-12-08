@@ -1,0 +1,286 @@
+{
+    "appState": {
+        "auth": {
+            "auth_checked": true,
+            "already_logged": true,
+            "user": {
+                "employeeId": 13,
+                "userId": 1,
+                "firstname": "yol",
+                "middlename": "r",
+                "lastname": "torres",
+                "mobileno": "09380738443",
+                "birthdate": "2020-09-25",
+                "gender": "Male",
+                "street": "Lapu-lapu street",
+                "city": "Cebu",
+                "country": "Philippines",
+                "email": "lorly@gmail.com",
+                "qr_code": "qr_1638630124",
+                "isActive": 1,
+                "position": "1",
+                "is_password_changed": 1,
+                "remaining_leave": 21,
+                "roleId": 1,
+                "accountType": 1,
+                "sss": null,
+                "pag_ibig_no": null,
+                "phil_health_no": null,
+                "profile_img": "uploads_1638632167.png",
+                "is_deactivated": 0
+            }
+        },
+        "app": {
+            "sidebarShow": "responsive",
+            "sideMenu": [],
+            "loading": false,
+            "notify": false,
+            "notification": {
+                "type": "",
+                "message": ""
+            }
+        },
+        "employee": {
+            "employees": [
+                {
+                    "employeeId": 13,
+                    "userId": 1,
+                    "accountType": 1,
+                    "role": "1",
+                    "department_id": null,
+                    "department_name": null,
+                    "department_headId": null,
+                    "department_head": null,
+                    "department_managerId": null,
+                    "department_manager": null,
+                    "isManager": null,
+                    "isHead": null,
+                    "department_nameM": null,
+                    "deparment_IdM": null,
+                    "deparment_IdH": null,
+                    "department_nameH": null,
+                    "firstname": "yol",
+                    "middlename": "r",
+                    "lastname": "torres",
+                    "gender": "Male",
+                    "mobileno": "09380738443",
+                    "birthdate": "2020-09-25",
+                    "email": "lorly@gmail.com",
+                    "street": "Lapu-lapu street",
+                    "city": "Cebu",
+                    "country": "Philippines",
+                    "phil_health_no": null,
+                    "sss": null,
+                    "pag_ibig_no": null,
+                    "isActive": 1,
+                    "profile_img": "uploads_1638632167.png",
+                    "qrcode": "qr_1638630124"
+                },
+                {
+                    "employeeId": 14,
+                    "userId": 2,
+                    "accountType": 3,
+                    "role": "Associate Technical Consultant",
+                    "department_id": null,
+                    "department_name": null,
+                    "department_headId": null,
+                    "department_head": null,
+                    "department_managerId": null,
+                    "department_manager": null,
+                    "isManager": 14,
+                    "isHead": null,
+                    "department_nameM": "IT",
+                    "deparment_IdM": 1,
+                    "deparment_IdH": null,
+                    "department_nameH": null,
+                    "firstname": "leo",
+                    "middlename": null,
+                    "lastname": "nilo",
+                    "gender": "male",
+                    "mobileno": "9222222222",
+                    "birthdate": "1999-12-24",
+                    "email": "ltorres@vonex.com.au",
+                    "street": "talisay",
+                    "city": "talisay",
+                    "country": "phiilippines",
+                    "phil_health_no": null,
+                    "sss": null,
+                    "pag_ibig_no": null,
+                    "isActive": 1,
+                    "profile_img": null,
+                    "qrcode": "qr_1638664119"
+                },
+                {
+                    "employeeId": 15,
+                    "userId": 3,
+                    "accountType": 2,
+                    "role": "Program Manager",
+                    "department_id": null,
+                    "department_name": null,
+                    "department_headId": null,
+                    "department_head": null,
+                    "department_managerId": null,
+                    "department_manager": null,
+                    "isManager": null,
+                    "isHead": 15,
+                    "department_nameM": null,
+                    "deparment_IdM": null,
+                    "deparment_IdH": 1,
+                    "department_nameH": "IT",
+                    "firstname": "ltorres",
+                    "middlename": null,
+                    "lastname": "ltorres",
+                    "gender": "male",
+                    "mobileno": "9999999999",
+                    "birthdate": "1999-12-24",
+                    "email": "ltorres@c.vom",
+                    "street": "test",
+                    "city": "test",
+                    "country": "test",
+                    "phil_health_no": null,
+                    "sss": null,
+                    "pag_ibig_no": null,
+                    "isActive": 1,
+                    "profile_img": null,
+                    "qrcode": "qr_1638664317"
+                },
+                {
+                    "employeeId": 16,
+                    "userId": 4,
+                    "accountType": 3,
+                    "role": "CIO",
+                    "department_id": null,
+                    "department_name": null,
+                    "department_headId": null,
+                    "department_head": null,
+                    "department_managerId": null,
+                    "department_manager": null,
+                    "isManager": null,
+                    "isHead": null,
+                    "department_nameM": null,
+                    "deparment_IdM": null,
+                    "deparment_IdH": null,
+                    "department_nameH": null,
+                    "firstname": "yol",
+                    "middlename": "r",
+                    "lastname": "torres",
+                    "gender": "male",
+                    "mobileno": "9999999999",
+                    "birthdate": "1999-12-24",
+                    "email": "ltorres@testc.com",
+                    "street": "test",
+                    "city": "test",
+                    "country": "test",
+                    "phil_health_no": null,
+                    "sss": null,
+                    "pag_ibig_no": null,
+                    "isActive": 1,
+                    "profile_img": null,
+                    "qrcode": "qr_1638866063"
+                }
+            ]
+        },
+        "accounts": {
+            "accounts": [
+                {
+                    "userId": 3,
+                    "employeeId": 15,
+                    "employee_username": "lltorres15",
+                    "employee_accountType": 2,
+                    "isDeactivated": 0,
+                    "isPasswordChanged": 0,
+                    "employee_name": "ltorres ltorres"
+                },
+                {
+                    "userId": 2,
+                    "employeeId": 14,
+                    "employee_username": "lnilo14",
+                    "employee_accountType": 3,
+                    "isDeactivated": 0,
+                    "isPasswordChanged": 0,
+                    "employee_name": "nilo leo"
+                },
+                {
+                    "userId": 1,
+                    "employeeId": 13,
+                    "employee_username": "ytorres13",
+                    "employee_accountType": 1,
+                    "isDeactivated": 0,
+                    "isPasswordChanged": 1,
+                    "employee_name": "torres yol"
+                },
+                {
+                    "userId": 4,
+                    "employeeId": 16,
+                    "employee_username": "ytorres16",
+                    "employee_accountType": 3,
+                    "isDeactivated": 0,
+                    "isPasswordChanged": 0,
+                    "employee_name": "torres yol"
+                }
+            ]
+        },
+        "leave": {
+            "leave_requests": []
+        },
+        "ticket": {
+            "ticket_requests": []
+        },
+        "files": {
+            "documents": [],
+            "images": [],
+            "videos": [],
+            "others": []
+        },
+        "department": {
+            "departments": [
+                {
+                    "department_id": 1,
+                    "department_name": "IT",
+                    "department_headId": 1,
+                    "department_head": "ltorres ltorres",
+                    "department_head_employeeId": 15,
+                    "department_head_profileImg": null
+                }
+            ]
+        },
+        "performance_review": {
+            "performance_reviews": [],
+            "my_performance_reviews": []
+        },
+        "department_manager": {
+            "department_managers": [
+                {
+                    "employeeId": 14,
+                    "managerId": 1,
+                    "userId": 2,
+                    "accountType": 3,
+                    "role": "Associate Technical Consultant",
+                    "department_id": 1,
+                    "department_name": "IT",
+                    "department_headId": 1,
+                    "department_head": "ltorres ltorres",
+                    "manager_firstname": "leo",
+                    "manager_middlename": null,
+                    "manager_lastname": "nilo",
+                    "manager_gender": "male",
+                    "manager_mobileno": "9222222222",
+                    "manager_birthdate": "1999-12-24",
+                    "manager_email": "ltorres@vonex.com.au",
+                    "manager_street": "talisay",
+                    "manager_city": "talisay",
+                    "manager_country": "phiilippines",
+                    "phil_health_no": null,
+                    "sss": null,
+                    "pag_ibig_no": null,
+                    "isActive": 1,
+                    "manager_qrcode": "qr_1638664119",
+                    "profile_img": null
+                }
+            ]
+        },
+        "department_employee": {
+            "department_employees": []
+        }
+    }
+}

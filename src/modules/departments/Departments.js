@@ -71,6 +71,7 @@ const Departments = (props) => {
       return key.department_name.toLowerCase().trim() === data.department_name.toLowerCase().trim();
     });
     if (isExist.length === 0) {
+      return
       dispatchNotification(dispatch, { type: 'info', message: 'Please wait' })
       let res = await api.post("/add_department", { name: data.department_name, department_head: +data.department_head }) // data [department_head, department_name as name]
       if (!res.error) {
@@ -151,7 +152,7 @@ const Departments = (props) => {
   return (
     <>
       {
-        stateDepartments.length === 0 && user.accountType !== 1 ? <NoData title="No Department/s added yet"/> :
+        stateDepartments.length === 0 && user.accountType !== 1 ? <NoData title="No Department/s added yet" /> :
           <CRow>
             {
               stateDepartments.map((dept, index) => {

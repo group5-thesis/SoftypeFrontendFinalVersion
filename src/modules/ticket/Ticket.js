@@ -102,6 +102,7 @@ const Ticket = (props) => {
       employeeId: user.employeeId,
       indicator: clickedApproveBtn ? 1 : clickedRejectBtn ? 0 : 0
     }
+    return
     dispatchNotification(dispatch, { type: 'info', message: "Please wait" })
     let res = await api.post("/close_officeRequest", data)
     if (!res.error) {
@@ -115,6 +116,7 @@ const Ticket = (props) => {
   }
 
   const onDelete = async () => {
+    return
     let res = await api.post("/delete_officeRequest", { id: tickets.id })
     if (!res.error) {
       dispatch(actionCreator(ActionTypes.DELETE_TICKET), tickets.id)
@@ -206,8 +208,7 @@ const Ticket = (props) => {
                     {collapse ? "Hide" : "Show "} Filter
                     <CIcon
                       size={"sm"}
-                      name={`${
-                        !collapse ? "cil-chevron-bottom" : "cil-chevron-top"
+                      name={`${!collapse ? "cil-chevron-bottom" : "cil-chevron-top"
                         }`}
                     />
                   </CButton>

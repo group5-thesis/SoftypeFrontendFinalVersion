@@ -37,6 +37,7 @@ const ForgotPassword = (props) => {
     const [OTP, setOTP] = useState('')
     const [isLoading, setLoading] = useState(false)
     const resendOTP = async () => {
+        return
         toggleSending(true)
         setMessage(waitMessage);
         let res = await api.post("/forgotPassword", { email })
@@ -51,6 +52,7 @@ const ForgotPassword = (props) => {
         return toggleShow(false)
     }
     const validate = async () => {
+        return
         if (message === waitMessage) {
             return
         }

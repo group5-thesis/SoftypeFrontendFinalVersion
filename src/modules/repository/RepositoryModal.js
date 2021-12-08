@@ -74,6 +74,7 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         }
     }
     const uploadFile = async () => {
+        return
         let payload = new FormData()
         payload.append('file', file);
         payload.append("description", description)

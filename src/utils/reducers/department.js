@@ -1,7 +1,16 @@
 import { ActionTypes } from "utils/actions";
 
 const initial_state = {
-  departments: [],
+  "departments": [
+    {
+      "department_id": 1,
+      "department_name": "IT",
+      "department_headId": 1,
+      "department_head": "ltorres ltorres",
+      "department_head_employeeId": 15,
+      "department_head_profileImg": null
+    }
+  ]
 }
 
 export default function changeState(state = initial_state, action) {

@@ -63,9 +63,6 @@ const AppContent = (_props) => {
   };
 
   useEffect(() => {
-    // console.log(isAppLoading)
-    // debugger
-    if (!isAppLoading) retrieve(payload);
   }, []);
 
   return (
@@ -74,34 +71,34 @@ const AppContent = (_props) => {
         {isAppLoading ? (
           loading
         ) : (
-            <Suspense fallback={loading}>
-              <Switch>
-                {accessedRoutes.map((route, idx) => {
-                  return (
-                    route.component && (
-                      <Route
-                        key={idx}
-                        path={route.path}
-                        exact={route.exact}
-                        name={route.name}
-                        render={(props) => (
-                          <route.component {...{ ..._props, ...props }} />
-                        )}
-                      />
-                    )
-                  );
-                })}
-                <Route
-                  exact
-                  path="/404"
-                  name="Page 404"
-                  render={(props) => <Page404 {...props} />}
-                />
-                <Redirect from="/" to="/dashboard" />
-                <Redirect from="*" to="/404" />
-              </Switch>
-            </Suspense>
-          )}
+          <Suspense fallback={loading}>
+            <Switch>
+              {accessedRoutes.map((route, idx) => {
+                return (
+                  route.component && (
+                    <Route
+                      key={idx}
+                      path={route.path}
+                      exact={route.exact}
+                      name={route.name}
+                      render={(props) => (
+                        <route.component {...{ ..._props, ...props }} />
+                      )}
+                    />
+                  )
+                );
+              })}
+              <Route
+                exact
+                path="/404"
+                name="Page 404"
+                render={(props) => <Page404 {...props} />}
+              />
+              <Redirect from="/" to="/dashboard" />
+              <Redirect from="*" to="/404" />
+            </Switch>
+          </Suspense>
+        )}
       </CContainer>
     </main>
   );

@@ -51,6 +51,11 @@ class Login extends Component {
   }
 
   loginAttempt = async () => {
+    let { dispatch, history } = this.props;
+
+    dispatch(actionCreator(ActionTypes.LOGIN));
+
+    return
     this.setState({ showError: false })
     if (!this.props.already_logged) {
       let { dispatch, history } = this.props;
@@ -127,7 +132,7 @@ class Login extends Component {
           }}
         ></ConfirmDialog>
         <CForm>
-          <h2>Welcome Back</h2>
+          <h2>Welcome Back*</h2>
           <p className="text-muted">Sign In to your account</p>
           {
             showError &&
@@ -192,8 +197,8 @@ class Login extends Component {
             {this.state.isLoading ? (
               <CSpinner color="secondary" size="sm" />
             ) : (
-                "Login"
-              )}
+              "Login"
+            )}
           </CButton>
           <hr className="hr-text" data-content="OR" />
           {/* {!this.state.camera || this.state.isLoading ? (

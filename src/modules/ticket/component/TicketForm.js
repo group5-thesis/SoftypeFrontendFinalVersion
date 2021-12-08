@@ -85,6 +85,7 @@ const TicketForm = () => {
   }
 
   const handleSubmit = async () => {
+    return
     dispatchNotification(dispatch, { type: 'info', message: "Please wait" });
     setIsLoading(true)
     let res = await api.post("/create_officeRequest ", data)
@@ -221,7 +222,7 @@ const TicketForm = () => {
         />
         <CInvalidFeedback className="help-block">
           Please provide a valid information
-                  </CInvalidFeedback>
+        </CInvalidFeedback>
       </CFormGroup>
       <CFormGroup >
         <CLabel htmlFor="date-input">Date Needed : </CLabel>

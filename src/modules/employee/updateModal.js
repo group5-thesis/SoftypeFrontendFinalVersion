@@ -4,11 +4,11 @@ import { CButton, CSelect, CRow, CCol, CContainer, CForm, CFormGroup, CLabel, CI
 import { Modal } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
-import {NameVAlidation} from 'utils/helpers';
+import { NameVAlidation } from 'utils/helpers';
 import { APP_MESSAGES } from 'utils/constants/constant';
 import { ADD_EMPLOYEE } from 'utils/constants/action-types';
-import {hasMissingFieds} from 'utils/helpers'
-import {employee} from './EmployeeModal'
+import { hasMissingFieds } from 'utils/helpers'
+import { employee } from './EmployeeModal'
 
 const EmployeeModal = () => {
     let dispatch = useDispatch();
@@ -33,33 +33,34 @@ const EmployeeModal = () => {
         Employee[event.target.name] = event.target.value
         createEmployee(Employee)
     }
-    
-    
+
+
     const [Error, setError] = useState(APP_MESSAGES.INPUT_REQUIRED)
     const [disabled, setDisabled] = useState(true)
 
 
     useEffect(() => {
         setDisabled(hasMissingFieds(employee))
-      }, [employee])
+    }, [employee])
 
-    
+
 
     const updateEmployee = async () => {
         // console.log(employee.roleId === undefined)
+        return
         let res = await api.post("/create_employee", employee)
         // console.log(res)
         if (!res.error) {
             dispatch(actionCreator(ActionTypes.ADD_EMPLOYEE, employee))
             console.log(employee)
         } else {
-           setError(res.message)
-           alert(Error)
+            setError(res.message)
+            alert(Error)
         }
-        
+
 
     }
-   
+
 
     return (
         <Modal {...{
