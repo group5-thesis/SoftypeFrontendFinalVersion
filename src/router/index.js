@@ -11,7 +11,6 @@ const LeaveRequest = React.lazy(() =>
 const LeaveCalendar = React.lazy(() =>
   import("modules/leave-management/LeaveCalendar")
 );
-const BasicForms = React.lazy(() => import("templates/base/cards/Cards"));
 const OrganizationChart = React.lazy(() =>
   import("modules/organizational-chart/SoftypeOrgChart")
 );
@@ -19,8 +18,6 @@ const Repository = React.lazy(() => import("modules/repository/Repositoryv1"));
 const RepositoryFiles = React.lazy(() =>
   import("modules/repository/RepositoryFiles")
 );
-const Upload = React.lazy(() => import("templates/base/forms/Upload"));
-const Cards = React.lazy(() => import("templates/base/cards/Cards"));
 const Calendar = React.lazy(() => import("modules/calendar/Calendar"));
 const Ticket = React.lazy(() => import("modules/ticket/Ticket"));
 const PerformanceReview = React.lazy(() =>
@@ -94,8 +91,6 @@ const routes = [
     component: LeaveCalendar,
     user: [4],
   },
-  { path: "/forms", name: "Forms", component: BasicForms, user: [4] },
-  // { path: '/cards', name: 'Cards', component: Test, user: [4] },
   {
     path: "/repository",
     exact: true,
@@ -111,9 +106,7 @@ const routes = [
     user: [4],
   },
   // { path: '/calendar', name: 'Calendar', component: Calendar, user: [4] },
-  { path: "/cards", name: "Cards", component: Cards, user: [4] },
   { path: "/calendar", name: "Calendar", component: Calendar, user: [4] },
-  { path: "/upload", name: "Upload", component: Upload, user: [4] },
   {
     path: "/requests",
     exact: true,
@@ -155,6 +148,7 @@ const routes = [
     name: "My Account",
     component: MyAccount,
     user: [4],
+    onclick: () => alert("This feature is not available yet")
   },
 ];
 

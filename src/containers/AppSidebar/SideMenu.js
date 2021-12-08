@@ -37,12 +37,12 @@ export default [
         icon: 'cil-user',
     },
     {
-      _tag: 'CSidebarNavItem',
-      name: 'Employee Accounts',
-      to: '/accounts',
-      user: [1],
-      icon: customIcon(mdiAccountCog),
-  },
+        _tag: 'CSidebarNavItem',
+        name: 'Employee Accounts',
+        to: '/accounts',
+        user: [1],
+        icon: customIcon(mdiAccountCog),
+    },
     {
         _tag: 'CSidebarNavItem',
         name: 'Organization Chart',
@@ -50,13 +50,7 @@ export default [
         user: [4],
         icon: customIcon(mdiFamilyTree),
     },
-    // {
-    //     _tag: 'CSidebarNavItem',
-    //     name: 'Performance Reviews',
-    //     to: '/employee/performance-review',
-    //     user: [4],
-    //     icon: 'cil-smile-plus',
-    // },
+
     {
         _tag: 'CSidebarNavItem',
         name: 'Departments',

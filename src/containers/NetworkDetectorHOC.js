@@ -14,13 +14,12 @@ export default function (ComposedComponent) {
         }
 
         componentDidMount() {
-            console.table(this.props)
-            let { PUSHER } = config;
-            const pusher = new Pusher(PUSHER.key, PUSHER.options);
-            const channel = pusher.subscribe(PUSHER.channel);
-            channel.bind('message', notif => {
-                this.notificationReceived(notif.message)
-            });
+            // let { PUSHER } = config;
+            // const pusher = new Pusher(PUSHER.key, PUSHER.options);
+            // const channel = pusher.subscribe(PUSHER.channel);
+            // channel.bind('message', notif => {
+            //     this.notificationReceived(notif.message)
+            // });
         }
 
         notificationReceived = (notif) => {

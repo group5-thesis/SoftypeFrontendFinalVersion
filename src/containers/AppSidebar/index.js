@@ -23,25 +23,43 @@ const AppSidebar = (props) => {
   const show = useSelector(state => state.appState.app.sidebarShow)
   const user = useSelector(state => state.appState.auth.user)
   let sideMenu = filterModule(navigation, user.roleId)
-  sideMenu = sideMenu.concat([{
-    _tag: 'CSidebarNavDivider',
-    className: 'm-2'
-  },
-  {
-    _tag: 'CSidebarNavItem',
-    name: 'Logout',
-    to: '',
-    icon: 'cil-account-logout',
-    label: true,
-    onClick: () => {
-      props.logout()
-      history.push("/login")
-    }
-  },
-  {
-    _tag: 'CSidebarNavDivider',
-    className: 'm-2'
-  }])
+  sideMenu = sideMenu.concat([
+    {
+      _tag: 'CSidebarNavTitle',
+      _children: ['Misc'],
+      user: [4],
+    },
+
+    {
+      _tag: 'CSidebarNavItem',
+      name: 'About Dev',
+      to: '',
+      icon: 'cil-info',
+      label: true,
+      onClick: () => {
+        window.location.href = 'https://dev-yol.github.io'
+      }
+    },
+    {
+
+      _tag: 'CSidebarNavDivider',
+      className: 'm-2'
+    },
+    {
+      _tag: 'CSidebarNavItem',
+      name: 'Logout',
+      to: '',
+      icon: 'cil-account-logout',
+      label: true,
+      onClick: () => {
+        props.logout()
+        history.push("/login")
+      }
+    },
+    {
+      _tag: 'CSidebarNavDivider',
+      className: 'm-2'
+    }])
   return (
     <CSidebar
       show={show}
@@ -56,7 +74,7 @@ const AppSidebar = (props) => {
           height={25}
         />
       </CSidebarBrand>
-      
+
       <CSidebarNav>
         <CCreateElement
           items={sideMenu}

@@ -8,6 +8,7 @@ import { icons } from 'assets/icons'
 import configureStore from 'utils/store/configureStore'
 import Root from 'app/Root'
 import { disableLogger } from 'utils/helpers/disableLogger';
+import { HashRouter } from 'react-router-dom'
 
 // import
 let store = configureStore()
@@ -16,7 +17,9 @@ React.icons = icons
 disableLogger();
 
 ReactDOM.render(
+  <HashRouter>
     <Root store={store} />
+  </HashRouter>
   , document.getElementById('root')
 )
 serviceWorker.register()
