@@ -25,11 +25,11 @@ $red:          #e72e2e !default;
 
 
 $theme-colors: (
-  "primary": $orange,
+  "primary": $green,
   "danger": $red,
   "info": $blue,
   "dark": $grey-darker,
-  "softype": $orange
+  "softype": $green
 );
 .form-control:focus  , select:focus {
   box-shadow: none !important;
