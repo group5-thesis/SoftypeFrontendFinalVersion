@@ -2,8 +2,10 @@ import React, { lazy, useRef, useState } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButtonGroup, CButton } from '@coreui/react'
 import CIcon from "@coreui/icons-react";
 import { useSelector, useDispatch } from 'react-redux';
-import { splitCamelCase, splitSnakeCase, insertProperty, shallowCopy, getAdminResponse, getDuration, dispatchNotification, respondToRequest, cancelRequest ,
-  formatDate } from 'utils/helpers'
+import {
+  splitCamelCase, splitSnakeCase, insertProperty, getAdminResponse, getDuration, dispatchNotification, respondToRequest, cancelRequest,
+  formatDate
+} from 'utils/helpers'
 import { NoData, ConfirmDialog } from 'reusable';
 import moment from 'moment';
 const Calendar = lazy(() => import('modules/calendar/Calendar'));
@@ -22,7 +24,7 @@ const LeaveRequest = ({ match }) => {
   if (!Object.keys(_request).length) {
     return <NoData />
   }
-  let request = shallowCopy(_request);
+  let request = { ..._request };
   request = insertProperty(request, 'no_of_days', getDuration(request['date from'], request['date to']), 4);
   let event = {
     start: new Date(request['date from']),

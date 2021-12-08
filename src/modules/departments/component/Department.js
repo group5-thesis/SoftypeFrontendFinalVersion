@@ -14,7 +14,7 @@ import {
   CDropdownMenu,
   CDropdownItem
 } from '@coreui/react';
-import { copyArray, setWidth, dispatchNotification, shallowCopy, RULES, getBaseUrl } from 'utils/helpers';
+import { copyArray, setWidth, dispatchNotification, RULES, getBaseUrl } from 'utils/helpers';
 import { NoData, Card, Modal, ConfirmDialog, Loader } from 'reusable';
 import colors from "assets/theme/colors"
 import AddDepartmentManager from './AddDepartmentManager'
@@ -134,7 +134,7 @@ const Department = ({ location }) => {
   const onChange = (e) => { // value is employee ID
     let key = e.target.name
     let value = e.target.value
-    let copy = shallowCopy(data)
+    let copy = { ...data }
     copy[key] = value
     setData(copy)
   }
@@ -155,7 +155,7 @@ const Department = ({ location }) => {
   }
 
   const validate = () => {
-    let _errors = shallowCopy(errors)
+    let _errors = { ...errors }
     Object.entries(data).map(([key, value]) => {
       let valid = validateInfo(key, value);
       _errors[key] = valid === true ? false : valid
@@ -227,7 +227,7 @@ const Department = ({ location }) => {
     if (key === "department_name_delete") {
       setDname(value.trim())
     }
-    let copy = shallowCopy(dataToEdit)
+    let copy = { ...dataToEdit }
     copy[key] = value
     if (key === "department_name") {
       if (value.replace(" ", "") === departmentDetails.department_name && value.indexOf(' ') >= 0) {
@@ -361,12 +361,12 @@ const Department = ({ location }) => {
                                 setRemoveTeam(false)
                                 modal.current.toggle()
                               }}>Delete This Department
-                            </CDropdownItem>
+                              </CDropdownItem>
                               <CDropdownItem onClick={() => {
                                 editDepartmentDetails()
                                 setRemoveTeam(false)
                               }}>Update Department
-                            </CDropdownItem>
+                              </CDropdownItem>
                               <CDropdownItem disabled={_departmentManagers.length === 0} onClick={() => {
                                 removeTeam ? cancelRemoveDepartmentTeam() : removeDepartmentTeam()
                               }}>{removeTeam ? "Cancel Deletetion" : "Delete Department Team"}

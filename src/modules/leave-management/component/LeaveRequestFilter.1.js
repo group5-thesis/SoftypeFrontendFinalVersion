@@ -13,11 +13,11 @@ import {
   CContainer,
 } from "@coreui/react";
 import { ConfirmDialog } from "reusable";
-import { checkDateRange, shallowCopy, setWidth } from "utils/helpers";
+import { checkDateRange, setWidth } from "utils/helpers";
 import { LEAVE_TYPES, STATUS, MONTHS } from "utils/constants/constant";
 
 const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) => {
-  
+
   const defaultDates = {
     from: filter.date_from,
     to: filter.date_to || "",
@@ -33,7 +33,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
 
   const handleDateOnChange = (e) => {
     const { name, value } = e.target;
-    const prevState = shallowCopy(dates);
+    const prevState = { ...dates };
     prevState[name] = value;
     if (name === "to") {
       let range = checkDateRange(prevState.from, prevState.to, true);
@@ -183,7 +183,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                         >
                           <option value="" hidden>
                             Select
-                        </option>
+                          </option>
                           <option value="All">All</option>
                           {Object.keys(STATUS).map((key) => {
                             return (
@@ -212,7 +212,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter }) =
                         >
                           <option value="" hidden>
                             Please select
-                        </option>
+                          </option>
                           <option value="All">All</option>
                           {LEAVE_TYPES.map((_category, idx) => {
                             return (

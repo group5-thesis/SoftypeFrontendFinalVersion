@@ -9,7 +9,7 @@ import {
 import { Card, Modal, NoData } from 'reusable'
 import AddDepartment from './component/AddDepartment'
 import DepartmentModel from "models/DepartmentModel"
-import { shallowCopy, RULES, dispatchNotification } from 'utils/helpers';
+import { RULES, dispatchNotification } from 'utils/helpers';
 import { useSelector, useDispatch } from 'react-redux'
 import { COLORS } from "utils/constants/constant";
 import { actionCreator, ActionTypes } from 'utils/actions';
@@ -106,7 +106,7 @@ const Departments = (props) => {
   }
 
   const validate = () => {
-    let _errors = shallowCopy(errors)
+    let _errors = { ...errors }
     Object.entries(data).map(([key, value]) => {
       let valid = validateInfo(key, value);
       _errors[key] = valid === true ? false : valid
@@ -132,7 +132,7 @@ const Departments = (props) => {
   const onChange = (e) => { // value is employee ID
     let key = e.target.name
     let value = e.target.value
-    let copy = shallowCopy(data)
+    let copy = { ...data }
     copy[key] = value
     setData(copy)
   }
@@ -152,7 +152,7 @@ const Departments = (props) => {
   return (
     <>
       {
-        stateDepartments.length === 0 && user.accountType !== 1 ? <NoData title="No Department/s added yet"/> :
+        stateDepartments.length === 0 && user.accountType !== 1 ? <NoData title="No Department/s added yet" /> :
           <CRow>
             {
               stateDepartments.map((dept, index) => {

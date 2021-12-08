@@ -60,7 +60,6 @@ const PerformanceReview = () => {
                           shape="square"
                           size="sm"
                           onClick={() => {
-                            console.log(item, index, " Details")
                           }}
                         >
                           {"Details"}
@@ -72,7 +71,6 @@ const PerformanceReview = () => {
                           shape="square"
                           size="sm"
                           onClick={() => {
-                            console.log(item, index, " Reviews")
                           }}
                         >
                           {"Review"}

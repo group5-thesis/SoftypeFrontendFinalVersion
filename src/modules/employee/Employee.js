@@ -18,7 +18,7 @@ import { config } from "utils/config";
 import { useDispatch, useSelector } from "react-redux";
 import { actionCreator, ActionTypes } from "utils/actions";
 import {
-  shallowCopy,
+
   checkNull,
   toCapitalize,
   getBaseUrl,
@@ -63,7 +63,6 @@ const EmployeeDetails = (props) => {
   })
 
   const _initProcess = (key, val) => {
-    let _temp_process = shallowCopy(process);
     _process[key] = val;
     setProcess(_process);
   };
@@ -152,7 +151,6 @@ const EmployeeDetails = (props) => {
     }
     const objectUrl = URL.createObjectURL(selectedFile);
     setPreview(objectUrl);
-    debugger
 
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl);

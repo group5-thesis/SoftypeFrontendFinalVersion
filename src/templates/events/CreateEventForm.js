@@ -88,7 +88,6 @@ const Announcements = ({ match }) => {
                                                                             return alert(field.errorMessage)
                                                                         }
                                                                     }
-                                                                    console.log(value)
                                                                     // return updateUser(name, value)
                                                                 }}
                                                                 disabled={field.disabled}
@@ -108,7 +107,6 @@ const Announcements = ({ match }) => {
                                                                             return alert(field.errorMessage)
                                                                         }
                                                                     }
-                                                                    console.log(value)
                                                                     // return updateUser(name, value)
                                                                 }}
                                                                 disabled={field.disabled}

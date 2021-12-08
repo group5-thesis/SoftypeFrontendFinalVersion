@@ -13,7 +13,7 @@ import {
 } from '@coreui/react'
 import { Modal } from 'reusable'
 import LeaveRequestModel from 'models/LeaveRequestModel'
-import { shallowCopy, checkDateRange, toCapitalize, renameKey, dispatchNotification } from 'utils/helpers'
+import { checkDateRange, toCapitalize, renameKey, dispatchNotification } from 'utils/helpers'
 import { useSelector, useDispatch } from 'react-redux'
 import { LEAVE_TYPES, LEAVE_REQUEST_FILTER } from 'utils/constants/constant'
 import { actionCreator, ActionTypes } from 'utils/actions';
@@ -142,8 +142,8 @@ const LeaveFormRequest = ({ request }) => {
   const handleOnChange = (e) => {
     let key = e.target.name
     let value = e.target.value
-    let copy = shallowCopy(data)
-    _errors = shallowCopy(errors)
+    let copy = { ...data }
+    _errors = { ...errors }
     _errors[key.includes('date_') ? 'dates' : key] = false;
     setErrors(_errors);
     copy[key] = value;
@@ -316,7 +316,7 @@ const LeaveFormRequest = ({ request }) => {
         />
         <CInvalidFeedback className="help-block">
           Please provide a valid information
-                  </CInvalidFeedback>
+        </CInvalidFeedback>
       </CFormGroup>
     </Modal>
   )

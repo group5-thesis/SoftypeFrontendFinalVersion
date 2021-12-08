@@ -8,13 +8,13 @@ import {
   CInputGroupText,
   CSpinner,
   CInvalidFeedback,
+  CAlert,
 } from "@coreui/react"
 import CIcon from "@coreui/icons-react"
 import { useDispatch, useSelector } from "react-redux"
-import { shallowCopy, toggleDialog } from "utils/helpers"
+import { toggleDialog } from "utils/helpers"
 import { APP_MESSAGES } from "utils/constants/constant"
 import { actionCreator, ActionTypes } from "utils/actions"
-import { ConfirmDialog } from "reusable"
 import api from "utils/api"
 import { CenteredLayout } from "containers"
 import { Redirect } from 'react-router-dom'
@@ -24,14 +24,14 @@ const Login = (props) => {
   const isLoggedIn = useSelector(state => state.appState.auth.already_logged)
   let { history } = props
   const [credentials, setCredentials] = useState({
-    username_email: "ytorres",
-    password: "Softype@100",
+    username_email: "",
+    password: "",
   })
-  const dialogRef = useRef(null);
 
   const [changed, setChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showError, toggleError] = useState(false)
   const dispatch = useDispatch()
 
   if (isLoggedIn) {
@@ -42,18 +42,19 @@ const Login = (props) => {
   // methods
   const handleChange = (e) => {
     setChanged(true)
-    let copy = shallowCopy(credentials)
+    toggleError(false)
+    let copy = { ...credentials }
     copy[e.target.name] = e.target.value
     setCredentials(copy)
   }
 
   const loginAttempt = async () => {
-
     if (credentials.password === "" || credentials.username_email === "") {
       setError(APP_MESSAGES.INPUT_REQUIRED)
       toggleDialog(dispatch)
       return
     }
+    setError("")
     setIsLoading(true)
     dispatch(actionCreator(ActionTypes.FETCH_PROFILE_PENDING))
     let res = await api.post("/login", credentials)
@@ -67,26 +68,23 @@ const Login = (props) => {
       history.push("/")
     } else {
       setError(res.message)
-      toggleDialog(dispatch)
-      dialogRef.current.toggle()
+      toggleError(true)
     }
 
   }
 
   return (
     <CenteredLayout cardClass='card-transparent'>
-      <ConfirmDialog
-        ref={dialogRef}
-        {...{
-          title: error,
-          cancelButtonText: "Ok",
-          confirmButton: false,
-        }}
-      >
-      </ConfirmDialog>
-      <CForm >
-        <h1>Welcome Back!!</h1>
+      <CForm onSubmit={(e) => {
+        e.preventDefault()
+      }}>
+        <h1>Welcome Back!! {error}</h1>
         <p className="text-muted">Sign In to your account</p>
+        {showError &&
+          <CAlert fade color="danger">
+            {error}
+          </CAlert>
+        }
         <CInputGroup className="mb-3">
           <CInputGroupPrepend>
             <CInputGroupText>

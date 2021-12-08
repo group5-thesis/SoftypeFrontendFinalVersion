@@ -78,7 +78,6 @@ const RepositoryFiles = (props) => {
         addToQueue(path)
         downloadFile(uri, filename, (success, err) => {
             if (!success) {
-                console.log(err)
             }
             setTimeout(() => {
                 return removeFromQueue(path)

@@ -138,10 +138,6 @@ const RepositoryModal = ({ isUpdate = false, isHidden = false }) => {
         modal.current.toggle()
     }
 
-    useEffect(() => {
-        console.log(error);
-    }, [error])
-
     return (
         <>
             <button className="btn  btn-primary fab" onClick={toggleModal}>

@@ -13,14 +13,15 @@ import {
 } from '@coreui/react'
 import { NoData, ConfirmDialog } from 'reusable'
 import Icon from '@mdi/react';
-import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline, mdiInformation } from '@mdi/js';
+import { mdiAccountOffOutline, mdiLockReset, mdiAccountCheckOutline, mdiInformation, mdiEye } from '@mdi/js';
 import colors from 'assets/theme/colors';
 import { fetchEmployeeAccounts, retrieveEmployees } from 'utils/helpers/fetch';
 import api from 'utils/api';
 import { dispatchNotification, toCapitalize } from 'utils/helpers';
 import _ from 'lodash'
 
-const Accounts = () => {
+const Accounts = (props) => {
+  const { history } = props
 
   const [disableAccount, setDisableAccount] = useState(false)
   const [resetAccount, setResetAccount] = useState(false)
@@ -77,11 +78,10 @@ const Accounts = () => {
     dispatchNotification(dispatch, { type: 'info', message: "Please wait." })
     let res = await api.post('/disable_employee_account', { userId: accountDisable.userId, employeeId: accountDisable.employeeId })
     setIsLoading(false)
-    console.log("disable account --> ", res.error)
     if (!res.error) {
-     await dispatchNotification(dispatch, { type: 'success', message: 'Success' })
-     await fetchEmployeeAccounts(dispatch)
-     await retrieveEmployees(dispatch)
+      await dispatchNotification(dispatch, { type: 'success', message: 'Success' })
+      await fetchEmployeeAccounts(dispatch)
+      await retrieveEmployees(dispatch)
     } else {
       dispatchNotification(dispatch, { type: 'error', message: res.message })
     }
@@ -119,18 +119,6 @@ const Accounts = () => {
 
   }
 
-  const _renderIcon = () => {
-    return (<>
-      {[1, 2].map((i) => {
-        return (
-          <h6 key={i} className="card-title mb-0">
-            <Icon path={mdiInformation} size={0.8} />test
-          </h6>
-        )
-      })}
-    </>)
-  }
-
   useEffect(() => {
     return
   }, [accountDisable, accountReset, accountEnable])
@@ -144,7 +132,10 @@ const Accounts = () => {
           {...{
             show: dialog,
             onConfirm: () => {
-              disableAccount ? handleDisableAccount() : resetAccount ? handleResetAccount() : enableAccount ? handleEnableAccount() : console.log()
+              disableAccount
+                ? handleDisableAccount() : resetAccount
+                  ? handleResetAccount() : enableAccount
+                    ? handleEnableAccount() : console.log()
             },
             onCloseCallback: () => {
               setDisableAccount(false)
@@ -180,7 +171,6 @@ const Accounts = () => {
               itemsPerPage={10}
               pagination
               noItemsViewSlot={<NoData />}
-              // activePage={page}
               scopedSlots={{
                 'name':
                   (item) => (
@@ -245,6 +235,19 @@ const Accounts = () => {
                         </CPopover>
 
                       }
+                      <CButton
+                        onClick={() => {
+                          history.push(`/employees/profile/${item.employeeId}`)
+                        }}
+                      >
+                        <Icon path={mdiEye}
+                          size={1}
+                          horizontal
+                          vertical
+                          rotate={180}
+                          color={colors.$orange}
+                        />
+                      </CButton>
                     </td>
                   )
               }}

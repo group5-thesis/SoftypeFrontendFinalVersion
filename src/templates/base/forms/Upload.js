@@ -15,7 +15,6 @@ const BasicForms = () => {
   const [description, setDescription] = useState("");
   const handleFileChange = (e) => {
     let { files } = e.target;
-    console.log(files)
     setFile(files[0]);
   };
   const handleDescriptionChange = (e) => {
@@ -26,9 +25,9 @@ const BasicForms = () => {
 
   const handleSubmit = async () => {
     let formdata = new FormData();
-    formdata.append("file", file , file.name);
-    formdata.append("description" , description)
-    let res = await api.post("/upload",formdata , true);
+    formdata.append("file", file, file.name);
+    formdata.append("description", description)
+    let res = await api.post("/upload", formdata, true);
   };
   return (
     <>

@@ -1,7 +1,7 @@
 export const config = {
     API_URL_DEV: "http://127.0.0.1:8000/api",
     API_URL_LIVE: "http://127.0.0.1:8000/api",
-    API_URL_BASE_LIVE: "http://127.0.0.1.240:8000",
+    API_URL_BASE_LIVE: "http://127.0.0.1    .240:8000",
     API_URL_BASE_DEV: "http://127.0.0.1:8000",
     IS_DEV: process.env.NODE_ENV === 'development',
     PUSHER: {

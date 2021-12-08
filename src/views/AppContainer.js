@@ -2,7 +2,6 @@ import Main from "."
 import { ActionTypes, actionCreator } from "utils/actions"
 import { connect } from "react-redux"
 import api from 'utils/api'
-import { plotArray } from 'utils/helpers'
 
 const logout = dispatch => {
   dispatch(actionCreator(ActionTypes.LOGOUT))

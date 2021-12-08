@@ -14,7 +14,9 @@ import { toCapitalize } from 'utils/helpers';
 import { NoData } from 'reusable'
 import moment from 'moment';
 import _ from 'lodash';
-
+import {
+    retrieveEmployees
+} from "utils/helpers/fetch";
 
 const getBadge = status => {
     switch (status) {
@@ -79,6 +81,7 @@ const Users = (props) => {
 
     useEffect(() => {
         currentPage !== page && setPage(currentPage)
+
     }, [currentPage, page])
 
     return (
@@ -108,7 +111,7 @@ const Users = (props) => {
                                             <option value="All">All</option>
                                             <option value="Active">Active</option>
                                             <option value="Inactive">Inactive</option>
-                                            )}
+                                            )
                                         </CSelect>
                                     </div>
                                 </CCol>
@@ -138,11 +141,7 @@ const Users = (props) => {
                                             {`${toCapitalize(item.lastname)}, ${toCapitalize(item.firstname)} ${toCapitalize(item.middlename && item.middlename[0]) + "."}`.toString()}
                                         </td>
                                     ),
-                                // 'email': item => (
-                                //     <td>
-                                //         <p className="wrap-content-text"> {item.email}</p>
-                                //     </td>
-                                // ),
+
                                 'department_name':
                                     (item) => {
                                         return (

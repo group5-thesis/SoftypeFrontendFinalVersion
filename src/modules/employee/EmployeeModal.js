@@ -5,7 +5,7 @@ import { Modal, LoadingButton, ConfirmDialog } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions'
 import api from "utils/api";
 import { APP_MESSAGES, ROLE, ACCOUNT_ROLES } from 'utils/constants/constant';
-import { RULES, shallowCopy, getAge } from 'utils/helpers'
+import { RULES, getAge } from 'utils/helpers'
 import { fetchEmployeeAccounts, retrieveEmployees } from 'utils/helpers/fetch';
 import _ from 'lodash';
 
@@ -43,7 +43,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
   let dispatch = useDispatch();
   const modal = useRef();
   const dialog = useRef();
-  const [employee, createEmployee] = useState(!data ? shallowCopy(defaultEmployee) : data)
+  const [employee, createEmployee] = useState(!data ? { ...defaultEmployee } : data)
   const [errors, setError] = useState(defaultErrors)
   const [disabled, setDisabled] = useState(false);
   const [responseError, setResponseError] = useState();
@@ -51,8 +51,8 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
   const handleOnChange = (event) => {
     setResponseError('')
     setError(defaultErrors)
-    let _errors = shallowCopy(errors)
-    let Employee = shallowCopy(employee)
+    let _errors = { ...errors }
+    let Employee = { ...employee }
     let { name, value } = event.target
     _errors[name] = false
     if (name === "role") {
@@ -127,7 +127,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
   const onSubmit = async () => {
     setDisabled(true)
     let path = isUpdate ? "update_employee" : "create_employee"
-    let payload = shallowCopy(employee)
+    let payload = { ...employee }
     if (isUpdate) {
       payload["employeeId"] = data.employeeId;
     }
@@ -150,7 +150,7 @@ const EmployeeModal = ({ isUpdate = false, data = null }) => {
 
   const validate = () => {
 
-    let _errors = shallowCopy(defaultErrors)
+    let _errors = { ...defaultErrors }
     let {
       role,
       firstname,

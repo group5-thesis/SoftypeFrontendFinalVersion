@@ -92,11 +92,6 @@ export const formatDate = (date) => {
   return moment(new Date(date)).format("YYYY-MM-DD");
 };
 
-export const shallowCopy = (obj) => {
-  let copy = Object.assign({}, obj);
-  return copy;
-};
-
 export const hasMissingFieds = (obj, rules) => {
   for (const [key, value] of Object.entries(obj)) {
     if (value === "" || value === null) {

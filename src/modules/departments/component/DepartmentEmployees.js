@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setWidth, shallowCopy, RULES, copyArray, getBaseUrl, dispatchNotification } from 'utils/helpers';
+import { setWidth, RULES, copyArray, getBaseUrl, dispatchNotification } from 'utils/helpers';
 import { fetchDepartmentEmployees, retrieveEmployees, fetchDepartmentManagers, fetchDepartments } from 'utils/helpers/fetch';
 import {
   CRow,
@@ -90,7 +90,7 @@ const DepartmentEmployees = ({ match }) => {
   const onChange = (e) => { // value is employee ID
     let key = e.target.name
     let value = e.target.value
-    let copy = shallowCopy(data)
+    let copy = { ...data }
     copy[key] = value
     setData(copy)
   }
@@ -111,7 +111,7 @@ const DepartmentEmployees = ({ match }) => {
   }
 
   const validate = () => {
-    let _errors = shallowCopy(errors)
+    let _errors = { ...errors }
     Object.entries(data).map(([key, value]) => {
       let valid = validateInfo(key, value);
       _errors[key] = valid === true ? false : valid
@@ -178,7 +178,7 @@ const DepartmentEmployees = ({ match }) => {
   const handleChange = (e) => {
     let key = e.target.name
     let value = e.target.value
-    let copy = shallowCopy(data)
+    let copy = { ...data }
     copy[key] = value
     let dm = `${_departmentManager[0].manager_firstname} ${_departmentManager[0].manager_lastname}`
     if (value === dm) {

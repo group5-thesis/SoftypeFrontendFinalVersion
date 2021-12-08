@@ -13,7 +13,7 @@ import {
 } from "@coreui/react";
 import { useDispatch } from 'react-redux'
 import { MONTHS, YEARS, TICKET_STATUS, OFFICE_REQUEST_FILTER } from "utils/constants/constant";
-import { setWidth, plotArray, shallowCopy, dispatchNotification } from "utils/helpers";
+import { setWidth, plotArray, dispatchNotification } from "utils/helpers";
 import { filterTickets, fetchTickets } from "utils/helpers/fetch";
 import { actionCreator, ActionTypes } from "utils/actions";
 
@@ -26,7 +26,7 @@ const TicketFilter = ({ show, onClearFilter }) => {
 
   const handleChange = (e) => {
     let { name, value } = e.target
-    let newState = shallowCopy(state);
+    let newState = { ...state }
     newState[name] = value;
     setstate(newState)
 
@@ -91,7 +91,7 @@ const TicketFilter = ({ show, onClearFilter }) => {
                     >
                       <option value="" hidden>
                         Select
-                        </option>
+                      </option>
                       <option value="All">All</option>
                       <option value={state.year} hidden>{state.year}</option>
                       {YEARS.map(key => {
@@ -119,7 +119,7 @@ const TicketFilter = ({ show, onClearFilter }) => {
                     >
                       <option value="" hidden>
                         Select
-                        </option>
+                      </option>
                       <option value={state.month} hidden>{state.month}</option>
                       <option value="All">All</option>
                       {MONTHS.map(key => {

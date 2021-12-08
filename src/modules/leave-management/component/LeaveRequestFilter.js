@@ -13,22 +13,22 @@ import {
   CContainer,
 } from "@coreui/react";
 import { ConfirmDialog, LoadingButton } from "reusable";
-import { setWidth, shallowCopy } from "utils/helpers";
+import { setWidth } from "utils/helpers";
 import { LEAVE_TYPES, STATUS, MONTHS, YEARS } from "utils/constants/constant";
 
 const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter, isLoading }) => {
   const dialog = useRef();
-  const [filteredValues, setFilteredValues] = useState(shallowCopy(filter))
+  const [filteredValues, setFilteredValues] = useState({ ...filter })
   const handleOnChange = (e) => {
     const name = e.target.name
     const value = e.target.value
-    const obj = shallowCopy(filteredValues);
+    const obj = { ...filteredValues };
     obj[name] = value;
     setFilteredValues(obj)
   }
 
   const clearFilter = () => {
-    setFilteredValues(shallowCopy(filter))
+    setFilteredValues({ ...filter })
     onClearFilter()
   }
 
@@ -125,7 +125,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter, isL
                         >
                           <option value="" hidden>
                             Select
-                        </option>
+                          </option>
                           <option value="All">All</option>
                           {Object.keys(STATUS).map((key) => {
                             return (
@@ -153,7 +153,7 @@ const LeaveFilterRequest = ({ show, onFilterRequests, filter, onClearFilter, isL
                         >
                           <option value="" hidden>
                             Please select
-                        </option>
+                          </option>
                           <option value="All">All</option>
                           {LEAVE_TYPES.map((_category, idx) => {
                             return (

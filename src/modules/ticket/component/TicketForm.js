@@ -14,7 +14,7 @@ import { Modal, ConfirmDialog, LoadingButton } from 'reusable'
 import { actionCreator, ActionTypes } from 'utils/actions';
 import TicketModel from 'models/TicketModel'
 import { useSelector, useDispatch } from 'react-redux'
-import { shallowCopy, dispatchNotification, toCapitalize, renameKey } from 'utils/helpers';
+import { dispatchNotification, toCapitalize, renameKey } from 'utils/helpers';
 import api from 'utils/api';
 import _ from 'lodash';
 import moment from 'moment';
@@ -50,7 +50,7 @@ const TicketForm = () => {
     setErrors(defaultErrors)
     let key = e.target.name
     let value = e.target.value
-    let copy = shallowCopy(data)
+    let copy = { ...data }
     copy[key] = value
     let _total = copy['price'] * copy['quantity']
     copy['total_price'] = _total > 0 ? _total : 0;
@@ -221,7 +221,7 @@ const TicketForm = () => {
         />
         <CInvalidFeedback className="help-block">
           Please provide a valid information
-                  </CInvalidFeedback>
+        </CInvalidFeedback>
       </CFormGroup>
       <CFormGroup >
         <CLabel htmlFor="date-input">Date Needed : </CLabel>
